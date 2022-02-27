@@ -1,8 +1,7 @@
 //! defines a common interface for an implementation of tokenized vaults that may or may not compound
 
-use anchor_lang::prelude::*;
+use anchor_lang::{prelude::*, solana_program::{account_info::AccountInfo}};
 use anchor_spl::token::Mint;
-use solana_program::{account_info::AccountInfo, pubkey::Pubkey};
 
 pub trait TokenizedShares {
     /// used to check if a withdraw attempt is locked. whether or

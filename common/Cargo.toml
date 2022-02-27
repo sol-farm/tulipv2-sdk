@@ -6,3 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anchor-lang = "0.22.0"
+anchor-spl = "0.22.0"
+spl-token = "3.2.0"
