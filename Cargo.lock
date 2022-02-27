@@ -418,7 +418,12 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "arrform",
+ "num-derive",
+ "num-traits",
  "spl-token",
+ "thiserror",
+ "uint",
 ]
 
 [[package]]
@@ -493,6 +498,16 @@ dependencies = [
  "rand_core",
  "subtle",
  "zeroize",
+]
+
+[[package]]
+name = "derivative"
+version = "2.2.1"
+source = "git+https://github.com/sol-farm/rust-derivative.git?rev=ff66e36f57d14c0a910e77d6e7f4d3dae307de7e#ff66e36f57d14c0a910e77d6e7f4d3dae307de7e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -770,6 +785,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "memoffset"
+version = "0.5.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "043175f069eda7b85febe4a74abbaeff828d9f8b448515d3151a14a3542811aa"
+dependencies = [
+ "autocfg",
+]
+
+[[package]]
 name = "num-derive"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -969,6 +993,12 @@ name = "regex-syntax"
 version = "0.6.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b"
+
+[[package]]
+name = "rustc-hex"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e75f6a532d0fd9f7f13144f392b6ad56a32696bfcd9c78f797f16bbb6f072d6"
 
 [[package]]
 name = "rustc_version"
@@ -1198,6 +1228,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "static-pubkey"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e390e1e75910fd6c02265a4743f06c85775bb357c70f58384e867b3dc84a8011"
+dependencies = [
+ "bs58 0.4.0",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "static_assertions"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
+
+[[package]]
 name = "subtle"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1253,10 +1301,43 @@ dependencies = [
 ]
 
 [[package]]
+name = "type-layout"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "074069282ba5be5078f1bdb34112b963516d50f262bf4c1082fee1f6ada11d74"
+dependencies = [
+ "memoffset",
+ "type-layout-derive",
+]
+
+[[package]]
+name = "type-layout-derive"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fc4a1cf66ce820973c4b31c5ef47a8e930a53ffbcec191212c33f5a3ad75c6cd"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "typenum"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dcf81ac59edc17cc8697ff311e8f5ef2d99fcbd9817b34cec66f90b6c3dfd987"
+
+[[package]]
+name = "uint"
+version = "0.8.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9db035e67dfaf7edd9aebfe8676afcd63eed53c8a4044fed514c8cccf1835177"
+dependencies = [
+ "byteorder",
+ "crunchy",
+ "rustc-hex",
+ "static_assertions",
+]
 
 [[package]]
 name = "unicode-segmentation"
@@ -1269,6 +1350,23 @@ name = "unicode-xid"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ccb82d61f80a663efe1f787a51b16b5a51e3314d6ac365b08639f52387b33f3"
+
+[[package]]
+name = "vaults"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "arrform",
+ "common",
+ "derivative",
+ "farms",
+ "itertools",
+ "spl-associated-token-account",
+ "spl-token",
+ "static-pubkey",
+ "type-layout",
+]
 
 [[package]]
 name = "version_check"

@@ -9,3 +9,8 @@ edition = "2021"
 anchor-lang = "0.22.0"
 anchor-spl = "0.22.0"
 spl-token = "3.2.0"
+arrform = {git = "https://github.com/sol-farm/arrform.git", rev = "fdbb0cfe18eadbff99cc8cd63f1b5a43df70e665"}
+uint = "0.8"
+num-derive = "0.3"
+num-traits = "0.2"
+thiserror = "1.0"

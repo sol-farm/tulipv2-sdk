@@ -1,7 +1,8 @@
 [workspace]
 members = [
     "farms",
-    "common"
+    "common",
+    "vaults"
 ]
 [profile.release]
 lto = "fat"
