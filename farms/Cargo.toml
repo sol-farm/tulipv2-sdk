@@ -1,0 +1,10 @@
+[package]
+name = "farms"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anchor-lang = "0.22.0"
+arrform = {git = "https://github.com/sol-farm/arrform.git", rev = "fdbb0cfe18eadbff99cc8cd63f1b5a43df70e665"}
