@@ -114,7 +114,11 @@ pub fn new_withdraw_deposit_tracking_ix(
 
 /// returns a new instruction to withdraw funds from the multi deposit optimizer vault.
 /// the `standalone_vault_accounts` argument are ProgramType specific accounts, which are
-/// expceted to be in the following order depending on the ProgramType
+/// expceted to be in the following order depending on the ProgramType.
+/// 
+/// You may request a withdrawal from any of the standalone vaults which have a deposited
+/// balance greater than 0. It's up to the caller to decide which of the active standalone vaults to withdraw from.
+/// 
 /// ------------------------------
 /// SOURCE_PROGRAM ACCOUNTS ORDER
 /// ------------------------------
