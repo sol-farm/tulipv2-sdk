@@ -101,6 +101,7 @@ pub fn new_withdraw_deposit_tracking_ix(
         accounts: vec![
             AccountMeta::new_readonly(authority, true),
             AccountMeta::new_readonly(sysvar::clock::id(), false),
+            AccountMeta::new_readonly(spl_token::id(), false),
             AccountMeta::new(deposit_tracking_account, false),
             AccountMeta::new(deposit_tracking_pda, false),
             AccountMeta::new(deposit_tracking_hold_account, false),
