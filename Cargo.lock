@@ -571,6 +571,7 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "arrform",
+ "farms",
  "num-derive",
  "num-traits",
  "spl-token",
