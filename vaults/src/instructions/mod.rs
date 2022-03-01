@@ -31,7 +31,7 @@ pub fn new_register_deposit_tracking_account_ix(
     Instruction {
         program_id: crate::ID,
         accounts: vec![
-            AccountMeta::new_readonly(authority, true),
+            AccountMeta::new(authority, true),
             AccountMeta::new_readonly(vault, false),
             AccountMeta::new(deposit_tracking_account, false),
             AccountMeta::new(deposit_tracking_queue_account, false),
