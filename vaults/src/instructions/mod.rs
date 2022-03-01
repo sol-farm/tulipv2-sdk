@@ -162,7 +162,7 @@ pub fn new_withdraw_deposit_tracking_ix(
 ///         0 []                -> mango_group_account
 ///
 ///         1 [writable]        -> optimizer_mango_account
-/// .
+///
 ///         2 []                -> mango_cache
 ///
 ///         3 []                -> root_bank

@@ -1,6 +1,7 @@
 pub mod vaults;
 pub mod traits;
 pub mod math;
+pub mod config;
 
 use anchor_lang::solana_program::pubkey::Pubkey;
 
