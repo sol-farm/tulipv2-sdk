@@ -1,10 +1,10 @@
 //! provides a tokenized shares vault targetting the Raydium protocol
 //! capable of supporting any v4 and onwards Raydium AMM farm
 use super::{vault_base::VaultBaseV1, InitVaultArgsV1};
-use farms::Farm;
-use common::msg_panic;
+use tulipv2_sdk_farms::Farm;
+use tulipv2_sdk_common::msg_panic;
 use anchor_lang::prelude::*;
-use common::{traits::vault::TokenizedShares, DEFAULT_KEY};
+use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 pub const VAULT_ACCOUNT_SIZE: usize = 1712;
 #[cfg(not(target_arch = "bpf"))]
 use derivative::*;

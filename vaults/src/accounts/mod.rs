@@ -7,11 +7,11 @@
 #![allow(clippy::extra_unused_lifetimes)]
 #![allow(clippy::field_reassign_with_default)]
 
-use farms::Farm;
+use tulipv2_sdk_farms::Farm;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
 use anchor_spl::token::Mint;
-use common::traits::vault::TokenizedShares;
+use tulipv2_sdk_common::traits::vault::TokenizedShares;
 use static_pubkey::static_pubkey;
 use self::vault_base::{NewVaultArgsV1, VaultBaseV1};
 
@@ -59,7 +59,7 @@ pub struct InitFeeArgsV1;
 /// with strings. there is no hard requirements for the format of this tag, however it is
 /// recommended that if the tag is 31 bytes or less, you use a newline delimiater (\n)
 /// so that UI, and other clients can render the data correctly
-pub fn derive_vault_address(farm: &farms::Farm, tag: [u8; 32]) -> (Pubkey, u8) {
+pub fn derive_vault_address(farm: &tulipv2_sdk_farms::Farm, tag: [u8; 32]) -> (Pubkey, u8) {
     let parts: [u64; 2] = (*farm).into();
     Pubkey::find_program_address(
         &[
@@ -208,9 +208,9 @@ pub fn parse_formatted_name(formatted_name: &str) -> (String, String) {
 mod test {
     use std::str::FromStr;
 
-    use common::DEFAULT_KEY;
+    use tulipv2_sdk_common::DEFAULT_KEY;
 
-    use farms::Farm;
+    use tulipv2_sdk_farms::Farm;
 
     use super::*;
     #[test]
@@ -257,7 +257,7 @@ mod test {
     #[test]
     fn vault_addresses() {
         let farm = Farm::Raydium {
-            name: farms::raydium::Raydium::ALEPHUSDC,
+            name: tulipv2_sdk_farms::raydium::Raydium::ALEPHUSDC,
         };
         let (vault, vault_nonce) = derive_vault_address(&farm, [0_u8; 32]);
         println!("vault {}, vault nonce {}", vault, vault_nonce);

@@ -3,11 +3,11 @@
 //! accounts depending on how Quarry is being used
 use super::vault_base::VaultBaseV1;
 use super::InitVaultArgsV1;
-use farms::Farm;
-use common::msg_panic;
+use tulipv2_sdk_farms::Farm;
+use tulipv2_sdk_common::msg_panic;
 use anchor_lang::prelude::*;
-use common::traits::pausable::Pausable;
-use common::{traits::vault::TokenizedShares, DEFAULT_KEY};
+use tulipv2_sdk_common::traits::pausable::Pausable;
+use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 #[cfg(not(target_arch = "bpf"))]
 use derivative::*;
 
@@ -194,13 +194,13 @@ impl From<u64> for QuarryVariant {
     }
 }
 
-impl From<farms::quarry::Quarry> for QuarryVariant {
-    fn from(val: farms::quarry::Quarry) -> Self {
+impl From<tulipv2_sdk_farms::quarry::Quarry> for QuarryVariant {
+    fn from(val: tulipv2_sdk_farms::quarry::Quarry) -> Self {
         match val {
-            farms::quarry::Quarry::VANILLA => Self::Vanilla,
-            farms::quarry::Quarry::SABER => Self::Saber,
-            farms::quarry::Quarry::SUNNY => Self::Sunny,
-            farms::quarry::Quarry::UNKNOWN => Self::UNKNOWN,
+            tulipv2_sdk_farms::quarry::Quarry::VANILLA => Self::Vanilla,
+            tulipv2_sdk_farms::quarry::Quarry::SABER => Self::Saber,
+            tulipv2_sdk_farms::quarry::Quarry::SUNNY => Self::Sunny,
+            tulipv2_sdk_farms::quarry::Quarry::UNKNOWN => Self::UNKNOWN,
         }
     }
 }

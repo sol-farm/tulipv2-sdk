@@ -1,15 +1,15 @@
 //! a base vault component providing tokenized shares, as well as pausable deposits / withdraws
 use super::InitFeeArgsV1;
 
-use farms::{unknown::Unknown, Farm};
-use common::msg_panic;
-use common::math::decimal::Decimal;
-use common::math::uint::U192;
+use tulipv2_sdk_farms::{unknown::Unknown, Farm};
+use tulipv2_sdk_common::msg_panic;
+use tulipv2_sdk_common::math::decimal::Decimal;
+use tulipv2_sdk_common::math::uint::U192;
 use anchor_lang::prelude::*;
 use anchor_spl::token::Mint;
 use anchor_spl::token::{self, Burn, MintTo, Transfer};
 use arrform::{arrform, ArrForm};
-use common::{
+use tulipv2_sdk_common::{
     math,
     traits::{
         pausable::{Pausable, PausableAction},

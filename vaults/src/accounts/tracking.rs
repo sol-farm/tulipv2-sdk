@@ -1,7 +1,7 @@
-use common::msg_panic;
+use tulipv2_sdk_common::msg_panic;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Transfer};
-use common::{
+use tulipv2_sdk_common::{
     traits::vault::{TokenizedShares, TokenizedSharesHolder},
     DEFAULT_KEY,
 };
@@ -94,7 +94,7 @@ impl TokenizedSharesHolder for DepositTrackingV1 {
         if vault.total_deposited_tokens() == 0 {
             return amount;
         }
-        common::math::calculate_shares_to_give(
+        tulipv2_sdk_common::math::calculate_shares_to_give(
             amount,
             vault.total_shares(),
             vault.total_deposited_tokens(),
@@ -104,7 +104,7 @@ impl TokenizedSharesHolder for DepositTrackingV1 {
         if vault.is_locked(self.last_deposit_time) {
             return None;
         }
-        Some(common::math::calculate_underlying_to_withdraw(
+        Some(tulipv2_sdk_common::math::calculate_underlying_to_withdraw(
             amount,
             vault.total_shares(),
             vault.total_deposited_tokens(),

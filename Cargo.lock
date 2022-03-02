@@ -565,22 +565,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "common"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "arrform",
- "farms",
- "num-derive",
- "num-traits",
- "spl-token",
- "static-pubkey",
- "thiserror",
- "uint",
-]
-
-[[package]]
 name = "console"
 version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -994,14 +978,6 @@ dependencies = [
  "quote 1.0.15",
  "syn 1.0.86",
  "synstructure",
-]
-
-[[package]]
-name = "farms"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "arrform",
 ]
 
 [[package]]
@@ -3421,6 +3397,51 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "59547bce71d9c38b83d9c0e92b6066c4253371f15005def0c30d9657f50c7642"
 
 [[package]]
+name = "tulipv2-sdk-common"
+version = "0.9.0"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "arrform",
+ "num-derive",
+ "num-traits",
+ "spl-token",
+ "static-pubkey",
+ "thiserror",
+ "tulipv2-sdk-farms",
+ "uint",
+]
+
+[[package]]
+name = "tulipv2-sdk-farms"
+version = "0.9.0"
+dependencies = [
+ "anchor-lang",
+ "arrform",
+]
+
+[[package]]
+name = "tulipv2-sdk-vaults"
+version = "0.9.0"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "arrform",
+ "data-encoding",
+ "derivative",
+ "itertools",
+ "proptest",
+ "ring",
+ "solana-client",
+ "spl-associated-token-account",
+ "spl-token",
+ "static-pubkey",
+ "tulipv2-sdk-common",
+ "tulipv2-sdk-farms",
+ "type-layout",
+]
+
+[[package]]
 name = "tungstenite"
 version = "0.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3553,27 +3574,6 @@ name = "utf-8"
 version = "0.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "09cc8ee72d2a9becf2f2febe0205bbed8fc6615b7cb429ad062dc7b7ddd036a9"
-
-[[package]]
-name = "vaults"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "arrform",
- "common",
- "data-encoding",
- "derivative",
- "farms",
- "itertools",
- "proptest",
- "ring",
- "solana-client",
- "spl-associated-token-account",
- "spl-token",
- "static-pubkey",
- "type-layout",
-]
 
 [[package]]
 name = "vec_map"

@@ -1,11 +1,11 @@
 use super::lending_optimizer::*;
 use super::{vault_base::VaultBaseV1, InitVaultArgsV1};
-use common::msg_panic;
-use farms::Farm;
+use tulipv2_sdk_common::msg_panic;
+use tulipv2_sdk_farms::Farm;
 
 use anchor_lang::prelude::*;
 use arrform::{arrform, ArrForm};
-use common::{traits::vault::TokenizedShares, DEFAULT_KEY};
+use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 #[cfg(not(target_arch = "bpf"))]
 use derivative::*;
 

@@ -1,5 +1,5 @@
 use anchor_lang::{prelude::*, solana_program::{instruction::Instruction, sysvar, system_program}};
-use farms::Farm;
+use tulipv2_sdk_farms::Farm;
 
 /// sighash used by the `register_deposit_tracking_account` instruction
 pub const REGISTER_DEPOSIT_TRACKING_ACCOUNT_SIGHASH: [u8; 8] = [55, 114, 97, 238, 33, 173, 193, 225];

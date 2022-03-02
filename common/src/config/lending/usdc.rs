@@ -3,11 +3,10 @@
 use anchor_lang::solana_program;
 use static_pubkey::static_pubkey;
 use anchor_lang::prelude::*;
+use tulipv2_sdk_farms::{Farm, lending::Lending};
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
-    use farms::{Farm, lending::Lending};
-
     use super::*;
 
     pub const TAG_STRING: &str = "usdcv1";
@@ -38,8 +37,6 @@ pub mod multi_deposit {
 
 /// bundles configuration information for the solend usdc standalone vault
 pub mod solend {
-    use farms::{Farm, lending::Lending};
-
     use super::*;
 
     pub const TAG_STRING: &str = "solend";
@@ -91,8 +88,6 @@ pub mod solend {
 
 /// bundles configuration information for the tulip usdc standalone vault
 pub mod tulip {
-    use farms::{Farm, lending::Lending};
-
     use super::*;
 
     pub const TAG_STRING: &str = "tulip";
@@ -139,8 +134,6 @@ pub mod tulip {
 
 /// bundles configuration information for the mango usdc standalone vault
 pub mod mango {
-    use farms::{Farm, lending::Lending};
-
     use super::*;
 
     pub const TAG_STRING: &str = "mango";

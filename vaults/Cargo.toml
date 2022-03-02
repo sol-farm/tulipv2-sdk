@@ -1,9 +1,11 @@
 [package]
-name = "vaults"
-version = "0.1.0"
+name = "tulipv2-sdk-vaults"
+version = "0.9.0"
 edition = "2021"
+authors = ["Tulip Protocol"]
+description = "vault account types, and vault instructions used by the v2 sdk"
+keywords = ["solana", "anchor", "tulip-protocol"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [features]
 default = ["production"]
 # activate staging features where applicable
@@ -14,14 +16,14 @@ localnet = []
 anchor-lang = "0.22.0"
 anchor-spl = "0.22.0"
 spl-token = "3.2.0"
-common = {path = "../common"}
+tulipv2-sdk-common = {path = "../common"}
 spl-associated-token-account = "1.0.3"
 static-pubkey = "1.0.2"
 type-layout = "0.2.0"
 arrform = {git = "https://github.com/sol-farm/arrform.git", rev = "fdbb0cfe18eadbff99cc8cd63f1b5a43df70e665"}
 derivative = {git = "https://github.com/sol-farm/rust-derivative.git", rev = "ff66e36f57d14c0a910e77d6e7f4d3dae307de7e"}
 itertools = "0.10.3"
-farms = {path = "../farms" }
+tulipv2-sdk-farms = {path = "../farms" }
 [dev-dependencies]
 proptest = "1.0.0"
 solana-client = "1.9.1"
