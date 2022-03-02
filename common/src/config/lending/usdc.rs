@@ -71,14 +71,14 @@ pub mod solend {
     pub const LENDING_MARKET_AUTHORITY: Pubkey = static_pubkey!("DdZR6zRFiUt4S5mg7AV1uKB2z1f1WzcNYCaTEEWPAuby");
     /// address of the oracle that goes into the first element
     /// of the oracle keys array
-    pub const ORACLE_ONE: Pubkey = static_pubkey!("Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD");
+    pub const PYTH_PRICE_ACCOUNT: Pubkey = static_pubkey!("Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD");
     /// address of the oracle that goes into the second element 
     /// of the oracle keys array
-    pub const ORACLE_TWO: Pubkey = static_pubkey!("CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb");
+    pub const SWITCHBOARD_PRICE_ACCOUNT: Pubkey = static_pubkey!("CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb");
     /// address of the program which owns the first oracle
-    pub const ORACLE_ONE_PROGRAM_ID: Pubkey = static_pubkey!("FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH");
+    pub const PYTH_PROGRAM_ID: Pubkey = static_pubkey!("FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH");
     /// address of the program which owns the second oracle
-    pub const ORACLE_TWO_PROGRAM_ID: Pubkey = static_pubkey!("DtmE9D2CSB4L5D6A15mraeEjrGMm6auWVzgaD8hK2tZM");
+    pub const SWITCHBOARD_PROGRAM_ID: Pubkey = static_pubkey!("DtmE9D2CSB4L5D6A15mraeEjrGMm6auWVzgaD8hK2tZM");
     /// address of the lending market reserve account
     pub const RESERVE_ACCOUNT: Pubkey = static_pubkey!("BgxfHJDzm44T7XG68MYKx7YisTjZu73tVovyZSjJMpmw");
     /// address of the reserve's token account which holders
@@ -124,9 +124,9 @@ pub mod tulip {
     pub const LENDING_MARKET_AUTHORITY: Pubkey = static_pubkey!("8gEGZbUfVE1poBq71VHKX9LU7ca4x8wTUyZgcbyQe51s");
     /// address of the oracle that goes into the first element
     /// of the oracle keys array
-    pub const ORACLE_ONE: Pubkey = static_pubkey!("ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB");
+    pub const PYTH_PRICE_ACCOUNT: Pubkey = static_pubkey!("ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB");
     /// address of the program which owns the first oracle
-    pub const ORACLE_ONE_PROGRAM_ID: Pubkey = static_pubkey!("5JQ8Mhdp2wv3HWcfjq9Ts8kwzCAeBADFBDAgBznzRsE4");
+    pub const PYTH_PROGRAM_ID: Pubkey = static_pubkey!("5JQ8Mhdp2wv3HWcfjq9Ts8kwzCAeBADFBDAgBznzRsE4");
     /// address of the lending market reserve account
     pub const RESERVE_ACCOUNT: Pubkey = static_pubkey!("FTkSmGsJ3ZqDSHdcnY7ejN1pWV3Ej7i88MYpZyyaqgGt");
     /// address of the reserve's token account which holders
