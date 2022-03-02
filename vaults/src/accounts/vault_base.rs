@@ -19,7 +19,7 @@ use tulipv2_sdk_common::{
     DEFAULT_KEY,
 };
 #[cfg(not(target_arch = "bpf"))]
-use derivative::*;
+use tulip_derivative::*;
 
 use std::convert::TryInto;
 /// size of the VaultBase struct in bytes

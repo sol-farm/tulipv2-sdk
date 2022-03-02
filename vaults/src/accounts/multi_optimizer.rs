@@ -7,7 +7,7 @@ use anchor_lang::prelude::*;
 use tulip_arrform::{arrform, ArrForm};
 use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 #[cfg(not(target_arch = "bpf"))]
-use derivative::*;
+use tulip_derivative::*;
 
 use itertools::Itertools;
 use std::iter::FromIterator;

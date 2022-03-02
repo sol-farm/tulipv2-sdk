@@ -9,7 +9,7 @@ use anchor_lang::prelude::*;
 use tulipv2_sdk_common::traits::pausable::Pausable;
 use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 #[cfg(not(target_arch = "bpf"))]
-use derivative::*;
+use tulip_derivative::*;
 
 #[cfg(not(target_arch = "bpf"))]
 use type_layout::TypeLayout;

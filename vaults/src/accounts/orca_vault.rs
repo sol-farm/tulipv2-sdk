@@ -4,7 +4,7 @@ use tulipv2_sdk_common::msg_panic;
 use anchor_lang::prelude::*;
 use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 #[cfg(not(target_arch = "bpf"))]
-use derivative::*;
+use tulip_derivative::*;
 
 
 pub const ORCA_VAULT_ACCOUNT_SIZE: usize = 1376;

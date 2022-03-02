@@ -6,7 +6,7 @@ use tulipv2_sdk_common::{
     DEFAULT_KEY,
 };
 #[cfg(not(target_arch = "bpf"))]
-use derivative::*;
+use tulip_derivative::*;
 
 pub const DEPOSIT_TRACKING_ACCOUNT_SIZE: usize = 440;
 pub const EPHEMERAL_TRACKING_ACCOUNT_SIZE: usize = 440;

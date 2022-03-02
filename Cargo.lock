@@ -748,16 +748,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "derivative"
-version = "2.2.1"
-source = "git+https://github.com/sol-farm/rust-derivative.git?rev=ff66e36f57d14c0a910e77d6e7f4d3dae307de7e#ff66e36f57d14c0a910e77d6e7f4d3dae307de7e"
-dependencies = [
- "proc-macro2 1.0.36",
- "quote 1.0.15",
- "syn 1.0.86",
-]
-
-[[package]]
 name = "dialoguer"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3398,6 +3388,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6f4c70c8fe82613e0a32b00a3eab2557ec5dd110bddf471ace19de8fd4577d0"
 
 [[package]]
+name = "tulip-derivative"
+version = "2.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75d6eabea9d108df2d23d7f1201de4f7d2bceebe0dda5fa05bcef95a5ff4deaf"
+dependencies = [
+ "proc-macro2 1.0.36",
+ "quote 1.0.15",
+ "syn 1.0.86",
+]
+
+[[package]]
 name = "tulipv2-sdk-common"
 version = "0.9.0"
 dependencies = [
@@ -3428,7 +3429,6 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "data-encoding",
- "derivative",
  "itertools",
  "proptest",
  "ring",
@@ -3437,6 +3437,7 @@ dependencies = [
  "spl-token",
  "static-pubkey",
  "tulip-arrform",
+ "tulip-derivative",
  "tulipv2-sdk-common",
  "tulipv2-sdk-farms",
  "type-layout",

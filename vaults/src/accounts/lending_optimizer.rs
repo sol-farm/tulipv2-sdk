@@ -15,7 +15,7 @@ use tulipv2_sdk_common::{
 use anchor_lang::prelude::*;
 
 #[cfg(not(target_arch = "bpf"))]
-use derivative::*;
+use tulip_derivative::*;
 
 #[cfg(not(target_arch = "bpf"))]
 use type_layout::TypeLayout;
