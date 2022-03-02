@@ -5,6 +5,7 @@ edition = "2021"
 authors = ["Tulip Protocol"]
 description = "vault account types, and vault instructions used by the v2 sdk"
 keywords = ["solana", "anchor", "tulip-protocol"]
+license = "MIT/Apache-2.0"
 
 [features]
 default = ["production"]
