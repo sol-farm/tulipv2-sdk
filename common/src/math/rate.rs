@@ -41,7 +41,7 @@ use uint::construct_uint;
 // U128 with 128 bits consisting of 2 x 64-bit words
 construct_uint! {
     pub struct U128(2);
-}
+} 
 
 /// Small decimal values, precise to 18 digits
 #[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd, Eq, Ord)]

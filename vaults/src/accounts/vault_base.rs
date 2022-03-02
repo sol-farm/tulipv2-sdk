@@ -8,7 +8,7 @@ use tulipv2_sdk_common::math::uint::U192;
 use anchor_lang::prelude::*;
 use anchor_spl::token::Mint;
 use anchor_spl::token::{self, Burn, MintTo, Transfer};
-use arrform::{arrform, ArrForm};
+use tulip_arrform::{arrform, ArrForm};
 use tulipv2_sdk_common::{
     math,
     traits::{

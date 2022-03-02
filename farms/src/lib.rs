@@ -28,7 +28,7 @@ pub mod quarry;
 pub mod raydium;
 pub mod unknown;
 
-use arrform::{arrform, ArrForm};
+use tulip_arrform::{arrform, ArrForm};
 use anchor_lang::prelude::*;
 use crate::{
     raydium::Raydium,

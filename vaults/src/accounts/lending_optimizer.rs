@@ -5,7 +5,7 @@ use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_common::msg_panic;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program_pack::Pack;
-use arrform::{arrform, ArrForm};
+use tulip_arrform::{arrform, ArrForm};
 use tulipv2_sdk_common::{
     traits::vault::TokenizedShares,
     DEFAULT_KEY,

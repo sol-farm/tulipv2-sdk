@@ -4,7 +4,7 @@ use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 
 use anchor_lang::prelude::*;
-use arrform::{arrform, ArrForm};
+use tulip_arrform::{arrform, ArrForm};
 use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 #[cfg(not(target_arch = "bpf"))]
 use derivative::*;

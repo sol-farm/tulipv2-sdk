@@ -58,7 +58,7 @@ macro_rules! msg_trace {
             // slow path
             msg!("{}", format!("'{}', '{}:{}", format!($($args)*), file_name, line!()).as_str());
         } else {
-            use arrform::{arrform, ArrForm};
+            use tulip_arrform::{arrform, ArrForm};
             let file_info = arrform!(256, "{}:{}", file_name, line!());
             let msg_part = arrform!(512, $($args)*);
             msg!("'{}', {}", msg_part.as_str(), file_info.as_str());

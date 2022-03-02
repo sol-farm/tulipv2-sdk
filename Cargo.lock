@@ -254,11 +254,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8da52d66c7071e2e3fa2a1e5c6d088fec47b593032b254f5e980de8ea54454d6"
 
 [[package]]
-name = "arrform"
-version = "0.1.1"
-source = "git+https://github.com/sol-farm/arrform.git?rev=fdbb0cfe18eadbff99cc8cd63f1b5a43df70e665#fdbb0cfe18eadbff99cc8cd63f1b5a43df70e665"
-
-[[package]]
 name = "assert_matches"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3397,17 +3392,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "59547bce71d9c38b83d9c0e92b6066c4253371f15005def0c30d9657f50c7642"
 
 [[package]]
+name = "tulip-arrform"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b6f4c70c8fe82613e0a32b00a3eab2557ec5dd110bddf471ace19de8fd4577d0"
+
+[[package]]
 name = "tulipv2-sdk-common"
 version = "0.9.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
- "arrform",
  "num-derive",
  "num-traits",
  "spl-token",
  "static-pubkey",
  "thiserror",
+ "tulip-arrform",
  "tulipv2-sdk-farms",
  "uint",
 ]
@@ -3417,7 +3418,7 @@ name = "tulipv2-sdk-farms"
 version = "0.9.0"
 dependencies = [
  "anchor-lang",
- "arrform",
+ "tulip-arrform",
 ]
 
 [[package]]
@@ -3426,7 +3427,6 @@ version = "0.9.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
- "arrform",
  "data-encoding",
  "derivative",
  "itertools",
@@ -3436,6 +3436,7 @@ dependencies = [
  "spl-associated-token-account",
  "spl-token",
  "static-pubkey",
+ "tulip-arrform",
  "tulipv2-sdk-common",
  "tulipv2-sdk-farms",
  "type-layout",
