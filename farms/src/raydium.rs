@@ -1,4 +1,4 @@
-//! farm types supported by raydium, some of these may or may not be activate at any given moment
+//! farm types supported by raydium
 use anchor_lang::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, AnchorSerialize, AnchorDeserialize)]

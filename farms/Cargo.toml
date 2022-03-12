@@ -6,6 +6,7 @@ authors = ["Tulip Protocol"]
 description = "farm identifiers and farm names used by the v2 sdk"
 keywords = ["solana", "anchor", "tulip-protocol"]
 license = "MIT/Apache-2.0"
+documentation = "https://docs.rs/tulipv2-sdk-farms"
 
 [dependencies]
 anchor-lang = "0.22.0"

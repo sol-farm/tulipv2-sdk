@@ -1,4 +1,4 @@
-//! farm types supported by Quarry
+//! farm types supported by Quarry, Saber, and Sunny
 use anchor_lang::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, AnchorSerialize, AnchorDeserialize)]

@@ -33,6 +33,8 @@ use anchor_lang::prelude::*;
 use tulip_arrform::{arrform, ArrForm};
 
 #[derive(Clone, Copy, PartialEq, Eq, AnchorSerialize, AnchorDeserialize, Debug)]
+/// the core type, which bundles together a "Farm Identifier" and "Farm Name" to uniquely
+/// identify vaults supported by Tulip V2.
 pub enum Farm {
     /// 0
     /// indicates the farm is of type raydium
