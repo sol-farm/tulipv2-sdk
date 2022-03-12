@@ -1,3 +1,5 @@
+//! vault type for farming non double dip and double dip orca aquafarms
+
 use super::{vault_base::VaultBaseV1, InitVaultArgsV1};
 use anchor_lang::prelude::*;
 #[cfg(not(target_arch = "bpf"))]

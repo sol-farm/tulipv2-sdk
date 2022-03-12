@@ -1,3 +1,5 @@
+//! multi deposit optimizer vault which deposits into one or more lending optimizer vaults
+//! to obtain the highest yield possible
 use super::lending_optimizer::*;
 use super::{vault_base::VaultBaseV1, InitVaultArgsV1};
 use tulipv2_sdk_common::msg_panic;

@@ -1,3 +1,5 @@
+//! helper functions for invoking Tulip V2 vaults instructions, largely limited to lending vaults
+
 #![allow(clippy::too_many_arguments)]
 use anchor_lang::{
     prelude::*,
