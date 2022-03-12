@@ -1,11 +1,9 @@
 #![allow(missing_docs)]
 
-
 use bytemuck::{cast_slice, from_bytes, try_cast_slice, Pod, PodCastError, Zeroable};
-use anchor_lang::solana_program::account_info::Account;
-use std::convert::TryInto;
+
 use std::mem::size_of;
-use crate::math::{common::TryDiv, decimal::Decimal};
+
 /// after this many slots consider a price update as being stale and thus invalid
 // 30 slots translates to a period of around 15s depending on slot times
 pub const STALE_AFTER_SLOTS_ELAPSED: u64 = 120;
@@ -172,14 +170,13 @@ pub fn load<T: Pod>(data: &[u8]) -> Result<&T, PodCastError> {
     )?)))
 }
 
-
 #[cfg(test)]
 mod test {
     use std::borrow::Borrow;
 
     use super::*;
-    use anchor_lang::{solana_program, solana_program::program_error::ProgramError};
     use anchor_client::solana_client::rpc_client::RpcClient;
+    use anchor_lang::{solana_program, solana_program::program_error::ProgramError};
     use static_pubkey::static_pubkey;
     #[test]
     fn test_get_pyth_price_account() {
@@ -187,6 +184,8 @@ mod test {
         let tulip_price_account_key =
             static_pubkey!("5RHxy1NbUR15y34uktDbN1a2SWbhgHwkCZ75yK2RJ1FC");
         let tulip_price_account = rpc.get_account(&tulip_price_account_key).unwrap();
-        let _ = load::<Price>(&tulip_price_account.data.borrow()).map_err(|_| ProgramError::InvalidAccountData).unwrap();
+        let _ = load::<Price>(tulip_price_account.data.borrow())
+            .map_err(|_| ProgramError::InvalidAccountData)
+            .unwrap();
     }
 }

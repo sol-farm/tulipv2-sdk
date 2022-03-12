@@ -7,9 +7,9 @@
 pub mod config;
 pub mod lending;
 pub mod math;
+pub mod pyth;
 pub mod traits;
 pub mod vaults;
-pub mod pyth;
 
 use anchor_lang::solana_program::pubkey::Pubkey;
 
