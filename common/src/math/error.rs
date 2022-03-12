@@ -1,7 +1,7 @@
 //! Error types
 
-use num_derive::FromPrimitive;
 use anchor_lang::solana_program::{decode_error::DecodeError, program_error::ProgramError};
+use num_derive::FromPrimitive;
 use thiserror::Error;
 
 /// Errors that may be returned by the TokenLending program.

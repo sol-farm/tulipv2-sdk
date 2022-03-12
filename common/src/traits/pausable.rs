@@ -1,6 +1,6 @@
 //! Pausable provides the ability to define one or more vault actions
-//! as "pausable", allowing them to enable enabled/disabled. 
-//! 
+//! as "pausable", allowing them to enable enabled/disabled.
+//!
 //! If you are familiar with Solidity development, you can consider this the
 //! a rudimentary implemetnation of a solana version of OpenZeppelin's ownable library.
 

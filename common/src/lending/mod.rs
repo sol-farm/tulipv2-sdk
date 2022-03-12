@@ -4,13 +4,13 @@
 #![allow(non_camel_case_types)]
 #![allow(clippy::too_many_arguments)]
 
-pub mod last_update;
 pub mod error;
+pub mod last_update;
 pub mod lending_obligation;
-pub mod reserve;
 pub mod obligation;
+pub mod reserve;
 
-use crate::math::{decimal::Decimal, common::WAD};
+use crate::math::{common::WAD, decimal::Decimal};
 
 use anchor_lang::solana_program::{
     clock::{DEFAULT_TICKS_PER_SECOND, DEFAULT_TICKS_PER_SLOT, SECONDS_PER_DAY},
@@ -31,7 +31,8 @@ pub const INITIAL_COLLATERAL_RATIO: u64 = 1;
 const INITIAL_COLLATERAL_RATE: u64 = INITIAL_COLLATERAL_RATIO * WAD;
 
 /// Number of slots per year
-pub const SLOTS_PER_YEAR: u64 = DEFAULT_TICKS_PER_SECOND / DEFAULT_TICKS_PER_SLOT * SECONDS_PER_DAY * 365;
+pub const SLOTS_PER_YEAR: u64 =
+    DEFAULT_TICKS_PER_SECOND / DEFAULT_TICKS_PER_SLOT * SECONDS_PER_DAY * 365;
 
 // Helpers
 fn pack_decimal(decimal: Decimal, dst: &mut [u8; 16]) {

@@ -1,14 +1,15 @@
 //! a base vault component providing tokenized shares, as well as pausable deposits / withdraws
 use super::InitFeeArgsV1;
 
-use tulipv2_sdk_farms::{unknown::Unknown, Farm};
-use tulipv2_sdk_common::msg_panic;
-use tulipv2_sdk_common::math::decimal::Decimal;
-use tulipv2_sdk_common::math::uint::U192;
 use anchor_lang::prelude::*;
 use anchor_spl::token::Mint;
 use anchor_spl::token::{self, Burn, MintTo, Transfer};
 use tulip_arrform::{arrform, ArrForm};
+#[cfg(not(target_arch = "bpf"))]
+use tulip_derivative::*;
+use tulipv2_sdk_common::math::decimal::Decimal;
+use tulipv2_sdk_common::math::uint::U192;
+use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_common::{
     math,
     traits::{
@@ -18,8 +19,7 @@ use tulipv2_sdk_common::{
     vaults::tag_to_str,
     DEFAULT_KEY,
 };
-#[cfg(not(target_arch = "bpf"))]
-use tulip_derivative::*;
+use tulipv2_sdk_farms::{unknown::Unknown, Farm};
 
 use std::convert::TryInto;
 /// size of the VaultBase struct in bytes
@@ -41,11 +41,7 @@ pub const ONE_HUNDRED: Decimal = Decimal(U192([7_766_279_631_452_241_920, 5, 0])
 #[cfg(not(target_arch = "bpf"))]
 use type_layout::TypeLayout;
 
-
-
-#[derive(
-    Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq, Default,
-)]
+#[derive(Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq, Default)]
 #[cfg_attr(not(target_arch = "bpf"), derive(Derivative))]
 #[cfg_attr(not(target_arch = "bpf"), derive(TypeLayout))]
 #[cfg_attr(not(target_arch = "bpf"), derivative(Debug))]
@@ -81,10 +77,7 @@ pub struct FeesV1 {
     pub buffer: [u64; 6],
 }
 
-
-#[derive(
-    Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq, Default,
-)]
+#[derive(Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq, Default)]
 #[cfg_attr(not(target_arch = "bpf"), derive(Derivative))]
 #[cfg_attr(not(target_arch = "bpf"), derive(TypeLayout))]
 #[cfg_attr(not(target_arch = "bpf"), derivative(Debug))]
@@ -195,13 +188,12 @@ impl VaultBaseV1 {
             .as_str()
             .to_owned()
     }
-
 }
 
 impl TokenizedShares for VaultBaseV1 {
     fn is_locked(&self, last_deposit_time: i64) -> bool {
         let unix_timestamp = Clock::get().unwrap().unix_timestamp;
-        
+
         let min_time = last_deposit_time
             .checked_add(REQUIRED_LOCK_DURATION_SECONDS)
             .unwrap();

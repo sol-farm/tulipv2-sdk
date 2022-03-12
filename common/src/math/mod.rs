@@ -1,8 +1,8 @@
+pub mod common;
 pub mod decimal;
+pub mod error;
 pub mod rate;
 pub mod uint;
-pub mod common;
-pub mod error;
 
 pub fn calculate_underlying_to_withdraw(
     amount: u64,

@@ -1,8 +1,13 @@
-
-use super::*;
-use crate::math::{decimal::Decimal, rate::Rate, common::{TryAdd, TryDiv, TryMul, TrySub}};
-use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
+use super::error::LendingError;
+use super::last_update::LastUpdate;
+use super::{reserve::Reserve, *};
+use crate::math::{
+    common::{TryAdd, TryDiv, TryMul, TrySub},
+    decimal::Decimal,
+    rate::Rate,
+};
 use anchor_lang::solana_program::{
+    account_info::Account,
     clock::Slot,
     entrypoint::ProgramResult,
     msg,
@@ -10,12 +15,12 @@ use anchor_lang::solana_program::{
     program_pack::{IsInitialized, Pack, Sealed},
     pubkey::{Pubkey, PUBKEY_BYTES},
 };
-use super::last_update::LastUpdate;
+use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
 use std::{
     cmp::Ordering,
+    collections::HashMap,
     convert::{TryFrom, TryInto},
 };
-use super::error::LendingError;
 
 /// Max number of collateral and liquidity reserve accounts combined for an obligation
 pub const MAX_OBLIGATION_RESERVES: usize = 10;
@@ -207,7 +212,8 @@ impl LendingObligation {
             );
             return Err(LendingError::ObligationReserveLimit.into());
         }
-        let liquidity = LendingObligationLiquidity::new(borrow_reserve, cumulative_borrow_rate_wads);
+        let liquidity =
+            LendingObligationLiquidity::new(borrow_reserve, cumulative_borrow_rate_wads);
         self.borrows.push(liquidity);
         Ok(self.borrows.last_mut().unwrap())
     }
@@ -343,14 +349,14 @@ impl LendingObligationLiquidity {
 const OBLIGATION_COLLATERAL_LEN: usize = 88; // 32 + 8 + 16 + 32
 const OBLIGATION_LIQUIDITY_LEN: usize = 112; // 32 + 16 + 16 + 16 + 32
 const OBLIGATION_LEN: usize = 1300; // 1 + 8 + 1 + 32 + 32 + 16 + 16 + 16 + 16 + 64 + 1 + 1 + (88 * 1) + (112 * 9)
-// @TODO: break this up by obligation / collateral / liquidity https://git.io/JOCca
+                                    // @TODO: break this up by obligation / collateral / liquidity https://git.io/JOCca
 impl Pack for LendingObligation {
     const LEN: usize = OBLIGATION_LEN;
 
     fn pack_into_slice(&self, dst: &mut [u8]) {
         let output = array_mut_ref![dst, 0, OBLIGATION_LEN];
         #[allow(clippy::ptr_offset_with_cast)]
-            let (
+        let (
             version,
             last_update_slot,
             last_update_stale,
@@ -400,7 +406,7 @@ impl Pack for LendingObligation {
         for collateral in &self.deposits {
             let deposits_flat = array_mut_ref![data_flat, offset, OBLIGATION_COLLATERAL_LEN];
             #[allow(clippy::ptr_offset_with_cast)]
-                let (deposit_reserve, deposited_amount, market_value, _padding_deposit) =
+            let (deposit_reserve, deposited_amount, market_value, _padding_deposit) =
                 mut_array_refs![deposits_flat, PUBKEY_BYTES, 8, 16, 32];
             deposit_reserve.copy_from_slice(collateral.deposit_reserve.as_ref());
             *deposited_amount = collateral.deposited_amount.to_le_bytes();
@@ -412,7 +418,7 @@ impl Pack for LendingObligation {
         for liquidity in &self.borrows {
             let borrows_flat = array_mut_ref![data_flat, offset, OBLIGATION_LIQUIDITY_LEN];
             #[allow(clippy::ptr_offset_with_cast)]
-                let (
+            let (
                 borrow_reserve,
                 cumulative_borrow_rate_wads,
                 borrowed_amount_wads,
@@ -434,7 +440,7 @@ impl Pack for LendingObligation {
     fn unpack_from_slice(src: &[u8]) -> Result<Self, ProgramError> {
         let input = array_ref![src, 0, OBLIGATION_LEN];
         #[allow(clippy::ptr_offset_with_cast)]
-            let (
+        let (
             version,
             last_update_slot,
             last_update_stale,
@@ -480,7 +486,7 @@ impl Pack for LendingObligation {
         for _ in 0..deposits_len {
             let deposits_flat = array_ref![data_flat, offset, OBLIGATION_COLLATERAL_LEN];
             #[allow(clippy::ptr_offset_with_cast)]
-                let (deposit_reserve, deposited_amount, market_value, _padding_deposit) =
+            let (deposit_reserve, deposited_amount, market_value, _padding_deposit) =
                 array_refs![deposits_flat, PUBKEY_BYTES, 8, 16, 32];
             deposits.push(LendingObligationCollateral {
                 deposit_reserve: Pubkey::new(deposit_reserve),
@@ -492,7 +498,7 @@ impl Pack for LendingObligation {
         for _ in 0..borrows_len {
             let borrows_flat = array_ref![data_flat, offset, OBLIGATION_LIQUIDITY_LEN];
             #[allow(clippy::ptr_offset_with_cast)]
-                let (
+            let (
                 borrow_reserve,
                 cumulative_borrow_rate_wads,
                 borrowed_amount_wads,
@@ -524,4 +530,81 @@ impl Pack for LendingObligation {
             unhealthy_borrow_value: unpack_decimal(unhealthy_borrow_value),
         })
     }
+}
+
+/// performs an off-chain refresh of the lending obligation
+pub fn pseudo_refresh_lending_obligation(
+    obligation_info: &mut LendingObligation,
+    reserves: HashMap<Pubkey, Reserve>,
+) -> Result<(), ProgramError> {
+    let mut deposited_value = Decimal::zero();
+    let mut borrowed_value = Decimal::zero();
+    let mut allowed_borrow_value = Decimal::zero();
+    let mut unhealthy_borrow_value = Decimal::zero();
+
+    for collateral in obligation_info.deposits.iter_mut() {
+        let deposit_reserve = match reserves.get(&collateral.deposit_reserve) {
+            Some(reserve) => reserve,
+            None => {
+                msg!(
+                    "failed to find deposit reserve {}",
+                    collateral.deposit_reserve
+                );
+                return Err(ProgramError::InvalidAccountData);
+            }
+        };
+        // @TODO: add lookup table https://git.io/JOCYq
+        let decimals = 10u64
+            .checked_pow(deposit_reserve.liquidity.mint_decimals as u32)
+            .ok_or(LendingError::MathOverflow)?;
+
+        let market_value = deposit_reserve
+            .collateral_exchange_rate()?
+            .decimal_collateral_to_liquidity(collateral.deposited_amount.into())?
+            .try_mul(deposit_reserve.liquidity.market_price)?
+            .try_div(decimals)?;
+        collateral.market_value = market_value;
+
+        let loan_to_value_rate = Rate::from_percent(deposit_reserve.config.loan_to_value_ratio);
+        let liquidation_threshold_rate =
+            Rate::from_percent(deposit_reserve.config.liquidation_threshold);
+
+        deposited_value = deposited_value.try_add(market_value)?;
+        allowed_borrow_value =
+            allowed_borrow_value.try_add(market_value.try_mul(loan_to_value_rate)?)?;
+        unhealthy_borrow_value =
+            unhealthy_borrow_value.try_add(market_value.try_mul(liquidation_threshold_rate)?)?;
+    }
+
+    for liquidity in obligation_info.borrows.iter_mut() {
+        let borrow_reserve = match reserves.get(&liquidity.borrow_reserve) {
+            Some(reserve) => reserve,
+            None => {
+                msg!("failed to find borrow reserve {}", liquidity.borrow_reserve);
+                return Err(ProgramError::InvalidAccountData);
+            }
+        };
+
+        liquidity.accrue_interest(borrow_reserve.liquidity.cumulative_borrow_rate_wads)?;
+
+        // @TODO: add lookup table https://git.io/JOCYq
+        let decimals = 10u64
+            .checked_pow(borrow_reserve.liquidity.mint_decimals as u32)
+            .ok_or(LendingError::MathOverflow)?;
+
+        let market_value = liquidity
+            .borrowed_amount_wads
+            .try_mul(borrow_reserve.liquidity.market_price)?
+            .try_div(decimals)?;
+        liquidity.market_value = market_value;
+
+        borrowed_value = borrowed_value.try_add(market_value)?;
+    }
+
+    obligation_info.deposited_value = deposited_value;
+    obligation_info.borrowed_value = borrowed_value;
+    obligation_info.allowed_borrow_value = allowed_borrow_value;
+    obligation_info.unhealthy_borrow_value = unhealthy_borrow_value;
+
+    Ok(())
 }

@@ -7,13 +7,13 @@
 #![allow(clippy::extra_unused_lifetimes)]
 #![allow(clippy::field_reassign_with_default)]
 
-use tulipv2_sdk_farms::Farm;
+use self::vault_base::{NewVaultArgsV1, VaultBaseV1};
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
 use anchor_spl::token::Mint;
-use tulipv2_sdk_common::traits::vault::TokenizedShares;
 use static_pubkey::static_pubkey;
-use self::vault_base::{NewVaultArgsV1, VaultBaseV1};
+use tulipv2_sdk_common::traits::vault::TokenizedShares;
+use tulipv2_sdk_farms::Farm;
 
 pub mod lending_optimizer;
 pub mod multi_optimizer;
@@ -22,10 +22,6 @@ pub mod quarry_vault;
 pub mod raydium_vault;
 pub mod tracking;
 pub mod vault_base;
-
-
-
-
 
 /// Base trait defines a trait that must be implemented
 /// by all custom vaults and is used to define shared methods

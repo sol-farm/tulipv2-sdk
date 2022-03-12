@@ -3,18 +3,16 @@
 //! accounts depending on how Quarry is being used
 use super::vault_base::VaultBaseV1;
 use super::InitVaultArgsV1;
-use tulipv2_sdk_farms::Farm;
-use tulipv2_sdk_common::msg_panic;
 use anchor_lang::prelude::*;
-use tulipv2_sdk_common::traits::pausable::Pausable;
-use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 #[cfg(not(target_arch = "bpf"))]
 use tulip_derivative::*;
+use tulipv2_sdk_common::msg_panic;
+use tulipv2_sdk_common::traits::pausable::Pausable;
+use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
+use tulipv2_sdk_farms::Farm;
 
 #[cfg(not(target_arch = "bpf"))]
 use type_layout::TypeLayout;
-
-
 
 pub const QUARRY_VAULT_ACCOUNT_SIZE: usize = 1256;
 pub const SABER_CONFIG_DATA_ACCOUNT_SIZE: usize = 458;

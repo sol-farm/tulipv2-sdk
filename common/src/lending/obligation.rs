@@ -1,8 +1,13 @@
 use super::error::LendingError;
 use super::last_update::LastUpdate;
-use super::{pack_bool, pack_decimal, UNINITIALIZED_VERSION, PROGRAM_VERSION, unpack_decimal, unpack_bool};
-use crate::math::{decimal::Decimal, rate::Rate, common::{TryAdd, TryDiv, TryMul, TrySub}};
-use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
+use super::{
+    pack_bool, pack_decimal, unpack_bool, unpack_decimal, PROGRAM_VERSION, UNINITIALIZED_VERSION,
+};
+use crate::math::{
+    common::{TryAdd, TryDiv, TryMul, TrySub},
+    decimal::Decimal,
+    rate::Rate,
+};
 use anchor_lang::solana_program::{
     clock::Slot,
     entrypoint::ProgramResult,
@@ -11,6 +16,7 @@ use anchor_lang::solana_program::{
     program_pack::{IsInitialized, Pack, Sealed},
     pubkey::{Pubkey, PUBKEY_BYTES},
 };
+use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
 use std::{
     cmp::Ordering,
     convert::{TryFrom, TryInto},
@@ -263,7 +269,6 @@ impl Obligation {
             .iter()
             .position(|liquidity| liquidity.borrow_reserve == borrow_reserve)
     }
-
 }
 
 /// Initialize an obligation
@@ -411,7 +416,7 @@ impl Pack for Obligation {
     fn pack_into_slice(&self, dst: &mut [u8]) {
         let output = array_mut_ref![dst, 0, OBLIGATION_LEN];
         #[allow(clippy::ptr_offset_with_cast)]
-            let (
+        let (
             version,
             last_update_slot,
             last_update_stale,
@@ -438,18 +443,18 @@ impl Pack for Obligation {
             data_flat,
         ) = mut_array_refs![
             output,
-            1, // version
-            8, // last update slot
-            1, // last update stale
+            1,            // version
+            8,            // last update slot
+            1,            // last update stale
             PUBKEY_BYTES, // lending market
             // PUBKEY_BYTES, // vault address
             PUBKEY_BYTES, // owner
-            16, // borrowed value
-            8, // vault shares
-            8, // lp tokens
-            8, // coin deposits
-            8, // pc deposits
-            16, // deposits market value
+            16,           // borrowed value
+            8,            // vault shares
+            8,            // lp tokens
+            8,            // coin deposits
+            8,            // pc deposits
+            16,           // deposits market value
             // PUBKEY_BYTES, // lp token price account
             // PUBKEY_BYTES, // coin price account
             // PUBKEY_BYTES, // pc price account
@@ -541,18 +546,18 @@ impl Pack for Obligation {
             data_flat,
         ) = array_refs![
             input,
-            1, // version
-            8, // last update slot
-            1, // last update stale
+            1,            // version
+            8,            // last update slot
+            1,            // last update stale
             PUBKEY_BYTES, // lending market
             // PUBKEY_BYTES, // vault address
             PUBKEY_BYTES, // owner
-            16, // borrowed value
-            8, // vault shares
-            8, // lp tokens
-            8, // coin deposits
-            8, // pc deposits
-            16, // deposits market value
+            16,           // borrowed value
+            8,            // vault shares
+            8,            // lp tokens
+            8,            // coin deposits
+            8,            // pc deposits
+            16,           // deposits market value
             // PUBKEY_BYTES, // lp token price account
             // PUBKEY_BYTES, // coin price account
             // PUBKEY_BYTES, // pc price account

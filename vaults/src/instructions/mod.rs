@@ -1,15 +1,19 @@
-use anchor_lang::{prelude::*, solana_program::{instruction::Instruction, sysvar, system_program}};
+use anchor_lang::{
+    prelude::*,
+    solana_program::{instruction::Instruction, system_program, sysvar},
+};
 use tulipv2_sdk_farms::Farm;
 
 /// sighash used by the `register_deposit_tracking_account` instruction
-pub const REGISTER_DEPOSIT_TRACKING_ACCOUNT_SIGHASH: [u8; 8] = [55, 114, 97, 238, 33, 173, 193, 225];
+pub const REGISTER_DEPOSIT_TRACKING_ACCOUNT_SIGHASH: [u8; 8] =
+    [55, 114, 97, 238, 33, 173, 193, 225];
 /// sighash used by the `withdraw_deposit_tracking` instruction
 pub const WITHDRAW_DEPOSIT_TRACKING_SIGHASH: [u8; 8] = [3, 232, 22, 105, 242, 88, 178, 172];
 /// sighash used by the `withdraw_multi_deposit_optimizer_vault` instruction
-pub const WITHDRAW_MULTI_DEPOSIT_OPTIMIZER_VAULT_SIGHASH: [u8; 8] = [94, 147, 111, 141, 204, 247, 197, 86];
+pub const WITHDRAW_MULTI_DEPOSIT_OPTIMIZER_VAULT_SIGHASH: [u8; 8] =
+    [94, 147, 111, 141, 204, 247, 197, 86];
 /// sighash used by the `issue_shares` istruction
 pub const ISSUE_SHARES_SIGHASH: [u8; 8] = [110, 72, 179, 47, 131, 109, 115, 103];
-
 
 /// returns a new instruction used to regsiter a deposit tracking account
 /// with a given vault.
@@ -21,13 +25,11 @@ pub fn new_register_deposit_tracking_account_ix(
     deposit_tracking_hold_account: Pubkey,
     shares_mint: Pubkey,
     deposit_tracking_pda: Pubkey,
-    farm_type: Farm
+    farm_type: Farm,
 ) -> Instruction {
     let mut ix_data = REGISTER_DEPOSIT_TRACKING_ACCOUNT_SIGHASH.to_vec();
     let farm_type: [u64; 2] = farm_type.into();
-    ix_data.append(
-        &mut AnchorSerialize::try_to_vec(&farm_type).unwrap(),
-    );
+    ix_data.append(&mut AnchorSerialize::try_to_vec(&farm_type).unwrap());
     Instruction {
         program_id: crate::ID,
         accounts: vec![
@@ -94,7 +96,7 @@ pub fn new_withdraw_deposit_tracking_ix(
 ) -> Instruction {
     let mut ix_data = WITHDRAW_DEPOSIT_TRACKING_SIGHASH.to_vec();
     let farm_type: [u64; 2] = farm_type.into();
-    ix_data.append(&mut AnchorSerialize::try_to_vec(&amount).unwrap()); 
+    ix_data.append(&mut AnchorSerialize::try_to_vec(&amount).unwrap());
     ix_data.append(&mut AnchorSerialize::try_to_vec(&farm_type).unwrap());
     Instruction {
         program_id: crate::ID,
@@ -116,10 +118,10 @@ pub fn new_withdraw_deposit_tracking_ix(
 /// returns a new instruction to withdraw funds from the multi deposit optimizer vault.
 /// the `standalone_vault_accounts` argument are ProgramType specific accounts, which are
 /// expceted to be in the following order depending on the ProgramType.
-/// 
+///
 /// You may request a withdrawal from any of the standalone vaults which have a deposited
 /// balance greater than 0. It's up to the caller to decide which of the active standalone vaults to withdraw from.
-/// 
+///
 /// ------------------------------
 /// SOURCE_PROGRAM ACCOUNTS ORDER
 /// ------------------------------
@@ -198,23 +200,23 @@ pub fn new_withdraw_multi_deposit_optimizer_vault_ix(
     let mut ix_data = WITHDRAW_MULTI_DEPOSIT_OPTIMIZER_VAULT_SIGHASH.to_vec();
     ix_data.append(&mut AnchorSerialize::try_to_vec(&amount).unwrap());
     let mut accounts = vec![
-            AccountMeta::new_readonly(authority, true),
-            AccountMeta::new(multi_vault, false),
-            AccountMeta::new_readonly(multi_vault_pda, false),
-            AccountMeta::new(withdraw_vault, false),
-            AccountMeta::new_readonly(withdraw_vault_pda, false),
-            AccountMeta::new_readonly(platform_information, false),
-            AccountMeta::new_readonly(platform_config_data, false),
-            AccountMeta::new_readonly(lending_program, false),
-            AccountMeta::new(multi_burning_shares_token_account, false),
-            AccountMeta::new(withdraw_burning_shares_token_account, false),
-            AccountMeta::new(receiving_underyling_token_account, false),
-            AccountMeta::new(multi_underlying_withdraw_queue, false),
-            AccountMeta::new(multi_shares_mint, false),
-            AccountMeta::new(withdraw_shares_mint, false),
-            AccountMeta::new_readonly(sysvar::clock::id(), false),
-            AccountMeta::new_readonly(spl_token::id(), false),
-            AccountMeta::new_readonly(withdraw_vault_underlying_deposit_queue, false),
+        AccountMeta::new_readonly(authority, true),
+        AccountMeta::new(multi_vault, false),
+        AccountMeta::new_readonly(multi_vault_pda, false),
+        AccountMeta::new(withdraw_vault, false),
+        AccountMeta::new_readonly(withdraw_vault_pda, false),
+        AccountMeta::new_readonly(platform_information, false),
+        AccountMeta::new_readonly(platform_config_data, false),
+        AccountMeta::new_readonly(lending_program, false),
+        AccountMeta::new(multi_burning_shares_token_account, false),
+        AccountMeta::new(withdraw_burning_shares_token_account, false),
+        AccountMeta::new(receiving_underyling_token_account, false),
+        AccountMeta::new(multi_underlying_withdraw_queue, false),
+        AccountMeta::new(multi_shares_mint, false),
+        AccountMeta::new(withdraw_shares_mint, false),
+        AccountMeta::new_readonly(sysvar::clock::id(), false),
+        AccountMeta::new_readonly(spl_token::id(), false),
+        AccountMeta::new_readonly(withdraw_vault_underlying_deposit_queue, false),
     ];
     accounts.extend_from_slice(&standalone_vault_accounts[..]);
     Instruction {
@@ -266,7 +268,7 @@ mod test {
             println!(
                 "pub const ISSUE_SHARES_SIGHASH: [u8; 8] = {:?};",
                 &digest.as_ref()[0..8]
-            );            
+            );
         }
     }
 }

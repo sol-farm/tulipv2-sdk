@@ -27,8 +27,8 @@
 use super::common::*;
 use super::rate::Rate;
 
-use super::uint::U192; 
 use super::error::MathError;
+use super::uint::U192;
 
 use anchor_lang::solana_program::program_error::ProgramError;
 use std::{convert::TryFrom, fmt};

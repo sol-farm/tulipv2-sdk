@@ -1,19 +1,17 @@
-use tulipv2_sdk_common::msg_panic;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Transfer};
+#[cfg(not(target_arch = "bpf"))]
+use tulip_derivative::*;
+use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_common::{
     traits::vault::{TokenizedShares, TokenizedSharesHolder},
     DEFAULT_KEY,
 };
-#[cfg(not(target_arch = "bpf"))]
-use tulip_derivative::*;
 
 pub const DEPOSIT_TRACKING_ACCOUNT_SIZE: usize = 440;
 pub const EPHEMERAL_TRACKING_ACCOUNT_SIZE: usize = 440;
 #[cfg(not(target_arch = "bpf"))]
 use type_layout::TypeLayout;
-
-
 
 #[account(zero_copy)]
 #[cfg_attr(not(target_arch = "bpf"), derive(Derivative))]

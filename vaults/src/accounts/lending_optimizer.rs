@@ -1,16 +1,12 @@
 //! lending optimizer vault which focuses on obtaining
 //! the maximum interest rate possible for any supported asset
 use super::{vault_base::VaultBaseV1, InitVaultArgsV1};
-use tulipv2_sdk_farms::Farm;
-use tulipv2_sdk_common::msg_panic;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::program_pack::Pack;
 use tulip_arrform::{arrform, ArrForm};
-use tulipv2_sdk_common::{
-    traits::vault::TokenizedShares,
-    DEFAULT_KEY,
-};
-
+use tulipv2_sdk_common::msg_panic;
+use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
+use tulipv2_sdk_farms::Farm;
 
 use anchor_lang::prelude::*;
 
@@ -182,8 +178,6 @@ impl super::Base for LendingOptimizerV1 {
     }
 }
 
-
-
 /// returns the underlying destination address
 /// for a given lending platform
 pub fn fetch_underlying_destination(
@@ -210,7 +204,6 @@ pub fn fetch_underlying_destination(
         _ => msg_panic!("unsupported program type"),
     }
 }
-
 
 impl Default for ProgramType {
     fn default() -> Self {
