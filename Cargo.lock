@@ -3400,10 +3400,11 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-common"
-version = "0.9.0"
+version = "0.9.1"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "arrayref",
  "num-derive",
  "num-traits",
  "spl-token",
@@ -3424,7 +3425,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.0"
+version = "0.9.1"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
