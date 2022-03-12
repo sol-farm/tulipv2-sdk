@@ -1,3 +1,4 @@
+#![allow(clippy::too_many_arguments)]
 use anchor_lang::{
     prelude::*,
     solana_program::{instruction::Instruction, system_program, sysvar},

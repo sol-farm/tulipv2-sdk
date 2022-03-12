@@ -24,7 +24,7 @@ type-layout = "0.2.0"
 tulip-arrform = "0.1.1"
 tulip-derivative = "2.2.1"
 itertools = "0.10.3"
-tulipv2-sdk-farms = {path = "../farms", version = "0.9.1"}
+tulipv2-sdk-farms = {path = "../farms", version = "0.9.2"}
 [dev-dependencies]
 proptest = "1.0.0"
 solana-client = "1.9.1"
