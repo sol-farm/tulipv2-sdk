@@ -1,7 +1,7 @@
-use solana_sdk::account::Account;
+use crate::math::{common::TryDiv, decimal::Decimal};
 use anchor_lang::prelude::ProgramError;
 use bytemuck::{cast_slice, from_bytes, try_cast_slice, Pod, PodCastError, Zeroable};
-use crate::math::{decimal::Decimal, common::TryDiv};
+use solana_sdk::account::Account;
 use std::mem::size_of;
 
 /// after this many slots consider a price update as being stale and thus invalid
@@ -176,7 +176,7 @@ pub fn get_pyth_price(pyth_price_info: &Account) -> Result<Decimal, ProgramError
     let pyth_price =
         load::<Price>(&pyth_price_info.data).map_err(|_| ProgramError::InvalidAccountData)?;
     if pyth_price.ptype as u32 != PriceType::Price as u32 {
-        return Err(ProgramError::Custom(u32::MAX-1));
+        return Err(ProgramError::Custom(u32::MAX - 1));
     }
 
     let price: u64 = match pyth_price.agg.price.checked_abs() {
@@ -184,7 +184,7 @@ pub fn get_pyth_price(pyth_price_info: &Account) -> Result<Decimal, ProgramError
             Ok(val) => val,
             Err(_) => return Err(ProgramError::InvalidArgument),
         },
-        None => return Err(ProgramError::Custom(u32::MAX-2)),
+        None => return Err(ProgramError::Custom(u32::MAX - 2)),
     };
 
     // @TODO: handle the case that the exponent is positive?
@@ -193,12 +193,12 @@ pub fn get_pyth_price(pyth_price_info: &Account) -> Result<Decimal, ProgramError
             Ok(val) => val,
             Err(_) => return Err(ProgramError::InvalidArgument),
         },
-        None => return Err(ProgramError::Custom(u32::MAX-2)),
+        None => return Err(ProgramError::Custom(u32::MAX - 2)),
     };
 
     let pyth_decimals = match 10u64.checked_pow(pyth_exponent) {
         Some(val) => val,
-        None => return Err(ProgramError::Custom(u32::MAX-2)),
+        None => return Err(ProgramError::Custom(u32::MAX - 2)),
     };
     let market_price = Decimal::from(price).try_div(pyth_decimals)?;
     Ok(market_price)
@@ -206,11 +206,10 @@ pub fn get_pyth_price(pyth_price_info: &Account) -> Result<Decimal, ProgramError
 
 #[cfg(test)]
 mod test {
-    use std::borrow::Borrow;
 
     use super::*;
     use anchor_client::solana_client::rpc_client::RpcClient;
-    use anchor_lang::{solana_program, solana_program::program_error::ProgramError};
+    use anchor_lang::solana_program;
     use static_pubkey::static_pubkey;
     #[test]
     fn test_get_pyth_price_account() {
