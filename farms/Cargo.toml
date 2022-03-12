@@ -1,12 +1,13 @@
 [package]
 name = "tulipv2-sdk-farms"
-version = "0.9.3"
+version = "0.9.4"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "farm identifiers and farm names used by the v2 sdk"
 keywords = ["solana", "anchor", "tulip-protocol"]
 license = "MIT/Apache-2.0"
 documentation = "https://docs.rs/tulipv2-sdk-farms"
+readme = "../README.md"
 
 [dependencies]
 anchor-lang = "0.22.0"

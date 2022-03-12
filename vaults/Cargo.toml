@@ -1,12 +1,13 @@
 [package]
 name = "tulipv2-sdk-vaults"
-version = "0.9.3"
+version = "0.9.4"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "vault account types, and vault instructions used by the v2 sdk"
 keywords = ["solana", "anchor", "tulip-protocol"]
 license = "MIT/Apache-2.0"
 documentation = "https://docs.rs/tulipv2-sdk-vaults"
+readme = "../README.md"
 
 [features]
 default = ["production"]
@@ -18,14 +19,14 @@ localnet = []
 anchor-lang = "0.22.0"
 anchor-spl = "0.22.0"
 spl-token = "3.2.0"
-tulipv2-sdk-common = {path = "../common", version = "0.9.3"}
+tulipv2-sdk-common = {path = "../common", version = "0.9.4"}
 spl-associated-token-account = "1.0.3"
 static-pubkey = "1.0.2"
 type-layout = "0.2.0"
 tulip-arrform = "0.1.1"
 tulip-derivative = "2.2.1"
 itertools = "0.10.3"
-tulipv2-sdk-farms = {path = "../farms", version = "0.9.3"}
+tulipv2-sdk-farms = {path = "../farms", version = "0.9.4"}
 [dev-dependencies]
 proptest = "1.0.0"
 solana-client = "1.9.1"
