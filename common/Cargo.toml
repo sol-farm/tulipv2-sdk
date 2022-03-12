@@ -1,6 +1,6 @@
 [package]
 name = "tulipv2-sdk-common"
-version = "0.9.0"
+version = "0.9.1"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "common types, traits, and helper functions used by the v2 sdk"
@@ -18,3 +18,4 @@ num-traits = "0.2"
 thiserror = "1.0"
 static-pubkey = "1.0.2"
 tulipv2-sdk-farms = {path = "../farms", version = "0.9.0"}
+arrayref = "0.3.6"

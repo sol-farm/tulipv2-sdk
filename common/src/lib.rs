@@ -1,7 +1,14 @@
+#![deny(unused_must_use)]
+#![deny(clippy::all)]
+#![allow(clippy::bool_assert_comparison)]
+#![allow(non_camel_case_types)]
+#![allow(clippy::too_many_arguments)]
+
 pub mod vaults;
 pub mod traits;
 pub mod math;
 pub mod config;
+pub mod lending;
 
 use anchor_lang::solana_program::pubkey::Pubkey;
 
