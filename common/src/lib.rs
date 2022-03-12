@@ -51,8 +51,8 @@ macro_rules! sum {
 
 /// msg_trace! is a wrapper around the `msg!` macro, that faciliates logging trace
 /// level logs, which include the file and line number from where the message was emitted.
-/// 
-/// if the total msg size is less than or equal to 512 bytes, then `arrform!` is used for 
+///
+/// if the total msg size is less than or equal to 512 bytes, then `arrform!` is used for
 /// the optimize (heap-less) message formatting. messages larger than 512 bytes use the traditional `format!`.
 #[macro_export]
 macro_rules! msg_trace {

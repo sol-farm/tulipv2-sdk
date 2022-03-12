@@ -1,6 +1,5 @@
 //! provides helper functions for parsing the Tulip V2 vault tag format
 
-
 /// parses a string representation of a vault tag
 /// into a 32 byte array . if the length of the string
 /// is less than 32 bytes, the remaining space is filled
