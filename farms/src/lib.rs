@@ -1,17 +1,17 @@
 //! Provides a `Farm` type used to describe different platforms (ie Raydium), and
 //! and farms within those platforms (RAY-USDC). The underlying representation of the
-//! `Farm` type consists of a 2 element u64 array. The first element of the array identifiers the platform, 
+//! `Farm` type consists of a 2 element u64 array. The first element of the array identifiers the platform,
 //! while the second element of the array identifies the farm type. In addition to identifying vaults
 //! the `Farm` type serves a secondary purpose, which is to ensure vault address generation is deterministic.
-//! 
+//!
 //! In certain circumstances, the same `Farm` type may be used for multiple vaults, so to prevent
-//! deterministic address generation of Solana PDA's from causing collisions, a the underlying 
+//! deterministic address generation of Solana PDA's from causing collisions, a the underlying
 //! representation of the `Farm` type is combined with a 32 byte `tag`, defaulting to [0_u8; 32]
-//! 
+//!
 //! For the rest of the comments/docs the first element of the underlying representation will be called
 //! the `Farm Identifier` and the second element will be called the `Farm Name`. Farm names are defined
 //! within modules in appropriately named files (lending.rs, orca.rs, etc..)
-//! 
+//!
 //! Within the files for the farm names there may be enum variants with names such as
 //! `PLACEHOLDER_XYZ`. These are intended to allow creation of new vault types without
 //! needing to upgrade the program to enable a new set of farm names to be valid.
@@ -28,15 +28,9 @@ pub mod quarry;
 pub mod raydium;
 pub mod unknown;
 
-use tulip_arrform::{arrform, ArrForm};
+use crate::{lending::Lending, orca::Orca, quarry::Quarry, raydium::Raydium, unknown::Unknown};
 use anchor_lang::prelude::*;
-use crate::{
-    raydium::Raydium,
-    lending::Lending,
-    orca::Orca,
-    quarry::Quarry,
-    unknown::Unknown,
-};
+use tulip_arrform::{arrform, ArrForm};
 
 #[derive(Clone, Copy, PartialEq, Eq, AnchorSerialize, AnchorDeserialize, Debug)]
 pub enum Farm {
@@ -75,10 +69,10 @@ impl Farm {
     }
     /// strips the farm identifier portion of the name
     /// returning the farm name, which corresponds to the market name
-    /// of the underlying asset. 
-    /// 
+    /// of the underlying asset.
+    ///
     /// This is irrelevant for lending farm identifiers as the farm name is likely to be a single asset
-    /// and is also irrelevant for quarry farm identifier as the farm name indicates the 
+    /// and is also irrelevant for quarry farm identifier as the farm name indicates the
     /// variant of quarry implementations, wrappers, etc..
     pub fn market_name(&self) -> Option<String> {
         if let Farm::Raydium { name: _name } = self {
@@ -198,10 +192,7 @@ impl From<Farm> for [u64; 2] {
 }
 
 /// used to strip the farm identifier portion of a farm type, returning only the farm name
-pub fn farm_identifier_stripper(
-    farm_type: &str,
-    parts: &Vec<&str>,
-) -> String {
+pub fn farm_identifier_stripper(farm_type: &str, parts: &[&str]) -> String {
     let mut farm_name = String::with_capacity(farm_type.len() - parts[0].len());
     for (idx, part) in parts.iter().enumerate() {
         if idx == 0 {
@@ -252,7 +243,6 @@ fn farm_from_str(val: &str) -> Farm {
         },
     }
 }
-
 
 #[cfg(test)]
 mod test {

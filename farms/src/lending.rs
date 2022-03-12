@@ -135,7 +135,7 @@ impl From<u64> for Lending {
             65559 => Lending::PLACEHOLDER_W,
             65560 => Lending::PLACEHOLDER_X,
             65561 => Lending::PLACEHOLDER_Y,
-            65562 => Lending::PLACEHOLDER_Z, 
+            65562 => Lending::PLACEHOLDER_Z,
             _ => Lending::UNKNOWN,
         }
     }

@@ -1,18 +1,11 @@
 //! lending optimizer vault which focuses on obtaining
 //! the maximum interest rate possible for any supported asset
 use super::{vault_base::VaultBaseV1, InitVaultArgsV1};
-use tulipv2_sdk_farms::Farm;
+use anchor_lang::prelude::*;
+
 use tulipv2_sdk_common::msg_panic;
-use anchor_lang::prelude::*;
-use anchor_lang::solana_program::program_pack::Pack;
-use tulip_arrform::{arrform, ArrForm};
-use tulipv2_sdk_common::{
-    traits::vault::TokenizedShares,
-    DEFAULT_KEY,
-};
-
-
-use anchor_lang::prelude::*;
+use tulipv2_sdk_common::traits::vault::TokenizedShares;
+use tulipv2_sdk_farms::Farm;
 
 #[cfg(not(target_arch = "bpf"))]
 use tulip_derivative::*;
@@ -171,7 +164,7 @@ impl super::Base for LendingOptimizerV1 {
     fn shares(&self) -> &dyn TokenizedShares {
         &self.base
     }
-    fn init(&mut self, args: &InitVaultArgsV1) {
+    fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
     fn farm(&self) -> Farm {
@@ -181,8 +174,6 @@ impl super::Base for LendingOptimizerV1 {
         self.base.sync_shares(mint);
     }
 }
-
-
 
 /// returns the underlying destination address
 /// for a given lending platform
@@ -210,7 +201,6 @@ pub fn fetch_underlying_destination(
         _ => msg_panic!("unsupported program type"),
     }
 }
-
 
 impl Default for ProgramType {
     fn default() -> Self {
@@ -258,7 +248,7 @@ impl std::str::FromStr for ProgramType {
             "SPLUNMODIFIED" => Ok(ProgramType::SplUnmodified),
             "SPLMODIFIEDSOLEND" => Ok(ProgramType::SplModifiedSolend),
             "MANGOV3" => Ok(ProgramType::MangoV3),
-            _ => Err(ProgramError::InvalidArgument.into()),
+            _ => Err(ProgramError::InvalidArgument),
         }
     }
 }

@@ -1,9 +1,12 @@
 use super::error::LendingError;
 use super::last_update::LastUpdate;
-use super::*;
 use super::obligation::{Obligation, ObligationCollateral, ObligationLiquidity};
-use crate::math::{decimal::Decimal, rate::Rate, common::{TryAdd, TryDiv, TryMul, TrySub}};
-use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
+use super::*;
+use crate::math::{
+    common::{TryAdd, TryDiv, TryMul, TrySub},
+    decimal::Decimal,
+    rate::Rate,
+};
 use anchor_lang::solana_program::{
     clock::Slot,
     entrypoint::ProgramResult,
@@ -12,6 +15,7 @@ use anchor_lang::solana_program::{
     program_pack::{IsInitialized, Pack, Sealed},
     pubkey::{Pubkey, PUBKEY_BYTES},
 };
+use arrayref::{array_mut_ref, array_ref, array_refs, mut_array_refs};
 use std::{
     cmp::Ordering,
     convert::{TryFrom, TryInto},
@@ -111,11 +115,14 @@ impl Reserve {
             );
 
             Ok(normalized_rate.try_mul(rate_range)?.try_add(min_rate)?)
-        } else if utilization_rate > optimal_utilization_rate && utilization_rate <= degen_utilization_rate {
+        } else if utilization_rate > optimal_utilization_rate
+            && utilization_rate <= degen_utilization_rate
+        {
             let normalized_rate = utilization_rate
                 .try_sub(optimal_utilization_rate)?
                 .try_div(Rate::from_percent(
-                    self.config.degen_utilization_rate
+                    self.config
+                        .degen_utilization_rate
                         .checked_sub(self.config.optimal_utilization_rate)
                         .ok_or(LendingError::MathOverflow)?,
                 ))?;
@@ -129,22 +136,23 @@ impl Reserve {
 
             Ok(normalized_rate.try_mul(rate_range)?.try_add(min_rate)?)
         } else {
-            let normalized_rate = utilization_rate
+            let normalized_rate =
+                utilization_rate
                     .try_sub(degen_utilization_rate)?
                     .try_div(Rate::from_percent(
                         100u8
                             .checked_sub(self.config.degen_utilization_rate)
                             .ok_or(LendingError::MathOverflow)?,
                     ))?;
-                let min_rate = Rate::from_percent(self.config.degen_borrow_rate);
-                let rate_range = Rate::from_percent(
-                    self.config
-                        .max_borrow_rate
-                        .checked_sub(self.config.degen_borrow_rate)
-                        .ok_or(LendingError::MathOverflow)?,
-                );
+            let min_rate = Rate::from_percent(self.config.degen_borrow_rate);
+            let rate_range = Rate::from_percent(
+                self.config
+                    .max_borrow_rate
+                    .checked_sub(self.config.degen_borrow_rate)
+                    .ok_or(LendingError::MathOverflow)?,
+            );
 
-                Ok(normalized_rate.try_mul(rate_range)?.try_add(min_rate)?)
+            Ok(normalized_rate.try_mul(rate_range)?.try_add(min_rate)?)
         }
     }
 
@@ -396,7 +404,7 @@ pub struct CalculateLiquidationResult {
     /// Amount that will be repaid as u64
     pub repay_amount: u64,
     /// Amount of collateral to withdraw in exchange for repay amount
-    pub withdraw_amount: u64, 
+    pub withdraw_amount: u64,
 }
 
 /// Reserve liquidity
@@ -479,23 +487,24 @@ impl ReserveLiquidity {
     pub fn withdraw_platform_fees(&mut self) -> u64 {
         // return platform_fees;
         match Decimal::from(self.available_amount).cmp(&self.platform_amount_wads) {
-            Ordering::Less => {
-                return 0;
-            }
+            Ordering::Less => 0,
             Ordering::Equal => {
                 let platform_fees = self.available_amount;
-                self.platform_amount_wads = self.platform_amount_wads.try_sub(Decimal::from(platform_fees)).unwrap();
+                self.platform_amount_wads = self
+                    .platform_amount_wads
+                    .try_sub(Decimal::from(platform_fees))
+                    .unwrap();
                 self.available_amount = 0;
-                return platform_fees;
+                platform_fees
             }
             Ordering::Greater => {
                 let platform_fees = self.platform_amount_wads.try_floor_u64().unwrap();
-                self.platform_amount_wads = self.platform_amount_wads.try_sub(Decimal::from(platform_fees)).unwrap();
-                self.available_amount = self
-                    .available_amount
-                    .checked_sub(platform_fees)
+                self.platform_amount_wads = self
+                    .platform_amount_wads
+                    .try_sub(Decimal::from(platform_fees))
                     .unwrap();
-                return platform_fees
+                self.available_amount = self.available_amount.checked_sub(platform_fees).unwrap();
+                platform_fees
             }
         }
     }
@@ -558,13 +567,15 @@ impl ReserveLiquidity {
             .cumulative_borrow_rate_wads
             .try_mul(compounded_interest_rate)?;
 
-        let before = self.borrowed_amount_wads.clone();
+        let before = self.borrowed_amount_wads;
         self.borrowed_amount_wads = self
             .borrowed_amount_wads
             .try_mul(compounded_interest_rate)?;
 
-        self.platform_amount_wads = self.platform_amount_wads.try_add((self.borrowed_amount_wads.try_sub(before)?)
-            .try_mul(Decimal::from_percent(self.platform_fees))?)?;
+        self.platform_amount_wads = self.platform_amount_wads.try_add(
+            (self.borrowed_amount_wads.try_sub(before)?)
+                .try_mul(Decimal::from_percent(self.platform_fees))?,
+        )?;
         Ok(())
     }
 }
@@ -1041,7 +1052,7 @@ impl Pack for Reserve {
                 borrowed_amount_wads: unpack_decimal(liquidity_borrowed_amount_wads),
                 cumulative_borrow_rate_wads: unpack_decimal(liquidity_cumulative_borrow_rate_wads),
                 market_price: unpack_decimal(liquidity_market_price),
-                platform_amount_wads:  unpack_decimal(liquidity_platform_amount_wads),
+                platform_amount_wads: unpack_decimal(liquidity_platform_amount_wads),
                 platform_fees: u8::from_le_bytes(*liquidity_platofrm_fees),
             },
             collateral: ReserveCollateral {

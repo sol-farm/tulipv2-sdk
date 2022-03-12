@@ -3,7 +3,6 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{decode_error::DecodeError, program_error::ProgramError};
 
-
 /// Errors that may be returned by the TokenLending program.
 #[error_code]
 pub enum LendingError {

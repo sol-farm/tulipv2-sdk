@@ -4,16 +4,15 @@ use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 
 use anchor_lang::prelude::*;
-use tulip_arrform::{arrform, ArrForm};
-use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
+
 #[cfg(not(target_arch = "bpf"))]
 use tulip_derivative::*;
+use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 
 use itertools::Itertools;
 use std::iter::FromIterator;
 #[cfg(not(target_arch = "bpf"))]
 use type_layout::TypeLayout;
-
 
 pub const MULTI_DEPOSIT_OPTIMIZER_ACCOUNT_SIZE: usize = 2072;
 pub const MULTI_REBALANCE_TRANSITION_ACCOUNT_SIZE: usize = 408;
@@ -136,7 +135,7 @@ impl super::Base for MultiDepositOptimizerV1 {
     /// unlike the majority of other vault implementations
     /// the lending optimizer initializes deposits, withdraws
     /// and compoudning to disabled
-    fn init(&mut self, args: &InitVaultArgsV1) {
+    fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
     fn farm(&self) -> Farm {
@@ -393,4 +392,3 @@ impl<'a> FromIterator<&'a StandaloneVaultCacheV1> for ActiveStandaloneVaults {
         c
     }
 }
-

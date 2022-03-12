@@ -30,9 +30,9 @@
 #![allow(clippy::reversed_empty_ranges)]
 #![allow(clippy::manual_range_contains)]
 
-use super::decimal::Decimal; 
-use super::error::*;
 use super::common::*;
+use super::decimal::Decimal;
+use super::error::*;
 
 use anchor_lang::solana_program::program_error::ProgramError;
 use std::{convert::TryFrom, fmt};
@@ -41,7 +41,7 @@ use uint::construct_uint;
 // U128 with 128 bits consisting of 2 x 64-bit words
 construct_uint! {
     pub struct U128(2);
-} 
+}
 
 /// Small decimal values, precise to 18 digits
 #[derive(Clone, Copy, Debug, Default, PartialEq, PartialOrd, Eq, Ord)]

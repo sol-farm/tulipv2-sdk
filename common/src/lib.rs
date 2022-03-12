@@ -4,11 +4,11 @@
 #![allow(non_camel_case_types)]
 #![allow(clippy::too_many_arguments)]
 
-pub mod vaults;
-pub mod traits;
-pub mod math;
 pub mod config;
 pub mod lending;
+pub mod math;
+pub mod traits;
+pub mod vaults;
 
 use anchor_lang::solana_program::pubkey::Pubkey;
 
@@ -31,7 +31,6 @@ macro_rules! msg_panic {
         panic!("RUNTIME ERROR: {}", format_args!($($args)*));
     }};
 }
-
 
 #[macro_export]
 macro_rules! sum {

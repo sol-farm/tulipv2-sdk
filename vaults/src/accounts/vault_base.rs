@@ -1,14 +1,14 @@
 //! a base vault component providing tokenized shares, as well as pausable deposits / withdraws
-use super::InitFeeArgsV1;
 
-use tulipv2_sdk_farms::{unknown::Unknown, Farm};
-use tulipv2_sdk_common::msg_panic;
-use tulipv2_sdk_common::math::decimal::Decimal;
-use tulipv2_sdk_common::math::uint::U192;
 use anchor_lang::prelude::*;
 use anchor_spl::token::Mint;
-use anchor_spl::token::{self, Burn, MintTo, Transfer};
+
 use tulip_arrform::{arrform, ArrForm};
+#[cfg(not(target_arch = "bpf"))]
+use tulip_derivative::*;
+use tulipv2_sdk_common::math::decimal::Decimal;
+use tulipv2_sdk_common::math::uint::U192;
+use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_common::{
     math,
     traits::{
@@ -16,12 +16,9 @@ use tulipv2_sdk_common::{
         vault::TokenizedShares,
     },
     vaults::tag_to_str,
-    DEFAULT_KEY,
 };
-#[cfg(not(target_arch = "bpf"))]
-use tulip_derivative::*;
+use tulipv2_sdk_farms::Farm;
 
-use std::convert::TryInto;
 /// size of the VaultBase struct in bytes
 pub const VAULT_BASE_SIZE: usize = 560;
 #[cfg(not(feature = "staging"))]
@@ -41,11 +38,7 @@ pub const ONE_HUNDRED: Decimal = Decimal(U192([7_766_279_631_452_241_920, 5, 0])
 #[cfg(not(target_arch = "bpf"))]
 use type_layout::TypeLayout;
 
-
-
-#[derive(
-    Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq, Default,
-)]
+#[derive(Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq, Default)]
 #[cfg_attr(not(target_arch = "bpf"), derive(Derivative))]
 #[cfg_attr(not(target_arch = "bpf"), derive(TypeLayout))]
 #[cfg_attr(not(target_arch = "bpf"), derivative(Debug))]
@@ -81,10 +74,7 @@ pub struct FeesV1 {
     pub buffer: [u64; 6],
 }
 
-
-#[derive(
-    Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq, Default,
-)]
+#[derive(Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq, Default)]
 #[cfg_attr(not(target_arch = "bpf"), derive(Derivative))]
 #[cfg_attr(not(target_arch = "bpf"), derive(TypeLayout))]
 #[cfg_attr(not(target_arch = "bpf"), derivative(Debug))]
@@ -195,20 +185,19 @@ impl VaultBaseV1 {
             .as_str()
             .to_owned()
     }
-
 }
 
 impl TokenizedShares for VaultBaseV1 {
     fn is_locked(&self, last_deposit_time: i64) -> bool {
         let unix_timestamp = Clock::get().unwrap().unix_timestamp;
-        
+
         let min_time = last_deposit_time
             .checked_add(REQUIRED_LOCK_DURATION_SECONDS)
             .unwrap();
         // locked if min time is greater or equal to current time
         min_time >= unix_timestamp
     }
-    fn compound(&mut self, balance_to_add: u64) -> bool {
+    fn compound(&mut self, _balance_to_add: u64) -> bool {
         msg_panic!("noop");
     }
     fn supports_compound(&self) -> bool {
@@ -228,10 +217,10 @@ impl TokenizedShares for VaultBaseV1 {
             self.total_deposited_balance,
         )
     }
-    fn record_deposit(&mut self, amount: u64) -> u64 {
+    fn record_deposit(&mut self, _amount: u64) -> u64 {
         msg_panic!("noop");
     }
-    fn record_withdraw(&mut self, shares_to_burn: u64, balance_to_remove: u64) {
+    fn record_withdraw(&mut self, _shares_to_burn: u64, _balance_to_remove: u64) {
         msg_panic!("noop");
     }
     fn total_deposited_tokens(&self) -> u64 {
@@ -249,14 +238,14 @@ impl TokenizedShares for VaultBaseV1 {
     #[cfg(not(tarpaulin_include))]
     fn issue_shares<'a, 'b, 'c, 'info>(
         &mut self,
-        mint: &AccountInfo<'info>,
+        _mint: &AccountInfo<'info>,
         // token account which will receive the shares
-        receiver: &AccountInfo<'info>,
-        pda: &AccountInfo<'info>,
-        token_program: &AccountInfo<'info>,
-        signer_seeds: &[&[&[u8]]],
+        _receiver: &AccountInfo<'info>,
+        _pda: &AccountInfo<'info>,
+        _token_program: &AccountInfo<'info>,
+        _signer_seeds: &[&[&[u8]]],
         // number of shares to mint
-        amount: u64,
+        _amount: u64,
     ) -> Result<()> {
         msg_panic!("noop");
     }
@@ -264,17 +253,17 @@ impl TokenizedShares for VaultBaseV1 {
     fn burn_shares<'a, 'b, 'c, 'info>(
         &mut self,
         // the shares token account from which we are burning funds
-        shares_account: &AccountInfo<'info>,
+        _shares_account: &AccountInfo<'info>,
         // the mint account of the shares we are burning
-        shares_mint: &mut Box<Account<'info, Mint>>,
-        authority: &AccountInfo<'info>,
+        _shares_mint: &mut Box<Account<'info, Mint>>,
+        _authority: &AccountInfo<'info>,
         // the underlying token account for which we are transferring
         // the redeemed underlying assets to
-        token_program: &AccountInfo<'info>,
-        signer_seeds: &[&[&[u8]]],
+        _token_program: &AccountInfo<'info>,
+        _signer_seeds: &[&[&[u8]]],
         // amount of shares we are burning
-        shares_to_burn: u64,
-        additional_signers: Option<Vec<AccountInfo<'info>>>,
+        _shares_to_burn: u64,
+        _additional_signers: Option<Vec<AccountInfo<'info>>>,
     ) -> Result<()> {
         msg_panic!("noop");
     }
@@ -282,14 +271,14 @@ impl TokenizedShares for VaultBaseV1 {
     fn transfer_underlying<'a, 'b, 'c, 'info>(
         &mut self,
         // account from which the underlying tokens will be sent from
-        underlying_account: &AccountInfo<'info>,
+        _underlying_account: &AccountInfo<'info>,
         // token account which will receive the underlying asset
-        receiver: &AccountInfo<'info>,
-        pda: &AccountInfo<'info>,
-        token_program: &AccountInfo<'info>,
-        signer_seeds: &[&[&[u8]]],
+        _receiver: &AccountInfo<'info>,
+        _pda: &AccountInfo<'info>,
+        _token_program: &AccountInfo<'info>,
+        _signer_seeds: &[&[&[u8]]],
         // number of shares to mint
-        amount: u64,
+        _amount: u64,
     ) -> Result<()> {
         msg_panic!("noop");
     }
