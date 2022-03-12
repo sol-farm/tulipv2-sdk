@@ -1,3 +1,5 @@
+//! farm types supported by orca
+
 use anchor_lang::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, AnchorSerialize, AnchorDeserialize)]

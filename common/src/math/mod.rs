@@ -1,3 +1,5 @@
+//! variety of math helper functions sourced spl lending program library
+
 pub mod common;
 pub mod decimal;
 pub mod error;

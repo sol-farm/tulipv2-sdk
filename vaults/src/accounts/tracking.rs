@@ -1,3 +1,5 @@
+//! tracking accounts used for tracking rewards over time, performing an initial deposit lock up, as well as
+//! providing additional ephemeral account types used during withdrawal processes.
 use anchor_lang::prelude::*;
 
 #[cfg(not(target_arch = "bpf"))]
