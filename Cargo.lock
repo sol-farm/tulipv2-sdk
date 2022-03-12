@@ -159,6 +159,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "anchor-client"
+version = "0.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0cf7abbc85e5dc4eddb2c665c894178c1f800850b305e96ce8e19b94a61b754e"
+dependencies = [
+ "anchor-lang",
+ "anyhow",
+ "regex",
+ "serde",
+ "solana-account-decoder",
+ "solana-client",
+ "solana-sdk",
+ "thiserror",
+ "url",
+]
+
+[[package]]
 name = "anchor-derive-accounts"
 version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3402,9 +3419,11 @@ dependencies = [
 name = "tulipv2-sdk-common"
 version = "0.9.2"
 dependencies = [
+ "anchor-client",
  "anchor-lang",
  "anchor-spl",
  "arrayref",
+ "bytemuck",
  "num-derive",
  "num-traits",
  "spl-token",
