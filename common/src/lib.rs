@@ -33,6 +33,7 @@ macro_rules! msg_panic {
     }};
 }
 
+/// sums size of the values provided
 #[macro_export]
 macro_rules! sum {
     // this delcares an exrpession i think :shrug:
@@ -47,12 +48,12 @@ macro_rules! sum {
         result
     }}
 }
+
 /// msg_trace! is a wrapper around the `msg!` macro, that faciliates logging trace
-/// level logs, which include the file and line number the message was emitted in
-/// this is potentially very unoptimized, and may not work with long filename paths
-/// or big messages.
-///
-/// state: heavy wip
+/// level logs, which include the file and line number from where the message was emitted.
+/// 
+/// if the total msg size is less than or equal to 512 bytes, then `arrform!` is used for 
+/// the optimize (heap-less) message formatting. messages larger than 512 bytes use the traditional `format!`.
 #[macro_export]
 macro_rules! msg_trace {
     ($($args:tt)+) => {

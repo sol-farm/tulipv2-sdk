@@ -1,3 +1,7 @@
+//! provides support for reading pyth price feeds from tulip's pyth price manager program
+//! this should in theory work with any pyth v2 price account out there, however it is only tested
+//! with the accounts that tulip publishes prices for via our own price feed program.
+
 use crate::math::{common::TryDiv, decimal::Decimal};
 use anchor_lang::prelude::ProgramError;
 use bytemuck::{cast_slice, from_bytes, try_cast_slice, Pod, PodCastError, Zeroable};
@@ -7,9 +11,6 @@ use std::mem::size_of;
 /// after this many slots consider a price update as being stale and thus invalid
 // 30 slots translates to a period of around 15s depending on slot times
 pub const STALE_AFTER_SLOTS_ELAPSED: u64 = 120;
-
-// todo(bonedaddy): upgraded the version constants without updating the price account dumps
-// that are included in the tests folder as that will take some time so tets might fail.
 
 pub const MAGIC: u32 = 0xa1b2c3d4;
 pub const VERSION_2: u32 = 2;

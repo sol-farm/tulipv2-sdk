@@ -1,6 +1,6 @@
 # tulipv2-sdk
 
-Rust sdk for interfacing with Tulip V2 vaults program.
+Rust sdk for on-chain (cpi) and off-chain (client-side) usage of Tulip V2 vaults, as well as sparse support for Tulip V1 lending programs.
 
 
 # Examples

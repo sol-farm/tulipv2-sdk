@@ -1,3 +1,5 @@
+//! tulip v1 lending program account types, and helper functions
+
 #![deny(unused_must_use)]
 #![deny(clippy::all)]
 #![allow(clippy::bool_assert_comparison)]
