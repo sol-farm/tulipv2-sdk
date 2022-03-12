@@ -3,7 +3,7 @@ use anchor_lang::prelude::*;
 #[cfg(not(target_arch = "bpf"))]
 use tulip_derivative::*;
 use tulipv2_sdk_common::msg_panic;
-use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
+use tulipv2_sdk_common::traits::vault::TokenizedShares;
 use tulipv2_sdk_farms::Farm;
 
 pub const ORCA_VAULT_ACCOUNT_SIZE: usize = 1376;
@@ -127,7 +127,7 @@ impl super::Base for OrcaVaultV1 {
     /// unlike the majority of other vault implementations
     /// the lending optimizer initializes deposits, withdraws
     /// and compoudning to disabled
-    fn init(&mut self, args: &InitVaultArgsV1) {
+    fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
     fn farm(&self) -> Farm {
@@ -148,7 +148,7 @@ impl super::Base for OrcaDoubleDipVaultV1 {
     fn shares(&self) -> &dyn TokenizedShares {
         &self.base
     }
-    fn init(&mut self, args: &InitVaultArgsV1) {
+    fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
     fn farm(&self) -> Farm {

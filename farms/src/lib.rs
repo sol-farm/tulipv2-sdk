@@ -192,7 +192,7 @@ impl From<Farm> for [u64; 2] {
 }
 
 /// used to strip the farm identifier portion of a farm type, returning only the farm name
-pub fn farm_identifier_stripper(farm_type: &str, parts: &Vec<&str>) -> String {
+pub fn farm_identifier_stripper(farm_type: &str, parts: &[&str]) -> String {
     let mut farm_name = String::with_capacity(farm_type.len() - parts[0].len());
     for (idx, part) in parts.iter().enumerate() {
         if idx == 0 {

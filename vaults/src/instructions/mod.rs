@@ -228,10 +228,9 @@ pub fn new_withdraw_multi_deposit_optimizer_vault_ix(
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use anchor_lang::solana_program::pubkey::Pubkey;
+
     use ring::digest::{Context, SHA256};
-    use std::str::FromStr;
+
     #[test]
     fn test_sighashes() {
         {

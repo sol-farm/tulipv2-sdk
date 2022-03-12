@@ -7,8 +7,8 @@ use anchor_lang::prelude::*;
 #[cfg(not(target_arch = "bpf"))]
 use tulip_derivative::*;
 use tulipv2_sdk_common::msg_panic;
-use tulipv2_sdk_common::traits::pausable::Pausable;
-use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
+
+use tulipv2_sdk_common::traits::vault::TokenizedShares;
 use tulipv2_sdk_farms::Farm;
 
 #[cfg(not(target_arch = "bpf"))]
@@ -159,7 +159,7 @@ impl super::Base for QuarryVaultV1 {
     fn shares(&self) -> &dyn TokenizedShares {
         &self.base
     }
-    fn init(&mut self, args: &InitVaultArgsV1) {
+    fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
     fn farm(&self) -> Farm {

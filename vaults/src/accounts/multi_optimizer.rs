@@ -4,7 +4,7 @@ use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 
 use anchor_lang::prelude::*;
-use tulip_arrform::{arrform, ArrForm};
+
 #[cfg(not(target_arch = "bpf"))]
 use tulip_derivative::*;
 use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
@@ -135,7 +135,7 @@ impl super::Base for MultiDepositOptimizerV1 {
     /// unlike the majority of other vault implementations
     /// the lending optimizer initializes deposits, withdraws
     /// and compoudning to disabled
-    fn init(&mut self, args: &InitVaultArgsV1) {
+    fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
     fn farm(&self) -> Farm {

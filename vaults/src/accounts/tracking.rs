@@ -1,12 +1,9 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Transfer};
+
 #[cfg(not(target_arch = "bpf"))]
 use tulip_derivative::*;
 use tulipv2_sdk_common::msg_panic;
-use tulipv2_sdk_common::{
-    traits::vault::{TokenizedShares, TokenizedSharesHolder},
-    DEFAULT_KEY,
-};
+use tulipv2_sdk_common::traits::vault::{TokenizedShares, TokenizedSharesHolder};
 
 pub const DEPOSIT_TRACKING_ACCOUNT_SIZE: usize = 440;
 pub const EPHEMERAL_TRACKING_ACCOUNT_SIZE: usize = 440;
@@ -108,13 +105,13 @@ impl TokenizedSharesHolder for DepositTrackingV1 {
             vault.total_deposited_tokens(),
         ))
     }
-    fn record_deposit(&mut self, amount: u64, shares: u64) {
+    fn record_deposit(&mut self, _amount: u64, _shares: u64) {
         msg_panic!("noop");
     }
     /// used to record the effect of withdrawing and burning the shares for their
     /// underlying assets. note you will need to calculate the shares to burn
     /// and the corresponding balance to remove
-    fn record_withdraw(&mut self, vault: &impl TokenizedShares, amount: u64) -> u64 {
+    fn record_withdraw(&mut self, _vault: &impl TokenizedShares, _amount: u64) -> u64 {
         msg_panic!("noop");
     }
     fn deposited_balance(&self) -> u64 {
@@ -132,12 +129,12 @@ impl TokenizedSharesHolder for DepositTrackingV1 {
     #[cfg(not(tarpaulin_include))]
     fn withdraw_shares<'a, 'b, 'c, 'info>(
         &mut self,
-        deposit_account: &AccountInfo<'info>,
-        hold_account: &AccountInfo<'info>,
-        pda_account: &AccountInfo<'info>,
-        receiving_shares_account: &AccountInfo<'info>,
-        token_program: &AccountInfo<'info>,
-        amount: u64,
+        _deposit_account: &AccountInfo<'info>,
+        _hold_account: &AccountInfo<'info>,
+        _pda_account: &AccountInfo<'info>,
+        _receiving_shares_account: &AccountInfo<'info>,
+        _token_program: &AccountInfo<'info>,
+        _amount: u64,
     ) -> Result<()> {
         msg_panic!("noop");
     }

@@ -7,11 +7,11 @@
 #![allow(clippy::extra_unused_lifetimes)]
 #![allow(clippy::field_reassign_with_default)]
 
-use self::vault_base::{NewVaultArgsV1, VaultBaseV1};
+use self::vault_base::VaultBaseV1;
 use anchor_lang::prelude::*;
-use anchor_lang::solana_program;
+
 use anchor_spl::token::Mint;
-use static_pubkey::static_pubkey;
+
 use tulipv2_sdk_common::traits::vault::TokenizedShares;
 use tulipv2_sdk_farms::Farm;
 

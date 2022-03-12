@@ -487,9 +487,7 @@ impl ReserveLiquidity {
     pub fn withdraw_platform_fees(&mut self) -> u64 {
         // return platform_fees;
         match Decimal::from(self.available_amount).cmp(&self.platform_amount_wads) {
-            Ordering::Less => {
-                return 0;
-            }
+            Ordering::Less => 0,
             Ordering::Equal => {
                 let platform_fees = self.available_amount;
                 self.platform_amount_wads = self
@@ -497,7 +495,7 @@ impl ReserveLiquidity {
                     .try_sub(Decimal::from(platform_fees))
                     .unwrap();
                 self.available_amount = 0;
-                return platform_fees;
+                platform_fees
             }
             Ordering::Greater => {
                 let platform_fees = self.platform_amount_wads.try_floor_u64().unwrap();
@@ -506,7 +504,7 @@ impl ReserveLiquidity {
                     .try_sub(Decimal::from(platform_fees))
                     .unwrap();
                 self.available_amount = self.available_amount.checked_sub(platform_fees).unwrap();
-                return platform_fees;
+                platform_fees
             }
         }
     }
@@ -569,7 +567,7 @@ impl ReserveLiquidity {
             .cumulative_borrow_rate_wads
             .try_mul(compounded_interest_rate)?;
 
-        let before = self.borrowed_amount_wads.clone();
+        let before = self.borrowed_amount_wads;
         self.borrowed_amount_wads = self
             .borrowed_amount_wads
             .try_mul(compounded_interest_rate)?;

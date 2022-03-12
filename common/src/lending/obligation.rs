@@ -169,13 +169,13 @@ impl Obligation {
     /// Calculate the maximum liquidity value that can be borrowed
     pub fn remaining_borrow_value(&self) -> Result<Decimal, ProgramError> {
         // self.allowed_borrow_value.try_sub(self.borrowed_value)
-        return Err(LendingError::MethodNotAllowed.into());
+        Err(LendingError::MethodNotAllowed.into())
     }
 
     /// Calculate the maximum liquidation amount for a given liquidity
     pub fn max_liquidation_amount(
         &self,
-        liquidity: &ObligationLiquidity,
+        _liquidity: &ObligationLiquidity,
     ) -> Result<Decimal, ProgramError> {
         // let max_liquidation_value = self
         //     .borrowed_value
@@ -183,13 +183,13 @@ impl Obligation {
         //     .min(liquidity.market_value);
         // let max_liquidation_pct = max_liquidation_value.try_div(liquidity.market_value)?;
         // liquidity.borrowed_amount_wads.try_mul(max_liquidation_pct)
-        return Err(LendingError::MethodNotAllowed.into());
+        Err(LendingError::MethodNotAllowed.into())
     }
 
     /// Find collateral by deposit reserve
     pub fn find_collateral_in_deposits(
         &self,
-        deposit_reserve: Pubkey,
+        _deposit_reserve: Pubkey,
     ) -> Result<(&ObligationCollateral, usize), ProgramError> {
         // if self.deposits.is_empty() {
         //     msg!("Obligation has no deposits");
@@ -199,7 +199,7 @@ impl Obligation {
         //     ._find_collateral_index_in_deposits(deposit_reserve)
         //     .ok_or(LendingError::InvalidObligationCollateral)?;
         // Ok((&self.deposits[collateral_index], collateral_index))
-        return Err(LendingError::MethodNotAllowed.into());
+        Err(LendingError::MethodNotAllowed.into())
     }
 
     /// Find or add collateral by deposit reserve
