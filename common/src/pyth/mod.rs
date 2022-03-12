@@ -1,7 +1,7 @@
-#![allow(missing_docs)]
-
+use solana_sdk::account::Account;
+use anchor_lang::prelude::ProgramError;
 use bytemuck::{cast_slice, from_bytes, try_cast_slice, Pod, PodCastError, Zeroable};
-
+use crate::math::{decimal::Decimal, common::TryDiv};
 use std::mem::size_of;
 
 /// after this many slots consider a price update as being stale and thus invalid
@@ -170,6 +170,40 @@ pub fn load<T: Pod>(data: &[u8]) -> Result<&T, PodCastError> {
     )?)))
 }
 
+/// returns the price contained in a price feed account, without
+/// validating price staleness
+pub fn get_pyth_price(pyth_price_info: &Account) -> Result<Decimal, ProgramError> {
+    let pyth_price =
+        load::<Price>(&pyth_price_info.data).map_err(|_| ProgramError::InvalidAccountData)?;
+    if pyth_price.ptype as u32 != PriceType::Price as u32 {
+        return Err(ProgramError::Custom(u32::MAX-1));
+    }
+
+    let price: u64 = match pyth_price.agg.price.checked_abs() {
+        Some(val) => match val.try_into() {
+            Ok(val) => val,
+            Err(_) => return Err(ProgramError::InvalidArgument),
+        },
+        None => return Err(ProgramError::Custom(u32::MAX-2)),
+    };
+
+    // @TODO: handle the case that the exponent is positive?
+    let pyth_exponent = match pyth_price.expo.checked_abs() {
+        Some(val) => match val.try_into() {
+            Ok(val) => val,
+            Err(_) => return Err(ProgramError::InvalidArgument),
+        },
+        None => return Err(ProgramError::Custom(u32::MAX-2)),
+    };
+
+    let pyth_decimals = match 10u64.checked_pow(pyth_exponent) {
+        Some(val) => val,
+        None => return Err(ProgramError::Custom(u32::MAX-2)),
+    };
+    let market_price = Decimal::from(price).try_div(pyth_decimals)?;
+    Ok(market_price)
+}
+
 #[cfg(test)]
 mod test {
     use std::borrow::Borrow;
@@ -184,8 +218,7 @@ mod test {
         let tulip_price_account_key =
             static_pubkey!("5RHxy1NbUR15y34uktDbN1a2SWbhgHwkCZ75yK2RJ1FC");
         let tulip_price_account = rpc.get_account(&tulip_price_account_key).unwrap();
-        let _ = load::<Price>(tulip_price_account.data.borrow())
-            .map_err(|_| ProgramError::InvalidAccountData)
-            .unwrap();
+        let price = get_pyth_price(&tulip_price_account).unwrap();
+        println!("price {:#?}", price);
     }
 }

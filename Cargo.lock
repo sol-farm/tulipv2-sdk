@@ -3426,6 +3426,7 @@ dependencies = [
  "bytemuck",
  "num-derive",
  "num-traits",
+ "solana-sdk",
  "spl-token",
  "static-pubkey",
  "thiserror",
