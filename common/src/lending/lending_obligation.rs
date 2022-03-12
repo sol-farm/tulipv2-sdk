@@ -535,7 +535,7 @@ impl Pack for LendingObligation {
 /// performs an off-chain refresh of the lending obligation
 pub fn pseudo_refresh_lending_obligation(
     obligation_info: &mut LendingObligation,
-    reserves: HashMap<Pubkey, Reserve>,
+    reserves: &HashMap<Pubkey, Reserve>,
 ) -> Result<(), ProgramError> {
     let mut deposited_value = Decimal::zero();
     let mut borrowed_value = Decimal::zero();
