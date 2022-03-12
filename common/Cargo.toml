@@ -7,6 +7,7 @@ description = "common types, traits, and helper functions used by the v2 sdk"
 keywords = ["solana", "anchor", "tulip-protocol"]
 license = "MIT/Apache-2.0"
 documentation = "https://docs.rs/tulipv2-sdk-common"
+readme = "../README.md"
 
 [dependencies]
 anchor-lang = "0.22.0"

@@ -171,11 +171,26 @@ pub fn load<T: Pod>(data: &[u8]) -> Result<&T, PodCastError> {
     )?)))
 }
 
-/// returns the price contained in a price feed account, without
-/// validating price staleness
-pub fn get_pyth_price(pyth_price_info: &Account) -> Result<Decimal, ProgramError> {
+pub fn load_pyth_price(pyth_price_account: &Account) -> Result<Decimal, ProgramError> {
     let pyth_price =
-        load::<Price>(&pyth_price_info.data).map_err(|_| ProgramError::InvalidAccountData)?;
+        load::<Price>(&pyth_price_account.data).map_err(|_| ProgramError::InvalidAccountData)?;
+    parse_pyth_price(pyth_price)
+}
+
+/// 🚨 see the warning at the end of this function for safe usage 🚨
+///
+/// parses the Price account for the currently stored price data.
+///
+/// 🚨 warning 🚨
+///
+/// this function does not check price staleness, confidence, or any
+/// other such validation of the price. it simply ensures that the value
+/// can be parsed into a Decimal without error.
+///
+/// this is only intended for use with the pyth price feeds published by
+/// tulip, and should be used cautiously as inappropriate usage will result
+/// in loss of money
+pub fn parse_pyth_price(pyth_price: &Price) -> Result<Decimal, ProgramError> {
     if pyth_price.ptype as u32 != PriceType::Price as u32 {
         return Err(ProgramError::Custom(u32::MAX - 1));
     }
@@ -218,7 +233,7 @@ mod test {
         let tulip_price_account_key =
             static_pubkey!("5RHxy1NbUR15y34uktDbN1a2SWbhgHwkCZ75yK2RJ1FC");
         let tulip_price_account = rpc.get_account(&tulip_price_account_key).unwrap();
-        let price = get_pyth_price(&tulip_price_account).unwrap();
+        let price = load_pyth_price(&tulip_price_account).unwrap();
         println!("price {:#?}", price);
     }
 }
