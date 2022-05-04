@@ -1,6 +1,6 @@
 [package]
 name = "tulipv2-sdk-farms"
-version = "0.9.5"
+version = "0.9.6"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "farm identifiers and farm names used by the v2 sdk"
@@ -10,5 +10,5 @@ documentation = "https://docs.rs/tulipv2-sdk-farms"
 readme = "../README.md"
 
 [dependencies]
-anchor-lang = "0.22.0"
+anchor-lang = "0.24.2"
 tulip-arrform = "0.1.1"
