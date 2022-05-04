@@ -1,7 +1,4 @@
-use anchor_lang::{
-    prelude::*,
-    solana_program::{pubkey::Pubkey, instruction::Instruction, system_program, sysvar},
-};
+use anchor_lang::solana_program::{pubkey::Pubkey, system_program};
 
 use crate::config::lending::usdc;
 
@@ -64,29 +61,26 @@ impl WithdrawAddresses {
             _ => return None,
         };
 
-        let multi_burning_shares_token_account = spl_associated_token_account::get_associated_token_address(
-            &user,
-            &shares_mint
-        );
+        let multi_burning_shares_token_account =
+            spl_associated_token_account::get_associated_token_address(&user, &shares_mint);
 
-        let withdraw_burning_shares_token_account = spl_associated_token_account::get_associated_token_address(
-            &vault_pda,
-            &platform_config[4]
-        );
+        let withdraw_burning_shares_token_account =
+            spl_associated_token_account::get_associated_token_address(
+                &vault_pda,
+                &platform_config[4],
+            );
 
-        let receiving_underlying_token_account = spl_associated_token_account::get_associated_token_address(
-            &user,
-            &underlying_mint
-        );
+        let receiving_underlying_token_account =
+            spl_associated_token_account::get_associated_token_address(&user, &underlying_mint);
 
-        Some(WithdrawAddresses{
+        Some(WithdrawAddresses {
             authority: user,
             multi_vault: vault,
             multi_vault_pda: vault_pda,
             withdraw_vault: platform_config[0],
             withdraw_vault_pda: platform_config[1],
             platform_information: platform_config[2],
-            platform_config_data:platform_config[3],
+            platform_config_data: platform_config[3],
             multi_burning_shares_token_account,
             withdraw_burning_shares_token_account,
             receiving_underlying_token_account,
@@ -94,7 +88,7 @@ impl WithdrawAddresses {
             multi_shares_mint: shares_mint,
             withdraw_shares_mint: platform_config[4],
             withdraw_vault_underlying_deposit_queue: platform_config[5],
-            lending_program: platform_config[6]
+            lending_program: platform_config[6],
         })
     }
 

@@ -1,7 +1,7 @@
-use anchor_lang::solana_program::pubkey::Pubkey;
 use crate::config::lending::usdc;
 use crate::config::lending::utils::{derive_tracking_address, derive_tracking_pda_address};
 use crate::lending::ID;
+use anchor_lang::solana_program::pubkey::Pubkey;
 
 #[derive(Clone, Debug, Default)]
 pub struct DepositAddresses {
@@ -22,30 +22,25 @@ impl DepositAddresses {
         let vault_pda = usdc::multi_deposit::PDA;
         let shares_mint = usdc::multi_deposit::SHARES_MINT;
         let underlying_mint = usdc::multi_deposit::UNDERLYING_MINT;
-        let deposit_tracking_account = derive_tracking_address(
-            &vault,
-            &user,
-            &ID
-        ).0;
+        let deposit_tracking_account = derive_tracking_address(&vault, &user, &ID).0;
 
         let deposit_tracking_pda = derive_tracking_pda_address(&deposit_tracking_account, &ID).0;
-        let deposit_tracking_hold_account = spl_associated_token_account::get_associated_token_address(
-            &deposit_tracking_pda,
-            &shares_mint
-        );
+        let deposit_tracking_hold_account =
+            spl_associated_token_account::get_associated_token_address(
+                &deposit_tracking_pda,
+                &shares_mint,
+            );
 
         // deposit ata for the user
-        let depositing_underlying_account = spl_associated_token_account::get_associated_token_address(
-            &user,
-            &underlying_mint
-        );
+        let depositing_underlying_account =
+            spl_associated_token_account::get_associated_token_address(&user, &underlying_mint);
 
         let vault_underlying_account = spl_associated_token_account::get_associated_token_address(
             &vault_pda,
-            &underlying_mint
+            &underlying_mint,
         );
 
-        DepositAddresses{
+        DepositAddresses {
             authority: user,
             vault,
             deposit_tracking_account,
