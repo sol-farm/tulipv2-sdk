@@ -1,6 +1,5 @@
 use anchor_lang::solana_program::pubkey::Pubkey;
 use crate::config::lending::usdc;
-use tulipv2_sdk_vaults;
 use crate::config::lending::utils::{derive_tracking_address, derive_tracking_pda_address};
 use crate::lending::ID;
 

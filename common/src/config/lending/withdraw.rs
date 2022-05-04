@@ -25,7 +25,8 @@ pub struct WithdrawAddresses {
 }
 
 impl WithdrawAddresses {
-    pub fn new(user: Pubkey, platform: &str) -> WithdrawAddresses {
+    /// returns None if the given platform is invalid
+    pub fn new(user: Pubkey, platform: &str) -> Option<WithdrawAddresses> {
         let vault = usdc::multi_deposit::ACCOUNT;
         let vault_pda = usdc::multi_deposit::PDA;
         let shares_mint = usdc::multi_deposit::SHARES_MINT;
@@ -60,7 +61,7 @@ impl WithdrawAddresses {
                 usdc::mango::UNDERLYING_DEPOSIT_QUEUE,
                 usdc::mango::PROGRAM_ID,
             ],
-            _ => {}
+            _ => return None,
         };
 
         let multi_burning_shares_token_account = spl_associated_token_account::get_associated_token_address(
@@ -78,7 +79,7 @@ impl WithdrawAddresses {
             &underlying_mint
         );
 
-        WithdrawAddresses{
+        Some(WithdrawAddresses{
             authority: user,
             multi_vault: vault,
             multi_vault_pda: vault_pda,
@@ -94,7 +95,7 @@ impl WithdrawAddresses {
             withdraw_shares_mint: platform_config[4],
             withdraw_vault_underlying_deposit_queue: platform_config[5],
             lending_program: platform_config[6]
-        }
+        })
     }
 
     pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {

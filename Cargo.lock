@@ -3417,6 +3417,7 @@ dependencies = [
  "num-traits",
  "so-defi-utils",
  "solana-sdk",
+ "spl-associated-token-account",
  "spl-token",
  "static-pubkey",
  "thiserror",
