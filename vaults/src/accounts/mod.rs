@@ -205,7 +205,6 @@ mod test {
     use std::str::FromStr;
 
     use tulipv2_sdk_common::DEFAULT_KEY;
-
     use tulipv2_sdk_farms::Farm;
 
     use super::*;

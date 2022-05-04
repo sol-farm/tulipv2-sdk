@@ -29,6 +29,8 @@ pub mod multi_deposit {
     /// address of the multi deposit vaults underlying asset withdraw queue
     pub const UNDERLYING_WITHDRAW_QUEUE: Pubkey =
         static_pubkey!("HLVcpKPkBJJJGTHTSaZcAixDppy4R65x1is3k8Q7qZpj");
+    pub const UNDERLYING_MINT: Pubkey =
+        static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
     pub const REBALANCE_STATE_TRANSITION: Pubkey =
         static_pubkey!("3Vjgd77xSaAeBX9DmtZ2Rw7EwVCqvb8aoPvDD7Z75HXP");
     pub const REBALANCE_STATE_TRANSITION_UNDERLYING: Pubkey =
@@ -68,6 +70,8 @@ pub mod solend {
         static_pubkey!("2Li9Q5Vx9BEnFTGJTLWc5pVqerYGjhgyGYzSAA2WhYKQ");
     /// address of the standalone vaults underlying asset withdraw queue
     pub const UNDERLYING_WITHDRAW_QUEUE: Pubkey =
+        static_pubkey!("BoGjVzrz2yhPRnFoj2QPPMLZTkptG7pESc3PyHDGV6WJ");
+    pub const UNDERLYING_MINT: Pubkey =
         static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
     /// address of the configuration data account used the v2 vaults program
     pub const CONFIG_DATA_ACCOUNT: Pubkey =
@@ -137,6 +141,8 @@ pub mod tulip {
     /// address of the standalone vaults underlying asset withdraw queue
     pub const UNDERLYING_WITHDRAW_QUEUE: Pubkey =
         static_pubkey!("AMdJL2UzEpd54a7wDqq6aV99ix6iXMHMmvs1w8CRs3Gc");
+    pub const UNDERLYING_MINT: Pubkey =
+        static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
     /// address of the configuration data account used the v2 vaults program
     pub const CONFIG_DATA_ACCOUNT: Pubkey =
         static_pubkey!("7XTtoiHfkYzjLDxKDMoaVYncmdBW1yLfphmisSbBrnuZ");
