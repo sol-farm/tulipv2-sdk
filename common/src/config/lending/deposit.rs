@@ -23,13 +23,13 @@ impl DepositAddresses {
         let vault_pda = usdc::multi_deposit::PDA;
         let shares_mint = usdc::multi_deposit::SHARES_MINT;
         let underlying_mint = usdc::multi_deposit::UNDERLYING_MINT;
-        let (deposit_tracking_account, _) = derive_tracking_address(
+        let deposit_tracking_account = derive_tracking_address(
             &vault,
             &user,
             &ID
-        );
+        ).0;
 
-        let (deposit_tracking_pda, _) = derive_tracking_pda_address(&deposit_tracking_account, &ID);
+        let deposit_tracking_pda = derive_tracking_pda_address(&deposit_tracking_account, &ID).0;
         let deposit_tracking_hold_account = spl_associated_token_account::get_associated_token_address(
             &deposit_tracking_pda,
             &shares_mint
