@@ -1,4 +1,8 @@
-use anchor_lang::solana_program::pubkey::Pubkey;
+use anchor_lang::{
+    prelude::*,
+    solana_program::{pubkey::Pubkey, instruction::Instruction, system_program, sysvar},
+};
+
 use crate::config::lending::usdc;
 
 #[derive(Clone, Debug, Default)]
@@ -91,5 +95,43 @@ impl WithdrawAddresses {
             withdraw_vault_underlying_deposit_queue: platform_config[5],
             lending_program: platform_config[6]
         }
+    }
+
+    pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
+        [
+            usdc::tulip::COLLATERAL_TOKEN_ACCOUNT,
+            usdc::tulip::RESERVE_ACCOUNT,
+            usdc::tulip::RESERVE_LIQUIDITY_ACCOUNT,
+            usdc::tulip::COLLATERAL_MINT,
+            usdc::tulip::LENDING_MARKET_ACCOUNT,
+            usdc::tulip::LENDING_MARKET_AUTHORITY,
+            usdc::tulip::PYTH_PRICE_ACCOUNT,
+        ]
+    }
+
+    pub fn get_solend_remaining_accounts() -> [Pubkey; 8] {
+        [
+            usdc::solend::COLLATERAL_TOKEN_ACCOUNT,
+            usdc::solend::RESERVE_ACCOUNT,
+            usdc::solend::RESERVE_LIQUIDITY_ACCOUNT,
+            usdc::solend::COLLATERAL_MINT,
+            usdc::solend::LENDING_MARKET_ACCOUNT,
+            usdc::solend::LENDING_MARKET_AUTHORITY,
+            usdc::solend::PYTH_PRICE_ACCOUNT,
+            usdc::solend::SWITCHBOARD_PRICE_ACCOUNT,
+        ]
+    }
+
+    pub fn get_mango_remaining_accounts() -> [Pubkey; 8] {
+        [
+            usdc::mango::GROUP,
+            usdc::mango::OPTIMIZER_MANGO_ACCOUNT,
+            usdc::mango::CACHE,
+            usdc::mango::ROOT_BANK,
+            usdc::mango::NODE_BANK,
+            usdc::mango::GROUP_TOKEN_ACCOUNT,
+            usdc::mango::GROUP_SIGNER,
+            system_program::id(),
+        ]
     }
 }
