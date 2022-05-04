@@ -1,7 +1,7 @@
-use anchor_lang::prelude::Pubkey;
 use crate::config::lending::usdc;
 use crate::config::lending::utils::{derive_tracking_address, derive_tracking_pda_address};
 use crate::lending::ID;
+use anchor_lang::prelude::Pubkey;
 
 #[derive(Clone, Debug, Default)]
 pub struct WithdrawDepositTrackingAddresses {
@@ -18,26 +18,18 @@ impl WithdrawDepositTrackingAddresses {
     pub fn new(user: Pubkey) -> WithdrawDepositTrackingAddresses {
         let vault = usdc::multi_deposit::ACCOUNT;
         let shares_mint = usdc::multi_deposit::SHARES_MINT;
-        let deposit_tracking_account = derive_tracking_address(
-            &vault,
-            &user,
-            &ID
-        ).0;
+        let deposit_tracking_account = derive_tracking_address(&vault, &user, &ID).0;
 
-        let deposit_tracking_pda = derive_tracking_pda_address(
-            &deposit_tracking_account,
-            &ID
-        ).0;
+        let deposit_tracking_pda = derive_tracking_pda_address(&deposit_tracking_account, &ID).0;
 
-        let deposit_tracking_hold_account = spl_associated_token_account::get_associated_token_address(
-            &deposit_tracking_pda,
-            &shares_mint
-        );
+        let deposit_tracking_hold_account =
+            spl_associated_token_account::get_associated_token_address(
+                &deposit_tracking_pda,
+                &shares_mint,
+            );
 
-        let receiving_shares_account = spl_associated_token_account::get_associated_token_address(
-            &user,
-            &shares_mint
-        );
+        let receiving_shares_account =
+            spl_associated_token_account::get_associated_token_address(&user, &shares_mint);
 
         WithdrawDepositTrackingAddresses {
             authority: user,
