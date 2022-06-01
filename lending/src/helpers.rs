@@ -16,6 +16,7 @@ pub fn refresh_reserve<'info>(
 }
 
 /// creates and invokes a deposit reserve liquidity instruction
+#[allow(clippy::too_many_arguments)]
 pub fn deposit_reserve_liquidity<'info>(
     lending_program_id: &AccountInfo<'info>,
     source_liquidity: &AccountInfo<'info>,
@@ -62,6 +63,7 @@ pub fn deposit_reserve_liquidity<'info>(
 }
 
 /// creates and invokes a redeem reserve collateral instruction
+#[allow(clippy::too_many_arguments)]
 pub fn redeem_reserve_collateral<'info>(
     lending_program_id: &AccountInfo<'info>,
     source_collateral: &AccountInfo<'info>,
