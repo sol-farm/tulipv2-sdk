@@ -9,9 +9,6 @@ license = "MIT/Apache-2.0"
 documentation = "https://docs.rs/tulipv2-sdk-vaults"
 readme = "../README.md"
 
-# technically speaking this is still v1 lending, it's just named `tulipv2-sdk-X` to 
-# be consistent with the rest of the crates in this workspace
-
 [dependencies]
 solana-program = "1.9"
 spl-token = "3.2.0"

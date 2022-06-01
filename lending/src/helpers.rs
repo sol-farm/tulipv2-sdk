@@ -1,24 +1,21 @@
+//! helper functions used to cpi to the lending program
+
 use solana_program::{account_info::AccountInfo, program_error::ProgramError};
 
+/// creates, and invokes a reserve refresh instruction
 pub fn refresh_reserve<'info>(
     lending_program_id: &AccountInfo<'info>,
     clock: &AccountInfo<'info>,
     reserve: &AccountInfo<'info>,
     oracle: &AccountInfo<'info>,
 ) -> Result<(), ProgramError> {
-    let ix =     super::instruction::refresh_reserve(
-        *lending_program_id.key,
-        *reserve.key,
-        *oracle.key,
-    );
-    solana_program::program::invoke(
-        &ix,
-        &[reserve.clone(), oracle.clone(), clock.clone()],
-    )?;
+    let ix =
+        super::instruction::refresh_reserve(*lending_program_id.key, *reserve.key, *oracle.key);
+    solana_program::program::invoke(&ix, &[reserve.clone(), oracle.clone(), clock.clone()])?;
     Ok(())
 }
 
-
+/// creates and invokes a deposit reserve liquidity instruction
 pub fn deposit_reserve_liquidity<'info>(
     lending_program_id: &AccountInfo<'info>,
     source_liquidity: &AccountInfo<'info>,
@@ -45,7 +42,7 @@ pub fn deposit_reserve_liquidity<'info>(
         *lending_market.key,
         *user_transfer_authority.key,
     );
-   solana_program::program::invoke_signed(
+    solana_program::program::invoke_signed(
         &ix,
         &[
             source_liquidity.clone(),
@@ -64,7 +61,7 @@ pub fn deposit_reserve_liquidity<'info>(
     Ok(())
 }
 
-
+/// creates and invokes a redeem reserve collateral instruction
 pub fn redeem_reserve_collateral<'info>(
     lending_program_id: &AccountInfo<'info>,
     source_collateral: &AccountInfo<'info>,

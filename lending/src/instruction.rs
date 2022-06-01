@@ -1,6 +1,12 @@
-use solana_program::{pubkey::{Pubkey, PUBKEY_BYTES}, program_error::ProgramError, msg, instruction::{AccountMeta, Instruction}, sysvar};
-use super::error::LendingError;
+use solana_program::{
+    instruction::{AccountMeta, Instruction},
+    msg,
+    program_error::ProgramError,
+    pubkey::{Pubkey, PUBKEY_BYTES},
+    sysvar,
+};
 use std::mem::size_of;
+use tulipv2_sdk_common::lending::error::LendingError;
 
 /// Instructions supported by the lending program.
 #[derive(Clone, Debug, PartialEq)]
@@ -97,44 +103,6 @@ impl LendingInstruction {
         Ok((value, rest))
     }
 
-    fn unpack_u8(input: &[u8]) -> Result<(u8, &[u8]), ProgramError> {
-        if input.is_empty() {
-            msg!("u8 cannot be unpacked");
-            return Err(LendingError::InstructionUnpackError.into());
-        }
-        let (bytes, rest) = input.split_at(1);
-        let value = bytes
-            .get(..1)
-            .and_then(|slice| slice.try_into().ok())
-            .map(u8::from_le_bytes)
-            .ok_or(LendingError::InstructionUnpackError)?;
-        Ok((value, rest))
-    }
-
-    fn unpack_bytes32(input: &[u8]) -> Result<(&[u8; 32], &[u8]), ProgramError> {
-        if input.len() < 32 {
-            msg!("32 bytes cannot be unpacked");
-            return Err(LendingError::InstructionUnpackError.into());
-        }
-        let (bytes, rest) = input.split_at(32);
-        Ok((
-            bytes
-                .try_into()
-                .map_err(|_| LendingError::InstructionUnpackError)?,
-            rest,
-        ))
-    }
-
-    fn unpack_pubkey(input: &[u8]) -> Result<(Pubkey, &[u8]), ProgramError> {
-        if input.len() < PUBKEY_BYTES {
-            msg!("Pubkey cannot be unpacked");
-            return Err(LendingError::InstructionUnpackError.into());
-        }
-        let (key, rest) = input.split_at(PUBKEY_BYTES);
-        let pk = Pubkey::new(key);
-        Ok((pk, rest))
-    }
-
     /// Packs a [LendingInstruction](enum.LendingInstruction.html) into a byte buffer.
     pub fn pack(&self) -> Vec<u8> {
         let mut buf = Vec::with_capacity(size_of::<Self>());
@@ -154,7 +122,6 @@ impl LendingInstruction {
         buf
     }
 }
-
 
 /// Creates a 'DepositReserveLiquidity' instruction.
 #[allow(clippy::too_many_arguments)]
