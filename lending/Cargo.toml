@@ -1,7 +1,13 @@
 [package]
 name = "tulipv2-sdk-lending"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
+authors = ["Tulip Protocol"]
+description = "lending instructions for v1 lending"
+keywords = ["solana", "anchor", "tulip-protocol"]
+license = "MIT/Apache-2.0"
+documentation = "https://docs.rs/tulipv2-sdk-vaults"
+readme = "../README.md"
 
 # technically speaking this is still v1 lending, it's just named `tulipv2-sdk-X` to 
 # be consistent with the rest of the crates in this workspace
