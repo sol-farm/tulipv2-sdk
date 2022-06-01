@@ -7,7 +7,6 @@ use crate::math::{
     rate::Rate,
 };
 use anchor_lang::solana_program::{
-    account_info::Account,
     clock::Slot,
     entrypoint::ProgramResult,
     msg,
