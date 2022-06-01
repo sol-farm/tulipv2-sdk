@@ -1,0 +1,22 @@
+[package]
+name = "tulipv2-sdk-lending"
+version = "0.1.0"
+edition = "2021"
+
+# technically speaking this is still v1 lending, it's just named `tulipv2-sdk-X` to 
+# be consistent with the rest of the crates in this workspace
+
+[dependencies]
+solana-program = "1.9"
+spl-token = "3.2.0"
+tulipv2-sdk-common = {path = "../common", version = "0.9.7"}
+itertools = "0.10.3"
+num-derive = "0.3"
+thiserror = "1.0"
+num-traits = "0.2"
+[dev-dependencies]
+proptest = "1.0.0"
+solana-client = "1.9.1"
+data-encoding = "2.3.2"
+ring = "0.16.20"
+type-layout = "0.2.0"

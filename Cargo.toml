@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "lending",
     "farms",
     "common",
     "vaults"
