@@ -204,6 +204,8 @@ pub mod mango {
     /// address of the standalone vaults underlying asset withdraw queue
     pub const UNDERLYING_WITHDRAW_QUEUE: Pubkey =
         static_pubkey!("Aty8vpK1gHm5YoLJBSegwxpCY2QmoebFQXkUd3xq1f4w");
+    pub const UNDERLYING_MINT: Pubkey =
+        static_pubkey!("So11111111111111111111111111111111111111112");
     /// address of the configuration data account used the v2 vaults program
     pub const CONFIG_DATA_ACCOUNT: Pubkey =
         static_pubkey!("6tGs1Yfejxo8pcyRiCovDkH5wvUAD5TsErpouQenPjfx");
@@ -221,9 +223,9 @@ pub mod mango {
     pub const GROUP_TOKEN_ACCOUNT: Pubkey =
         static_pubkey!("AVn3JRGhifPCxjxZsU3tQuo4U4dTHizHzBDGW983tx47");
     /// address of the mango root bank
-    pub const ROOT_BANK: Pubkey = static_pubkey!("2bqJYcA1A8gw4qJFjyE2G4akiUunpd9rP6QzfnxHqSqr");
+    pub const ROOT_BANK: Pubkey = static_pubkey!("7jH1uLmiB2zbHNe6juZZYjQCrvquakTwd3yMaQpeP8rR");
     /// address of the mango usdc node bank
-    pub const NODE_BANK: Pubkey = static_pubkey!("7Ch4sYW3BmxG6FayQ7ojv8gdvjokkaiTfPqsQ5X1r4vR");
+    pub const NODE_BANK: Pubkey = static_pubkey!("2bqJYcA1A8gw4qJFjyE2G4akiUunpd9rP6QzfnxHqSqr");
     /// address of the standalone vault's mango account
     pub const OPTIMIZER_MANGO_ACCOUNT: Pubkey =
         static_pubkey!("7jH1uLmiB2zbHNe6juZZYjQCrvquakTwd3yMaQpeP8rR");

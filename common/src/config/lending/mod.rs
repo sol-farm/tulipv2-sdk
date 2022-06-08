@@ -10,3 +10,6 @@ pub mod usdc;
 
 #[cfg(feature = "sol-optimizer")]
 pub mod sol;
+
+#[cfg(feature = "ray-optimizer")]
+pub mod ray;
