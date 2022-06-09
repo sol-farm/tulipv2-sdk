@@ -1,13 +1,15 @@
 //! the `withdraw` submodule provides helper objects to facilitate withdrawing
 //! tokenized shares from deposit tracking accounts
 
-use crate::config::deposit_tracking::derivations::{derive_tracking_address, derive_tracking_pda_address};
+use super::traits::{RegisterDepositTracking, WithdrawDepositTracking};
+use crate::config::deposit_tracking::derivations::{
+    derive_tracking_address, derive_tracking_pda_address,
+};
 use crate::config::ID;
 use anchor_lang::prelude::Pubkey;
-use sighashdb::GlobalSighashDB;
-use super::traits::{RegisterDepositTracking, WithdrawDepositTracking};
-use solana_sdk::{msg, instruction::AccountMeta, sysvar, system_program, instruction::Instruction};
 use anchor_lang::AnchorSerialize;
+use sighashdb::GlobalSighashDB;
+use solana_sdk::{instruction::AccountMeta, instruction::Instruction, msg, system_program, sysvar};
 
 #[derive(Clone, Debug, Default)]
 pub struct WithdrawDepositTrackingAddresses {

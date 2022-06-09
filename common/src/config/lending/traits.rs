@@ -7,7 +7,7 @@ use tulipv2_sdk_farms::Farm;
 /// The `WithdrawMultiOptimizerVault` trait is used to
 /// burn a lending optimizer's tokenized shares, in exchange
 /// for the underlying asset backing the burned amount.
-/// 
+///
 /// To accomplish this, the caller provides the configuration
 /// information for one of the protocols the lending optimizer
 /// is deposited into, allowing the user to withdraw up to
@@ -49,16 +49,16 @@ pub trait WithdrawMultiOptimizerVault {
     /// which we are withdrawing from
     fn withdraw_shares_mint(&self) -> Pubkey;
     /// the deposit queue account used by the standalone vault to
-    /// hold funds while they are being deposited. even though this is 
+    /// hold funds while they are being deposited. even though this is
     /// a withdraw instruction, the deposit queue account is needed
     /// so that when the vault rebases before the withdraw happens,
     /// all assets are accounted for
     fn withdraw_vault_underlying_deposit_queue(&self) -> Pubkey;
     /// returns accounts specific to the standalone vault being used
-    /// 
+    ///
     /// when the caller is withdrawing from a Tulip standalone vault
     /// the following accounts are used
-    /// 
+    ///
     ///         0 [writable]        -> source_collateral_token_account
     ///
     ///         1 [writable]        -> reserve_account
@@ -75,9 +75,9 @@ pub trait WithdrawMultiOptimizerVault {
     ///
     /// when the caller is withdrawing from a Solend standalone vault
     /// the following accounts are used:
-    /// 
+    ///
     ///         0 [writable]       -> source_collateral_token_account
-    /// 
+    ///
     ///         1 [writable]        -> reserve_account
     ///
     ///         2 [writable]        -> reserve_liquidity_supply
@@ -91,10 +91,10 @@ pub trait WithdrawMultiOptimizerVault {
     ///         6 []                -> reserve_pyth_price_account
     ///
     ///         7 []                -> reserve_switchboard_price_account
-    /// 
+    ///
     /// when the caller is withdrawing from a Mango standalone vaults
     /// the following accounts are used:
-    /// 
+    ///
     ///         0 []                -> mango_group_account
     ///
     ///         1 [writable]        -> optimizer_mango_account
@@ -114,7 +114,7 @@ pub trait WithdrawMultiOptimizerVault {
     fn standalone_vault_accounts(&self) -> Vec<AccountMeta>;
     /// returns the Instruction object which can be used to invoke
     /// the withdraw_multi_optimizer_vault instruction via CPI, or off-chain clients
-    /// 
+    ///
     /// `farm_type` is the farm key used by a particular vault, while `amount`
     /// is the amount of underlying asset the caller wants to deposit
     fn instruction(&self, amount: u64) -> Option<Instruction>;

@@ -1,15 +1,18 @@
 //! the `issue_shares` submodule provides helper objects to facilitate issueing `issue_shares` instructions
 //! which are a vault-agnostic method of depositing into the Tulip V2 vaults program
 
-use super::{derivations::{derive_tracking_address, derive_tracking_pda_address}, traits::IssueShares};
+use super::{
+    derivations::{derive_tracking_address, derive_tracking_pda_address},
+    traits::IssueShares,
+};
 use crate::config::ID;
 use anchor_lang::solana_program::pubkey::Pubkey;
+use anchor_lang::AnchorSerialize;
 use sighashdb::GlobalSighashDB;
 use solana_sdk::instruction::AccountMeta;
-use tulipv2_sdk_farms::Farm;
-use anchor_lang::AnchorSerialize;
-use solana_sdk::msg;
 use solana_sdk::instruction::Instruction;
+use solana_sdk::msg;
+use tulipv2_sdk_farms::Farm;
 
 /// object used to bundle together information required by the
 /// `IssueShares` trait
@@ -65,7 +68,6 @@ impl DepositAddresses {
         }
     }
 }
-
 
 impl IssueShares for DepositAddresses {
     fn authority(&self) -> Pubkey {

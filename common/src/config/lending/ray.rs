@@ -7,12 +7,14 @@ use tulipv2_sdk_farms::{lending::Lending, Farm};
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
-    use crate::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
-    use crate::config::deposit_tracking::traits::{IssueShares, RegisterDepositTracking, WithdrawDepositTracking};
-    use crate::config::deposit_tracking::issue_shares::DepositAddresses;
-    use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
     use super::*;
-    /// empty struct used to implement the various traits used 
+    use crate::config::deposit_tracking::issue_shares::DepositAddresses;
+    use crate::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
+    use crate::config::deposit_tracking::traits::{
+        IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
+    };
+    use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
+    /// empty struct used to implement the various traits used
     /// to interact with the ray lending optimizer vault
     pub struct ProgramConfig;
 
@@ -55,28 +57,13 @@ pub mod multi_deposit {
 
     impl ProgramConfig {
         pub fn issue_shares_ix(user: Pubkey) -> impl IssueShares {
-            DepositAddresses::new(
-                user,
-                ACCOUNT,
-                PDA,
-                SHARES_MINT,
-                UNDERLYING_MINT
-            )
+            DepositAddresses::new(user, ACCOUNT, PDA, SHARES_MINT, UNDERLYING_MINT)
         }
         pub fn register_deposit_tracking_ix(user: Pubkey) -> impl RegisterDepositTracking {
-            RegisterDepositTrackingAddresses::new(
-                user,
-                ACCOUNT,
-                SHARES_MINT,
-                UNDERLYING_MINT
-            )
+            RegisterDepositTrackingAddresses::new(user, ACCOUNT, SHARES_MINT, UNDERLYING_MINT)
         }
         pub fn withdraw_deposit_tracking(user: Pubkey) -> impl WithdrawDepositTracking {
-            WithdrawDepositTrackingAddresses::new(
-                user,
-                ACCOUNT,
-                SHARES_MINT
-            )
+            WithdrawDepositTrackingAddresses::new(user, ACCOUNT, SHARES_MINT)
         }
     }
 }
@@ -86,9 +73,7 @@ pub mod solend {
     use super::*;
 
     pub const TAG_STRING: &str = "solend";
-    pub const FARM_KEY: Farm = Farm::Lending {
-        name: Lending::RAY,
-    };
+    pub const FARM_KEY: Farm = Farm::Lending { name: Lending::RAY };
 
     /// address of the standalone vault itself
     pub const ACCOUNT: Pubkey = static_pubkey!("8eAWyCa27MCukBBswRWBMc6RB4pLQQ2oyXr7sTKFvGXH");
@@ -156,9 +141,7 @@ pub mod tulip {
     use super::*;
 
     pub const TAG_STRING: &str = "tulip";
-    pub const FARM_KEY: Farm = Farm::Lending {
-        name: Lending::RAY,
-    };
+    pub const FARM_KEY: Farm = Farm::Lending { name: Lending::RAY };
 
     /// address of the standalone vault itself
     pub const ACCOUNT: Pubkey = static_pubkey!("7RqGWFDK8J7AUB498ged2ZrmK5otqPE2nFM5RZQ3sCZ3");
@@ -219,9 +202,7 @@ pub mod mango {
     use super::*;
 
     pub const TAG_STRING: &str = "mango";
-    pub const FARM_KEY: Farm = Farm::Lending {
-        name: Lending::RAY,
-    };
+    pub const FARM_KEY: Farm = Farm::Lending { name: Lending::RAY };
 
     /// address of the standalone vault itself
     pub const ACCOUNT: Pubkey = static_pubkey!("A1tu6mY4CrVynaNTVPMtWfecJmXT2nNqwkhmyAjRaSvc");

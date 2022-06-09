@@ -67,7 +67,6 @@ pub struct MangoStandaloneAddresses {
     pub system_program_id: Pubkey,
 }
 
-
 impl WithdrawAddresses {
     pub fn new(
         user: Pubkey,
@@ -106,17 +105,19 @@ impl WithdrawAddresses {
             mango_standalone_addresses: None,
         };
         if standalone_config.1.eq(&Platform::MangoV3) {
-            let mango_standalone_addresses: MangoStandaloneAddresses = standalone_config.0.try_into()?;
+            let mango_standalone_addresses: MangoStandaloneAddresses =
+                standalone_config.0.try_into()?;
             withdraw_addresses.mango_standalone_addresses = Some(mango_standalone_addresses);
         } else if standalone_config.1.eq(&Platform::Solend) {
-            let solend_standalone_addresses: SolendStandaloneAddresses = standalone_config.0.try_into()?;
+            let solend_standalone_addresses: SolendStandaloneAddresses =
+                standalone_config.0.try_into()?;
             withdraw_addresses.solend_standalone_addresses = Some(solend_standalone_addresses);
         } else {
-            let tulip_standalone_addresses: TulipStandaloneAddresses = standalone_config.0.try_into()?;
+            let tulip_standalone_addresses: TulipStandaloneAddresses =
+                standalone_config.0.try_into()?;
             withdraw_addresses.tulip_standalone_addresses = Some(tulip_standalone_addresses);
         }
         Ok(withdraw_addresses)
-
     }
 
     pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
@@ -158,7 +159,6 @@ impl WithdrawAddresses {
     }
 }
 
-
 impl TryFrom<&[Pubkey]> for TulipStandaloneAddresses {
     type Error = std::io::ErrorKind;
     fn try_from(accounts: &[Pubkey]) -> Result<Self, Self::Error> {
@@ -199,7 +199,6 @@ impl TryFrom<&[Pubkey]> for SolendStandaloneAddresses {
         })
     }
 }
-
 
 impl TryFrom<&[Pubkey]> for MangoStandaloneAddresses {
     type Error = std::io::ErrorKind;

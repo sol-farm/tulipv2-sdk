@@ -17,7 +17,6 @@ use anchor_lang::solana_program;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use static_pubkey::static_pubkey;
 
-
 use crate::math::{common::WAD, decimal::Decimal};
 
 use anchor_lang::solana_program::{

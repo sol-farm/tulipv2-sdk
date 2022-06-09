@@ -1,14 +1,14 @@
 //! the `register` submodule provides helper objects to facilitate registration of
 //! a deposit tracking account, used for reward tracking token lockup, etc...
 
+use super::traits::RegisterDepositTracking;
 use crate::config::deposit_tracking::derivations::{
     derive_tracking_address, derive_tracking_pda_address, derive_tracking_queue_address,
 };
 use crate::config::ID;
 use anchor_lang::prelude::Pubkey;
 use sighashdb::GlobalSighashDB;
-use super::traits::RegisterDepositTracking;
-use solana_sdk::{msg, instruction::AccountMeta, sysvar, system_program, instruction::Instruction};
+use solana_sdk::{instruction::AccountMeta, instruction::Instruction, msg, system_program, sysvar};
 
 #[derive(Clone, Debug, Default)]
 pub struct RegisterDepositTrackingAddresses {

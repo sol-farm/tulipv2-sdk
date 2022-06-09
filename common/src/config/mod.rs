@@ -11,8 +11,8 @@
 //! the `lending` submodule is for v2 lending optimizer vault, while the `deposit_tracking` submodule
 //! is for the deposit tracking account
 
-pub mod lending;
 pub mod deposit_tracking;
+pub mod lending;
 
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
