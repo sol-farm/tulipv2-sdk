@@ -78,6 +78,42 @@ pub mod multi_deposit {
                 SHARES_MINT
             )
         }
+        pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
+            [
+                super::tulip::COLLATERAL_TOKEN_ACCOUNT,
+                super::tulip::RESERVE_ACCOUNT,
+                super::tulip::RESERVE_LIQUIDITY_ACCOUNT,
+                super::tulip::COLLATERAL_MINT,
+                super::tulip::LENDING_MARKET_ACCOUNT,
+                super::tulip::LENDING_MARKET_AUTHORITY,
+                super::tulip::PYTH_PRICE_ACCOUNT,
+            ]
+        }
+    
+        pub fn get_solend_remaining_accounts() -> [Pubkey; 8] {
+            [
+                super::solend::COLLATERAL_TOKEN_ACCOUNT,
+                super::solend::RESERVE_ACCOUNT,
+                super::solend::RESERVE_LIQUIDITY_ACCOUNT,
+                super::solend::COLLATERAL_MINT,
+                super::solend::LENDING_MARKET_ACCOUNT,
+                super::solend::LENDING_MARKET_AUTHORITY,
+                super::solend::PYTH_PRICE_ACCOUNT,
+                super::solend::SWITCHBOARD_PRICE_ACCOUNT,
+            ]
+        }
+    
+        pub fn get_mango_remaining_accounts() -> [Pubkey; 7] {
+            [
+                super::mango::GROUP,
+                super::mango::OPTIMIZER_MANGO_ACCOUNT,
+                super::mango::CACHE,
+                super::mango::ROOT_BANK,
+                super::mango::NODE_BANK,
+                super::mango::GROUP_TOKEN_ACCOUNT,
+                super::mango::GROUP_SIGNER,
+            ]
+        }
     }
 }
 

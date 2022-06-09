@@ -1,95 +1,122 @@
 use anchor_lang::solana_program::{pubkey::Pubkey, system_program};
 
 use crate::config::lending::usdc;
+use solana_sdk::{msg, native_token::Sol};
 
-#[derive(Clone, Debug, Default)]
+use super::Platform;
+
+#[derive(Clone, Copy)]
 pub struct WithdrawAddresses {
     pub authority: Pubkey,
     pub multi_vault: Pubkey,
     pub multi_vault_pda: Pubkey,
-    pub withdraw_vault: Pubkey,
-    pub withdraw_vault_pda: Pubkey,
-    pub platform_information: Pubkey,
-    pub platform_config_data: Pubkey,
     pub multi_burning_shares_token_account: Pubkey,
     pub withdraw_burning_shares_token_account: Pubkey,
     pub receiving_underlying_token_account: Pubkey,
     pub multi_underlying_withdraw_queue: Pubkey,
     pub multi_shares_mint: Pubkey,
-    pub withdraw_shares_mint: Pubkey,
-    pub withdraw_vault_underlying_deposit_queue: Pubkey,
-    pub lending_program: Pubkey,
+    pub platform_config: PlatformConfigAddresses,
+    pub tulip_standalone_addresses: Option<TulipStandaloneAddresses>,
+    pub solend_standalone_addresses: Option<SolendStandaloneAddresses>,
+    pub mango_standalone_addresses: Option<MangoStandaloneAddresses>,
 }
 
+#[derive(Clone, Copy)]
+pub struct PlatformConfigAddresses {
+    pub vault: Pubkey,
+    pub vault_pda: Pubkey,
+    pub information_account: Pubkey,
+    pub config_data_account: Pubkey,
+    pub shares_mint: Pubkey,
+    pub underlying_deposit_queue: Pubkey,
+    pub program_id: Pubkey,
+}
+
+#[derive(Clone, Copy)]
+pub struct TulipStandaloneAddresses {
+    pub collateral_token_account: Pubkey,
+    pub reserve: Pubkey,
+    pub reserve_liquidity: Pubkey,
+    pub collateral_mint: Pubkey,
+    pub lending_market_account: Pubkey,
+    pub lending_market_authority: Pubkey,
+    pub pyth_price_account: Pubkey,
+}
+
+#[derive(Clone, Copy)]
+pub struct SolendStandaloneAddresses {
+    pub collateral_token_account: Pubkey,
+    pub reserve: Pubkey,
+    pub reserve_liquidity: Pubkey,
+    pub collateral_mint: Pubkey,
+    pub lending_market_account: Pubkey,
+    pub lending_market_authority: Pubkey,
+    pub pyth_price_account: Pubkey,
+    pub switchboard_price_account: Pubkey,
+}
+
+#[derive(Clone, Copy)]
+pub struct MangoStandaloneAddresses {
+    pub group: Pubkey,
+    pub optimizer_mango_account: Pubkey,
+    pub cache: Pubkey,
+    pub root_bank: Pubkey,
+    pub node_bank: Pubkey,
+    pub group_token_account: Pubkey,
+    pub group_signer: Pubkey,
+    pub system_program_id: Pubkey,
+}
+
+
 impl WithdrawAddresses {
-    /// returns None if the given platform is invalid
-    pub fn new(user: Pubkey, platform: &str) -> Option<WithdrawAddresses> {
-        let vault = usdc::multi_deposit::ACCOUNT;
-        let vault_pda = usdc::multi_deposit::PDA;
-        let shares_mint = usdc::multi_deposit::SHARES_MINT;
-        let underlying_mint = usdc::multi_deposit::UNDERLYING_MINT;
-        let underlying_withdraw_queue = usdc::multi_deposit::UNDERLYING_WITHDRAW_QUEUE;
-
-        let platform_config = match platform {
-            "tulip" => [
-                usdc::tulip::ACCOUNT,
-                usdc::tulip::PDA,
-                usdc::tulip::INFORMATION_ACCOUNT,
-                usdc::tulip::CONFIG_DATA_ACCOUNT,
-                usdc::tulip::SHARES_MINT,
-                usdc::tulip::UNDERLYING_DEPOSIT_QUEUE,
-                usdc::tulip::PROGRAM_ID,
-            ],
-            "solend" => [
-                usdc::solend::ACCOUNT,
-                usdc::solend::PDA,
-                usdc::solend::INFORMATION_ACCOUNT,
-                usdc::solend::CONFIG_DATA_ACCOUNT,
-                usdc::solend::SHARES_MINT,
-                usdc::solend::UNDERLYING_DEPOSIT_QUEUE,
-                usdc::solend::PROGRAM_ID,
-            ],
-            "mango" => [
-                usdc::mango::ACCOUNT,
-                usdc::mango::PDA,
-                usdc::mango::INFORMATION_ACCOUNT,
-                usdc::mango::CONFIG_DATA_ACCOUNT,
-                usdc::mango::SHARES_MINT,
-                usdc::mango::UNDERLYING_DEPOSIT_QUEUE,
-                usdc::mango::PROGRAM_ID,
-            ],
-            _ => return None,
-        };
-
+    pub fn new(
+        user: Pubkey,
+        vault: Pubkey,
+        vault_pda: Pubkey,
+        shares_mint: Pubkey,
+        underlying_mint: Pubkey,
+        underlying_withdraw_queue: Pubkey,
+        platform_config: PlatformConfigAddresses,
+        standalone_config: (&[Pubkey], Platform),
+    ) -> std::result::Result<WithdrawAddresses, std::io::Error> {
         let multi_burning_shares_token_account =
             spl_associated_token_account::get_associated_token_address(&user, &shares_mint);
 
         let withdraw_burning_shares_token_account =
             spl_associated_token_account::get_associated_token_address(
                 &vault_pda,
-                &platform_config[4],
+                &platform_config.shares_mint,
             );
 
         let receiving_underlying_token_account =
             spl_associated_token_account::get_associated_token_address(&user, &underlying_mint);
 
-        Some(WithdrawAddresses {
+        let mut withdraw_addresses = WithdrawAddresses {
             authority: user,
             multi_vault: vault,
             multi_vault_pda: vault_pda,
-            withdraw_vault: platform_config[0],
-            withdraw_vault_pda: platform_config[1],
-            platform_information: platform_config[2],
-            platform_config_data: platform_config[3],
             multi_burning_shares_token_account,
             withdraw_burning_shares_token_account,
             receiving_underlying_token_account,
             multi_underlying_withdraw_queue: underlying_withdraw_queue,
             multi_shares_mint: shares_mint,
-            withdraw_shares_mint: platform_config[4],
-            withdraw_vault_underlying_deposit_queue: platform_config[5],
-            lending_program: platform_config[6],
-        })
+            platform_config,
+            tulip_standalone_addresses: None,
+            solend_standalone_addresses: None,
+            mango_standalone_addresses: None,
+        };
+        if standalone_config.1.eq(&Platform::MangoV3) {
+            let mango_standalone_addresses: MangoStandaloneAddresses = standalone_config.0.try_into()?;
+            withdraw_addresses.mango_standalone_addresses = Some(mango_standalone_addresses);
+        } else if standalone_config.1.eq(&Platform::Solend) {
+            let solend_standalone_addresses: SolendStandaloneAddresses = standalone_config.0.try_into()?;
+            withdraw_addresses.solend_standalone_addresses = Some(solend_standalone_addresses);
+        } else {
+            let tulip_standalone_addresses: TulipStandaloneAddresses = standalone_config.0.try_into()?;
+            withdraw_addresses.tulip_standalone_addresses = Some(tulip_standalone_addresses);
+        }
+        Ok(withdraw_addresses)
+
     }
 
     pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
@@ -128,5 +155,70 @@ impl WithdrawAddresses {
             usdc::mango::GROUP_SIGNER,
             system_program::id(),
         ]
+    }
+}
+
+
+impl TryFrom<&[Pubkey]> for TulipStandaloneAddresses {
+    type Error = std::io::ErrorKind;
+    fn try_from(accounts: &[Pubkey]) -> Result<Self, Self::Error> {
+        if accounts.len() != 7 {
+            #[cfg(feature = "logs")]
+            msg!("insufficient accounts");
+            return Err(std::io::ErrorKind::InvalidInput.into());
+        }
+        Ok(Self {
+            collateral_token_account: accounts[0],
+            reserve: accounts[1],
+            reserve_liquidity: accounts[2],
+            collateral_mint: accounts[3],
+            lending_market_account: accounts[4],
+            lending_market_authority: accounts[5],
+            pyth_price_account: accounts[6],
+        })
+    }
+}
+
+impl TryFrom<&[Pubkey]> for SolendStandaloneAddresses {
+    type Error = std::io::ErrorKind;
+    fn try_from(accounts: &[Pubkey]) -> Result<Self, Self::Error> {
+        if accounts.len() != 8 {
+            #[cfg(feature = "logs")]
+            msg!("insufficient accounts");
+            return Err(std::io::ErrorKind::InvalidInput.into());
+        }
+        Ok(Self {
+            collateral_token_account: accounts[0],
+            reserve: accounts[1],
+            reserve_liquidity: accounts[2],
+            collateral_mint: accounts[3],
+            lending_market_account: accounts[4],
+            lending_market_authority: accounts[5],
+            pyth_price_account: accounts[6],
+            switchboard_price_account: accounts[7],
+        })
+    }
+}
+
+
+impl TryFrom<&[Pubkey]> for MangoStandaloneAddresses {
+    type Error = std::io::ErrorKind;
+    fn try_from(accounts: &[Pubkey]) -> Result<Self, Self::Error> {
+        // although 8 accounts are required we dont need to provide system program through input
+        if accounts.len() != 7 {
+            #[cfg(feature = "logs")]
+            msg!("insufficient accounts");
+            return Err(std::io::ErrorKind::InvalidInput.into());
+        }
+        Ok(Self {
+            group: accounts[0],
+            optimizer_mango_account: accounts[1],
+            cache: accounts[2],
+            root_bank: accounts[3],
+            node_bank: accounts[4],
+            group_token_account: accounts[5],
+            group_signer: accounts[6],
+            system_program_id: system_program::id(),
+        })
     }
 }

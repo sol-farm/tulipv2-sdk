@@ -5,7 +5,7 @@
 
 
 pub mod withdraw;
-pub mod withdraw_deposit_tracking;
+pub mod traits;
 
 #[cfg(feature = "usdc-optimizer")]
 pub mod usdc;
@@ -18,3 +18,10 @@ pub mod ray;
 
 #[cfg(feature = "usdt-optimizer")]
 pub mod usdt;
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Platform {
+    MangoV3,
+    Tulip,
+    Solend,
+}
