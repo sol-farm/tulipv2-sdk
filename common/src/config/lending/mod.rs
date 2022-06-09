@@ -13,3 +13,6 @@ pub mod sol;
 
 #[cfg(feature = "ray-optimizer")]
 pub mod ray;
+
+#[cfg(feature = "usdt-optimizer")]
+pub mod usdt;
