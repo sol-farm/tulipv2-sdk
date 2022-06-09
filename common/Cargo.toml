@@ -25,7 +25,7 @@ bytemuck = "1.7.2"
 solana-sdk = "1.9.1"
 so-defi-utils = "0.1.1"
 spl-associated-token-account = "1.0.3"
-sighashdb = {version = "0.1.25", default-features = false, features = ["tulipv2"]}
+sighashdb = {version = "0.1.26", default-features = false, features = ["tulipv2"]}
 [dev-dependencies]
 anchor-client = "0.24.2"
 

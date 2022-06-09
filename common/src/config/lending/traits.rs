@@ -17,6 +17,7 @@ pub trait WithdrawMultiOptimizerVault {
     fn authority(&self) -> Pubkey;
     /// the main vault that users interact with, which is called a MultiDepositOptimizerVaultV1
     fn multi_deposit_vault(&self) -> Pubkey;
+    fn multi_deposit_vault_pda(&self) -> Pubkey;
     /// to enable maximal defi legos, multiple "standalone vaults" may exist, where
     /// a single standalone vault is deposits one asset (ie USDC) into one protocol (ie Tulip),
     /// this allows the standalone vaults to be reused by any of tulip's v2 vaults for
@@ -111,7 +112,7 @@ pub trait WithdrawMultiOptimizerVault {
     ///
     ///         7 []                -> system_program
     ///
-    fn standalone_vault_accounts(&self) -> Vec<AccountMeta>;
+    fn standalone_vault_accounts(&self) -> Option<Vec<AccountMeta>>;
     /// returns the Instruction object which can be used to invoke
     /// the withdraw_multi_optimizer_vault instruction via CPI, or off-chain clients
     ///

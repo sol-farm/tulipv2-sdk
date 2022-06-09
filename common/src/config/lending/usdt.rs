@@ -14,6 +14,10 @@ pub mod multi_deposit {
         IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
     };
     use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
+    use crate::config::lending::traits::WithdrawMultiOptimizerVault;
+    use crate::config::lending::withdraw::WithdrawAddresses;
+    use crate::config::lending::Platform;
+
     /// empty struct used to implement the various traits used
     /// to interact with the usdt lending optimizer vault
     pub struct ProgramConfig;
@@ -65,12 +69,89 @@ pub mod multi_deposit {
         pub fn withdraw_deposit_tracking(user: Pubkey) -> impl WithdrawDepositTracking {
             WithdrawDepositTrackingAddresses::new(user, ACCOUNT, SHARES_MINT)
         }
+        pub fn withdraw_multi_deposit_optimizer_vault(
+            user: Pubkey,
+            platform: Platform,
+        ) -> std::result::Result<impl WithdrawMultiOptimizerVault, std::io::Error> {
+            let (standalone_config, platform_config) = if platform.eq(&Platform::MangoV3) {
+                (
+                    (
+                        ProgramConfig::get_mango_remaining_accounts().to_vec(),
+                        platform,
+                    ),
+                    super::mango::platform_config(),
+                )
+            } else if platform.eq(&Platform::Solend) {
+                (
+                    (
+                        ProgramConfig::get_solend_remaining_accounts().to_vec(),
+                        platform,
+                    ),
+                    super::solend::platform_config(),
+                )
+            } else {
+                (
+                    (
+                        ProgramConfig::get_tulip_remaining_accounts().to_vec(),
+                        platform,
+                    ),
+                    super::tulip::platform_config(),
+                )
+            };
+            Ok(WithdrawAddresses::new(
+                user,
+                ACCOUNT,
+                PDA,
+                SHARES_MINT,
+                UNDERLYING_MINT,
+                UNDERLYING_WITHDRAW_QUEUE,
+                platform_config,
+                (&standalone_config.0, standalone_config.1),
+            )?)
+        }
+        pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
+            [
+                super::tulip::COLLATERAL_TOKEN_ACCOUNT,
+                super::tulip::RESERVE_ACCOUNT,
+                super::tulip::RESERVE_LIQUIDITY_ACCOUNT,
+                super::tulip::COLLATERAL_MINT,
+                super::tulip::LENDING_MARKET_ACCOUNT,
+                super::tulip::LENDING_MARKET_AUTHORITY,
+                super::tulip::PYTH_PRICE_ACCOUNT,
+            ]
+        }
+
+        pub fn get_solend_remaining_accounts() -> [Pubkey; 8] {
+            [
+                super::solend::COLLATERAL_TOKEN_ACCOUNT,
+                super::solend::RESERVE_ACCOUNT,
+                super::solend::RESERVE_LIQUIDITY_ACCOUNT,
+                super::solend::COLLATERAL_MINT,
+                super::solend::LENDING_MARKET_ACCOUNT,
+                super::solend::LENDING_MARKET_AUTHORITY,
+                super::solend::PYTH_PRICE_ACCOUNT,
+                super::solend::SWITCHBOARD_PRICE_ACCOUNT,
+            ]
+        }
+
+        pub fn get_mango_remaining_accounts() -> [Pubkey; 7] {
+            [
+                super::mango::GROUP,
+                super::mango::OPTIMIZER_MANGO_ACCOUNT,
+                super::mango::CACHE,
+                super::mango::ROOT_BANK,
+                super::mango::NODE_BANK,
+                super::mango::GROUP_TOKEN_ACCOUNT,
+                super::mango::GROUP_SIGNER,
+            ]
+        }
     }
 }
 
 /// bundles configuration information for the solend usdc standalone vault
 pub mod solend {
     use super::*;
+    use crate::config::lending::withdraw::PlatformConfigAddresses;
 
     pub const TAG_STRING: &str = "solend";
     pub const FARM_KEY: Farm = Farm::Lending {
@@ -136,11 +217,24 @@ pub mod solend {
     /// reserve's collateral token mint
     pub const COLLATERAL_TOKEN_ACCOUNT: Pubkey =
         static_pubkey!("8DPzi8QSpREME7hsFs3Pcf7Uzgi5Ranxe1HvUt8L8jBg");
+
+    pub fn platform_config() -> PlatformConfigAddresses {
+        PlatformConfigAddresses {
+            vault: ACCOUNT,
+            vault_pda: PDA,
+            information_account: INFORMATION_ACCOUNT,
+            config_data_account: CONFIG_DATA_ACCOUNT,
+            shares_mint: SHARES_MINT,
+            underlying_deposit_queue: UNDERLYING_DEPOSIT_QUEUE,
+            lending_program: PROGRAM_ID,
+        }
+    }
 }
 
 /// bundles configuration information for the tulip usdc standalone vault
 pub mod tulip {
     use super::*;
+    use crate::config::lending::withdraw::PlatformConfigAddresses;
 
     pub const TAG_STRING: &str = "tulip";
     pub const FARM_KEY: Farm = Farm::Lending {
@@ -199,11 +293,24 @@ pub mod tulip {
     /// reserve's collateral token mint
     pub const COLLATERAL_TOKEN_ACCOUNT: Pubkey =
         static_pubkey!("BD7AHG6GwNRj4xaTr9RZgJTpWfMJtZsARMzgnFvNYffm");
+
+    pub fn platform_config() -> PlatformConfigAddresses {
+        PlatformConfigAddresses {
+            vault: ACCOUNT,
+            vault_pda: PDA,
+            information_account: INFORMATION_ACCOUNT,
+            config_data_account: CONFIG_DATA_ACCOUNT,
+            shares_mint: SHARES_MINT,
+            underlying_deposit_queue: UNDERLYING_DEPOSIT_QUEUE,
+            lending_program: PROGRAM_ID,
+        }
+    }
 }
 
 /// bundles configuration information for the mango usdc standalone vault
 pub mod mango {
     use super::*;
+    use crate::config::lending::withdraw::PlatformConfigAddresses;
 
     pub const TAG_STRING: &str = "mango";
     pub const FARM_KEY: Farm = Farm::Lending {
@@ -250,4 +357,16 @@ pub mod mango {
     /// address of the standalone vault's mango account
     pub const OPTIMIZER_MANGO_ACCOUNT: Pubkey =
         static_pubkey!("FhLkZ4krKGzjLzJhMQHJt94gPpWdGNUkqYZKwtUGZFW");
+
+    pub fn platform_config() -> PlatformConfigAddresses {
+        PlatformConfigAddresses {
+            vault: ACCOUNT,
+            vault_pda: PDA,
+            information_account: INFORMATION_ACCOUNT,
+            config_data_account: CONFIG_DATA_ACCOUNT,
+            shares_mint: SHARES_MINT,
+            underlying_deposit_queue: UNDERLYING_DEPOSIT_QUEUE,
+            lending_program: PROGRAM_ID,
+        }
+    }
 }

@@ -1,9 +1,14 @@
-use anchor_lang::solana_program::{pubkey::Pubkey, system_program};
-
-use crate::config::lending::usdc;
-use solana_sdk::{msg, native_token::Sol};
-
-use super::Platform;
+use super::{traits::WithdrawMultiOptimizerVault, Platform};
+use crate::config::{lending::usdc, ID};
+use anchor_lang::AnchorSerialize;
+use anchor_lang::{
+    solana_program::{pubkey::Pubkey, system_program},
+    ToAccountMetas,
+};
+use sighashdb::GlobalSighashDB;
+use solana_sdk::instruction::AccountMeta;
+use solana_sdk::sysvar;
+use solana_sdk::{instruction::Instruction, msg, native_token::Sol};
 
 #[derive(Clone, Copy)]
 pub struct WithdrawAddresses {
@@ -29,7 +34,7 @@ pub struct PlatformConfigAddresses {
     pub config_data_account: Pubkey,
     pub shares_mint: Pubkey,
     pub underlying_deposit_queue: Pubkey,
-    pub program_id: Pubkey,
+    pub lending_program: Pubkey,
 }
 
 #[derive(Clone, Copy)]
@@ -64,7 +69,6 @@ pub struct MangoStandaloneAddresses {
     pub node_bank: Pubkey,
     pub group_token_account: Pubkey,
     pub group_signer: Pubkey,
-    pub system_program_id: Pubkey,
 }
 
 impl WithdrawAddresses {
@@ -119,42 +123,114 @@ impl WithdrawAddresses {
         }
         Ok(withdraw_addresses)
     }
+}
 
-    pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
-        [
-            usdc::tulip::COLLATERAL_TOKEN_ACCOUNT,
-            usdc::tulip::RESERVE_ACCOUNT,
-            usdc::tulip::RESERVE_LIQUIDITY_ACCOUNT,
-            usdc::tulip::COLLATERAL_MINT,
-            usdc::tulip::LENDING_MARKET_ACCOUNT,
-            usdc::tulip::LENDING_MARKET_AUTHORITY,
-            usdc::tulip::PYTH_PRICE_ACCOUNT,
-        ]
+impl WithdrawMultiOptimizerVault for WithdrawAddresses {
+    fn authority(&self) -> Pubkey {
+        self.authority
     }
-
-    pub fn get_solend_remaining_accounts() -> [Pubkey; 8] {
-        [
-            usdc::solend::COLLATERAL_TOKEN_ACCOUNT,
-            usdc::solend::RESERVE_ACCOUNT,
-            usdc::solend::RESERVE_LIQUIDITY_ACCOUNT,
-            usdc::solend::COLLATERAL_MINT,
-            usdc::solend::LENDING_MARKET_ACCOUNT,
-            usdc::solend::LENDING_MARKET_AUTHORITY,
-            usdc::solend::PYTH_PRICE_ACCOUNT,
-            usdc::solend::SWITCHBOARD_PRICE_ACCOUNT,
-        ]
+    fn multi_deposit_vault(&self) -> Pubkey {
+        self.multi_vault
     }
-
-    pub fn get_mango_remaining_accounts() -> [Pubkey; 8] {
-        [
-            usdc::mango::GROUP,
-            usdc::mango::OPTIMIZER_MANGO_ACCOUNT,
-            usdc::mango::CACHE,
-            usdc::mango::ROOT_BANK,
-            usdc::mango::NODE_BANK,
-            usdc::mango::GROUP_TOKEN_ACCOUNT,
-            usdc::mango::GROUP_SIGNER,
-            system_program::id(),
+    fn multi_deposit_vault_pda(&self) -> Pubkey {
+        self.multi_vault_pda
+    }
+    fn withdraw_vault(&self) -> Pubkey {
+        self.platform_config.vault
+    }
+    fn withdraw_vault_pda(&self) -> Pubkey {
+        self.platform_config.vault_pda
+    }
+    fn platform_information(&self) -> Pubkey {
+        self.platform_config.information_account
+    }
+    fn platform_config_data(&self) -> Pubkey {
+        self.platform_config.config_data_account
+    }
+    fn lending_program(&self) -> Pubkey {
+        self.platform_config.lending_program
+    }
+    fn multi_burning_shares_token_account(&self) -> Pubkey {
+        self.multi_burning_shares_token_account
+    }
+    fn withdraw_burning_shares_token_account(&self) -> Pubkey {
+        self.withdraw_burning_shares_token_account
+    }
+    fn receiving_underlying_token_account(&self) -> Pubkey {
+        self.receiving_underlying_token_account
+    }
+    fn multi_underlying_withdraw_queue(&self) -> Pubkey {
+        self.multi_underlying_withdraw_queue
+    }
+    fn multi_shares_mint(&self) -> Pubkey {
+        self.multi_shares_mint
+    }
+    fn withdraw_shares_mint(&self) -> Pubkey {
+        self.platform_config.shares_mint
+    }
+    fn withdraw_vault_underlying_deposit_queue(&self) -> Pubkey {
+        self.platform_config.underlying_deposit_queue
+    }
+    fn standalone_vault_accounts(&self) -> Option<Vec<solana_sdk::instruction::AccountMeta>> {
+        if let Some(mango_accounts) = self.mango_standalone_addresses {
+            Some(mango_accounts.to_account_metas(None))
+        } else if let Some(solend_accounts) = self.solend_standalone_addresses {
+            Some(solend_accounts.to_account_metas(None))
+        } else if let Some(tulip_accounts) = self.tulip_standalone_addresses {
+            Some(tulip_accounts.to_account_metas(None))
+        } else {
+            #[cfg(feature = "logs")]
+            msg!("mango, solend, and tulip accounts are None");
+            None
+        }
+    }
+    fn instruction(&self, amount: u64) -> Option<solana_sdk::instruction::Instruction> {
+        let ix_sighash = self.ix_data()?;
+        // 8 for the sighash, 8 for the amount
+        let mut ix_data = Vec::with_capacity(16);
+        ix_data.extend_from_slice(&ix_sighash[..]);
+        match AnchorSerialize::try_to_vec(&amount) {
+            Ok(amount_data) => ix_data.extend_from_slice(&amount_data[..]),
+            Err(err) => {
+                #[cfg(feature = "logs")]
+                msg!("failed to serialize amount {:#?}", err);
+                return None;
+            }
+        }
+        let mut accounts = self.to_account_meta(None);
+        let mut standalone_metas = self.standalone_vault_accounts()?;
+        accounts.append(&mut standalone_metas);
+        Some(Instruction {
+            program_id: ID,
+            accounts,
+            data: ix_data,
+        })
+    }
+    fn ix_data(&self) -> Option<[u8; 8]> {
+        GlobalSighashDB.get("withdraw_multi_deposit_optimizer_vault")
+    }
+    // returns the account metas for the main instruction object
+    fn to_account_meta(
+        &self,
+        _is_signer: Option<bool>,
+    ) -> Vec<solana_sdk::instruction::AccountMeta> {
+        vec![
+            AccountMeta::new_readonly(self.authority(), true),
+            AccountMeta::new(self.multi_deposit_vault(), false),
+            AccountMeta::new_readonly(self.multi_deposit_vault_pda(), false),
+            AccountMeta::new(self.withdraw_vault(), false),
+            AccountMeta::new_readonly(self.withdraw_vault_pda(), false),
+            AccountMeta::new_readonly(self.platform_information(), false),
+            AccountMeta::new_readonly(self.platform_config_data(), false),
+            AccountMeta::new_readonly(self.lending_program(), false),
+            AccountMeta::new(self.multi_burning_shares_token_account(), false),
+            AccountMeta::new(self.withdraw_burning_shares_token_account(), false),
+            AccountMeta::new(self.receiving_underlying_token_account(), false),
+            AccountMeta::new(self.multi_shares_mint(), false),
+            AccountMeta::new(self.withdraw_shares_mint(), false),
+            AccountMeta::new_readonly(sysvar::clock::id(), false),
+            AccountMeta::new_readonly(spl_token::id(), false),
+            AccountMeta::new_readonly(self.withdraw_vault_underlying_deposit_queue(), false),
         ]
     }
 }
@@ -217,7 +293,56 @@ impl TryFrom<&[Pubkey]> for MangoStandaloneAddresses {
             node_bank: accounts[4],
             group_token_account: accounts[5],
             group_signer: accounts[6],
-            system_program_id: system_program::id(),
         })
+    }
+}
+
+impl ToAccountMetas for MangoStandaloneAddresses {
+    fn to_account_metas(&self, is_signer: Option<bool>) -> Vec<AccountMeta> {
+        vec![
+            AccountMeta::new_readonly(self.group, false),
+            AccountMeta::new(self.optimizer_mango_account, false),
+            AccountMeta::new(self.cache, false),
+            AccountMeta::new(self.root_bank, false),
+            AccountMeta::new(self.node_bank, false),
+            AccountMeta::new(self.optimizer_mango_account, false),
+            AccountMeta::new_readonly(self.group_signer, false),
+            AccountMeta::new_readonly(system_program::id(), false),
+        ]
+    }
+}
+
+impl ToAccountMetas for SolendStandaloneAddresses {
+    fn to_account_metas(
+        &self,
+        is_signer: Option<bool>,
+    ) -> Vec<solana_sdk::instruction::AccountMeta> {
+        vec![
+            AccountMeta::new(self.collateral_token_account, false),
+            AccountMeta::new(self.reserve, false),
+            AccountMeta::new(self.reserve_liquidity, false),
+            AccountMeta::new(self.collateral_mint, false),
+            AccountMeta::new_readonly(self.lending_market_account, false),
+            AccountMeta::new_readonly(self.lending_market_authority, false),
+            AccountMeta::new_readonly(self.pyth_price_account, false),
+            AccountMeta::new(self.switchboard_price_account, false),
+        ]
+    }
+}
+
+impl ToAccountMetas for TulipStandaloneAddresses {
+    fn to_account_metas(
+        &self,
+        is_signer: Option<bool>,
+    ) -> Vec<solana_sdk::instruction::AccountMeta> {
+        vec![
+            AccountMeta::new(self.collateral_token_account, false),
+            AccountMeta::new(self.reserve, false),
+            AccountMeta::new(self.reserve_liquidity, false),
+            AccountMeta::new(self.collateral_mint, false),
+            AccountMeta::new_readonly(self.lending_market_account, false),
+            AccountMeta::new_readonly(self.lending_market_authority, false),
+            AccountMeta::new_readonly(self.pyth_price_account, false),
+        ]
     }
 }
