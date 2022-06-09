@@ -1,5 +1,5 @@
 use super::{traits::WithdrawMultiOptimizerVault, Platform};
-use crate::config::{lending::usdc, ID};
+use crate::config::{ID};
 use anchor_lang::AnchorSerialize;
 use anchor_lang::{
     solana_program::{pubkey::Pubkey, system_program},
@@ -8,7 +8,7 @@ use anchor_lang::{
 use sighashdb::GlobalSighashDB;
 use solana_sdk::instruction::AccountMeta;
 use solana_sdk::sysvar;
-use solana_sdk::{instruction::Instruction, msg, native_token::Sol};
+use solana_sdk::{instruction::Instruction, msg};
 
 #[derive(Clone, Copy)]
 pub struct WithdrawAddresses {
@@ -241,7 +241,7 @@ impl TryFrom<&[Pubkey]> for TulipStandaloneAddresses {
         if accounts.len() != 7 {
             #[cfg(feature = "logs")]
             msg!("insufficient accounts");
-            return Err(std::io::ErrorKind::InvalidInput.into());
+            return Err(std::io::ErrorKind::InvalidInput);
         }
         Ok(Self {
             collateral_token_account: accounts[0],
@@ -261,7 +261,7 @@ impl TryFrom<&[Pubkey]> for SolendStandaloneAddresses {
         if accounts.len() != 8 {
             #[cfg(feature = "logs")]
             msg!("insufficient accounts");
-            return Err(std::io::ErrorKind::InvalidInput.into());
+            return Err(std::io::ErrorKind::InvalidInput);
         }
         Ok(Self {
             collateral_token_account: accounts[0],
@@ -283,7 +283,7 @@ impl TryFrom<&[Pubkey]> for MangoStandaloneAddresses {
         if accounts.len() != 7 {
             #[cfg(feature = "logs")]
             msg!("insufficient accounts");
-            return Err(std::io::ErrorKind::InvalidInput.into());
+            return Err(std::io::ErrorKind::InvalidInput);
         }
         Ok(Self {
             group: accounts[0],
@@ -298,7 +298,7 @@ impl TryFrom<&[Pubkey]> for MangoStandaloneAddresses {
 }
 
 impl ToAccountMetas for MangoStandaloneAddresses {
-    fn to_account_metas(&self, is_signer: Option<bool>) -> Vec<AccountMeta> {
+    fn to_account_metas(&self, _is_signer: Option<bool>) -> Vec<AccountMeta> {
         vec![
             AccountMeta::new_readonly(self.group, false),
             AccountMeta::new(self.optimizer_mango_account, false),
@@ -315,7 +315,7 @@ impl ToAccountMetas for MangoStandaloneAddresses {
 impl ToAccountMetas for SolendStandaloneAddresses {
     fn to_account_metas(
         &self,
-        is_signer: Option<bool>,
+        _is_signer: Option<bool>,
     ) -> Vec<solana_sdk::instruction::AccountMeta> {
         vec![
             AccountMeta::new(self.collateral_token_account, false),
@@ -333,7 +333,7 @@ impl ToAccountMetas for SolendStandaloneAddresses {
 impl ToAccountMetas for TulipStandaloneAddresses {
     fn to_account_metas(
         &self,
-        is_signer: Option<bool>,
+        _is_signer: Option<bool>,
     ) -> Vec<solana_sdk::instruction::AccountMeta> {
         vec![
             AccountMeta::new(self.collateral_token_account, false),

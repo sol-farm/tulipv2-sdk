@@ -2,7 +2,7 @@
 
 use anchor_lang::prelude::*;
 use solana_sdk::instruction::Instruction;
-use tulipv2_sdk_farms::Farm;
+
 
 /// The `WithdrawMultiOptimizerVault` trait is used to
 /// burn a lending optimizer's tokenized shares, in exchange

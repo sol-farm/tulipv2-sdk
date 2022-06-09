@@ -98,7 +98,7 @@ pub mod multi_deposit {
                     super::tulip::platform_config(),
                 )
             };
-            Ok(WithdrawAddresses::new(
+            WithdrawAddresses::new(
                 user,
                 ACCOUNT,
                 PDA,
@@ -107,7 +107,7 @@ pub mod multi_deposit {
                 UNDERLYING_WITHDRAW_QUEUE,
                 platform_config,
                 (&standalone_config.0, standalone_config.1),
-            )?)
+            )
         }
         pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
             [
