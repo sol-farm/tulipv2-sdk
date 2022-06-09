@@ -2406,9 +2406,9 @@ dependencies = [
 
 [[package]]
 name = "sighashdb"
-version = "0.1.23"
+version = "0.1.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7f02cd2bfb2aa3a19fa326be813367444c39c17f8fd1df2b6952d7f30f02283"
+checksum = "e0290a90b576ca4c118342afa544827a723a9eba87474a27f7d4679d8f6812e1"
 dependencies = [
  "hex",
 ]

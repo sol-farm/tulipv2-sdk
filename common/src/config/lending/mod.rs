@@ -4,7 +4,6 @@
 //! By default all of the configuration modules are  enabled, however this can be disabled/enabled using feature flags to help reduce the size of the dependency
 
 
-pub mod register_deposit_tracking;
 pub mod withdraw;
 pub mod withdraw_deposit_tracking;
 

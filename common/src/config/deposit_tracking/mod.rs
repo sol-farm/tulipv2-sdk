@@ -10,3 +10,5 @@
 pub mod derivations;
 pub mod traits;
 pub mod issue_shares;
+pub mod register;
+pub mod withdraw;

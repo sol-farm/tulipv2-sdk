@@ -7,12 +7,13 @@ use tulipv2_sdk_farms::{lending::Lending, Farm};
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
-    use crate::config::deposit_tracking::{traits::IssueShares, issue_shares::DepositAddresses};
-
+    use crate::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
+    use crate::config::deposit_tracking::traits::{IssueShares, RegisterDepositTracking, WithdrawDepositTracking};
+    use crate::config::deposit_tracking::issue_shares::DepositAddresses;
+    use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
     use super::*;
-
     /// empty struct used to implement the various traits used 
-    /// to interact with the vault
+    /// to interact with the usdt lending optimizer vault
     pub struct ProgramConfig;
 
     pub const TAG_STRING: &str = "usdtv1";
@@ -61,6 +62,21 @@ pub mod multi_deposit {
                 PDA,
                 SHARES_MINT,
                 UNDERLYING_MINT
+            )
+        }
+        pub fn register_deposit_tracking_ix(user: Pubkey) -> impl RegisterDepositTracking {
+            RegisterDepositTrackingAddresses::new(
+                user,
+                ACCOUNT,
+                SHARES_MINT,
+                UNDERLYING_MINT
+            )
+        }
+        pub fn withdraw_deposit_tracking(user: Pubkey) -> impl WithdrawDepositTracking {
+            WithdrawDepositTrackingAddresses::new(
+                user,
+                ACCOUNT,
+                SHARES_MINT
             )
         }
     }
