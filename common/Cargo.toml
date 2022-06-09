@@ -27,3 +27,11 @@ so-defi-utils = "0.1.1"
 spl-associated-token-account = "1.0.3"
 [dev-dependencies]
 anchor-client = "0.24.2"
+
+[features]
+default = ["optimizers"]
+optimizers = ["usdc-optimizer", "usdt-optimizer", "sol-optimizer", "ray-optimizer"]
+usdc-optimizer = []
+usdt-optimizer = []
+sol-optimizer = []
+ray-optimizer = []

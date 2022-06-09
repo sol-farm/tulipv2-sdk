@@ -9,42 +9,42 @@ use tulipv2_sdk_farms::{lending::Lending, Farm};
 pub mod multi_deposit {
     use super::*;
 
-    pub const TAG_STRING: &str = "usdcv1";
+    pub const TAG_STRING: &str = "solv1";
     pub const FARM_KEY: Farm = Farm::Lending {
         name: Lending::MULTI_DEPOSIT,
     };
 
     /// address of the multi deposit vault itself
-    pub const ACCOUNT: Pubkey = static_pubkey!("3wPiV9inTGexMZjp6x5Amqwp2sRNtpSheG8Hbv2rgq8W");
+    pub const ACCOUNT: Pubkey = static_pubkey!("2WNw7tW2G54UCXN726S5tR9XutSEDeMf7xamidQtWszK");
     /// address of the multi deposit vault pda
-    pub const PDA: Pubkey = static_pubkey!("14fdy6YXbhDgnVQz4VcgSGgUcZ35eE48SKDrfqF87NUP");
+    pub const PDA: Pubkey = static_pubkey!("FzSwmSA7ZsKsfCRZGnfxb13HYX4nZpMQfBjqpg5bjT5V");
     /// address of the shares mint
-    pub const SHARES_MINT: Pubkey = static_pubkey!("Cvvh8nsKZet59nsDDo3orMa3rZnPWQhpgrMCVcRDRgip");
+    pub const SHARES_MINT: Pubkey = static_pubkey!("DgnaQdr5VkNbH7n8qN471Hgsw19hUbMBhUs1N3MQKgtu");
     /// address of the multi depsoit vaults underlying asset compound queue
     pub const UNDERLYING_COMPOUND_QUEUE: Pubkey =
-        static_pubkey!("FAr7Xouceyn9Ms7Egx4JUQryy3RQXuM27RVvCqH6X1o3");
+        static_pubkey!("637PczfBDWSRX5d55M8punyQEzdx3G3htMwhrD6cVcAk");
     /// address of the multi deposit vaults underlying asset deposit queue
     pub const UNDERLYING_DEPOSIT_QUEUE: Pubkey =
-        static_pubkey!("36KtHLHxcGnrfEb2GLwPcbN9nHUkeoi3gd6rMQj8wwVj");
+        static_pubkey!("8HjBSJvQQwaC81gY1sND1ekNwjEvewYvrJeEh4Be6nQQ");
     /// address of the multi deposit vaults underlying asset withdraw queue
     pub const UNDERLYING_WITHDRAW_QUEUE: Pubkey =
-        static_pubkey!("HLVcpKPkBJJJGTHTSaZcAixDppy4R65x1is3k8Q7qZpj");
+        static_pubkey!("9k8MUkfjNDH1XPRNhSia57aAb7HGneP1jREQRPc3XZh7");
     pub const UNDERLYING_MINT: Pubkey =
-        static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+        static_pubkey!("So11111111111111111111111111111111111111112");
     pub const REBALANCE_STATE_TRANSITION: Pubkey =
-        static_pubkey!("3Vjgd77xSaAeBX9DmtZ2Rw7EwVCqvb8aoPvDD7Z75HXP");
+        static_pubkey!("7VrQy2dzGBff69rwz7XxfF9FB5Pvgi9UQFNGwept4dzt");
     pub const REBALANCE_STATE_TRANSITION_UNDERLYING: Pubkey =
-        static_pubkey!("BBAcBhNSvGpHd4FHh1XF1VGpGjfeUDeNxxww9TRKra7r");
+        static_pubkey!("GrDw6ChbbA119r694Wvtnc9dYuBi2BbT1mHJLT5ovuB9");
 
     /// the address of the multi deposit vault's shares token account for the solend standalone vault
     pub const SOLEND_OPTIMIZER_SHARES_ACCOUNT: Pubkey =
-        static_pubkey!("UxVNZzzx3xRxKFAuGjRQgbDaa7mirSkFEAu7qiYQ1h4");
+        static_pubkey!("96jC6s6whzjxov8E8pL6t6jJsPPXkeKWQx1CZzLQiahp");
     /// the address of the multi deposit vault's shares token account for the tulip standalone vault
     pub const TULIP_OPTIMIZER_SHARES_ACCOUNT: Pubkey =
-        static_pubkey!("M7akLS7xYVhp68LnMkBBCemvqkGcCycQ3qp7e3SsKR1");
+        static_pubkey!("qv1gRK7rQkuzyewtg4Xbqgmr8J99FnDhELYtsjCUuws");
     /// the address of the multi deposit vault's shares token account for the mango standalone vault
     pub const MANGO_OPTIMIZER_SHARES_ACCOUNT: Pubkey =
-        static_pubkey!("A9kM8NKf3v29F3DgRQ5Rw7TJoadFZZDfBGLRBGNzASrr");
+        static_pubkey!("7XdtJRhMYg5DS5uueCjpWHAxRYFaDUFu2MkG5AWE4Ywx");
 }
 
 /// bundles configuration information for the solend usdc standalone vault
@@ -53,37 +53,37 @@ pub mod solend {
 
     pub const TAG_STRING: &str = "solend";
     pub const FARM_KEY: Farm = Farm::Lending {
-        name: Lending::USDC,
+        name: Lending::SOL,
     };
 
     /// address of the standalone vault itself
-    pub const ACCOUNT: Pubkey = static_pubkey!("85JXjDiyianDpvz8y8efkRyFsxpnSJJpmyxrJ7bncKHM");
+    pub const ACCOUNT: Pubkey = static_pubkey!("2DPDpyd8pUoNDux8E7ZbzCgQtvyyVv8gPHUAzHDRXiWN");
     /// address of the standalone vault pda
-    pub const PDA: Pubkey = static_pubkey!("963HGaUjwGqvqwwqwJZayUXvCC21AAqZU5SLw1kU4gVc");
+    pub const PDA: Pubkey = static_pubkey!("9ftmG873yFyybF51v85QjrvYfYZTu83mSgQo6wHtEqTh");
     /// address of the shares mint
-    pub const SHARES_MINT: Pubkey = static_pubkey!("CS8cJicaSpphTTboMJD1UeNpU7vpkZc86vKrtqzRVnG5");
+    pub const SHARES_MINT: Pubkey = static_pubkey!("934f2qngiJN2XnCjqMkEJjECgMGzCBfJF6SCBqzRYBKw");
     /// address of the standalone vaults underlying asset compound queue
     pub const UNDERLYING_COMPOUND_QUEUE: Pubkey =
-        static_pubkey!("2KpoR9CquEuUTgVqFTtZi8nqrTA1YFsYmsHjp957YVcX");
+        static_pubkey!("7q6UP1BhkAxbzkK9HSTbUU8GE3YgGnFTvL4sApMgN9Yt");
     /// address of the standalone vaults underlying asset deposit queue
     pub const UNDERLYING_DEPOSIT_QUEUE: Pubkey =
-        static_pubkey!("2Li9Q5Vx9BEnFTGJTLWc5pVqerYGjhgyGYzSAA2WhYKQ");
+        static_pubkey!("57V8aNbjFzZHLs7TrzqgMDvLxuaaMzouLapi3eawytoB");
     /// address of the standalone vaults underlying asset withdraw queue
     pub const UNDERLYING_WITHDRAW_QUEUE: Pubkey =
-        static_pubkey!("BoGjVzrz2yhPRnFoj2QPPMLZTkptG7pESc3PyHDGV6WJ");
+        static_pubkey!("GKXUBegwfoVBrTJmEbsUZ8sxRtx6Pk54rgerYNvVPP63");
     pub const UNDERLYING_MINT: Pubkey =
-        static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+        static_pubkey!("So11111111111111111111111111111111111111112");
     /// address of the configuration data account used the v2 vaults program
     pub const CONFIG_DATA_ACCOUNT: Pubkey =
-        static_pubkey!("6AzcPNmNWomkdMRgcZJPVAs4zF1jev9wqxzzzxVzDDsi");
+        static_pubkey!("7sqrzaBWTf7apr5z2VmAb61g6CbzFr5mzjWcYur8arcA");
     /// address of the information account which stores configuration information for the config data account
     pub const INFORMATION_ACCOUNT: Pubkey =
-        static_pubkey!("GRL5rtnvzCfQRdKJXkG2A8LvDSNXkbxENEnF4SwJ3pTF");
+        static_pubkey!("5vCZXDNn8NTFrvQvNGGRhNAEf5tHqXq83xnmjJMJSFmE");
     /// address of the program id this standalone vault deposits into
     pub const PROGRAM_ID: Pubkey = static_pubkey!("So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo");
     /// address of the reserves collateral token mint
     pub const COLLATERAL_MINT: Pubkey =
-        static_pubkey!("993dVFL2uXWYeoXuEBFXR4BijeXdTv4s6BzsCjJZuwqk");
+        static_pubkey!("5h6ssFpeDeRbzsEHDbTQNH7nVGgsKrZydxdSTnLm6QdV");
     /// address of the lending market which owns the reserve
     pub const LENDING_MARKET_ACCOUNT: Pubkey =
         static_pubkey!("4UpD2fh7xH3VP9QQaXtsS1YY3bxzWhtfpks7FatyKvdY");
@@ -93,11 +93,11 @@ pub mod solend {
     /// address of the oracle that goes into the first element
     /// of the oracle keys array
     pub const PYTH_PRICE_ACCOUNT: Pubkey =
-        static_pubkey!("Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD");
+        static_pubkey!("H6ARHf6YXhGYeQfUzQNGk6rDNnLBQKrenN712K4AQJEG");
     /// address of the oracle that goes into the second element
     /// of the oracle keys array
     pub const SWITCHBOARD_PRICE_ACCOUNT: Pubkey =
-        static_pubkey!("CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb");
+        static_pubkey!("AdtRGGhmqvom3Jemp5YNrxd9q9unX36BZk1pujkkXijL");
     /// address of the program which owns the first oracle
     pub const PYTH_PROGRAM_ID: Pubkey =
         static_pubkey!("FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH");
@@ -106,15 +106,15 @@ pub mod solend {
         static_pubkey!("DtmE9D2CSB4L5D6A15mraeEjrGMm6auWVzgaD8hK2tZM");
     /// address of the lending market reserve account
     pub const RESERVE_ACCOUNT: Pubkey =
-        static_pubkey!("BgxfHJDzm44T7XG68MYKx7YisTjZu73tVovyZSjJMpmw");
+        static_pubkey!("8PbodeaosQP19SjYFx855UMqWxH2HynZLdBXmsrbac36");
     /// address of the reserve's token account which holders
     /// the underlying tokens
     pub const RESERVE_LIQUIDITY_ACCOUNT: Pubkey =
-        static_pubkey!("8SheGtsopRUDzdiD6v6BR9a6bqZ9QwywYQY99Fp5meNf");
+        static_pubkey!("8UviNr47S8eL6J3WfDxMRa3hvLta1VDJwNWqsDgtN3Cv");
     /// the address of the standalone vault's token account for the
     /// reserve's collateral token mint
     pub const COLLATERAL_TOKEN_ACCOUNT: Pubkey =
-        static_pubkey!("6EaiG2gRVu9u7QzVmX59AWLSmiaEYvMrKWQfPMCgNxsZ");
+        static_pubkey!("4bKoFNye8HxwkK2jfq3XHaLmfcKWZtd1fAA6DsMYqx3f");
 }
 
 /// bundles configuration information for the tulip usdc standalone vault
@@ -123,37 +123,37 @@ pub mod tulip {
 
     pub const TAG_STRING: &str = "tulip";
     pub const FARM_KEY: Farm = Farm::Lending {
-        name: Lending::USDC,
+        name: Lending::SOL,
     };
 
     /// address of the standalone vault itself
-    pub const ACCOUNT: Pubkey = static_pubkey!("8KLrrsnUv3DjC9Q89xSQDVdiGLZHUEUuyPedfHrtuVRr");
+    pub const ACCOUNT: Pubkey = static_pubkey!("5KrsibBDuJyifhFMnpKhicZxpdjse8o4M3viXgqyduoH");
     /// address of the standalone vault pda
-    pub const PDA: Pubkey = static_pubkey!("mrT9Q45iuC2HLYxpceaQFjzcAgd6Trks7bXAGbKYpwL");
+    pub const PDA: Pubkey = static_pubkey!("3xk85iPpM4ni7WaiioCbLeq29KRXVVkx7myJgKHQ1v2S");
     /// address of the shares mint
-    pub const SHARES_MINT: Pubkey = static_pubkey!("D2PLcwGR1wsXUPhb1BHysSVEsHVVCQ129qGpgXXaTNR1");
+    pub const SHARES_MINT: Pubkey = static_pubkey!("DVumpNbQZNXvTpK8oY31DrQ9gNdK5hHRqhs7oApPF9Qo");
     /// address of the standalone vaults underlying asset compound queue
     pub const UNDERLYING_COMPOUND_QUEUE: Pubkey =
-        static_pubkey!("E9XiAr49FzCGeLHwLjz5H1AiPKWNodizA5e8So7zLmjz");
+        static_pubkey!("CbgZWaX2R2etnvb2xz86ehWf97ZaFWqGVSV3qLJAhNpV");
     /// address of the standalone vaults underlying asset deposit queue
     pub const UNDERLYING_DEPOSIT_QUEUE: Pubkey =
-        static_pubkey!("8eDHmS15CWd8d88uckg6oKxrfwijZVudZsDgdtgGqS49");
+        static_pubkey!("67FuierfDeYa1eru2rFh3EKxmrziYWaPS4uKnpW3fUoh");
     /// address of the standalone vaults underlying asset withdraw queue
     pub const UNDERLYING_WITHDRAW_QUEUE: Pubkey =
-        static_pubkey!("AMdJL2UzEpd54a7wDqq6aV99ix6iXMHMmvs1w8CRs3Gc");
+        static_pubkey!("DSgsM43L563zHaioGHAzAysVdT89EPLZyzAbBN83QyxT");
     pub const UNDERLYING_MINT: Pubkey =
-        static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+        static_pubkey!("So11111111111111111111111111111111111111112");
     /// address of the configuration data account used the v2 vaults program
     pub const CONFIG_DATA_ACCOUNT: Pubkey =
-        static_pubkey!("7XTtoiHfkYzjLDxKDMoaVYncmdBW1yLfphmisSbBrnuZ");
+        static_pubkey!("Hv7bo9Y1jXRYs3gV9BJz8vYG3Gandw2NofPxrdKJ7ps5");
     /// address of the information account which stores configuration information for the config data account
     pub const INFORMATION_ACCOUNT: Pubkey =
-        static_pubkey!("4QVuedVSCMLA3eQ643czUy95uQFxXKAcCMJ1ChpkVA2B");
+        static_pubkey!("5j8x3giFz4fJfjKZAWELUP5DXHwjdn6xtch59od7EHxj");
     /// address of the program id this standalone vault deposits into
     pub const PROGRAM_ID: Pubkey = static_pubkey!("4bcFeLv4nydFrsZqV5CgwCVrPhkQKsXtzfy2KyMz7ozM");
     /// address of the reserves collateral token mint
     pub const COLLATERAL_MINT: Pubkey =
-        static_pubkey!("Amig8TisuLpzun8XyGfC5HJHHGUQEscjLgoTWsCCKihg");
+        static_pubkey!("H4Q3hDbuMUw8Bu72Ph8oV2xMQ7BFNbekpfQZKS2xF7jW");
     /// address of the lending market which owns the reserve
     pub const LENDING_MARKET_ACCOUNT: Pubkey =
         static_pubkey!("D1cqtVThyebK9KXKGXrCEuiqaNf5L4UfM1vHgCqiJxym");
@@ -163,21 +163,21 @@ pub mod tulip {
     /// address of the oracle that goes into the first element
     /// of the oracle keys array
     pub const PYTH_PRICE_ACCOUNT: Pubkey =
-        static_pubkey!("ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB");
+        static_pubkey!("DQAcms41gjYzidRooXRE9GQM1jAauPXDcEpMbVh4FEc7");
     /// address of the program which owns the first oracle
     pub const PYTH_PROGRAM_ID: Pubkey =
         static_pubkey!("5JQ8Mhdp2wv3HWcfjq9Ts8kwzCAeBADFBDAgBznzRsE4");
     /// address of the lending market reserve account
     pub const RESERVE_ACCOUNT: Pubkey =
-        static_pubkey!("FTkSmGsJ3ZqDSHdcnY7ejN1pWV3Ej7i88MYpZyyaqgGt");
+        static_pubkey!("FzbfXR7sopQL29Ubu312tkqWMxSre4dYSrFyYAjUYiC4");
     /// address of the reserve's token account which holders
     /// the underlying tokens
     pub const RESERVE_LIQUIDITY_ACCOUNT: Pubkey =
-        static_pubkey!("64QJd6MYXUjCBvCaZKaqxiKmaMkPUdNonE1KuY1YoGGb");
+        static_pubkey!("CPs1jJ5XAjhcAJsmTToWksAiPEqoLwKMbb1Z83rzaaaU");
     /// the address of the standalone vault's token account for the
     /// reserve's collateral token mint
     pub const COLLATERAL_TOKEN_ACCOUNT: Pubkey =
-        static_pubkey!("2U6kk4iTVqeypBydVPKA8mLTLAQEBfWf4KYfmkcvomPE");
+        static_pubkey!("DrB1QrmkdrTN4BfrZUpKzHMG1h7MkBrnMwz5HRHDiiSo");
 }
 
 /// bundles configuration information for the mango usdc standalone vault
@@ -186,32 +186,32 @@ pub mod mango {
 
     pub const TAG_STRING: &str = "mango";
     pub const FARM_KEY: Farm = Farm::Lending {
-        name: Lending::USDC,
+        name: Lending::SOL,
     };
 
     /// address of the standalone vault itself
-    pub const ACCOUNT: Pubkey = static_pubkey!("ZH9GWNBtwxcWeU9kHk77DSciwQnoJcSm8VVvYfmHXfe");
+    pub const ACCOUNT: Pubkey = static_pubkey!("4oJXs6Gx4Sj1YBY4DndMaB97RqUXzkW21t8YZGerEAvt");
     /// address of the standalone vault pda
-    pub const PDA: Pubkey = static_pubkey!("Dhry4TVd862yzcAuxFZgiuh6juS4R6FesfRZkWG3pCe7");
+    pub const PDA: Pubkey = static_pubkey!("BodRnr1TUSbzENAWEXr3QWbrPSFo1ahyWbsxZZd8TTP");
     /// address of the shares mint
-    pub const SHARES_MINT: Pubkey = static_pubkey!("5u6jxB7En2LF5aroeq8U5JUbnHa5WSYB5JTemh3gYaMj");
+    pub const SHARES_MINT: Pubkey = static_pubkey!("4jpVgQaLL3aDPxo2q1NoaWVLp6TfcH6ZVeUMKKDFph22");
     /// address of the standalone vaults underlying asset compound queue
     pub const UNDERLYING_COMPOUND_QUEUE: Pubkey =
-        static_pubkey!("D8DwEfi3sqr2MDaFzT2bsWHi4Sqy9gokXTkGgLqJ4imW");
+        static_pubkey!("Dp4dE9n2DRNyLurBg9VP4xby9yUYLw28hqExopFe4rEd");
     /// address of the standalone vaults underlying asset deposit queue
     pub const UNDERLYING_DEPOSIT_QUEUE: Pubkey =
-        static_pubkey!("3CnAyCjpA9mcxayed12cwJNGue7YbmyuBjpT9KN6meVT");
+        static_pubkey!("CGv35EfXdUxddZoWbKApZ7XRgHmyVt9XXydjT4ZfuCs6");
     /// address of the standalone vaults underlying asset withdraw queue
     pub const UNDERLYING_WITHDRAW_QUEUE: Pubkey =
-        static_pubkey!("GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd");
+        static_pubkey!("Aty8vpK1gHm5YoLJBSegwxpCY2QmoebFQXkUd3xq1f4w");
     pub const UNDERLYING_MINT: Pubkey =
-        static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+        static_pubkey!("So11111111111111111111111111111111111111112");
     /// address of the configuration data account used the v2 vaults program
     pub const CONFIG_DATA_ACCOUNT: Pubkey =
-        static_pubkey!("EecDX1xHrjKXQWbE5WtwU7fAiEkKxAv7w196oe8jaoqY");
+        static_pubkey!("6tGs1Yfejxo8pcyRiCovDkH5wvUAD5TsErpouQenPjfx");
     /// address of the information account which stores configuration information for the config data account
     pub const INFORMATION_ACCOUNT: Pubkey =
-        static_pubkey!("GDzbqzebKTxJaQVfxfqejkqU4HLcBmgNBwun3rADvm8J");
+        static_pubkey!("CGfAEaUSv1soa8Z3XMNpdnstGwRM46c1E5WxuRkpBFRw");
     pub const PROGRAM_ID: Pubkey = static_pubkey!("mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68");
     /// address of the mango cache
     pub const CACHE: Pubkey = static_pubkey!("EBDRoayCDDUvDgCimta45ajQeXbexv7aKqJubruqpyvu");
@@ -221,12 +221,12 @@ pub mod mango {
     pub const GROUP_SIGNER: Pubkey = static_pubkey!("9BVcYqEQxyccuwznvxXqDkSJFavvTyheiTYk231T1A8S");
     /// address of the mango group usdc token account
     pub const GROUP_TOKEN_ACCOUNT: Pubkey =
-        static_pubkey!("8Vw25ZackDzaJzzBBqcgcpDsCsDfRSkMGgwFQ3gbReWF");
+        static_pubkey!("AVn3JRGhifPCxjxZsU3tQuo4U4dTHizHzBDGW983tx47");
     /// address of the mango root bank
-    pub const ROOT_BANK: Pubkey = static_pubkey!("AMzanZxMirPCgGcBoH9kw4Jzi9LFMomyUCXbpzDeL2T8");
+    pub const ROOT_BANK: Pubkey = static_pubkey!("7jH1uLmiB2zbHNe6juZZYjQCrvquakTwd3yMaQpeP8rR");
     /// address of the mango usdc node bank
-    pub const NODE_BANK: Pubkey = static_pubkey!("BGcwkj1WudQwUUjFk78hAjwd1uAm8trh1N4CJSa51euh");
+    pub const NODE_BANK: Pubkey = static_pubkey!("2bqJYcA1A8gw4qJFjyE2G4akiUunpd9rP6QzfnxHqSqr");
     /// address of the standalone vault's mango account
     pub const OPTIMIZER_MANGO_ACCOUNT: Pubkey =
-        static_pubkey!("3cZkd5eVyZhMhE8nJcR3rA7GgVQ6gCJt2qofr2GQd8ca");
+        static_pubkey!("7jH1uLmiB2zbHNe6juZZYjQCrvquakTwd3yMaQpeP8rR");
 }
