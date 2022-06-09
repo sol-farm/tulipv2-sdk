@@ -1,3 +1,5 @@
+//! provides functions used for deriving deposit tracking related addresses
+
 use anchor_lang::prelude::Pubkey;
 
 /// derive the address used to store tracking account information in

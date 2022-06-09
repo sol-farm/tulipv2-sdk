@@ -13,11 +13,9 @@ pub mod leverage_farm;
 pub mod obligation;
 pub mod reserve;
 
-use anchor_lang::solana_program;
-use anchor_lang::solana_program::pubkey::Pubkey;
-use static_pubkey::static_pubkey;
 
-pub const ID: Pubkey = static_pubkey!("TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX");
+
+
 
 use crate::math::{common::WAD, decimal::Decimal};
 

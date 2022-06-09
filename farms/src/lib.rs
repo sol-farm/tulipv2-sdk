@@ -101,6 +101,9 @@ impl Farm {
         }
         None
     }
+    pub fn serialize(&self) -> std::result::Result<Vec<u8>, std::io::Error> {
+        AnchorSerialize::try_to_vec(&self)
+    }
 }
 
 impl ToString for Farm {

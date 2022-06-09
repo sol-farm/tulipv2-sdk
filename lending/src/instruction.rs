@@ -9,7 +9,7 @@ use std::mem::size_of;
 use tulipv2_sdk_common::lending::error::LendingError;
 
 /// Instructions supported by the lending program.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LendingInstruction {
     // 3
     /// Accrue interest and update market price of liquidity on a reserve.
