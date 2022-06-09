@@ -1,6 +1,6 @@
 use crate::config::lending::usdc;
-use crate::config::lending::utils::{derive_tracking_address, derive_tracking_pda_address};
-use crate::lending::ID;
+use crate::config::deposit_tracking::derivations::{derive_tracking_address, derive_tracking_pda_address};
+use crate::config::ID;
 use anchor_lang::prelude::Pubkey;
 
 #[derive(Clone, Debug, Default)]

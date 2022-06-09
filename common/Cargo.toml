@@ -25,13 +25,15 @@ bytemuck = "1.7.2"
 solana-sdk = "1.9.1"
 so-defi-utils = "0.1.1"
 spl-associated-token-account = "1.0.3"
+sighashdb = "0.1.23"
 [dev-dependencies]
 anchor-client = "0.24.2"
 
 [features]
-default = ["optimizers"]
+default = ["optimizers", "logs"]
 optimizers = ["usdc-optimizer", "usdt-optimizer", "sol-optimizer", "ray-optimizer"]
 usdc-optimizer = []
 usdt-optimizer = []
 sol-optimizer = []
 ray-optimizer = []
+logs = []

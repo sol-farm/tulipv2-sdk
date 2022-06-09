@@ -7,7 +7,13 @@ use tulipv2_sdk_farms::{lending::Lending, Farm};
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
+    use crate::config::deposit_tracking::{traits::IssueShares, issue_shares::DepositAddresses};
+
     use super::*;
+
+    /// empty struct used to implement the various traits used 
+    /// to interact with the vault
+    pub struct ProgramConfig;
 
     pub const TAG_STRING: &str = "usdtv1";
     pub const FARM_KEY: Farm = Farm::Lending {
@@ -45,6 +51,19 @@ pub mod multi_deposit {
     /// the address of the multi deposit vault's shares token account for the mango standalone vault
     pub const MANGO_OPTIMIZER_SHARES_ACCOUNT: Pubkey =
         static_pubkey!("5ai771C6H16dAEXywGz7AyVSXkbaJ5qYA2wfvpLPabn");
+
+
+    impl ProgramConfig {
+        pub fn issue_shares_ix(user: Pubkey) -> impl IssueShares {
+            DepositAddresses::new(
+                user,
+                ACCOUNT,
+                PDA,
+                SHARES_MINT,
+                UNDERLYING_MINT
+            )
+        }
+    }
 }
 
 /// bundles configuration information for the solend usdc standalone vault
