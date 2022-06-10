@@ -9,9 +9,9 @@ use crate::config::ID;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use anchor_lang::AnchorSerialize;
 use sighashdb::GlobalSighashDB;
-use solana_sdk::instruction::AccountMeta;
-use solana_sdk::instruction::Instruction;
-use solana_sdk::msg;
+use solana_program::instruction::AccountMeta;
+use solana_program::instruction::Instruction;
+use solana_program::msg;
 use tulipv2_sdk_farms::Farm;
 
 /// object used to bundle together information required by the

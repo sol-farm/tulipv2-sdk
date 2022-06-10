@@ -1,14 +1,14 @@
 use super::{traits::WithdrawMultiOptimizerVault, Platform};
-use crate::config::{ID};
+use crate::config::ID;
 use anchor_lang::AnchorSerialize;
 use anchor_lang::{
     solana_program::{pubkey::Pubkey, system_program},
     ToAccountMetas,
 };
 use sighashdb::GlobalSighashDB;
-use solana_sdk::instruction::AccountMeta;
-use solana_sdk::sysvar;
-use solana_sdk::{instruction::Instruction, msg};
+use solana_program::instruction::AccountMeta;
+use solana_program::sysvar;
+use solana_program::{instruction::Instruction, msg};
 
 #[derive(Clone, Copy)]
 pub struct WithdrawAddresses {
@@ -171,7 +171,7 @@ impl WithdrawMultiOptimizerVault for WithdrawAddresses {
     fn withdraw_vault_underlying_deposit_queue(&self) -> Pubkey {
         self.platform_config.underlying_deposit_queue
     }
-    fn standalone_vault_accounts(&self) -> Option<Vec<solana_sdk::instruction::AccountMeta>> {
+    fn standalone_vault_accounts(&self) -> Option<Vec<solana_program::instruction::AccountMeta>> {
         if let Some(mango_accounts) = self.mango_standalone_addresses {
             Some(mango_accounts.to_account_metas(None))
         } else if let Some(solend_accounts) = self.solend_standalone_addresses {
@@ -184,7 +184,7 @@ impl WithdrawMultiOptimizerVault for WithdrawAddresses {
             None
         }
     }
-    fn instruction(&self, amount: u64) -> Option<solana_sdk::instruction::Instruction> {
+    fn instruction(&self, amount: u64) -> Option<solana_program::instruction::Instruction> {
         let ix_sighash = self.ix_data()?;
         // 8 for the sighash, 8 for the amount
         let mut ix_data = Vec::with_capacity(16);
@@ -213,7 +213,7 @@ impl WithdrawMultiOptimizerVault for WithdrawAddresses {
     fn to_account_meta(
         &self,
         _is_signer: Option<bool>,
-    ) -> Vec<solana_sdk::instruction::AccountMeta> {
+    ) -> Vec<solana_program::instruction::AccountMeta> {
         vec![
             AccountMeta::new_readonly(self.authority(), true),
             AccountMeta::new(self.multi_deposit_vault(), false),
@@ -316,7 +316,7 @@ impl ToAccountMetas for SolendStandaloneAddresses {
     fn to_account_metas(
         &self,
         _is_signer: Option<bool>,
-    ) -> Vec<solana_sdk::instruction::AccountMeta> {
+    ) -> Vec<solana_program::instruction::AccountMeta> {
         vec![
             AccountMeta::new(self.collateral_token_account, false),
             AccountMeta::new(self.reserve, false),
@@ -334,7 +334,7 @@ impl ToAccountMetas for TulipStandaloneAddresses {
     fn to_account_metas(
         &self,
         _is_signer: Option<bool>,
-    ) -> Vec<solana_sdk::instruction::AccountMeta> {
+    ) -> Vec<solana_program::instruction::AccountMeta> {
         vec![
             AccountMeta::new(self.collateral_token_account, false),
             AccountMeta::new(self.reserve, false),

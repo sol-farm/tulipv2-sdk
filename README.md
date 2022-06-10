@@ -26,7 +26,7 @@ For now this wont compile, but should serve as a sufficient example to get start
 ```rust
 use tulipv2_sdk_common;
 use tulipv2_sdk_farm;
-use solana_sdk::signature::Keypair;
+use solana_program::signature::Keypair;
 fn main() {
     let rpc = .. // create rpc client
     let kp = Keypair::new();

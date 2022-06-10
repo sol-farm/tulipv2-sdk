@@ -13,10 +13,6 @@ pub mod leverage_farm;
 pub mod obligation;
 pub mod reserve;
 
-
-
-
-
 use crate::math::{common::WAD, decimal::Decimal};
 
 use anchor_lang::solana_program::{
