@@ -945,7 +945,7 @@ name = "examples"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
- "tulipv2-sdk-common 0.9.15 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tulipv2-sdk-common 0.9.15",
 ]
 
 [[package]]
@@ -3421,29 +3421,6 @@ dependencies = [
 [[package]]
 name = "tulipv2-sdk-common"
 version = "0.9.15"
-dependencies = [
- "anchor-client",
- "anchor-lang",
- "anchor-spl",
- "arrayref",
- "bytemuck",
- "num-derive",
- "num-traits",
- "sighashdb",
- "so-defi-utils",
- "solana-program",
- "spl-associated-token-account",
- "spl-token",
- "static-pubkey",
- "thiserror",
- "tulip-arrform",
- "tulipv2-sdk-farms 0.9.15",
- "uint",
-]
-
-[[package]]
-name = "tulipv2-sdk-common"
-version = "0.9.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d08701a200f297694982a5d1d3dd2af93f2f79135d9557c8bbb24ee8f4afa8d"
 dependencies = [
@@ -3466,6 +3443,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "tulipv2-sdk-common"
+version = "0.9.16"
+dependencies = [
+ "anchor-client",
+ "anchor-lang",
+ "anchor-spl",
+ "arrayref",
+ "bytemuck",
+ "num-derive",
+ "num-traits",
+ "sighashdb",
+ "so-defi-utils",
+ "solana-program",
+ "spl-associated-token-account",
+ "spl-token",
+ "static-pubkey",
+ "thiserror",
+ "tulip-arrform",
+ "tulipv2-sdk-farms 0.9.16",
+ "uint",
+]
+
+[[package]]
 name = "tulipv2-sdk-farms"
 version = "0.9.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3477,7 +3477,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-farms"
-version = "0.9.15"
+version = "0.9.16"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
@@ -3485,7 +3485,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-lending"
-version = "0.9.15"
+version = "0.9.16"
 dependencies = [
  "data-encoding",
  "itertools",
@@ -3497,13 +3497,13 @@ dependencies = [
  "solana-program",
  "spl-token",
  "thiserror",
- "tulipv2-sdk-common 0.9.15",
+ "tulipv2-sdk-common 0.9.16",
  "type-layout",
 ]
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.14"
+version = "0.9.16"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -3517,8 +3517,8 @@ dependencies = [
  "static-pubkey",
  "tulip-arrform",
  "tulip-derivative",
- "tulipv2-sdk-common 0.9.15",
- "tulipv2-sdk-farms 0.9.15",
+ "tulipv2-sdk-common 0.9.16",
+ "tulipv2-sdk-farms 0.9.16",
  "type-layout",
 ]
 
