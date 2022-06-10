@@ -5,7 +5,6 @@
 use crate::math::{common::TryDiv, decimal::Decimal};
 use anchor_lang::prelude::ProgramError;
 use bytemuck::{cast_slice, from_bytes, try_cast_slice, Pod, PodCastError, Zeroable};
-use solana_sdk::account::Account;
 use std::mem::size_of;
 
 /// after this many slots consider a price update as being stale and thus invalid
@@ -171,9 +170,9 @@ pub fn load<T: Pod>(data: &[u8]) -> Result<&T, PodCastError> {
     )?)))
 }
 
-pub fn load_pyth_price(pyth_price_account: &Account) -> Result<Decimal, ProgramError> {
+pub fn load_pyth_price(pyth_price_account_data: &[u8]) -> Result<Decimal, ProgramError> {
     let pyth_price =
-        load::<Price>(&pyth_price_account.data).map_err(|_| ProgramError::InvalidAccountData)?;
+        load::<Price>(pyth_price_account_data).map_err(|_| ProgramError::InvalidAccountData)?;
     parse_pyth_price(pyth_price)
 }
 
@@ -233,7 +232,7 @@ mod test {
         let tulip_price_account_key =
             static_pubkey!("5RHxy1NbUR15y34uktDbN1a2SWbhgHwkCZ75yK2RJ1FC");
         let tulip_price_account = rpc.get_account(&tulip_price_account_key).unwrap();
-        let price = load_pyth_price(&tulip_price_account).unwrap();
+        let price = load_pyth_price(&tulip_price_account.data[..]).unwrap();
         println!("price {:#?}", price);
     }
 }

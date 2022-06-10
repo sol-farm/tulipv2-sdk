@@ -8,7 +8,9 @@ use crate::config::deposit_tracking::derivations::{
 use crate::config::ID;
 use anchor_lang::prelude::Pubkey;
 use sighashdb::GlobalSighashDB;
-use solana_sdk::{instruction::AccountMeta, instruction::Instruction, msg, system_program, sysvar};
+use solana_program::{
+    instruction::AccountMeta, instruction::Instruction, msg, system_program, sysvar,
+};
 
 #[derive(Clone, Debug, Default)]
 pub struct RegisterDepositTrackingAddresses {

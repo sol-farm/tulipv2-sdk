@@ -1,8 +1,7 @@
 //! traits which are exclusive to the lending optimizer vaults
 
 use anchor_lang::prelude::*;
-use solana_sdk::instruction::Instruction;
-
+use solana_program::instruction::Instruction;
 
 /// The `WithdrawMultiOptimizerVault` trait is used to
 /// burn a lending optimizer's tokenized shares, in exchange
