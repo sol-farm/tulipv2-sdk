@@ -945,7 +945,7 @@ name = "examples"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
- "tulipv2-sdk-common 0.9.15",
+ "tulipv2-sdk-common",
 ]
 
 [[package]]
@@ -3119,9 +3119,9 @@ checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
 
 [[package]]
 name = "static-pubkey"
-version = "1.0.2"
+version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e390e1e75910fd6c02265a4743f06c85775bb357c70f58384e867b3dc84a8011"
+checksum = "0547d5945c93f55e1b18bf2a67d1a3d0548561f2687645b22c1c1d4fbb9a8e90"
 dependencies = [
  "bs58 0.4.0",
  "proc-macro2 1.0.36",
@@ -3420,31 +3420,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-common"
-version = "0.9.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5d08701a200f297694982a5d1d3dd2af93f2f79135d9557c8bbb24ee8f4afa8d"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "arrayref",
- "bytemuck",
- "num-derive",
- "num-traits",
- "sighashdb",
- "so-defi-utils",
- "solana-program",
- "spl-associated-token-account",
- "spl-token",
- "static-pubkey",
- "thiserror",
- "tulip-arrform",
- "tulipv2-sdk-farms 0.9.12",
- "uint",
-]
-
-[[package]]
-name = "tulipv2-sdk-common"
-version = "0.9.16"
+version = "0.9.17"
 dependencies = [
  "anchor-client",
  "anchor-lang",
@@ -3461,18 +3437,8 @@ dependencies = [
  "static-pubkey",
  "thiserror",
  "tulip-arrform",
- "tulipv2-sdk-farms 0.9.16",
+ "tulipv2-sdk-farms",
  "uint",
-]
-
-[[package]]
-name = "tulipv2-sdk-farms"
-version = "0.9.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "923b60b9591012df1f14ba10c91b488bd15d2c2e90a28f41d5a4f99cd81c382c"
-dependencies = [
- "anchor-lang",
- "tulip-arrform",
 ]
 
 [[package]]
@@ -3497,7 +3463,7 @@ dependencies = [
  "solana-program",
  "spl-token",
  "thiserror",
- "tulipv2-sdk-common 0.9.16",
+ "tulipv2-sdk-common",
  "type-layout",
 ]
 
@@ -3517,8 +3483,8 @@ dependencies = [
  "static-pubkey",
  "tulip-arrform",
  "tulip-derivative",
- "tulipv2-sdk-common 0.9.16",
- "tulipv2-sdk-farms 0.9.16",
+ "tulipv2-sdk-common",
+ "tulipv2-sdk-farms",
  "type-layout",
 ]
 

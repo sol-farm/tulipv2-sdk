@@ -81,7 +81,7 @@ impl WithdrawAddresses {
         underlying_withdraw_queue: Pubkey,
         platform_config: PlatformConfigAddresses,
         standalone_config: (&[Pubkey], Platform),
-    ) -> std::result::Result<WithdrawAddresses, std::io::Error> {
+    ) -> std::result::Result<Box<WithdrawAddresses>, std::io::Error> {
         let multi_burning_shares_token_account =
             spl_associated_token_account::get_associated_token_address(&user, &shares_mint);
 
@@ -121,11 +121,11 @@ impl WithdrawAddresses {
                 standalone_config.0.try_into()?;
             withdraw_addresses.tulip_standalone_addresses = Some(tulip_standalone_addresses);
         }
-        Ok(withdraw_addresses)
+        Ok(Box::new(withdraw_addresses))
     }
 }
 
-impl WithdrawMultiOptimizerVault for WithdrawAddresses {
+impl WithdrawMultiOptimizerVault for Box<WithdrawAddresses> {
     fn authority(&self) -> Pubkey {
         self.authority
     }
@@ -181,6 +181,7 @@ impl WithdrawMultiOptimizerVault for WithdrawAddresses {
         } else {
             #[cfg(feature = "logs")]
             msg!("mango, solend, and tulip accounts are None");
+
             None
         }
     }

@@ -21,7 +21,7 @@ anchor-spl = "0.24.2"
 spl-token = "3.2.0"
 tulipv2-sdk-common = {path = "../common", version = "0.9.16"}
 spl-associated-token-account = "1.0.3"
-static-pubkey = "1.0.2"
+static-pubkey = "1.0.3"
 type-layout = "0.2.0"
 tulip-arrform = "0.1.1"
 tulip-derivative = "2.2.1"

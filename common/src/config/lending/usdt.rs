@@ -11,9 +11,9 @@ use crate::config::deposit_tracking::traits::{
 };
 use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 use crate::config::lending::traits::WithdrawMultiOptimizerVault;
-use crate::config::lending::withdraw::WithdrawAddresses;
+//use crate::config::lending::withdraw::WithdrawAddresses;
 use crate::config::lending::Platform;
-use crate::config::lending::withdraw::PlatformConfigAddresses;
+use crate::config::lending::PlatformConfigAddresses;
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
@@ -70,7 +70,7 @@ pub mod multi_deposit {
         pub fn withdraw_deposit_tracking(user: Pubkey) -> impl WithdrawDepositTracking {
             WithdrawDepositTrackingAddresses::new(user, ACCOUNT, SHARES_MINT)
         }
-        pub fn withdraw_multi_deposit_optimizer_vault(
+        /*pub fn withdraw_multi_deposit_optimizer_vault(
             user: Pubkey,
             platform: Platform,
         ) -> std::result::Result<impl WithdrawMultiOptimizerVault, std::io::Error> {
@@ -109,7 +109,7 @@ pub mod multi_deposit {
                 platform_config,
                 (&standalone_config.0, standalone_config.1),
             )
-        }
+        }*/
         pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
             [
                 super::tulip::COLLATERAL_TOKEN_ACCOUNT,
