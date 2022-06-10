@@ -1,6 +1,6 @@
 [package]
 name = "tulipv2-sdk-lending"
-version = "0.9.14"
+version = "0.9.15"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "lending instructions for v1 lending"
@@ -12,7 +12,7 @@ readme = "../README.md"
 [dependencies]
 solana-program = "1.9.13"
 spl-token = "3.2.0"
-tulipv2-sdk-common = {path = "../common", version = "0.9.14"}
+tulipv2-sdk-common = {path = "../common", version = "0.9.15"}
 itertools = "0.10.3"
 num-derive = "0.3"
 thiserror = "1.0"
