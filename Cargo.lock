@@ -941,6 +941,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "examples"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "tulipv2-sdk-common 0.9.14",
+]
+
+[[package]]
 name = "failure"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1208,12 +1216,6 @@ checksum = "62b467343b94ba476dcb2500d242dadbb39557df889310ac77c5d99100aaac33"
 dependencies = [
  "libc",
 ]
-
-[[package]]
-name = "hex"
-version = "0.4.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f24254aa9a54b5c858eaee2f5bccdb46aaf0e486a595ed5fd8f86ba55232a70"
 
 [[package]]
 name = "hidapi"
@@ -2406,12 +2408,9 @@ dependencies = [
 
 [[package]]
 name = "sighashdb"
-version = "0.1.26"
+version = "0.1.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c872d8226d179fced6a0ca13e17e22e70388b8bb157a038d2ac6c7da99c8c83e"
-dependencies = [
- "hex",
-]
+checksum = "038c936415c5f7688ebc6f91f83b604bb8f763e17c88a39d9e5f91ca492b07b0"
 
 [[package]]
 name = "signal-hook-registry"
@@ -3422,6 +3421,30 @@ dependencies = [
 [[package]]
 name = "tulipv2-sdk-common"
 version = "0.9.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a9057c32b45842e1c46e43f1c367315b038dabf93b7a5ccbdb931007427cfc45"
+dependencies = [
+ "anchor-lang",
+ "anchor-spl",
+ "arrayref",
+ "bytemuck",
+ "num-derive",
+ "num-traits",
+ "sighashdb",
+ "so-defi-utils",
+ "solana-program",
+ "spl-associated-token-account",
+ "spl-token",
+ "static-pubkey",
+ "thiserror",
+ "tulip-arrform",
+ "tulipv2-sdk-farms 0.9.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "uint",
+]
+
+[[package]]
+name = "tulipv2-sdk-common"
+version = "0.9.15"
 dependencies = [
  "anchor-client",
  "anchor-lang",
@@ -3438,13 +3461,23 @@ dependencies = [
  "static-pubkey",
  "thiserror",
  "tulip-arrform",
- "tulipv2-sdk-farms",
+ "tulipv2-sdk-farms 0.9.12",
  "uint",
 ]
 
 [[package]]
 name = "tulipv2-sdk-farms"
 version = "0.9.12"
+dependencies = [
+ "anchor-lang",
+ "tulip-arrform",
+]
+
+[[package]]
+name = "tulipv2-sdk-farms"
+version = "0.9.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "923b60b9591012df1f14ba10c91b488bd15d2c2e90a28f41d5a4f99cd81c382c"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
@@ -3464,7 +3497,7 @@ dependencies = [
  "solana-program",
  "spl-token",
  "thiserror",
- "tulipv2-sdk-common",
+ "tulipv2-sdk-common 0.9.15",
  "type-layout",
 ]
 
@@ -3484,8 +3517,8 @@ dependencies = [
  "static-pubkey",
  "tulip-arrform",
  "tulip-derivative",
- "tulipv2-sdk-common",
- "tulipv2-sdk-farms",
+ "tulipv2-sdk-common 0.9.15",
+ "tulipv2-sdk-farms 0.9.12",
  "type-layout",
 ]
 

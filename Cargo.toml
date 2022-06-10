@@ -3,5 +3,6 @@ members = [
     "lending",
     "farms",
     "common",
-    "vaults"
+    "vaults",
+    "examples/programs/examples"
 ]
