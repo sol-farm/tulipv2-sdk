@@ -1,0 +1,13 @@
+{
+  "pubkey": "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx",
+  "account": {
+    "lamports": 52094050253,
+    "data": [
+      "AQAAAOkBBEZAcr+6qq4qeoKV31Sqbzq1CRNJsbB+p9a4cYlegv1nJ+3E9TEIAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+      "base64"
+    ],
+    "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "executable": false,
+    "rentEpoch": 275
+  }
+}

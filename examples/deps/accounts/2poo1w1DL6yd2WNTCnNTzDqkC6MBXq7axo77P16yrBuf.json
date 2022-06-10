@@ -1,0 +1,13 @@
+{
+  "pubkey": "2poo1w1DL6yd2WNTCnNTzDqkC6MBXq7axo77P16yrBuf",
+  "account": {
+    "lamports": 5995551280,
+    "data": [
+      "AQAAAD5A+lfFbM6AIwUHMljMOkd9ES9u110ijYJ1YkRYe5+svedTeyeEAAAGAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+      "base64"
+    ],
+    "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "executable": false,
+    "rentEpoch": 275
+  }
+}

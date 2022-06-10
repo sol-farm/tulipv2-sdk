@@ -1,0 +1,13 @@
+{
+  "pubkey": "4Zc4kQZhRQeGztihvcGSWezJE1k44kKEgPCAkdeBfras",
+  "account": {
+    "lamports": 2039280,
+    "data": [
+      "HE5e7aDoi3KnOyEeu5JTaQs798Rx8QgkoXKsGDuSV2IW43L/0PXS93ET59iihoAezprbBi4bxZgvkB3uCwhCCIVjrEYQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "base64"
+    ],
+    "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "executable": false,
+    "rentEpoch": 275
+  }
+}

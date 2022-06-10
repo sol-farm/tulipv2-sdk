@@ -1,0 +1,13 @@
+{
+  "pubkey": "GEoTC3gN12qHDniaDD7Zxvd5xtcZyEKkTPy42B44s82y",
+  "account": {
+    "lamports": 1566000,
+    "data": [
+      "HEVrpimLzffIdBbhXCLvltw50ZnjDx2hzw74NVn49kmpYj2VZHQJoQywKfGsXBJGkJCwykaFsaqfFyzWUiompe0ZPhCwFVSl/gAAAAAAAAAAIn/g5+NJAADlE1HBe5kAAA==",
+      "base64"
+    ],
+    "owner": "QMWoBmAyJLAsA1Lh9ugMTw2gciTihncciphzdNzdZYV",
+    "executable": false,
+    "rentEpoch": 275
+  }
+}

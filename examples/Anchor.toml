@@ -1,14 +1,1326 @@
-[features]
-seeds = false
-[programs.localnet]
-examples = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+
+###############
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
 cluster = "localnet"
-wallet = "/home/solidity/.config/solana/id.json"
+wallet = "secrets/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
+
+[features]
+seeds = false
+[programs.localnet]
+examples = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+
+###############
+# programs
+[[test.genesis]]
+address = "TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX"
+program = "./deps/tulip/v2_vaults.so"
+[[test.genesis]]
+address = "EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q"
+program = "./deps/raydium/stake_program.so"
+[[test.genesis]]
+address = "9KEPoZmtHUrBbhWN1v1KWLMkkvwY6WLtAVUCPRtRjP4z"
+program = "./deps/raydium/stake_program_v5.so"
+[[test.genesis]]
+address = "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"
+program = "./deps/raydium/liquidity_program_v4.so"
+[[test.genesis]]
+address = "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"
+program = "./deps/serum/serum_dex.so"
+[[test.genesis]]
+address = "Port7uDYB3wk6GJAw4KT1WpTeMtSu9bTcChBHkX2LfR"
+program = "./deps/port/lending.so"
+[[test.genesis]]
+address = "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo"
+program = "./deps/solend/lending.so"
+[[test.genesis]]
+address = "FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH"
+program = "./deps/solend/pyth.so"
+[[test.genesis]]
+address = "DtmE9D2CSB4L5D6A15mraeEjrGMm6auWVzgaD8hK2tZM"
+program = "./deps/solend/switchboard.so"
+[[test.genesis]]
+address = "stkarvwmSzv2BygN5e2LeTwimTczLWHCKPKGC2zVLiq"
+program = "./deps/port/staking.so"
+[[test.genesis]]
+address = "4bcFeLv4nydFrsZqV5CgwCVrPhkQKsXtzfy2KyMz7ozM"
+program = "./deps/tulip/lending.so"
+[[test.genesis]]
+address = "mv3ekLzLbnVPNxjSKvqBpU3ZeZXPQdEC3bp5MDEBG68"
+program = "./deps/mango/mango.so"
+# orca v1 swap program
+[[test.genesis]]
+address = "DjVE6JNiYqPL2QXyCUUh8rNjHrbz9hXHNYt99MQ59qw1"
+program = "./deps/orca/swap.so"
+[[test.genesis]]
+address = "9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP"
+program = "./deps/orca/swap_v2.so"
+[[test.genesis]]
+address  = "82yxjeMsvaURa4MbZZ7WZZHfobirZYkH1zF8fmeGtyaQ"
+program = "./deps/orca/aquafarm.so"
+[[test.genesis]]
+address = "SSwpkEEcbUqx4vtoEByFjSkhKdCT862DNVb52nZg1UZ"
+program = "./deps/saber/stable_swap.so"
+[[test.genesis]]
+address = "Crt7UoUR6QgrFrN7j8rmSQpUTNWNSitSwWvsWGf1qZ5t"
+program = "./deps/saber/router.so"
+[[test.genesis]]
+address = "QMMD16kjauP5knBwxNUJRZ1Z5o3deBuFrqVjBVmmqto"
+program = "./deps/quarry/merge_mine.so"
+[[test.genesis]]
+address = "QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB"
+program = "./deps/quarry/mine.so"
+[[test.genesis]]
+address = "QMWoBmAyJLAsA1Lh9ugMTw2gciTihncciphzdNzdZYV"
+program = "./deps/quarry/mint_wrapper.so"
+[[test.genesis]]
+address = "QoP6NfrQbaGnccXQrMLUkog2tQZ4C1RFgJcwDnT8Kmz"
+program = "./deps/quarry/operator.so"
+[[test.genesis]]
+address = "QRDxhMw1P2NEfiw5mYXG79bwfgHTdasY2xNP76XSea9"
+program = "./deps/quarry/redeemer.so"
+[[test.genesis]]
+address = "QREGBnEj9Sa5uR91AV8u3FxThgP5ZCvdZUW2bHAkfNc"
+program = "./deps/quarry/registry.so"
+[[test.genesis]]
+address = "RDM23yr8pr1kEAmhnFpaabPny6C9UVcEcok3Py5v86X"
+program = "./deps/saber/redeemer.so"
+[[test.genesis]]
+address = "UBEBk5idELqykEEaycYtQ7iBVrCg6NmvFSzMpdr22mL"
+program = "./deps/saber/mint_proxy.so"
+[[test.genesis]]
+address = "DecZY86MU5Gj7kppfUCEmd4LbXXuyZH1yHaP2NTqdiZB"
+program = "./deps/saber/decimal_wrap.so"
+[[test.genesis]]
+address = "SPQR4kT3q2oUKEJes2L6NNSBCiPW9SfuhkuqC9bp6Sx"
+program = "./deps/sunny/quarry.so"
+[[test.genesis]]
+address = "SRDmexy38YTqtCmh7xU2eMFkWweYWF1pqdPyatTF1qP"
+program = "./deps/sunny/redeemer.so"
+[[test.genesis]]
+address = "MNTerkxkpXetKfRSvSxKp54ty3a7M1ZbGTpL285RtDZ"
+program = "./deps/sunny/minter.so"
+[[test.genesis]]
+address = "HvwYjjzPbXWpykgVZhqvvfeeaSraQVnTiQibofaFw9M7"
+program = "./deps/atrix/pool.so"
+[[test.genesis]]
+address = "BLDDrex4ZSWBgPYaaH6CQCzkJXWfzCiiur9cSFJT8t3x"
+program = "./deps/atrix/farm.so"
+[[test.genesis]]
+address = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+program = "./deps/misc/associated_token.so"
+
+
+##############
+# token mints
+##############
+
+# name = "USDC-TOKEN-MINT"
+[[test.validator.account]]
+address = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+filename = "deps/accounts/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.json"
+
+# name = "RAY-TOKEN-MINT"
+[[test.validator.account]]
+address = "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
+filename = "deps/accounts/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R.json"
+
+# name = "SRM-TOKEN-MINT"
+[[test.validator.account]]
+address = "SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt"
+filename = "deps/accounts/SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt.json"
+
+# TULIP-USDC-LP-TOKEN-MINT
+[[test.validator.account]]
+address = "2doeZGLJyACtaG9DCUyqMLtswesfje1hjNA11hMdj6YU"
+filename = "deps/accounts/2doeZGLJyACtaG9DCUyqMLtswesfje1hjNA11hMdj6YU.json"
+
+# name = "RAY-USDC-LP-TOKEN-MINT"
+[[test.validator.account]]
+address = "FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m"
+filename = "deps/accounts/FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m.json"
+
+# name = "PORT USDC COLLATERAL TOKEN MINT"
+[[test.validator.account]]
+address = "FgSsGV8GByPaMERxeQJPvZRZHf7zCBhrdYtztKorJS58"
+filename = "deps/accounts/FgSsGV8GByPaMERxeQJPvZRZHf7zCBhrdYtztKorJS58.json"
+
+# name = "TULIP-TOKEN-MINT"
+[[test.validator.account]]
+address = "TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T1uoWBk6FDs"
+filename = "deps/accounts/TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T1uoWBk6FDs.json"
+
+# name = wSOL mint
+[[test.validator.account]]
+address = "So11111111111111111111111111111111111111112"
+filename = "deps/accounts/So11111111111111111111111111111111111111112.json"
+
+# name = "SOLEND USDC COLLATERAL TOKEN MINT"
+[[test.validator.account]]
+address = "993dVFL2uXWYeoXuEBFXR4BijeXdTv4s6BzsCjJZuwqk"
+filename = "deps/accounts/993dVFL2uXWYeoXuEBFXR4BijeXdTv4s6BzsCjJZuwqk.json"
+
+# name = "TULIP USDC COLLATERAL MINT"
+[[test.validator.account]]
+address = "Amig8TisuLpzun8XyGfC5HJHHGUQEscjLgoTWsCCKihg"
+filename = "deps/accounts/Amig8TisuLpzun8XyGfC5HJHHGUQEscjLgoTWsCCKihg.json"
+
+# name = "ORCA TOKEN MINT"
+[[test.validator.account]]
+address = "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE"
+filename = "deps/accounts/orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE.json"
+
+# name = "ORCA/SOL FARM TOKEN MINT"
+[[test.validator.account]]
+address = "B5waaKnsmtqFawPspUwcuy1cRjAC7u2LrHSwxPSxK4sZ"
+filename = "deps/accounts/B5waaKnsmtqFawPspUwcuy1cRjAC7u2LrHSwxPSxK4sZ.json"
+
+# name = "ORCA/SOL SWAP POOL MINT"
+[[test.validator.account]]
+address = "2uVjAuRXavpM6h1scGQaxqb6HVaNRn6T2X7HHXTabz25"
+filename = "deps/accounts/2uVjAuRXavpM6h1scGQaxqb6HVaNRn6T2X7HHXTabz25.json"
+
+# name = "ATLAS/USDC FARM TOKEN MINT"
+[[test.validator.account]]
+address = "HFmY1ggCsCky1zJ1sfdkNR4zb3u5n38YNRdf4vsGu17t"
+filename = "deps/accounts/HFmY1ggCsCky1zJ1sfdkNR4zb3u5n38YNRdf4vsGu17t.json"
+
+# name = "ATLAS/USDC SWAP POOL MINT"
+[[test.validator.account]]
+address = "FZ8x1LCRSPDeHBDoAc3Gc6Y7ETCynuHEr5q5YWV7uRCJ"
+filename = "deps/accounts/FZ8x1LCRSPDeHBDoAc3Gc6Y7ETCynuHEr5q5YWV7uRCJ.json"
+
+# name = "ATLAS TOKEN MINT"
+[[test.validator.account]]
+address = "ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx"
+filename = "deps/accounts/ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx.json"
+
+# name = "ATLAS/USDC DOUBLE DIP FARM_TOKEN_MINT
+[[test.validator.account]]
+address = "894ptAFT7d3inPsWTniCGL2NZpJDiXGvFZFfuHXA1w8F"
+filename = "deps/accounts/894ptAFT7d3inPsWTniCGL2NZpJDiXGvFZFfuHXA1w8F.json"
+
+# name = "ATLAS/USDC DOUBLE DIP GLOBAL BASE TOKEN MINT
+[[test.validator.account]]
+address = "HFmY1ggCsCky1zJ1sfdkNR4zb3u5n38YNRdf4vsGu17t"
+filename = "deps/accounts/HFmY1ggCsCky1zJ1sfdkNR4zb3u5n38YNRdf4vsGu17t.json"
+
+# name = "ORCA/USDC SWAP POOL MINT
+[[test.validator.account]]
+address = "n8Mpu28RjeYD7oUX3LG1tPxzhRZh3YYLRSHcHRdS3Zx"
+filename = "deps/accounts/n8Mpu28RjeYD7oUX3LG1tPxzhRZh3YYLRSHcHRdS3Zx.json"
+
+# name = "COMPOUNDING FEE WALLET USDC ACCOUNT"
+[[test.validator.account]]
+address = "3y3UC1tXhjsg34kiTs6ueuR11wEh9UDGugJV8f7Df16P"
+filename = "deps/accounts/3y3UC1tXhjsg34kiTs6ueuR11wEh9UDGugJV8f7Df16P.json"
+
+
+# name = "USDT-USDC SABER LP TOKEN MINT"
+[[test.validator.account]]
+address = "2poo1w1DL6yd2WNTCnNTzDqkC6MBXq7axo77P16yrBuf"
+filename = "deps/accounts/2poo1w1DL6yd2WNTCnNTzDqkC6MBXq7axo77P16yrBuf.json"
+
+# name = "SABER TOKEN MINT"
+[[test.validator.account]]
+address = "Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1"
+filename = "deps/accounts/Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1.json"
+
+# name = "USDT TOKEN MINT"
+[[test.validator.account]]
+address = "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+filename = "deps/accounts/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB.json"
+
+# name = "CASH-USDC LP TOKEN MINT"
+[[test.validator.account]]
+address = "CLPKiHjoU5HwpPK5L6MBXHKqFsuzPr47dM1w4An3Lnvv"
+filename = "deps/accounts/CLPKiHjoU5HwpPK5L6MBXHKqFsuzPr47dM1w4An3Lnvv.json"
+
+# name = "SABER sUSDC-8 WRAPPED TOKEN MINT"
+[[test.validator.account]]
+address = "88881Hu2jGMfCs9tMu5Rr7Ah7WBNBuXqde4nR5ZmKYYy"
+filename = "deps/accounts/88881Hu2jGMfCs9tMu5Rr7Ah7WBNBuXqde4nR5ZmKYYy.json"
+
+# name = "SABER DAI-USDC LP TOKEN MINT"
+[[test.validator.account]]
+address = "DAihWEjhBc8LEmV1rEekTaiC2zqE5ex7nEFkmoe1Ppp3"
+filename = "deps/accounts/DAihWEjhBc8LEmV1rEekTaiC2zqE5ex7nEFkmoe1Ppp3.json"
+
+# name = "DAI TOKEN MINT"
+[[test.validator.account]]
+address = "EjmyN6qEC1Tf1JxiG1ae7UTJhUxSwk1TCWNWqxWV4J6o"
+filename = "deps/accounts/EjmyN6qEC1Tf1JxiG1ae7UTJhUxSwk1TCWNWqxWV4J6o.json"
+
+# name = "SUNNY TOKEN MINT"
+[[test.validator.account]]
+address = "SUNNYWgPQmFxe9wTZzNK7iPnJ3vYDrkgnxJRJm1s3ag"
+filename = "deps/accounts/SUNNYWgPQmFxe9wTZzNK7iPnJ3vYDrkgnxJRJm1s3ag.json"
+
+# name = "FEE COLLECTOR SUNNY TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "2NBV6EqA6iASEqBKoVPftPsMaYz5pKYXEndeBufXH7uT"
+filename = "deps/accounts/2NBV6EqA6iASEqBKoVPftPsMaYz5pKYXEndeBufXH7uT.json"
+
+###############
+
+################
+# token accounts
+################
+
+# you will need to make sure you update this to be the ATA
+# of the account that wallet account configured to be used
+# by the cluster
+# name = "YOUR-RAY-USDC-LP-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "GbTStmD6KFCG3cCy9NNrq6xRSKVnupz6AcxYaN9gFLQs"
+filename = "deps/accounts/GbTStmD6KFCG3cCy9NNrq6xRSKVnupz6AcxYaN9gFLQs.json"
+
+# name = "YOUR-SRM-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "A49TahKG1c6KsqNhCtjkEYT1TV65LXqq4eGMJUNYXxDQ"
+filename = "deps/accounts/A49TahKG1c6KsqNhCtjkEYT1TV65LXqq4eGMJUNYXxDQ.json"
+
+# name = "YOUR-TULIP-USDC-LP-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "Catx4sg6td3c9y7XRgaNqjvbLTNrkXcWWZQWhCsebbTz"
+filename = "deps/accounts/Catx4sg6td3c9y7XRgaNqjvbLTNrkXcWWZQWhCsebbTz.json"
+
+# name = "YOUR USDC TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "BH5mFFmBZwgQ6Yr3812qKbf42wP57jzHta2LeDT7gXwU"
+filename = "deps/accounts/BH5mFFmBZwgQ6Yr3812qKbf42wP57jzHta2LeDT7gXwU.json"
+
+# name = "YOUR ORCA TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "4HYm7ZDRTpXPnNZu8LRC7L1W391PyqK6Vg71qgKcbdQc"
+filename = "deps/accounts/4HYm7ZDRTpXPnNZu8LRC7L1W391PyqK6Vg71qgKcbdQc.json"
+
+# name = "YOUR ATLAS TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "TxPhMXwaCPHrhA66W3zrScYvxi4AE4fKqWEm3S4SNjw"
+filename = "deps/accounts/TxPhMXwaCPHrhA66W3zrScYvxi4AE4fKqWEm3S4SNjw.json"
+
+# name = "ATLAS_COMPOUND_FEE_TOKEN_ACCOUNT"
+[[test.validator.account]]
+address = "GqKREVrUsm3agec8axTyuQJTF93LEWi224j3KY4aoA4Z"
+filename = "deps/accounts/GqKREVrUsm3agec8axTyuQJTF93LEWi224j3KY4aoA4Z.json"
+
+# name = "RAY_COMPOUND_FEE_TOKEN_ACCOUNT"
+[[test.validator.account]]
+address = "EPPhqysp2Vxmap2p3qvUBH6uqfoGUR3E2pvWr4esxaRN"
+filename = "deps/accounts/EPPhqysp2Vxmap2p3qvUBH6uqfoGUR3E2pvWr4esxaRN.json"
+
+# name = "TULIP_COMPOUND_FEE_TOKEN_ACCOUNT"
+[[test.validator.account]]
+address = "FMfQ3guQWstuMpx4qwnLhTYyPcKT5pMVJENeuKHk9dG4"
+filename = "deps/accounts/FMfQ3guQWstuMpx4qwnLhTYyPcKT5pMVJENeuKHk9dG4.json"
+
+# name = "YOUR SABER USDT-USDC LP TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "4MD8GqsRceWmG8qNUJLZXwjsUx7BuYe5iiMjnxbBNqkE"
+filename = "deps/accounts/4MD8GqsRceWmG8qNUJLZXwjsUx7BuYe5iiMjnxbBNqkE.json"
+
+# name = "YOUR SABER TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "G5CAVruTAvzSQPxs54bX4eVyoppszaYLEpCeQGbPbha9"
+filename = "deps/accounts/G5CAVruTAvzSQPxs54bX4eVyoppszaYLEpCeQGbPbha9.json"
+
+# name = "YOUR USDT TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "HQkQkzbMFgRfrPwZJCdZAo9H5bWGeow1Gb2pw2KgJp3o"
+filename = "deps/accounts/HQkQkzbMFgRfrPwZJCdZAo9H5bWGeow1Gb2pw2KgJp3o.json"
+
+# name = "FEE COLLECTOR SABER TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "GxPtnxUD5ttQ4W2hyWLZR13wgaamBDd6aXHYfzxB8b4v"
+filename = "deps/accounts/GxPtnxUD5ttQ4W2hyWLZR13wgaamBDd6aXHYfzxB8b4v.json"
+
+# name = "YOUR SABER DAI-USDC LP TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "FePvNoMjA8JSMMtdsuQEtqGjPQxXWjkmug5iKp6739b5"
+filename = "deps/accounts/FePvNoMjA8JSMMtdsuQEtqGjPQxXWjkmug5iKp6739b5.json"
+
+
+# name = "YOUR ATRIX SOL USDC LP TOKEN ACCOUNT"
+[[test.validator.account]]
+address = "FJbmxEE18oyuXocWMov6Rof17q9yoyGZXUZSMqEwaPNt"
+filename = "deps/accounts/FJbmxEE18oyuXocWMov6Rof17q9yoyGZXUZSMqEwaPNt.json"
+
+###############
+
+#######################
+# ray-usdc amm accounts
+#######################
+
+# RAY-USDC Raydium AMM accounts
+[[test.validator.account]]
+address = "CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS"
+filename = "deps/accounts/CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS.json"
+
+# name = "RAY-USDC-POOL-ID"
+[[test.validator.account]]
+address = "BNnXLFGva3K8ACruAc1gaP49NCbLkyE6xWhGV4G2HLrs"
+filename = "deps/accounts/BNnXLFGva3K8ACruAc1gaP49NCbLkyE6xWhGV4G2HLrs.json"
+
+# name = "RAy-USDC-POOL-LP-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR"
+filename = "deps/accounts/DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR.json"
+
+# name = "RAY-USDC-POOL-REWARD-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg"
+filename = "deps/accounts/6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg.json"
+
+# name = "RAY-USDC-AMM-ID"
+[[test.validator.account]]
+address = "J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW"
+filename = "deps/accounts/J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW.json"
+
+# name = "RAY-USDC-AMM-OPEN-ORDERS"
+[[test.validator.account]]
+address = "3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT"
+filename = "deps/accounts/3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT.json"
+
+# name = "RAY-USDC-AMM-QUANTITIES-ORG-TARGET-ORDERS"
+[[test.validator.account]]
+address = "FdmKUE4UMiJYFK5ogCngHzShuVKrFXBamPWcewDr31th"
+filename = "deps/accounts/FdmKUE4UMiJYFK5ogCngHzShuVKrFXBamPWcewDr31th.json"
+
+# name = "RAY-USDC-POOL-COIN-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk"
+filename = "deps/accounts/Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk.json"
+
+# name = "RAY-USDC-POOL-PC-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB"
+filename = "deps/accounts/D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB.json"
+
+# name = "RAY-USDC-POOL-TEMP-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr"
+filename = "deps/accounts/ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr.json"
+
+# name = "RAY-USDC-POOl-WITHDRAW-QUEUE"
+
+###############
+
+
+#########################
+# ray-usdc serum accounts
+#########################
+
+# RAY-USDC Serum accounts
+[[test.validator.account]]
+address = "2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep"
+filename = "deps/accounts/2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep.json"
+
+# name = "RAY-USDC-SERUM-MARKET"
+[[test.validator.account]]
+address = "DC1HsWWRCXVg3wk2NndS5LTbce3axwUwUZH1RgnV4oDN"
+filename = "deps/accounts/DC1HsWWRCXVg3wk2NndS5LTbce3axwUwUZH1RgnV4oDN.json"
+
+# name = "RAY-USDC-SERUM-ASKS"
+[[test.validator.account]]
+address = "Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5"
+filename = "deps/accounts/Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5.json"
+
+# name = "RAY-USDC-SERUM-BIDS"
+[[test.validator.account]]
+address = "GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa"
+filename = "deps/accounts/GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa.json"
+
+# name = "RAY-USDC-SERUM-COIN-VAULT"
+[[test.validator.account]]
+address = "22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe"
+filename = "deps/accounts/22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe.json"
+
+# name = "RAY-USDC-SERUM-PC-VAULT"
+[[test.validator.account]]
+address = "39mE6bYktM1XAKKmB6WN971X3Sa1yGkHxtCTWMkVrwN2"
+filename = "deps/accounts/39mE6bYktM1XAKKmB6WN971X3Sa1yGkHxtCTWMkVrwN2.json"
+
+# name = "RAY-USDC-SERUM-REQ-QUEUE"
+[[test.validator.account]]
+address = "H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz"
+filename = "deps/accounts/H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz.json"
+
+# name = "RAY-USDC-SERUM-EVT-QUEUE"
+
+###############
+
+
+#########################
+# sol-usdc serum accounts
+#########################
+
+# SOL-USDC serum accounts
+[[test.validator.account]]
+address = "9wFFyRfZBsuAha4YcuxcXLKwMxJR43S7fPfQLusDBzvT"
+filename = "deps/accounts/9wFFyRfZBsuAha4YcuxcXLKwMxJR43S7fPfQLusDBzvT.json"
+
+# name = SOL-USDC-SERUM-MARKET
+[[test.validator.account]]
+address = "CEQdAFKdycHugujQg9k2wbmxjcpdYZyVLfV9WerTnafJ"
+filename = "deps/accounts/CEQdAFKdycHugujQg9k2wbmxjcpdYZyVLfV9WerTnafJ.json"
+
+# asks
+[[test.validator.account]]
+address = "14ivtgssEBoBjuZJtSAPKYgpUK7DmnSwuPMqJoVTSgKJ"
+filename = "deps/accounts/14ivtgssEBoBjuZJtSAPKYgpUK7DmnSwuPMqJoVTSgKJ.json"
+
+# bids
+[[test.validator.account]]
+address = "36c6YqAwyGKQG66XEp2dJc5JqjaBNv7sVghEtJv4c7u6"
+filename = "deps/accounts/36c6YqAwyGKQG66XEp2dJc5JqjaBNv7sVghEtJv4c7u6.json"
+
+# coin_vault
+[[test.validator.account]]
+address = "8CFo8bL8mZQK8abbFyypFMwEDd8tVJjHTTojMLgQTUSZ"
+filename = "deps/accounts/8CFo8bL8mZQK8abbFyypFMwEDd8tVJjHTTojMLgQTUSZ.json"
+
+# pc_vault
+[[test.validator.account]]
+address = "AZG3tFCFtiCqEwyardENBQNpHqxgzbMw8uKeZEw2nRG5"
+filename = "deps/accounts/AZG3tFCFtiCqEwyardENBQNpHqxgzbMw8uKeZEw2nRG5.json"
+
+# req q
+[[test.validator.account]]
+address = "5KKsLVU6TcbVDK4BS6K1DGDxnh4Q9xjYJ8XaDCG5t8ht"
+filename = "deps/accounts/5KKsLVU6TcbVDK4BS6K1DGDxnh4Q9xjYJ8XaDCG5t8ht.json"
+
+# evt q
+
+###############
+
+
+#########################
+# tulip-usdc amm accounts
+#########################
+
+# TULIP-USDC Raydium AMM Accounts
+
+# name = "TULIP-USDC-POOL-ID"
+[[test.validator.account]]
+address = "7U8Z6TWQMtsMcHV2htALnF9VQonnD1MrVm17YtmGEGEw"
+filename = "deps/accounts/7U8Z6TWQMtsMcHV2htALnF9VQonnD1MrVm17YtmGEGEw.json"
+
+# name = "TULIP-USDC-POOL-LP-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "B6xn6doS3Qfy1LJLbdcJa5MpJ4po2bgut1rKFvmmq6Ut"
+filename = "deps/accounts/B6xn6doS3Qfy1LJLbdcJa5MpJ4po2bgut1rKFvmmq6Ut.json"
+
+
+# name = "TULIP-USDC-POOL-REWARD-A-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "GtPTgCr6nXiogRCWqGvLa8P6dJgZpHfAX3KxGMpxnGMJ"
+filename = "deps/accounts/GtPTgCr6nXiogRCWqGvLa8P6dJgZpHfAX3KxGMpxnGMJ.json"
+
+
+# name = "TULIP-USDC-POOL-REWARD-B-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "8qgijAifBGx2EAJ7zKAzk6z7dVpcDV9eHvTBwofmdTP5"
+filename = "deps/accounts/8qgijAifBGx2EAJ7zKAzk6z7dVpcDV9eHvTBwofmdTP5.json"
+
+
+# name = "TULIP-USDC-AMM-ID"
+[[test.validator.account]]
+address = "96hPvuJ3SRT82m7BAc7G1AUVPVcoj8DABAa5gT7wjgzX"
+filename = "deps/accounts/96hPvuJ3SRT82m7BAc7G1AUVPVcoj8DABAa5gT7wjgzX.json"
+
+
+# name = "TULIP-USDC-AMM-OPEN-ORDERS"
+[[test.validator.account]]
+address = "6GtSWZfdUFtT47RPk2oSxoB6RbNkp9aM6yP77jB4XmZB"
+filename = "deps/accounts/6GtSWZfdUFtT47RPk2oSxoB6RbNkp9aM6yP77jB4XmZB.json"
+
+
+# name = "TULIP-USDC-AMM-QUANTITIES-ORG-TARGET-ORDERS"
+[[test.validator.account]]
+address = "9mB928abAihkhqM6AKLMW4cZkHBXFn2TmcxEKhTqs6Yr"
+filename = "deps/accounts/9mB928abAihkhqM6AKLMW4cZkHBXFn2TmcxEKhTqs6Yr.json"
+
+
+# name = "TULIP-USDC-POOL-COIN-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "s9Xp7GV1jGvixdSfY6wPgivsTd3c4TzjW1eJGyojwV4"
+filename = "deps/accounts/s9Xp7GV1jGvixdSfY6wPgivsTd3c4TzjW1eJGyojwV4.json"
+
+
+# name = "TULIP-USDC-POOL-PC-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "wcyW58QFNfppgm4Wi7cKhSftdVNfpLdn67YvvCNMWrt"
+filename = "deps/accounts/wcyW58QFNfppgm4Wi7cKhSftdVNfpLdn67YvvCNMWrt.json"
+
+
+# name = "TULIP-USDC-POOL-TEMP-TOKEN-ACCOUNT"
+[[test.validator.account]]
+address = "71oLQgsHknJVHGJDCaBVUnb6udGepK7kwkHXGy47u2i4"
+filename = "deps/accounts/71oLQgsHknJVHGJDCaBVUnb6udGepK7kwkHXGy47u2i4.json"
+
+
+# name = "TULIP-USDC-POOL-WITHDRAW-QUEUE"
+[[test.validator.account]]
+address = "59NA3khShyZk4dhDjFN564nScNdEi3UR4wrCnLN6rRgX"
+filename = "deps/accounts/59NA3khShyZk4dhDjFN564nScNdEi3UR4wrCnLN6rRgX.json"
+
+
+###############
+
+
+###########################
+# tulip-usdc serum accounts
+###########################
+
+# TULIP-USDC Serum Accounts
+
+# TULIP-USDC-SERUM-MARKET
+[[test.validator.account]]
+address = "8GufnKq7YnXKhnB3WNhgy5PzU9uvHbaaRrZWQK6ixPxW"
+filename = "deps/accounts/8GufnKq7YnXKhnB3WNhgy5PzU9uvHbaaRrZWQK6ixPxW.json"
+
+
+# TULIP-USDC-SERUM-ASKS
+[[test.validator.account]]
+address = "42RcphsKYsVWDhaqJRETmx74RHXtHJDjZLFeeDrEL2F9"
+filename = "deps/accounts/42RcphsKYsVWDhaqJRETmx74RHXtHJDjZLFeeDrEL2F9.json"
+
+
+# TULIP-USDC-SERUM-BIDS
+[[test.validator.account]]
+address = "69W6zLetZ7FgXPXgHRp4i4wNd422tXeZzDuBzdkjgoBW"
+filename = "deps/accounts/69W6zLetZ7FgXPXgHRp4i4wNd422tXeZzDuBzdkjgoBW.json"
+
+# TULIP-USDC-SERUM-COIN-VAULT
+[[test.validator.account]]
+address = "6qH3FNTSGKw34SEEj7GXbQ6kMQXHwuyGsAAeV5hLPhJc"
+filename = "deps/accounts/6qH3FNTSGKw34SEEj7GXbQ6kMQXHwuyGsAAeV5hLPhJc.json"
+
+# TULIP-USDC-SERUM-PC-VAULT
+[[test.validator.account]]
+address = "6AdJbeH76BBSJ34DeQ6LLdauF6W8fZRrMKEfLt3YcMcT"
+filename = "deps/accounts/6AdJbeH76BBSJ34DeQ6LLdauF6W8fZRrMKEfLt3YcMcT.json"
+
+# TULIP-USDC-SERUM-REQ-QUEUE
+[[test.validator.account]]
+address = "DAntkL9MxXEKad58DMmDsjwPgztFmkgPeucuNCCjUBb1"
+filename = "deps/accounts/DAntkL9MxXEKad58DMmDsjwPgztFmkgPeucuNCCjUBb1.json"
+
+# TULIP-USDC-SERUM-EVT-QUEUE
+[[test.validator.account]]
+address = "ExbLY71YpFaAGKuHjJKXSsWLA8hf1hGLoUYHNtzvbpGJ"
+filename = "deps/accounts/ExbLY71YpFaAGKuHjJKXSsWLA8hf1hGLoUYHNtzvbpGJ.json"
+
+###############
+
+####################
+# port usdc accounts
+####################
+
+# usdc liquidity supply account
+[[test.validator.account]]
+address = "2xPnqU4bWhUSjZ74CibY63NrtkHHw5eKntsxf8dzwiid"
+filename = "deps/accounts/2xPnqU4bWhUSjZ74CibY63NrtkHHw5eKntsxf8dzwiid.json"
+
+# usdc reserve account
+[[test.validator.account]]
+address = "DcENuKuYd6BWGhKfGr7eARxodqG12Bz1sN5WA8NwvLRx"
+filename = "deps/accounts/DcENuKuYd6BWGhKfGr7eARxodqG12Bz1sN5WA8NwvLRx.json"
+
+###############
+# port accounts
+###############
+
+# lending market account
+[[test.validator.account]]
+address = "6T4XxKerq744sSuj3jaoV6QiZ8acirf4TrPwQzHAoSy5"
+filename = "deps/accounts/6T4XxKerq744sSuj3jaoV6QiZ8acirf4TrPwQzHAoSy5.json"
+
+###############
+
+######################
+# solend usdc accounts 
+######################
+
+# usdc liquidity supply
+[[test.validator.account]]
+address = "8SheGtsopRUDzdiD6v6BR9a6bqZ9QwywYQY99Fp5meNf"
+filename = "deps/accounts/8SheGtsopRUDzdiD6v6BR9a6bqZ9QwywYQY99Fp5meNf.json"
+
+# usdc reserve collateral supply
+[[test.validator.account]]
+address = "UtRy8gcEu9fCkDuUrU8EmC7Uc6FZy5NCwttzG7i6nkw"
+filename = "deps/accounts/UtRy8gcEu9fCkDuUrU8EmC7Uc6FZy5NCwttzG7i6nkw.json"
+
+# usdc fee receiver
+[[test.validator.account]]
+address = "5Gdxn4yquneifE6uk9tK8X4CqHfWKjW2BvYU25hAykwP"
+filename = "deps/accounts/5Gdxn4yquneifE6uk9tK8X4CqHfWKjW2BvYU25hAykwP.json"
+
+# usdc reserve 
+[[test.validator.account]]
+address = "BgxfHJDzm44T7XG68MYKx7YisTjZu73tVovyZSjJMpmw"
+filename = "deps/accounts/BgxfHJDzm44T7XG68MYKx7YisTjZu73tVovyZSjJMpmw.json"
+
+
+# usdc oracle address
+[[test.validator.account]]
+address = "8GWTTbNiXdmyZREXbjsZBmCRuzdPrW55dnZGDkTRjWvb"
+filename = "deps/accounts/8GWTTbNiXdmyZREXbjsZBmCRuzdPrW55dnZGDkTRjWvb.json"
+
+
+# usdc oracle price account
+[[test.validator.account]]
+address = "Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"
+filename = "deps/accounts/Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD.json"
+
+
+# usdc switchboard feed address
+[[test.validator.account]]
+address = "CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb"
+filename = "deps/accounts/CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb.json"
+
+
+#################
+# solend accounts
+#################
+
+# lending market account
+[[test.validator.account]]
+address = "4UpD2fh7xH3VP9QQaXtsS1YY3bxzWhtfpks7FatyKvdY"
+filename = "deps/accounts/4UpD2fh7xH3VP9QQaXtsS1YY3bxzWhtfpks7FatyKvdY.json"
+
+
+###############
+
+##################
+# tulip accounts #
+##################
+
+# usdc reserve
+[[test.validator.account]]
+address = "FTkSmGsJ3ZqDSHdcnY7ejN1pWV3Ej7i88MYpZyyaqgGt"
+filename = "deps/accounts/FTkSmGsJ3ZqDSHdcnY7ejN1pWV3Ej7i88MYpZyyaqgGt.json"
+
+
+# lending market
+[[test.validator.account]]
+address = "D1cqtVThyebK9KXKGXrCEuiqaNf5L4UfM1vHgCqiJxym"
+filename = "deps/accounts/D1cqtVThyebK9KXKGXrCEuiqaNf5L4UfM1vHgCqiJxym.json"
+
+
+# usdc reserve liquidity supply
+[[test.validator.account]]
+address = "64QJd6MYXUjCBvCaZKaqxiKmaMkPUdNonE1KuY1YoGGb"
+filename = "deps/accounts/64QJd6MYXUjCBvCaZKaqxiKmaMkPUdNonE1KuY1YoGGb.json"
+
+
+# usdc pyth price account
+[[test.validator.account]]
+address = "ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB"
+filename = "deps/accounts/ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB.json"
+
+
+###############
+
+###################
+# mango v3 accounts
+###################
+
+# mainnet.1 group key
+[[test.validator.account]]
+address = "98pjRuQjK3qA6gXts96PqZT4Ze5QmnCmt3QYjhbUSPue"
+filename = "deps/accounts/98pjRuQjK3qA6gXts96PqZT4Ze5QmnCmt3QYjhbUSPue.json"
+
+
+# usdc root key
+[[test.validator.account]]
+address = "AMzanZxMirPCgGcBoH9kw4Jzi9LFMomyUCXbpzDeL2T8"
+filename = "deps/accounts/AMzanZxMirPCgGcBoH9kw4Jzi9LFMomyUCXbpzDeL2T8.json"
+
+
+# usdc node key
+[[test.validator.account]]
+address = "BGcwkj1WudQwUUjFk78hAjwd1uAm8trh1N4CJSa51euh"
+filename = "deps/accounts/BGcwkj1WudQwUUjFk78hAjwd1uAm8trh1N4CJSa51euh.json"
+
+
+# mango mainnet.1 group cache
+[[test.validator.account]]
+address = "EBDRoayCDDUvDgCimta45ajQeXbexv7aKqJubruqpyvu"
+filename = "deps/accounts/EBDRoayCDDUvDgCimta45ajQeXbexv7aKqJubruqpyvu.json"
+
+
+# mango usdc group token account
+[[test.validator.account]]
+address = "8Vw25ZackDzaJzzBBqcgcpDsCsDfRSkMGgwFQ3gbReWF"
+filename = "deps/accounts/8Vw25ZackDzaJzzBBqcgcpDsCsDfRSkMGgwFQ3gbReWF.json"
+
+
+###############
+
+##########################
+# orca atlas/usdc accounts
+###########################
+
+# pool_swap_account
+[[test.validator.account]]
+address = "3V5sjXj1mrWjjB1Xt6Xwp554QwHE5fppGSxbk4GzAtEW"
+filename = "deps/accounts/3V5sjXj1mrWjjB1Xt6Xwp554QwHE5fppGSxbk4GzAtEW.json"
+
+# pool_swap_token_a
+[[test.validator.account]]
+address = "xotXsNCx4tBhnwhrajGTaVgKq1sfuMkeYHc77ZegCqE"
+filename = "deps/accounts/xotXsNCx4tBhnwhrajGTaVgKq1sfuMkeYHc77ZegCqE.json"
+
+# pool_swap_token_b
+[[test.validator.account]]
+address = "8YswVYsTi66umBF2Bnkh4LB2VWMKPssDpe54VAgiuJZQ"
+filename = "deps/accounts/8YswVYsTi66umBF2Bnkh4LB2VWMKPssDpe54VAgiuJZQ.json"
+
+
+###############
+
+##########################
+# orca orca/sol accounts
+###########################
+
+# pool_swap_account
+[[test.validator.account]]
+address = "2ZnVuidTHpi5WWKUwFXauYGhvdT9jRKYv5MDahtbwtYr"
+filename = "deps/accounts/2ZnVuidTHpi5WWKUwFXauYGhvdT9jRKYv5MDahtbwtYr.json"
+
+# pool_swap_token_a
+[[test.validator.account]]
+address = "AioST8HKQJRqjE1mknk4Rydc8wVADhdQwRJmAAYX1T6Z"
+filename = "deps/accounts/AioST8HKQJRqjE1mknk4Rydc8wVADhdQwRJmAAYX1T6Z.json"
+
+# pool_swap_token_b
+[[test.validator.account]]
+address = "73zdy95DynZP4exdpuXTDsexcrWbDJX9TFi2E6CDzXh4"
+filename = "deps/accounts/73zdy95DynZP4exdpuXTDsexcrWbDJX9TFi2E6CDzXh4.json"
+
+# global_farm
+[[test.validator.account]]
+address = "F6pi7SyXWx56fP96mYQ4Yfh4yZ7oGNtDjwSYHT5Mz7Ld"
+filename = "deps/accounts/F6pi7SyXWx56fP96mYQ4Yfh4yZ7oGNtDjwSYHT5Mz7Ld.json"
+
+# global_base_token_vault
+[[test.validator.account]]
+address = "7N7zxoDMMV1sCDiVEzinTyQxS2GoN388QprMCQX38BeT"
+filename = "deps/accounts/7N7zxoDMMV1sCDiVEzinTyQxS2GoN388QprMCQX38BeT.json"
+
+# global_reward_token_vault
+[[test.validator.account]]
+address = "CSbYA7Cd65Vis2oqX797zmnWmpgENmqrPdmPbTbRPykd"
+filename = "deps/accounts/CSbYA7Cd65Vis2oqX797zmnWmpgENmqrPdmPbTbRPykd.json"
+
+# pool_fee_account
+[[test.validator.account]]
+address = "4Zc4kQZhRQeGztihvcGSWezJE1k44kKEgPCAkdeBfras"
+filename = "deps/accounts/4Zc4kQZhRQeGztihvcGSWezJE1k44kKEgPCAkdeBfras.json"
+
+
+
+##########################
+# orca atlas/usdc accounts
+###########################
+
+# farm (non double-dip configs) #
+# pool_swap_token_a
+[[test.validator.account]]
+address = "xotXsNCx4tBhnwhrajGTaVgKq1sfuMkeYHc77ZegCqE"
+filename = "deps/accounts/xotXsNCx4tBhnwhrajGTaVgKq1sfuMkeYHc77ZegCqE.json"
+
+# pool_swap_token_b
+[[test.validator.account]]
+address = "8YswVYsTi66umBF2Bnkh4LB2VWMKPssDpe54VAgiuJZQ"
+filename = "deps/accounts/8YswVYsTi66umBF2Bnkh4LB2VWMKPssDpe54VAgiuJZQ.json"
+
+# pool_swap_account
+[[test.validator.account]]
+address = "3V5sjXj1mrWjjB1Xt6Xwp554QwHE5fppGSxbk4GzAtEW"
+filename = "deps/accounts/3V5sjXj1mrWjjB1Xt6Xwp554QwHE5fppGSxbk4GzAtEW.json"
+
+# pool_fee_account
+[[test.validator.account]]
+address = "CFN4DQ2p3qroX92pPNy3mov3Dw1aCNGLrU5AXHpHxbko"
+filename = "deps/accounts/CFN4DQ2p3qroX92pPNy3mov3Dw1aCNGLrU5AXHpHxbko.json"
+
+# global_base_token_vault
+[[test.validator.account]]
+address = "AuZoiJ3Y4P55YrT7bZnhE6wCE5BVAn7rEYHjb7rHvFMF"
+filename = "deps/accounts/AuZoiJ3Y4P55YrT7bZnhE6wCE5BVAn7rEYHjb7rHvFMF.json"
+
+# global_reward_token_vault
+[[test.validator.account]]
+address = "7AxW2s5dqKphs9pjVzwNsVHqSznEyLkrtu3w61TQNvHd"
+filename = "deps/accounts/7AxW2s5dqKphs9pjVzwNsVHqSznEyLkrtu3w61TQNvHd.json"
+
+# global_farm
+[[test.validator.account]]
+address = "G92aJeZBCFiECwrKSQsbobfykh6cNLCf5Pd3zkiLjGLe"
+filename = "deps/accounts/G92aJeZBCFiECwrKSQsbobfykh6cNLCf5Pd3zkiLjGLe.json"
+
+
+# farm (double dip configs)
+# global_base_token_vault
+[[test.validator.account]]
+address = "Bu3epZQvoSmUJtzAJWH8v91HFwbc9bRN6B9hrjGojFUW"
+filename = "deps/accounts/Bu3epZQvoSmUJtzAJWH8v91HFwbc9bRN6B9hrjGojFUW.json"
+
+# global_reward_token_vault
+[[test.validator.account]]
+address = "H6xDcxgbV4W9FhiR2VQECSxavSzJHnRnmPzoDWtTc2Qt"
+filename = "deps/accounts/H6xDcxgbV4W9FhiR2VQECSxavSzJHnRnmPzoDWtTc2Qt.json"
+
+# global_farm
+[[test.validator.account]]
+address = "DTP1xr4EzFf1YDu4CeWTtWVsCBzFPk4HDEsL3AzoR3kB"
+filename = "deps/accounts/DTP1xr4EzFf1YDu4CeWTtWVsCBzFPk4HDEsL3AzoR3kB.json"
+
+
+###############
+
+##########################
+# orca orca/usdc accounts
+###########################
+# pool_swap_token_a
+[[test.validator.account]]
+address = "9vYWHBPz817wJdQpE8u3h8UoY3sZ16ZXdCcvLB7jY4Dj"
+filename = "deps/accounts/9vYWHBPz817wJdQpE8u3h8UoY3sZ16ZXdCcvLB7jY4Dj.json"
+
+# pool_swap_token_b
+[[test.validator.account]]
+address = "6UczejMUv1tzdvUzKpULKHxrK9sqLm8edR1v9jinVWm9"
+filename = "deps/accounts/6UczejMUv1tzdvUzKpULKHxrK9sqLm8edR1v9jinVWm9.json"
+
+# pool_swap_account
+[[test.validator.account]]
+address = "2p7nYbtPBgtmY69NsE8DAW6szpRJn7tQvDnqvoEWQvjY"
+filename = "deps/accounts/2p7nYbtPBgtmY69NsE8DAW6szpRJn7tQvDnqvoEWQvjY.json"
+
+# pool_fee_account
+[[test.validator.account]]
+address = "7CXZED4jfRp3qdHB9Py3up6v1C4UhHofFvfT6RXbJLRN"
+filename = "deps/accounts/7CXZED4jfRp3qdHB9Py3up6v1C4UhHofFvfT6RXbJLRN.json"
+
+
+###############
+
+
+#######################
+# MangoV3 Ray Account #
+#######################
+
+# ray oracle
+[[test.validator.account]]
+address = "AnLf8tVYCM816gmBjiy8n53eXKKEDydT5piYjjQDPgTB"
+filename = "deps/accounts/AnLf8tVYCM816gmBjiy8n53eXKKEDydT5piYjjQDPgTB.json"
+
+# root bank
+[[test.validator.account]]
+address = "7TNHrBUDH3FL9uy9hxjmRcKNNaCBG9sYPuDJSJuj3LGs"
+filename = "deps/accounts/7TNHrBUDH3FL9uy9hxjmRcKNNaCBG9sYPuDJSJuj3LGs.json"
+
+# node bank
+[[test.validator.account]]
+address = "GDNCSCaVzhD2L164GwUv8JqTdaHCuYGg21JjXQDtuofk"
+filename = "deps/accounts/GDNCSCaVzhD2L164GwUv8JqTdaHCuYGg21JjXQDtuofk.json"
+
+###############
+
+
+############################
+# Quarry USDT/USDC Account #
+############################
+
+# name = "quarry"
+[[test.validator.account]]
+address = "Hs1X5YtXwZACueUtS9azZyXFDWVxAMLvm3tttubpK7ph"
+filename = "deps/accounts/Hs1X5YtXwZACueUtS9azZyXFDWVxAMLvm3tttubpK7ph.json"
+# name = "rewarder"
+# note ="this is actually a general rewarder used for al lsaber tokens"
+[[test.validator.account]]
+address = "rXhAofQCT7NN9TUqigyEAUzV1uLL4boeD8CRkNBSkYk"
+filename = "deps/accounts/rXhAofQCT7NN9TUqigyEAUzV1uLL4boeD8CRkNBSkYk.json"
+# name = "mint_wrapper"
+[[test.validator.account]]
+address = "EVVDA3ZiAjTizemLGXNUN3gb6cffQFEYkFjFZokPmUPz"
+filename = "deps/accounts/EVVDA3ZiAjTizemLGXNUN3gb6cffQFEYkFjFZokPmUPz.json"
+# name = "minter"
+[[test.validator.account]]
+address = "GEoTC3gN12qHDniaDD7Zxvd5xtcZyEKkTPy42B44s82y"
+filename = "deps/accounts/GEoTC3gN12qHDniaDD7Zxvd5xtcZyEKkTPy42B44s82y.json"
+# name = "saber_iou_token_mint"
+[[test.validator.account]]
+address = "iouQcQBAiEXe6cKLS85zmZxUqaCqBdeHFpqKoSz615u"
+filename = "deps/accounts/iouQcQBAiEXe6cKLS85zmZxUqaCqBdeHFpqKoSz615u.json"
+# name = "claim_fee_token_account"
+[[test.validator.account]]
+address = "4Snkea6wv3K6qzDTdyJiF2VTiLPmCoyHJCzAdkdTStBK"
+filename = "deps/accounts/4Snkea6wv3K6qzDTdyJiF2VTiLPmCoyHJCzAdkdTStBK.json"
+
+
+################################
+# Saber Swap USDT/USDC Account #
+################################
+
+# name = "swap_account"
+[[test.validator.account]]
+address = "YAkoNb6HKmSxQN9L8hiBE5tPJRsniSSMzND1boHmZxe"
+filename = "deps/accounts/YAkoNb6HKmSxQN9L8hiBE5tPJRsniSSMzND1boHmZxe.json"
+# name = "swap_authority"
+# 5C1k9yV7y4CjMnKv8eGYDgWND8P89Pdfj79Trk2qmfGo
+
+# name = "swap_token_b"
+[[test.validator.account]]
+address = "EnTrdMMpdhugeH6Ban6gYZWXughWxKtVGfCwFn78ZmY3"
+filename = "deps/accounts/EnTrdMMpdhugeH6Ban6gYZWXughWxKtVGfCwFn78ZmY3.json"
+# name = "swap_token_a"
+[[test.validator.account]]
+address = "CfWX7o2TswwbxusJ4hCaPobu2jLCb1hfXuXJQjVq3jQF"
+filename = "deps/accounts/CfWX7o2TswwbxusJ4hCaPobu2jLCb1hfXuXJQjVq3jQF.json"
+
+###############
+
+#########################
+# SBR/USDC Serum Market #
+#########################
+
+# name = "vault_signer"
+# 84aqZGKMzbr8ddA267ML7JUTAjieVJe8oR1yGUaKwP53
+ 
+# name = "serum_market
+[[test.validator.account]]
+address = "HXBi8YBwbh4TXF6PjVw81m8Z3Cc4WBofvauj5SBFdgUs"
+filename = "deps/accounts/HXBi8YBwbh4TXF6PjVw81m8Z3Cc4WBofvauj5SBFdgUs.json"
+# name = "coin_vault
+[[test.validator.account]]
+address = "38r5pRYVzdScrJNZowNyrpjVbtRKQ5JMcQxn7PgKE45L"
+filename = "deps/accounts/HXBi8YBwbh4TXF6PjVw81m8Z3Cc4WBofvauj5SBFdgUs.json"
+# name = "event_queue"
+[[test.validator.account]]
+address = "EUre4VPaLh7B95qG3JPS3atquJ5hjbwtX7XFcTtVNkc7"
+filename = "deps/accounts/HXBi8YBwbh4TXF6PjVw81m8Z3Cc4WBofvauj5SBFdgUs.json"
+# name = "pc_vault"
+[[test.validator.account]]
+address = "4YqAGXQEQTQbn4uKX981yCiSjUuYPV8aCajc9qQh3QPy"
+filename = "deps/accounts/HXBi8YBwbh4TXF6PjVw81m8Z3Cc4WBofvauj5SBFdgUs.json"
+# name = "request_queue"
+[[test.validator.account]]
+address = "iwa5jrLEdmzTxvR7iNUL4jrNK9g8aGeCPj1sdLHwwmP"
+filename = "deps/accounts/HXBi8YBwbh4TXF6PjVw81m8Z3Cc4WBofvauj5SBFdgUs.json"
+
+###############
+
+#################################
+# Saber IOU Token Mint Redeemer #
+################################
+
+# name = "saber_iou_token_redeemer"
+[[test.validator.account]]
+address = "CL9wkGFT3SZRRNa9dgaovuRV7jrVVigBUZ6DjcgySsCU"
+filename = "deps/accounts/CL9wkGFT3SZRRNa9dgaovuRV7jrVVigBUZ6DjcgySsCU.json"
+# name = "redemption_vault"
+[[test.validator.account]]
+address = "ESg7xPUBioCqK4QaSvuZkhuekagvKcx326wNo3U7kRWc"
+filename = "deps/accounts/ESg7xPUBioCqK4QaSvuZkhuekagvKcx326wNo3U7kRWc.json"
+# name = "mint_proxy_state"
+[[test.validator.account]]
+address = "9qRjwMQYrkd5JvsENaYYxSCgwEuVhK4qAo5kCFHSmdmL"
+filename = "deps/accounts/9qRjwMQYrkd5JvsENaYYxSCgwEuVhK4qAo5kCFHSmdmL.json"
+# name = "proxy_mint_authority"
+# GyktbGXbH9kvxP8RGfWsnFtuRgC7QCQo2WBqpo3ryk7L
+
+# name = "minter_info"
+# owned by the saber mint proxy program
+[[test.validator.account]]
+address = "GNSuMDSnUP9oK4HRtCi41zAbUzEqeLK1QPoby6dLVD9v"
+filename = "deps/accounts/GNSuMDSnUP9oK4HRtCi41zAbUzEqeLK1QPoby6dLVD9v.json"
+
+###############
+
+#####################################
+# Saber CASH/USDC Quarry Merge Mine #
+#####################################
+
+# name = "merge_pool"
+[[test.validator.account]]
+address = "2ZuDp78p74j5WLnSiRHU8KEVaqdrkKXgDwRWbgNc7Acj"
+filename = "deps/accounts/2ZuDp78p74j5WLnSiRHU8KEVaqdrkKXgDwRWbgNc7Acj.json"
+# name = "quarry"
+[[test.validator.account]]
+address = "3esh4Uq1WMpdYSgBmK92C9eLVRU5MzcNPm2PJyG72Fqo"
+filename = "deps/accounts/3esh4Uq1WMpdYSgBmK92C9eLVRU5MzcNPm2PJyG72Fqo.json"
+###############
+
+########################
+# Saber DAI/USDC Farm  #
+########################
+
+# name = "susdc8_wrapper_account"
+[[test.validator.account]]
+address = "G4gRGymKo7MGzGZup12JS39YVCvy8YMM6KY9AmcKi5iw"
+filename = "deps/accounts/G4gRGymKo7MGzGZup12JS39YVCvy8YMM6KY9AmcKi5iw.json"
+# name = "wrapper_underlying_token_account"
+[[test.validator.account]]
+address = "AQhP39mE4o6BYNwnwYqnz7ZobkPBSLpCg8WvEESq1viZ"
+filename = "deps/accounts/AQhP39mE4o6BYNwnwYqnz7ZobkPBSLpCg8WvEESq1viZ.json"
+
+# name = "swap_account"
+[[test.validator.account]]
+address = "RajgMbScQbqqrdJfR2rxfHJiTiY5b6bJ2tTXiF4aPxy"
+filename = "deps/accounts/RajgMbScQbqqrdJfR2rxfHJiTiY5b6bJ2tTXiF4aPxy.json"
+# authority = 7mupg3bhALz9TBNz8yWRroVpVqJMKDaJG1u1JasCebe8
+
+# name = "swap_token_a"
+[[test.validator.account]]
+address = "725ZA3fhyBAKb5iopNRrcbSuQa3LXA1656Q3mBvYPxeg"
+filename = "deps/accounts/725ZA3fhyBAKb5iopNRrcbSuQa3LXA1656Q3mBvYPxeg.json"
+# name = "swap_token_b"
+[[test.validator.account]]
+address = "GLA6i1dSZpUfk2f9Nj8uiG7xyDdAR2reff8oEiZH3617"
+filename = "deps/accounts/GLA6i1dSZpUfk2f9Nj8uiG7xyDdAR2reff8oEiZH3617.json"
+
+# name = "quarry"
+[[test.validator.account]]
+address = "Gr1ijg84eQWG9zsf5PaBpjrNy4iEzP6hBpUgqxWkpb9y"
+filename = "deps/accounts/Gr1ijg84eQWG9zsf5PaBpjrNy4iEzP6hBpUgqxWkpb9y.json"
+
+###############
+ 
+#########################
+# Sunny DAI/USDC Farm  #
+#########################
+
+# name = "sunny_pool" (basically the sunny equivalent of our vaults)
+[[test.validator.account]]
+address = "75dRdYpYSYDnLrhnxu1ofSWyM9D6C5bjJNR5Dx6v1d7E"
+filename = "deps/accounts/75dRdYpYSYDnLrhnxu1ofSWyM9D6C5bjJNR5Dx6v1d7E.json"
+# name = "sunny_iou_token_mint"
+[[test.validator.account]]
+address = "SRYWvj5Xw1UoivpdfJN4hFZU1qbtceMvfM5nBc3PsRC"
+filename = "deps/accounts/SRYWvj5Xw1UoivpdfJN4hFZU1qbtceMvfM5nBc3PsRC.json"
+# name = "sunny_rewarder
+[[test.validator.account]]
+address = "97PmYbGpSHSrKrUkQX793mjpA2EA9rrQKkHsQuvenU44"
+filename = "deps/accounts/97PmYbGpSHSrKrUkQX793mjpA2EA9rrQKkHsQuvenU44.json"
+# name = "sunny_quarry" (this is the quarry we mine for sunny rewards)
+[[test.validator.account]]
+address = "7dj2G5YgjjvZpFpv2r3ovPa26qC5MiMeiCVNcUHqT67f"
+filename = "deps/accounts/7dj2G5YgjjvZpFpv2r3ovPa26qC5MiMeiCVNcUHqT67f.json"
+# name = "sunny_internal_token_mint"
+[[test.validator.account]]
+address = "DT26tjv9SEuSrQohJ7vSAVShy3xDqjBazGSciDYdZzNP"
+filename = "deps/accounts/DT26tjv9SEuSrQohJ7vSAVShy3xDqjBazGSciDYdZzNP.json"
+# name = "sunny_saber_fee_account"
+[[test.validator.account]]
+address = "FDP4qBjzYHmHWngWssR11aMbpc8vEEEdM1sNAKLRUepG"
+filename = "deps/accounts/FDP4qBjzYHmHWngWssR11aMbpc8vEEEdM1sNAKLRUepG.json"
+# name = "sunny_sunny_fee_account"
+[[test.validator.account]]
+address = "569S7bwpT4JcAXNfSsaz771RpxBAe82YHC965cczinDw"
+filename = "deps/accounts/569S7bwpT4JcAXNfSsaz771RpxBAe82YHC965cczinDw.json"
+# name = "sunny_sunny_redeemer"
+[[test.validator.account]]
+address = "C8Lz145NvmaJe9fHyVGNoieyb9cU9jHEVtgBF7QNn51x"
+filename = "deps/accounts/C8Lz145NvmaJe9fHyVGNoieyb9cU9jHEVtgBF7QNn51x.json"
+# name = "sunny_sunny_redemption_vault"
+[[test.validator.account]]
+address = "5vnPNFuemK5LAYaHpxH4GzttyyEDkoNJ6c547Par9rWx"
+filename = "deps/accounts/5vnPNFuemK5LAYaHpxH4GzttyyEDkoNJ6c547Par9rWx.json"
+# name = "sunny_sunny_minter" (not actually the minter)
+[[test.validator.account]]
+address = "846wNVmi9FgvpZ5wazeJNof5rSTjGR2wFHMmpH5BwWHu"
+filename = "deps/accounts/846wNVmi9FgvpZ5wazeJNof5rSTjGR2wFHMmpH5BwWHu.json"
+# name = "sunny_sunny_mint_wrapper" (not actually the mint wrapper, but forget what it is for)
+[[test.validator.account]]
+address = "7cz5g4tv9PjQZpkWYZqUeEG2NuMo6MJwuoLKFfH6djA7"
+filename = "deps/accounts/7cz5g4tv9PjQZpkWYZqUeEG2NuMo6MJwuoLKFfH6djA7.json"
+[[test.validator.account]]
+address = "9AMTd87fjLQzVt2fM9fdm2h4RNWHBVv9QR1UvYt8fVHP"
+filename = "deps/accounts/9AMTd87fjLQzVt2fM9fdm2h4RNWHBVv9QR1UvYt8fVHP.json"
+[[test.validator.account]]
+address = "C5z6oQDhXbPDrn8DSZXhvnnLb4JuZaEKop9QxQCvhDPr"
+filename = "deps/accounts/C5z6oQDhXbPDrn8DSZXhvnnLb4JuZaEKop9QxQCvhDPr.json"
+
+# name = "sunny_withdraw_fee_destination"
+[[test.validator.account]]
+address = "CbKFRziSAtpWQWxfiQyRfkMNDvxbR8SsZeuRbCh8aVn4"
+filename = "deps/accounts/CbKFRziSAtpWQWxfiQyRfkMNDvxbR8SsZeuRbCh8aVn4.json"
+
+ name = "sunny_claim_fee_token_account"
+[[test.validator.account]]
+address = "4BF6M8M5V3yVQNfYLAAiunvazWBamcA6NQircUuEHCEa"
+filename = "deps/accounts/4BF6M8M5V3yVQNfYLAAiunvazWBamcA6NQircUuEHCEa.json"
+
+###############
+
+#########################
+# Atrix SOL/USDC Farm  #
+#########################
+
+
+# name = "sol_usdc_farm_account"
+[[test.validator.account]]
+address = "5bazugUrs4wsoryG6kZwnbR9EiWgmGsb79GjVYqGGbA2"
+filename = "deps/accounts/5bazugUrs4wsoryG6kZwnbR9EiWgmGsb79GjVYqGGbA2.json"
+# name = "sol_usdc_pool_account"
+[[test.validator.account]]
+address = "8YnCv62yA1WXuReeYqBFjT7DZBH2A8uJt5HfHPfR7wtK"
+filename = "deps/accounts/8YnCv62yA1WXuReeYqBFjT7DZBH2A8uJt5HfHPfR7wtK.json"
+# name = "sol_usdc_alp_mint (stake mint)"
+[[test.validator.account]]
+address = "Gm6HMqHw42TkjTF6ueq8Y6cBD4U17EnNhuSA2UY8Ah7r"
+filename = "deps/accounts/Gm6HMqHw42TkjTF6ueq8Y6cBD4U17EnNhuSA2UY8Ah7r.json"
+# name = "sol_usdc_rewards_account (crop reward account)"
+[[test.validator.account]]
+address = "CcqntMkRcjhiqJs8HW5CrCDmUdUi8n74vvpVaEtfhvRG"
+filename = "deps/accounts/CcqntMkRcjhiqJs8HW5CrCDmUdUi8n74vvpVaEtfhvRG.json"
+# name = "atrix_protocol_account"
+[[test.validator.account]]
+address = "3uTzTX5GBSfbW7eM9R9k95H7Txe32Qw3Z25MtyD2dzwC"
+filename = "deps/accounts/3uTzTX5GBSfbW7eM9R9k95H7Txe32Qw3Z25MtyD2dzwC.json"
+# name = "sol_usdc_farm_stake_token_account"
+[[test.validator.account]]
+address = "6GZaSGjfMgAgQ9Uy4iCTCDA5EZ3nbuujLE5PUYueJRLM"
+filename = "deps/accounts/6GZaSGjfMgAgQ9Uy4iCTCDA5EZ3nbuujLE5PUYueJRLM.json"
+# name = "sol_usdc_crop_account"
+[[test.validator.account]]
+address = "EgfLRauQPFtzpx3hA74B5QUgCMhrFd9qcYGWZ48PijtM"
+filename = "deps/accounts/EgfLRauQPFtzpx3hA74B5QUgCMhrFd9qcYGWZ48PijtM.json"
+# name = "sol_usdc_pool_coin_account"
+[[test.validator.account]]
+address = "9NBvCk78BUVe3yLBwB2H43S7JBSY3zXzZQKSiH1AFgN2"
+filename = "deps/accounts/9NBvCk78BUVe3yLBwB2H43S7JBSY3zXzZQKSiH1AFgN2.json"
+# name = "sol_usdc_pool_pc_account"
+[[test.validator.account]]
+address = "Ebe9AM7Bzwy4Ew8H1dsBU15jsxJGahe6xGffxbeFDqfD"
+filename = "deps/accounts/Ebe9AM7Bzwy4Ew8H1dsBU15jsxJGahe6xGffxbeFDqfD.json"
+# name = "sol_usdc_pool_lp_token_account"
+[[test.validator.account]]
+address = "BvD9F1x549kfuBWcaHVVfBss8UAY7XoHBjaSZwSAwd6f"
+filename = "deps/accounts/BvD9F1x549kfuBWcaHVVfBss8UAY7XoHBjaSZwSAwd6f.json"
+# name = "sol_usdc_atrix_open_orders"
+[[test.validator.account]]
+address = "EpAdzaqV13Es3x4dukfjFoCrKVXnZ7y9Y76whgMHo5qx"
+filename = "deps/accounts/EpAdzaqV13Es3x4dukfjFoCrKVXnZ7y9Y76whgMHo5qx.json"
+###############
+
+##############################
+# Tulip V2 USDCv1   Accounts #
+##############################
+
+
+[[test.validator.account]] # usdcv1_vault_account
+address = "3wPiV9inTGexMZjp6x5Amqwp2sRNtpSheG8Hbv2rgq8W"
+filename = "deps/accounts/3wPiV9inTGexMZjp6x5Amqwp2sRNtpSheG8Hbv2rgq8W.json"
+[[test.validator.account]] # usdcv1_shares_mint
+address = "Cvvh8nsKZet59nsDDo3orMa3rZnPWQhpgrMCVcRDRgip"
+filename = "deps/accounts/Cvvh8nsKZet59nsDDo3orMa3rZnPWQhpgrMCVcRDRgip.json"
+[[test.validator.account]] # usdcv1_compound_queue
+address = "FAr7Xouceyn9Ms7Egx4JUQryy3RQXuM27RVvCqH6X1o3"
+filename = "deps/accounts/FAr7Xouceyn9Ms7Egx4JUQryy3RQXuM27RVvCqH6X1o3.json"
+[[test.validator.account]] # underlying_deposit_queue
+address = "36KtHLHxcGnrfEb2GLwPcbN9nHUkeoi3gd6rMQj8wwVj"
+filename = "deps/accounts/36KtHLHxcGnrfEb2GLwPcbN9nHUkeoi3gd6rMQj8wwVj.json"
+[[test.validator.account]] # underlying_withdraw_queue
+address = "HLVcpKPkBJJJGTHTSaZcAixDppy4R65x1is3k8Q7qZpj"
+filename = "deps/accounts/HLVcpKPkBJJJGTHTSaZcAixDppy4R65x1is3k8Q7qZpj.json"
+[[test.validator.account]] # rebalance_state_transition
+address = "3Vjgd77xSaAeBX9DmtZ2Rw7EwVCqvb8aoPvDD7Z75HXP"
+filename = "deps/accounts/3Vjgd77xSaAeBX9DmtZ2Rw7EwVCqvb8aoPvDD7Z75HXP.json"
+[[test.validator.account]] # rebalance_state_transition_underlying
+address = "BBAcBhNSvGpHd4FHh1XF1VGpGjfeUDeNxxww9TRKra7r"
+filename = "deps/accounts/BBAcBhNSvGpHd4FHh1XF1VGpGjfeUDeNxxww9TRKra7r.json"
+[[test.validator.account]] # usdcv1_solend_optimizer_shares_account
+address = "UxVNZzzx3xRxKFAuGjRQgbDaa7mirSkFEAu7qiYQ1h4"
+filename = "deps/accounts/UxVNZzzx3xRxKFAuGjRQgbDaa7mirSkFEAu7qiYQ1h4.json"
+[[test.validator.account]] # usdcv1_tulip_optimizer_shares_account
+address = "M7akLS7xYVhp68LnMkBBCemvqkGcCycQ3qp7e3SsKR1"
+filename = "deps/accounts/M7akLS7xYVhp68LnMkBBCemvqkGcCycQ3qp7e3SsKR1.json"
+[[test.validator.account]] # usdcv1_mango_optimizer_shares_account
+address = "A9kM8NKf3v29F3DgRQ5Rw7TJoadFZZDfBGLRBGNzASrr"
+filename = "deps/accounts/A9kM8NKf3v29F3DgRQ5Rw7TJoadFZZDfBGLRBGNzASrr.json"
+[[test.validator.account]] # solend_vault_account
+address = "85JXjDiyianDpvz8y8efkRyFsxpnSJJpmyxrJ7bncKHM"
+filename = "deps/accounts/85JXjDiyianDpvz8y8efkRyFsxpnSJJpmyxrJ7bncKHM.json"
+[[test.validator.account]] # solend_config_data_account
+address = "6AzcPNmNWomkdMRgcZJPVAs4zF1jev9wqxzzzxVzDDsi"
+filename = "deps/accounts/6AzcPNmNWomkdMRgcZJPVAs4zF1jev9wqxzzzxVzDDsi.json"
+[[test.validator.account]] # solend_information_account
+address = "GRL5rtnvzCfQRdKJXkG2A8LvDSNXkbxENEnF4SwJ3pTF"
+filename = "deps/accounts/GRL5rtnvzCfQRdKJXkG2A8LvDSNXkbxENEnF4SwJ3pTF.json"
+[[test.validator.account]] # solend_vault_collateral_token_account
+address = "6EaiG2gRVu9u7QzVmX59AWLSmiaEYvMrKWQfPMCgNxsZ"
+filename = "deps/accounts/6EaiG2gRVu9u7QzVmX59AWLSmiaEYvMrKWQfPMCgNxsZ.json"
+[[test.validator.account]] # solend_shares_mint
+address = "CS8cJicaSpphTTboMJD1UeNpU7vpkZc86vKrtqzRVnG5"
+filename = "deps/accounts/CS8cJicaSpphTTboMJD1UeNpU7vpkZc86vKrtqzRVnG5.json"
+[[test.validator.account]] # solend_underlying_compound_queue
+address = "2KpoR9CquEuUTgVqFTtZi8nqrTA1YFsYmsHjp957YVcX"
+filename = "deps/accounts/2KpoR9CquEuUTgVqFTtZi8nqrTA1YFsYmsHjp957YVcX.json"
+[[test.validator.account]] # solend_underlying_deposit_queue
+address = "2Li9Q5Vx9BEnFTGJTLWc5pVqerYGjhgyGYzSAA2WhYKQ"
+filename = "deps/accounts/2Li9Q5Vx9BEnFTGJTLWc5pVqerYGjhgyGYzSAA2WhYKQ.json"
+[[test.validator.account]] # solend_underlying_withdraw_queue
+address = "BoGjVzrz2yhPRnFoj2QPPMLZTkptG7pESc3PyHDGV6WJ"
+filename = "deps/accounts/BoGjVzrz2yhPRnFoj2QPPMLZTkptG7pESc3PyHDGV6WJ.json"
+[[test.validator.account]] # tulip_vault_account
+address = "8KLrrsnUv3DjC9Q89xSQDVdiGLZHUEUuyPedfHrtuVRr"
+filename = "deps/accounts/8KLrrsnUv3DjC9Q89xSQDVdiGLZHUEUuyPedfHrtuVRr.json"
+[[test.validator.account]] # tulip_config_data_account
+address = "7XTtoiHfkYzjLDxKDMoaVYncmdBW1yLfphmisSbBrnuZ"
+filename = "deps/accounts/7XTtoiHfkYzjLDxKDMoaVYncmdBW1yLfphmisSbBrnuZ.json"
+[[test.validator.account]] # tulip_information_account
+address = "4QVuedVSCMLA3eQ643czUy95uQFxXKAcCMJ1ChpkVA2B"
+filename = "deps/accounts/4QVuedVSCMLA3eQ643czUy95uQFxXKAcCMJ1ChpkVA2B.json"
+[[test.validator.account]] # tulip_vault_collateral_token_account
+address = "2U6kk4iTVqeypBydVPKA8mLTLAQEBfWf4KYfmkcvomPE"
+filename = "deps/accounts/2U6kk4iTVqeypBydVPKA8mLTLAQEBfWf4KYfmkcvomPE.json"
+[[test.validator.account]] # tulip_shares_mint
+address = "D2PLcwGR1wsXUPhb1BHysSVEsHVVCQ129qGpgXXaTNR1"
+filename = "deps/accounts/D2PLcwGR1wsXUPhb1BHysSVEsHVVCQ129qGpgXXaTNR1.json"
+[[test.validator.account]] # tulip_underlying_compound_queue
+address = "E9XiAr49FzCGeLHwLjz5H1AiPKWNodizA5e8So7zLmjz"
+filename = "deps/accounts/E9XiAr49FzCGeLHwLjz5H1AiPKWNodizA5e8So7zLmjz.json"
+[[test.validator.account]] # tulip_underlying_deposit_queue
+address = "8eDHmS15CWd8d88uckg6oKxrfwijZVudZsDgdtgGqS49"
+filename = "deps/accounts/8eDHmS15CWd8d88uckg6oKxrfwijZVudZsDgdtgGqS49.json"
+[[test.validator.account]] # tulip_underlying_withdraw_queue
+address = "AMdJL2UzEpd54a7wDqq6aV99ix6iXMHMmvs1w8CRs3Gc"
+filename = "deps/accounts/AMdJL2UzEpd54a7wDqq6aV99ix6iXMHMmvs1w8CRs3Gc.json"
+[[test.validator.account]] # mango_vault_account
+address = "ZH9GWNBtwxcWeU9kHk77DSciwQnoJcSm8VVvYfmHXfe"
+filename = "deps/accounts/ZH9GWNBtwxcWeU9kHk77DSciwQnoJcSm8VVvYfmHXfe.json"
+[[test.validator.account]] # mango_config_data_account
+address = "EecDX1xHrjKXQWbE5WtwU7fAiEkKxAv7w196oe8jaoqY"
+filename = "deps/accounts/EecDX1xHrjKXQWbE5WtwU7fAiEkKxAv7w196oe8jaoqY.json"
+[[test.validator.account]] # mango_information_account
+address = "GDzbqzebKTxJaQVfxfqejkqU4HLcBmgNBwun3rADvm8J"
+filename = "deps/accounts/GDzbqzebKTxJaQVfxfqejkqU4HLcBmgNBwun3rADvm8J.json"
+[[test.validator.account]] # mango_vault_optimizer_mango_account
+address = "3cZkd5eVyZhMhE8nJcR3rA7GgVQ6gCJt2qofr2GQd8ca"
+filename = "deps/accounts/3cZkd5eVyZhMhE8nJcR3rA7GgVQ6gCJt2qofr2GQd8ca.json"
+[[test.validator.account]] # mango_shares_mint
+address = "5u6jxB7En2LF5aroeq8U5JUbnHa5WSYB5JTemh3gYaMj"
+filename = "deps/accounts/5u6jxB7En2LF5aroeq8U5JUbnHa5WSYB5JTemh3gYaMj.json"
+[[test.validator.account]] # mango_underlying_compound_queue
+address = "D8DwEfi3sqr2MDaFzT2bsWHi4Sqy9gokXTkGgLqJ4imW"
+filename = "deps/accounts/D8DwEfi3sqr2MDaFzT2bsWHi4Sqy9gokXTkGgLqJ4imW.json"
+[[test.validator.account]] # mango_underlying_deposit_queue
+address = "3CnAyCjpA9mcxayed12cwJNGue7YbmyuBjpT9KN6meVT"
+filename = "deps/accounts/3CnAyCjpA9mcxayed12cwJNGue7YbmyuBjpT9KN6meVT.json"
+[[test.validator.account]] # mango_underlying_withdraw_queue
+address = "GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd"
+filename = "deps/accounts/GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd.json"
+
+###############

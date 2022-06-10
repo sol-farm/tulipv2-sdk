@@ -1,0 +1,13 @@
+{
+  "pubkey": "Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1",
+  "account": {
+    "lamports": 3680844220,
+    "data": [
+      "AQAAAO1pdIkHVLJcTVQgWR5wqD2IofSV7xnnzm/Vlp4xsteLDJ6Drk9tAgAGAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+      "base64"
+    ],
+    "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "executable": false,
+    "rentEpoch": 275
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "pubkey": "SUNNYWgPQmFxe9wTZzNK7iPnJ3vYDrkgnxJRJm1s3ag",
+  "account": {
+    "lamports": 50463000600,
+    "data": [
+      "AQAAAGJd/bg0JdCyV+y69G0Z33Afgzph60qZFusnxhQQz4toiMfdgL5JCwAGAQEAAABiXf24NCXQslfsuvRtGd9wH4M6YetKmRbrJ8YUEM+LaA==",
+      "base64"
+    ],
+    "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "executable": false,
+    "rentEpoch": 277
+  }
+}
