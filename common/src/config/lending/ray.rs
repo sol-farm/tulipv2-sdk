@@ -4,19 +4,21 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
 use static_pubkey::static_pubkey;
 use tulipv2_sdk_farms::{lending::Lending, Farm};
+use crate::config::deposit_tracking::issue_shares::DepositAddresses;
+use crate::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
+use crate::config::deposit_tracking::traits::{
+    IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
+};
+use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
+use crate::config::lending::traits::WithdrawMultiOptimizerVault;
+use crate::config::lending::withdraw::WithdrawAddresses;
+use crate::config::lending::Platform;
+use crate::config::lending::withdraw::PlatformConfigAddresses;
+
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
     use super::*;
-    use crate::config::deposit_tracking::issue_shares::DepositAddresses;
-    use crate::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
-    use crate::config::deposit_tracking::traits::{
-        IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
-    };
-    use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
-    use crate::config::lending::traits::WithdrawMultiOptimizerVault;
-    use crate::config::lending::withdraw::WithdrawAddresses;
-    use crate::config::lending::Platform;
 
     /// empty struct used to implement the various traits used
     /// to interact with the ray lending optimizer vault
@@ -151,8 +153,6 @@ pub mod multi_deposit {
 /// bundles configuration information for the solend usdc standalone vault
 pub mod solend {
     use super::*;
-    use crate::config::lending::withdraw::PlatformConfigAddresses;
-
     pub const TAG_STRING: &str = "solend";
     pub const FARM_KEY: Farm = Farm::Lending { name: Lending::RAY };
 
@@ -232,7 +232,6 @@ pub mod solend {
 /// bundles configuration information for the tulip usdc standalone vault
 pub mod tulip {
     use super::*;
-    use crate::config::lending::withdraw::PlatformConfigAddresses;
 
     pub const TAG_STRING: &str = "tulip";
     pub const FARM_KEY: Farm = Farm::Lending { name: Lending::RAY };
@@ -306,8 +305,7 @@ pub mod tulip {
 /// bundles configuration information for the mango usdc standalone vault
 pub mod mango {
     use super::*;
-    use crate::config::lending::withdraw::PlatformConfigAddresses;
-
+    
     pub const TAG_STRING: &str = "mango";
     pub const FARM_KEY: Farm = Farm::Lending { name: Lending::RAY };
 
