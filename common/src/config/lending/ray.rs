@@ -1,9 +1,5 @@
 //! usdc lending optimizer configuration variables
 
-use anchor_lang::prelude::*;
-use anchor_lang::solana_program;
-use static_pubkey::static_pubkey;
-use tulipv2_sdk_farms::{lending::Lending, Farm};
 use crate::config::deposit_tracking::issue_shares::DepositAddresses;
 use crate::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
 use crate::config::deposit_tracking::traits::{
@@ -11,8 +7,12 @@ use crate::config::deposit_tracking::traits::{
 };
 use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 use crate::config::lending::traits::WithdrawMultiOptimizerVault;
-use crate::config::lending::withdraw::{WithdrawAddresses, PlatformConfigAddresses};
+use crate::config::lending::withdraw::{PlatformConfigAddresses, WithdrawAddresses};
 use crate::config::lending::Platform;
+use anchor_lang::prelude::*;
+use anchor_lang::solana_program;
+use static_pubkey::static_pubkey;
+use tulipv2_sdk_farms::{lending::Lending, Farm};
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 
@@ -312,7 +312,7 @@ pub mod tulip {
 /// bundles configuration information for the mango usdc standalone vault
 pub mod mango {
     use super::*;
-    
+
     pub const TAG_STRING: &str = "mango";
     pub const FARM_KEY: Farm = Farm::Lending { name: Lending::RAY };
 

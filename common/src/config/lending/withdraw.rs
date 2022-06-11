@@ -182,7 +182,7 @@ impl WithdrawMultiOptimizerVault for WithdrawAddresses {
         } else {
             #[cfg(feature = "logs")]
             msg!("mango, solend, and tulip accounts are None");
-            
+
             None
         }
     }
@@ -328,7 +328,7 @@ impl ToAccountMetas for SolendStandaloneAddresses {
             AccountMeta::new_readonly(self.lending_market_account, false),
             AccountMeta::new_readonly(self.lending_market_authority, false),
             AccountMeta::new_readonly(self.pyth_price_account, false),
-            AccountMeta::new_readonly(self.switchboard_price_account, false)
+            AccountMeta::new_readonly(self.switchboard_price_account, false),
         ]
     }
 }

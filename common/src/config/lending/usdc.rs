@@ -1,9 +1,5 @@
 //! usdc lending optimizer configuration variables
 
-use anchor_lang::prelude::*;
-use anchor_lang::solana_program;
-use static_pubkey::static_pubkey;
-use tulipv2_sdk_farms::{lending::Lending, Farm};
 use crate::config::deposit_tracking::issue_shares::DepositAddresses;
 use crate::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
 use crate::config::deposit_tracking::traits::{
@@ -11,9 +7,12 @@ use crate::config::deposit_tracking::traits::{
 };
 use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 use crate::config::lending::traits::WithdrawMultiOptimizerVault;
-use crate::config::lending::withdraw::{WithdrawAddresses, PlatformConfigAddresses};
+use crate::config::lending::withdraw::{PlatformConfigAddresses, WithdrawAddresses};
 use crate::config::lending::Platform;
-
+use anchor_lang::prelude::*;
+use anchor_lang::solana_program;
+use static_pubkey::static_pubkey;
+use tulipv2_sdk_farms::{lending::Lending, Farm};
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
@@ -61,7 +60,6 @@ pub mod multi_deposit {
         static_pubkey!("A9kM8NKf3v29F3DgRQ5Rw7TJoadFZZDfBGLRBGNzASrr");
 
     impl ProgramConfig {
-
         #[inline(always)]
         pub fn issue_shares_ix(user: Pubkey) -> impl IssueShares {
             DepositAddresses::new(user, ACCOUNT, PDA, SHARES_MINT, UNDERLYING_MINT)
@@ -116,7 +114,6 @@ pub mod multi_deposit {
                 (&standalone_config.0, standalone_config.1),
             )?))
         }
-
 
         #[inline(always)]
         pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
