@@ -130,35 +130,20 @@ pub mod examples {
         ctx: Context<WithdrawMangoMultiDepositOptimizerVault>,
         amount: u64,
     ) -> Result<()> {
-        let standalone_vault_accounts = vec![
-            AccountMeta::new_readonly(ctx.accounts.mango_group_account.key(), false),
-            AccountMeta::new(ctx.accounts.withdraw_vault_mango_account.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.mango_cache.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.mango_root_bank.key(), false),
-            AccountMeta::new(ctx.accounts.mango_node_bank.key(), false),
-            AccountMeta::new(ctx.accounts.mango_token_account.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.mango_group_signer.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.system_program.key(), false),
-        ];
-        let ix = new_withdraw_multi_deposit_optimizer_vault_ix(
-            ctx.accounts.common_data.authority.key(),
-            ctx.accounts.common_data.multi_vault.key(),
-            ctx.accounts.common_data.multi_vault_pda.key(),
-            ctx.accounts.common_data.withdraw_vault.key(),
-            ctx.accounts.common_data.withdraw_vault_pda.key(),
-            ctx.accounts.common_data.platform_information.key(),
-            ctx.accounts.common_data.platform_config_data.key(),
-            ctx.accounts.common_data.lending_program.key(),
-            ctx.accounts.common_data.multi_burning_shares_token_account.key(),
-            ctx.accounts.common_data.withdraw_burning_shares_token_account.key(),
-            ctx.accounts.common_data.receiving_underlying_token_account.key(),
-            ctx.accounts.common_data.multi_underlying_withdraw_queue.key(),
-            ctx.accounts.common_data.multi_shares_mint.key(),
-            ctx.accounts.common_data.withdraw_shares_mint.key(),
-            ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.key(),
-            amount,
-            standalone_vault_accounts.clone()
-        );
+        // you must scope the instruction creation function the way this is done
+        // otherwise stack size will be blown, as the size of the `withdraw_trait`
+        // and the instruction itself can't be on the stack when the instruction is 
+        // invoked through cpi
+        let ix = {
+            let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
+                *ctx.accounts.common_data.authority.key,
+                tulipv2_sdk_common::config::lending::Platform::MangoV3,
+            ).unwrap();
+            let ix = withdraw_trait.instruction(amount).unwrap();
+            ix
+        };
+        // this instruction fails in localnet as the localnet mainnet cloned state
+        // is deposited into solend
         anchor_lang::solana_program::program::invoke(
             &ix,
             &[
@@ -196,6 +181,10 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawSolendMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
+        // you must scope the instruction creation function the way this is done
+        // otherwise stack size will be blown, as the size of the `withdraw_trait`
+        // and the instruction itself can't be on the stack when the instruction is 
+        // invoked through cpi
         let ix = {
             let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
                 *ctx.accounts.common_data.authority.key,
@@ -248,37 +237,24 @@ pub mod examples {
     }
     /// burns/redeems the `amount` of shares for their corresponding amount
     /// of underlying asset, using the tulip standalone vault as the source of funds to withdraw from
-    pub fn withdraw_multi_deposit_vault_through_tulip(
-        ctx: Context<WithdrawTulipMultiDepositOptimizerVault>,
+    pub fn withdraw_multi_deposit_vault_through_tulip<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, WithdrawTulipMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
-        let standalone_vault_accounts = vec![
-            AccountMeta::new_readonly(ctx.accounts.reserve_account.key(), false),
-            AccountMeta::new(ctx.accounts.reserve_liquidity_supply.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.reserve_collateral_mint.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.lending_market_account.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.derived_lending_market_authority.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.reserve_pyth_price_account.key(), false),
-        ];
-        let ix = new_withdraw_multi_deposit_optimizer_vault_ix(
-            ctx.accounts.common_data.authority.key(),
-            ctx.accounts.common_data.multi_vault.key(),
-            ctx.accounts.common_data.multi_vault_pda.key(),
-            ctx.accounts.common_data.withdraw_vault.key(),
-            ctx.accounts.common_data.withdraw_vault_pda.key(),
-            ctx.accounts.common_data.platform_information.key(),
-            ctx.accounts.common_data.platform_config_data.key(),
-            ctx.accounts.common_data.lending_program.key(),
-            ctx.accounts.common_data.multi_burning_shares_token_account.key(),
-            ctx.accounts.common_data.withdraw_burning_shares_token_account.key(),
-            ctx.accounts.common_data.receiving_underlying_token_account.key(),
-            ctx.accounts.common_data.multi_underlying_withdraw_queue.key(),
-            ctx.accounts.common_data.multi_shares_mint.key(),
-            ctx.accounts.common_data.withdraw_shares_mint.key(),
-            ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.key(),
-            amount,
-            standalone_vault_accounts.clone()
-        );
+        // you must scope the instruction creation function the way this is done
+        // otherwise stack size will be blown, as the size of the `withdraw_trait`
+        // and the instruction itself can't be on the stack when the instruction is 
+        // invoked through cpi
+        let ix = {
+            let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
+                *ctx.accounts.common_data.authority.key,
+                tulipv2_sdk_common::config::lending::Platform::Tulip,
+            ).unwrap();
+            let ix = withdraw_trait.instruction(amount).unwrap();
+            ix
+        };
+        // this instruction fails in localnet as the localnet mainnet cloned state
+        // is deposited into solend
         anchor_lang::solana_program::program::invoke(
             &ix,
             &[
@@ -296,14 +272,16 @@ pub mod examples {
                 ctx.accounts.common_data.multi_underlying_withdraw_queue.to_account_info(),
                 ctx.accounts.common_data.multi_shares_mint.to_account_info(),
                 ctx.accounts.common_data.withdraw_shares_mint.to_account_info(),
-                ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.to_account_info(),
-                ctx.accounts.reserve_account.clone(),
-                ctx.accounts.reserve_liquidity_supply.to_account_info(),
-                ctx.accounts.reserve_collateral_mint.to_account_info(),
-                ctx.accounts.lending_market_account.clone(),
-                ctx.accounts.derived_lending_market_authority.clone(),
-                ctx.accounts.reserve_pyth_price_account.to_account_info(),
                 ctx.accounts.common_data.clock.to_account_info(),
+                ctx.accounts.common_data.token_program.clone(),
+                ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.to_account_info(),
+                ctx.remaining_accounts.get(0).unwrap().clone(), // reserve collateral
+                ctx.remaining_accounts.get(1).unwrap().clone(),  // reserve account
+                ctx.remaining_accounts.get(2).unwrap().clone(), // reserve liquidity supply
+                ctx.remaining_accounts.get(3).unwrap().clone(), // reserve collateral mint
+                ctx.remaining_accounts.get(4).unwrap().clone(), // lending market
+                ctx.remaining_accounts.get(5).unwrap().clone(), // lending market authority
+                ctx.remaining_accounts.get(6).unwrap().clone(), // pyth price account
             ],
         )?;
         Ok(())
@@ -531,19 +509,4 @@ pub struct WithdrawTulipMultiDepositOptimizerVault<'info> {
     /// regardless of the underlying vault htey are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
-    #[account(mut)]
-    /// CHECK: .
-    pub reserve_account: AccountInfo<'info>,
-    #[account(mut)]
-    /// CHECK: .
-    pub reserve_liquidity_supply: Box<Account<'info, TokenAccount>>,
-    #[account(mut)]
-    /// CHECK: .
-    pub reserve_collateral_mint: Box<Account<'info, Mint>>,
-    /// CHECK: .
-    pub lending_market_account: AccountInfo<'info>,
-    /// CHECK: .
-    pub derived_lending_market_authority: AccountInfo<'info>,
-    /// CHECK: .
-    pub reserve_pyth_price_account: AccountInfo<'info>,
 }

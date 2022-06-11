@@ -305,8 +305,8 @@ impl ToAccountMetas for MangoStandaloneAddresses {
         vec![
             AccountMeta::new_readonly(self.group, false),
             AccountMeta::new(self.optimizer_mango_account, false),
-            AccountMeta::new(self.cache, false),
-            AccountMeta::new(self.root_bank, false),
+            AccountMeta::new_readonly(self.cache, false),
+            AccountMeta::new_readonly(self.root_bank, false),
             AccountMeta::new(self.node_bank, false),
             AccountMeta::new(self.optimizer_mango_account, false),
             AccountMeta::new_readonly(self.group_signer, false),

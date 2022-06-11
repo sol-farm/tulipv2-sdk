@@ -208,6 +208,9 @@ describe("examples", () => {
   const solendCollateralTokenAccount = new anchor.web3.PublicKey(
     "6EaiG2gRVu9u7QzVmX59AWLSmiaEYvMrKWQfPMCgNxsZ"
   );
+  const tulipCollateralTokenAccount = new anchor.web3.PublicKey(
+    "2U6kk4iTVqeypBydVPKA8mLTLAQEBfWf4KYfmkcvomPE"
+  )
   let depositTrackingAccount: anchor.web3.PublicKey;
   let depositTrackingPda: anchor.web3.PublicKey;
   let depositTrackingQueueAccount: anchor.web3.PublicKey;
@@ -357,20 +360,51 @@ describe("examples", () => {
             clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
             tokenProgram: splToken.TOKEN_PROGRAM_ID,
             lendingProgram: tulipProgramId,
-            vaultProgram: v2VaultsProgramId,
+            vaultProgram: v2VaultsProgramId
           },
-          reserveAccount: tulipReserveAccount,
-          reserveLiquiditySupply: tulipReserveLiquiditySupply,
-          reserveCollateralMint: tulipReserveCollateralMint,
-          lendingMarketAccount: tulipLendingMarketAccount,
-          derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
-          reservePythPriceAccount: tulipReservePythPriceAccount,
         },
+        remainingAccounts: [
+          {
+            pubkey: tulipCollateralTokenAccount,
+            isSigner: false,
+            isWritable: true
+          },
+          {
+            pubkey: tulipReserveAccount,
+            isSigner: false,
+            isWritable: true
+          },
+          {
+            pubkey: tulipReserveLiquiditySupply,
+            isSigner: false,
+            isWritable: true,
+          },
+          {
+            pubkey: tulipReserveCollateralMint,
+            isSigner: false,
+            isWritable: true
+          },
+          {
+            pubkey: tulipLendingMarketAccount,
+            isSigner: false,
+            isWritable: false
+          },
+          {
+            pubkey: tulipDerivedLendingMarketAuthority,
+            isSigner: false,
+            isWritable: false
+          },
+          {
+            pubkey: tulipReservePythPriceAccount,
+            isSigner: false,
+            isWritable: false
+          }
+        ]
       }
     );
   });
   it("withdraws multi deposit vault through mango", async () => {
-    let tx = await program.rpc.withdrawMultiDepositVaultThroughMango(
+    program.rpc.withdrawMultiDepositVaultThroughMango(
       new anchor.BN(9968969),
       {
         options: {skipPreflight: true},
@@ -405,7 +439,12 @@ describe("examples", () => {
           systemProgram: anchor.web3.SystemProgram.programId,
         },
       }
-    );
+    ).then(() => {
+      console.log("test should not pass in localnet");
+      process.exit(255);
+    }).catch(() => {
+      console.log("due to localnet restrictions, this test is expected to fail")
+    });
   });
   it("withdraws multi deposit vault through solend", async () => {
    program.rpc.withdrawMultiDepositVaultThroughSolend(
