@@ -4,6 +4,9 @@
 
 > **Unaudited, possibly untested sdk** Tulip Protocol takes no responsibility for any  (financial, physical, emotional, etc..) damage  that results from usage of this sdk, nor makes any guarantee as to the correctness of the sdk. Users of these crates take full responsibility for any mishaps that results from the usage of this sdk.
 
+
+> **all crate versions before 0.9.17 are broken and will not work**
+
 # Overview
 
 `tulipv2-sdk` is a set of crates for interacting with Tulip V2 vaults, and V1 lending programs via CPI, however it is also usable with off-chain rust clients. The goal of this crate is to provide an easy to use sdk for working with the Tulip Protocol, while also serving as a sort of "configuration file".
