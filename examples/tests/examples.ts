@@ -214,7 +214,7 @@ describe("examples", () => {
   let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
   let yourSharesTokenAccount: anchor.web3.PublicKey;
 
-  let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+  let ten = new anchor.BN(10).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 
   it("registers deposit tracking account", async () => {
     console.log("progrmaId ", programId);
@@ -281,7 +281,7 @@ describe("examples", () => {
       usdcv1SharesMint
     );
     let tx = await program.rpc.issueShares(
-      one,
+      ten,
       [new anchor.BN(1), new anchor.BN(65537)],
       {
         options: {
@@ -310,8 +310,8 @@ describe("examples", () => {
     freeze(3000);
     console.log("in production this would fail, as 15 minutes need to pass before lockup is expired")
     let tx = await program.rpc.withdrawDepositTracking(
-      // fixed amount we get for 1 USDC based on the program state which has been dumped to disk
-      new anchor.BN(996896),
+      // fixed amount we get for 10 USDC based on the program state which has been dumped to disk
+      new anchor.BN(9968969),
       [new anchor.BN(1), new anchor.BN(65537)],
       {
         options: {skipPreflight: true},
@@ -331,10 +331,47 @@ describe("examples", () => {
     );
     console.log("sent withdraw deposit tracking tx");
   });
+  it("withdraws multi deposit vault through tulip", async () => {
+    let tx = await program.rpc.withdrawMultiDepositVaultThroughTulip(
+      new anchor.BN(9968969),
+      {
+        options: {skipPreflight: true},
+        accounts: {
+          commonData: {
+            authority: provider.wallet.publicKey,
+            multiVault: usdcv1Vault,
+            multiVaultPda: usdcv1VaultPda,
+            withdrawVault: tulipVault,
+            withdrawVaultPda: tulipVaultPda,
+            platformInformation: tulipVaultPlatformInformation,
+            platformConfigData: tulipVaultPlatformConfigDataAccount,
+            multiBurningSharesTokenAccount: yourSharesTokenAccount,
+            withdrawBurningSharesTokenAccount: usdcv1TulipVaultSharesAccount,
+            receivingUnderlyingTokenAccount: yourUnderlyingTokenAccount,
+            multiUnderlyingWithdrawQueue: usdcv1WithdrawQueue,
+            multiSharesMint: usdcv1SharesMint,
+            withdrawSharesMint: tulipVaultSharesMint,
+            withdrawVaultUnderlyingDepositQueue: tulipVaultDepositQueue,
+            clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+            tokenProgram: splToken.TOKEN_PROGRAM_ID,
+            lendingProgram: tulipProgramId,
+            vaultProgram: v2VaultsProgramId,
+          },
+          reserveAccount: tulipReserveAccount,
+          reserveLiquiditySupply: tulipReserveLiquiditySupply,
+          reserveCollateralMint: tulipReserveCollateralMint,
+          lendingMarketAccount: tulipLendingMarketAccount,
+          derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+          reservePythPriceAccount: tulipReservePythPriceAccount,
+        },
+      }
+    );
+  });
   it("withdraws multi deposit vault through mango", async () => {
     let tx = await program.rpc.withdrawMultiDepositVaultThroughMango(
-      new anchor.BN(0),
+      new anchor.BN(9968969),
       {
+        options: {skipPreflight: true},
         accounts: {
           commonData: {
             authority: provider.wallet.publicKey,
@@ -370,8 +407,9 @@ describe("examples", () => {
   });
   it("withdraws multi deposit vault through solend", async () => {
     let tx = await program.rpc.withdrawMultiDepositVaultThroughSolend(
-      new anchor.BN(0),
+      new anchor.BN(9968969),
       {
+        options: {skipPreflight: true},
         accounts: {
           commonData: {
             authority: provider.wallet.publicKey,
@@ -400,41 +438,6 @@ describe("examples", () => {
           derivedLendingMarketAuthority: solendDerivedLendingMarketAuthority,
           reservePythPriceAccount: solendReservePythPriceAccount,
           reserveSwitchboardPriceAccount: solendReserveSwitchboardPriceAccount,
-        },
-      }
-    );
-  });
-  it("withdraws multi deposit vault through solend", async () => {
-    let tx = await program.rpc.withdrawMultiDepositVaultThroughTulip(
-      new anchor.BN(0),
-      {
-        accounts: {
-          commonData: {
-            authority: provider.wallet.publicKey,
-            multiVault: usdcv1Vault,
-            multiVaultPda: usdcv1VaultPda,
-            withdrawVault: tulipVault,
-            withdrawVaultPda: tulipVaultPda,
-            platformInformation: tulipVaultPlatformInformation,
-            platformConfigData: tulipVaultPlatformConfigDataAccount,
-            multiBurningSharesTokenAccount: yourSharesTokenAccount,
-            withdrawBurningSharesTokenAccount: usdcv1TulipVaultSharesAccount,
-            receivingUnderlyingTokenAccount: yourUnderlyingTokenAccount,
-            multiUnderlyingWithdrawQueue: usdcv1WithdrawQueue,
-            multiSharesMint: usdcv1SharesMint,
-            withdrawSharesMint: tulipVaultSharesMint,
-            withdrawVaultUnderlyingDepositQueue: tulipVaultDepositQueue,
-            clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-            tokenProgram: splToken.TOKEN_PROGRAM_ID,
-            lendingProgram: tulipProgramId,
-            vaultProgram: v2VaultsProgramId,
-          },
-          reserveAccount: tulipReserveAccount,
-          reserveLiquiditySupply: tulipReserveLiquiditySupply,
-          reserveCollateralMint: tulipReserveCollateralMint,
-          lendingMarketAccount: tulipLendingMarketAccount,
-          derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
-          reservePythPriceAccount: tulipReservePythPriceAccount,
         },
       }
     );
