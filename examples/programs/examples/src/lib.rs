@@ -4,6 +4,8 @@ use tulipv2_sdk_vaults::instructions::{new_withdraw_multi_deposit_optimizer_vaul
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_common::config::deposit_tracking::traits::RegisterDepositTracking;
+use tulipv2_sdk_common::config::deposit_tracking::traits::IssueShares;
+use tulipv2_sdk_common::config::deposit_tracking::traits::WithdrawDepositTracking;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
@@ -65,28 +67,23 @@ pub mod examples {
     /// use the tokenized shares elsewhere (ie friktion volts), otherwise
     /// its best to leave them within the deposit tracking account otherwise
     /// so that you can measure your accrued rewards automatically.
-    pub fn issue_shares(ctx: Context<IssueShares>, amount: u64, farm_type: [u64; 2]) -> Result<()> {
+    pub fn issue_shares(ctx: Context<IssueSharesInstruction>, amount: u64, farm_type: [u64; 2]) -> Result<()> {
         /*
             if this error is returned, it means the depositing_underlying_account
             has less tokens (X) then requested deposit amount (Y)
             Program log: RUNTIME ERROR: a(X) < b(Y)
             Program log: panicked at 'RUNTIME ERROR: a(0) < b(1)', programs/vaults/src/vault_instructions/deposit_tracking/acl_helpers.rs:198:9
         */
-        let ix = new_issue_shares_ix(
-            ctx.accounts.authority.key(),
-            ctx.accounts.vault.key(),
-            ctx.accounts.deposit_tracking_account.key(),
-            ctx.accounts.deposit_tracking_pda.key(),
-            ctx.accounts.vault_pda.key(),
-            ctx.accounts.vault_underlying_account.key(),
-            ctx.accounts.shares_mint.key(),
-            ctx.accounts.receiving_shares_account.key(),
-            ctx.accounts.depositing_underlying_account.key(),
-            Farm::from(farm_type),
-            amount,
+
+        let issue_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
+            *ctx.accounts.authority.key,
         );
+    
         anchor_lang::solana_program::program::invoke(
-            &ix,
+            &issue_trait.instruction(
+                farm_type.into(),
+                amount,
+            ).unwrap(),
             &[
                 ctx.accounts.authority.clone(),
                 ctx.accounts.vault.clone(),
@@ -105,19 +102,14 @@ pub mod examples {
     /// these withdrawn shares still accrue rewards, the rewards accrued are no longer tracked by the deposit
     /// tracking account
     pub fn withdraw_deposit_tracking(ctx: Context<WithdrawDepositTrackingAccount>, amount: u64, farm_type: [u64; 2]) -> Result<()> {
-        let ix = new_withdraw_deposit_tracking_ix(
-            ctx.accounts.authority.key(),
-            ctx.accounts.deposit_tracking_account.key(),
-            ctx.accounts.deposit_tracking_pda.key(),
-            ctx.accounts.deposit_tracking_hold_account.key(),
-            ctx.accounts.receiving_shares_account.key(),
-            ctx.accounts.shares_mint.key(),
-            ctx.accounts.vault.key(),
-            Farm::from(farm_type),
-            amount,
+        let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_deposit_tracking_ix(
+            *ctx.accounts.authority.key,
         );
         anchor_lang::solana_program::program::invoke(
-             &ix,
+            &withdraw_trait.instruction(
+                amount,
+                farm_type.into(),
+            ).unwrap(),
              &[
                  ctx.accounts.authority.clone(),
                  ctx.accounts.clock.to_account_info(),
@@ -364,7 +356,7 @@ pub struct RegisterDepositTrackingAccount<'info> {
 
 
 #[derive(Accounts)]
-pub struct IssueShares<'info> {
+pub struct IssueSharesInstruction<'info> {
     #[account(signer)]
     /// CHECK: .
     pub authority: AccountInfo<'info>,

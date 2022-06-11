@@ -73,7 +73,7 @@ pub mod multi_deposit {
         }
 
         #[inline(always)]
-        pub fn withdraw_deposit_tracking(user: Pubkey) -> impl WithdrawDepositTracking {
+        pub fn withdraw_deposit_tracking_ix(user: Pubkey) -> impl WithdrawDepositTracking {
             WithdrawDepositTrackingAddresses::new(user, ACCOUNT, SHARES_MINT)
         }
         #[inline(always)]
