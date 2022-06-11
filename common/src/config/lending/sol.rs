@@ -11,11 +11,8 @@ use crate::config::deposit_tracking::traits::{
 };
 use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 use crate::config::lending::traits::WithdrawMultiOptimizerVault;
-//use crate::config::lending::withdraw::WithdrawAddresses;
+use crate::config::lending::withdraw::{WithdrawAddresses, PlatformConfigAddresses};
 use crate::config::lending::Platform;
-
-use crate::config::lending::PlatformConfigAddresses;
-
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
     use super::*;
@@ -61,16 +58,20 @@ pub mod multi_deposit {
         static_pubkey!("7XdtJRhMYg5DS5uueCjpWHAxRYFaDUFu2MkG5AWE4Ywx");
 
     impl ProgramConfig {
+        #[inline(always)]
         pub fn issue_shares_ix(user: Pubkey) -> impl IssueShares {
             DepositAddresses::new(user, ACCOUNT, PDA, SHARES_MINT, UNDERLYING_MINT)
         }
+        #[inline(always)]
         pub fn register_deposit_tracking_ix(user: Pubkey) -> impl RegisterDepositTracking {
             RegisterDepositTrackingAddresses::new(user, ACCOUNT, SHARES_MINT, UNDERLYING_MINT)
         }
+        #[inline(always)]
         pub fn withdraw_deposit_tracking(user: Pubkey) -> impl WithdrawDepositTracking {
             WithdrawDepositTrackingAddresses::new(user, ACCOUNT, SHARES_MINT)
         }
-        /*pub fn withdraw_multi_deposit_optimizer_vault(
+        #[inline(always)]
+        pub fn withdraw_multi_deposit_optimizer_vault(
             user: Pubkey,
             platform: Platform,
         ) -> std::result::Result<impl WithdrawMultiOptimizerVault, std::io::Error> {
@@ -109,7 +110,8 @@ pub mod multi_deposit {
                 platform_config,
                 (&standalone_config.0, standalone_config.1),
             )
-        }*/
+        }
+        #[inline(always)]
         pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {
             [
                 super::tulip::COLLATERAL_TOKEN_ACCOUNT,
@@ -122,6 +124,7 @@ pub mod multi_deposit {
             ]
         }
 
+        #[inline(always)]
         pub fn get_solend_remaining_accounts() -> [Pubkey; 8] {
             [
                 super::solend::COLLATERAL_TOKEN_ACCOUNT,
@@ -135,6 +138,7 @@ pub mod multi_deposit {
             ]
         }
 
+        #[inline(always)]
         pub fn get_mango_remaining_accounts() -> [Pubkey; 7] {
             [
                 super::mango::GROUP,
@@ -216,6 +220,7 @@ pub mod solend {
     pub const COLLATERAL_TOKEN_ACCOUNT: Pubkey =
         static_pubkey!("4bKoFNye8HxwkK2jfq3XHaLmfcKWZtd1fAA6DsMYqx3f");
 
+    #[inline(always)]
     pub fn platform_config() -> PlatformConfigAddresses {
         PlatformConfigAddresses {
             vault: ACCOUNT,
@@ -289,6 +294,7 @@ pub mod tulip {
     pub const COLLATERAL_TOKEN_ACCOUNT: Pubkey =
         static_pubkey!("DrB1QrmkdrTN4BfrZUpKzHMG1h7MkBrnMwz5HRHDiiSo");
 
+    #[inline(always)]
     pub fn platform_config() -> PlatformConfigAddresses {
         PlatformConfigAddresses {
             vault: ACCOUNT,
@@ -349,7 +355,8 @@ pub mod mango {
     /// address of the standalone vault's mango account
     pub const OPTIMIZER_MANGO_ACCOUNT: Pubkey =
         static_pubkey!("7jH1uLmiB2zbHNe6juZZYjQCrvquakTwd3yMaQpeP8rR");
-
+    
+    #[inline(always)]
     pub fn platform_config() -> PlatformConfigAddresses {
         PlatformConfigAddresses {
             vault: ACCOUNT,

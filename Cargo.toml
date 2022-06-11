@@ -6,6 +6,3 @@ members = [
     "vaults",
     "examples/programs/examples"
 ]
-[profile.release]
-opt-level = 0
-incremental = false

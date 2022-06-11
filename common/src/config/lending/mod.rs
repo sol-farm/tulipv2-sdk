@@ -4,7 +4,7 @@
 //! By default all of the configuration modules are  enabled, however this can be disabled/enabled using feature flags to help reduce the size of the dependency
 use solana_program::pubkey::Pubkey;
 pub mod traits;
-//pub mod withdraw;
+pub mod withdraw;
 
 #[cfg(feature = "usdc-optimizer")]
 pub mod usdc;
@@ -23,16 +23,4 @@ pub enum Platform {
     MangoV3,
     Tulip,
     Solend,
-}
-
-
-#[derive(Clone, Copy)]
-pub struct PlatformConfigAddresses {
-    pub vault: Pubkey,
-    pub vault_pda: Pubkey,
-    pub information_account: Pubkey,
-    pub config_data_account: Pubkey,
-    pub shares_mint: Pubkey,
-    pub underlying_deposit_queue: Pubkey,
-    pub lending_program: Pubkey,
 }

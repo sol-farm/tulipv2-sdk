@@ -111,11 +111,18 @@ describe('examples', () => {
       depositTrackingPda,
       usdcv1SharesMint,
     );
+    console.log("deposit tracking queue", depositTrackingQueueAccount.toString())
+    console.log("deposit tracking hold", depositTrackingHoldAccount.toString())
+    console.log("deposit tracking pda", depositTrackingPda.toString())
+    console.log("deposit tracking", depositTrackingAccount.toString())
     const authority = provider.wallet;
     console.log("sending register deposit tracking account tx")
     let tx = await program.rpc.registerDepositTrackingAccount([
       new anchor.BN(1), new anchor.BN(65537)
     ], {
+      options: {
+        skipPreflight: true,
+      },
       accounts: {
         authority: provider.wallet.publicKey,
         vault: usdcv1Vault,

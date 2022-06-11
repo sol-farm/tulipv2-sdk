@@ -945,7 +945,10 @@ name = "examples"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
+ "anchor-spl",
+ "spl-associated-token-account",
  "tulipv2-sdk-common",
+ "tulipv2-sdk-vaults",
 ]
 
 [[package]]
@@ -3443,7 +3446,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-farms"
-version = "0.9.16"
+version = "0.9.17"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
@@ -3451,7 +3454,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-lending"
-version = "0.9.16"
+version = "0.9.17"
 dependencies = [
  "data-encoding",
  "itertools",
@@ -3469,7 +3472,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.16"
+version = "0.9.17"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

@@ -36,7 +36,7 @@ impl RegisterDepositTrackingAddresses {
         let deposit_tracking_pda = derive_tracking_pda_address(&deposit_tracking_account, &ID).0;
 
         let deposit_tracking_queue_account =
-            derive_tracking_queue_address(&deposit_tracking_account, &ID).0;
+            derive_tracking_queue_address(&deposit_tracking_pda, &ID).0;
 
         let deposit_tracking_hold_account =
             spl_associated_token_account::get_associated_token_address(
@@ -95,7 +95,12 @@ impl RegisterDepositTracking for RegisterDepositTrackingAddresses {
                 return None;
             }
         }
-        None
+        let accounts = self.to_account_meta(None);
+        Some(Instruction {
+            program_id: ID,
+            accounts: self.to_account_meta(None),
+            data: ix_data,
+        })
     }
     fn ix_data(&self) -> Option<[u8; 8]> {
         GlobalSighashDB.get("register_deposit_tracking_account")

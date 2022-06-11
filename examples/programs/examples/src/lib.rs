@@ -3,6 +3,8 @@ use anchor_spl::token::{Mint, TokenAccount};
 use tulipv2_sdk_vaults::instructions::{new_withdraw_multi_deposit_optimizer_vault_ix, new_withdraw_deposit_tracking_ix, new_register_deposit_tracking_account_ix, new_issue_shares_ix};
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
+use tulipv2_sdk_common::config::deposit_tracking::traits::RegisterDepositTracking;
+
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
@@ -12,21 +14,8 @@ pub mod examples {
         ctx: Context<RegisterDepositTrackingAccount>,
         farm_type: [u64; 2]
     ) -> Result<()> {
-        let got_tracking = tulipv2_sdk_vaults::accounts::derive_tracking_address(
-            ctx.accounts.vault.key,
-            ctx.accounts.authority.key,
-            ctx.accounts.vault_program.key,
-        ).0;
-        if ctx.accounts.deposit_tracking_account.key().ne(&got_tracking) {
-            msg_panic!("invalid deposit tracking account. got {}, want {}", got_tracking, ctx.accounts.deposit_tracking_account.key());
-        }
-        let got_pda = tulipv2_sdk_vaults::accounts::derive_tracking_pda_address(
-            &got_tracking,
-            ctx.accounts.vault_program.key,
-        ).0;
-        if ctx.accounts.deposit_tracking_pda.key().ne(&got_pda) {
-            msg_panic!("invalid deposit tracking pda. got {}, want {}", got_pda, ctx.accounts.deposit_tracking_pda.key());
-        }
+
+
         // create the associate
         {
             let ix = spl_associated_token_account::create_associated_token_account(
@@ -47,18 +36,11 @@ pub mod examples {
             )?;
         }
         {
-            let ix = new_register_deposit_tracking_account_ix(
-            ctx.accounts.authority.key(),
-            ctx.accounts.vault.key(),
-            ctx.accounts.deposit_tracking_account.key(),
-            ctx.accounts.deposit_tracking_queue_account.key(),
-            ctx.accounts.deposit_tracking_hold_account.key(),
-            ctx.accounts.shares_mint.key(),
-            ctx.accounts.deposit_tracking_pda.key(),
-            Farm::from(farm_type)
+            let registration_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::register_deposit_tracking_ix(
+                *ctx.accounts.authority.key,
             );
             anchor_lang::solana_program::program::invoke(
-                &ix,
+                &registration_trait.instruction(tulipv2_sdk_farms::Farm::Lending{name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT}).unwrap(),
                 &[
                     ctx.accounts.authority.clone(),
                     ctx.accounts.vault.clone(),
@@ -68,6 +50,9 @@ pub mod examples {
                     ctx.accounts.shares_mint.to_account_info(),
                     ctx.accounts.deposit_tracking_pda.clone(),
                     ctx.accounts.rent.to_account_info(),
+                    ctx.accounts.token_program.clone(),
+                    ctx.accounts.rent.to_account_info(),
+                    ctx.accounts.system_program.to_account_info(),
                 ],
             )?;
         }
