@@ -95,7 +95,6 @@ impl RegisterDepositTracking for RegisterDepositTrackingAddresses {
                 return None;
             }
         }
-        let accounts = self.to_account_meta(None);
         Some(Instruction {
             program_id: ID,
             accounts: self.to_account_meta(None),
