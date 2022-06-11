@@ -73,11 +73,10 @@ pub mod multi_deposit {
         pub fn withdraw_deposit_tracking_ix(user: Pubkey) -> impl WithdrawDepositTracking {
             WithdrawDepositTrackingAddresses::new(user, ACCOUNT, SHARES_MINT)
         }
-        #[inline(always)]
         pub fn withdraw_multi_deposit_optimizer_vault(
             user: Pubkey,
             platform: Platform,
-        ) -> std::result::Result<impl WithdrawMultiOptimizerVault, std::io::Error> {
+        ) -> std::result::Result<Box<impl WithdrawMultiOptimizerVault>, std::io::Error> {
             let (standalone_config, platform_config) = if platform.eq(&Platform::MangoV3) {
                 (
                     (
@@ -103,7 +102,7 @@ pub mod multi_deposit {
                     super::tulip::platform_config(),
                 )
             };
-            WithdrawAddresses::new(
+            Ok(Box::new(WithdrawAddresses::new(
                 user,
                 ACCOUNT,
                 PDA,
@@ -112,7 +111,7 @@ pub mod multi_deposit {
                 UNDERLYING_WITHDRAW_QUEUE,
                 platform_config,
                 (&standalone_config.0, standalone_config.1),
-            )
+            )?))
         }
         #[inline(always)]
         pub fn get_tulip_remaining_accounts() -> [Pubkey; 7] {

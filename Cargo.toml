@@ -3,8 +3,8 @@ members = [
     "lending",
     "farms",
     "common",
-    "vaults",
-    "examples/programs/examples"
+    "vaults"
+    #"examples/programs/examples"
 ]
 [profile.release]
 opt-level = 3

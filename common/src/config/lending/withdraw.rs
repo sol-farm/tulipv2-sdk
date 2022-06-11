@@ -228,6 +228,7 @@ impl WithdrawMultiOptimizerVault for WithdrawAddresses {
             AccountMeta::new(self.multi_burning_shares_token_account(), false),
             AccountMeta::new(self.withdraw_burning_shares_token_account(), false),
             AccountMeta::new(self.receiving_underlying_token_account(), false),
+            AccountMeta::new(self.multi_underlying_withdraw_queue(), false),
             AccountMeta::new(self.multi_shares_mint(), false),
             AccountMeta::new(self.withdraw_shares_mint(), false),
             AccountMeta::new_readonly(sysvar::clock::id(), false),
@@ -327,7 +328,7 @@ impl ToAccountMetas for SolendStandaloneAddresses {
             AccountMeta::new_readonly(self.lending_market_account, false),
             AccountMeta::new_readonly(self.lending_market_authority, false),
             AccountMeta::new_readonly(self.pyth_price_account, false),
-            AccountMeta::new(self.switchboard_price_account, false),
+            AccountMeta::new_readonly(self.switchboard_price_account, false)
         ]
     }
 }

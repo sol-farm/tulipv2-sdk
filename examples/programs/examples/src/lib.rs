@@ -6,6 +6,7 @@ use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_common::config::deposit_tracking::traits::RegisterDepositTracking;
 use tulipv2_sdk_common::config::deposit_tracking::traits::IssueShares;
 use tulipv2_sdk_common::config::deposit_tracking::traits::WithdrawDepositTracking;
+use tulipv2_sdk_common::config::lending::traits::WithdrawMultiOptimizerVault;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
@@ -18,7 +19,7 @@ pub mod examples {
     ) -> Result<()> {
 
 
-        // create the associate
+        // create the associated
         {
             let ix = spl_associated_token_account::create_associated_token_account(
                 ctx.accounts.authority.key,
@@ -166,7 +167,7 @@ pub mod examples {
                 ctx.accounts.common_data.multi_vault_pda.clone(),
                 ctx.accounts.common_data.withdraw_vault.clone(),
                 ctx.accounts.common_data.withdraw_vault_pda.clone(),
-                ctx.accounts.common_data.platform_information.clone(),
+                ctx.accounts.common_data.platform_information.to_account_info(),
                 ctx.accounts.common_data.platform_config_data.clone(),
                 ctx.accounts.common_data.lending_program.clone(),
                 ctx.accounts.common_data.multi_burning_shares_token_account.to_account_info(),
@@ -191,38 +192,28 @@ pub mod examples {
     }
     /// burns/redeems the `amount` of shares for their corresponding amount
     /// of underlying asset, using the solend standalone vault as the source of funds to withdraw from
-    pub fn withdraw_multi_deposit_vault_through_solend(
-        ctx: Context<WithdrawSolendMultiDepositOptimizerVault>,
+    pub fn withdraw_multi_deposit_vault_through_solend<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, WithdrawSolendMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
-        let standalone_vault_accounts = vec![
-            AccountMeta::new_readonly(ctx.accounts.reserve_account.key(), false),
-            AccountMeta::new(ctx.accounts.reserve_liquidity_supply.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.reserve_collateral_mint.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.lending_market_account.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.derived_lending_market_authority.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.reserve_pyth_price_account.key(), false),
-            AccountMeta::new_readonly(ctx.accounts.reserve_switchboard_price_account.key(), false),
-        ];
-        let ix = new_withdraw_multi_deposit_optimizer_vault_ix(
-            ctx.accounts.common_data.authority.key(),
-            ctx.accounts.common_data.multi_vault.key(),
-            ctx.accounts.common_data.multi_vault_pda.key(),
-            ctx.accounts.common_data.withdraw_vault.key(),
-            ctx.accounts.common_data.withdraw_vault_pda.key(),
-            ctx.accounts.common_data.platform_information.key(),
-            ctx.accounts.common_data.platform_config_data.key(),
-            ctx.accounts.common_data.lending_program.key(),
-            ctx.accounts.common_data.multi_burning_shares_token_account.key(),
-            ctx.accounts.common_data.withdraw_burning_shares_token_account.key(),
-            ctx.accounts.common_data.receiving_underlying_token_account.key(),
-            ctx.accounts.common_data.multi_underlying_withdraw_queue.key(),
-            ctx.accounts.common_data.multi_shares_mint.key(),
-            ctx.accounts.common_data.withdraw_shares_mint.key(),
-            ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.key(),
-            amount,
-            standalone_vault_accounts.clone()
-        );
+        let ix = {
+            let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
+                *ctx.accounts.common_data.authority.key,
+                tulipv2_sdk_common::config::lending::Platform::Solend,
+            ).unwrap();
+            let ix = withdraw_trait.instruction(amount).unwrap();
+            ix
+        };
+        /*
+            this will fail in the localnet environment, as there is no sweeper service
+            that sweeps funds the user has deposited. when running this on localnet
+            if you check the program logs and see:
+                ```
+                    Program log: RUNTIME ERROR: !!WARN!! farm balance 7251615747817 < deposited 7269688550615, rebase happening before sweep
+                    Program log: panicked at 'RUNTIME ERROR: !!WARN!! farm balance 7251615747817 < deposited 7269688550615, rebase happening before sweep', programs/vaults/src/vault_accounts/lending_optimizer.rs:259:17
+                ```
+            then this is an expected error message
+        */
         anchor_lang::solana_program::program::invoke(
             &ix,
             &[
@@ -231,7 +222,7 @@ pub mod examples {
                 ctx.accounts.common_data.multi_vault_pda.clone(),
                 ctx.accounts.common_data.withdraw_vault.clone(),
                 ctx.accounts.common_data.withdraw_vault_pda.clone(),
-                ctx.accounts.common_data.platform_information.clone(),
+                ctx.accounts.common_data.platform_information.to_account_info(),
                 ctx.accounts.common_data.platform_config_data.clone(),
                 ctx.accounts.common_data.lending_program.clone(),
                 ctx.accounts.common_data.multi_burning_shares_token_account.to_account_info(),
@@ -240,15 +231,17 @@ pub mod examples {
                 ctx.accounts.common_data.multi_underlying_withdraw_queue.to_account_info(),
                 ctx.accounts.common_data.multi_shares_mint.to_account_info(),
                 ctx.accounts.common_data.withdraw_shares_mint.to_account_info(),
-                ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.to_account_info(),
-                ctx.accounts.reserve_account.clone(),
-                ctx.accounts.reserve_liquidity_supply.to_account_info(),
-                ctx.accounts.reserve_collateral_mint.to_account_info(),
-                ctx.accounts.lending_market_account.clone(),
-                ctx.accounts.derived_lending_market_authority.clone(),
-                ctx.accounts.reserve_pyth_price_account.to_account_info(),
-                ctx.accounts.reserve_switchboard_price_account.clone(),
                 ctx.accounts.common_data.clock.to_account_info(),
+                ctx.accounts.common_data.token_program.clone(),
+                ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.to_account_info(),
+                ctx.remaining_accounts.get(0).unwrap().clone(), // reserve collateral
+                ctx.remaining_accounts.get(1).unwrap().clone(),  // reserve account
+                ctx.remaining_accounts.get(2).unwrap().clone(), // reserve liquidity supply
+                ctx.remaining_accounts.get(3).unwrap().clone(), // reserve collateral mint
+                ctx.remaining_accounts.get(4).unwrap().clone(), // lending market
+                ctx.remaining_accounts.get(5).unwrap().clone(), // lending market authority
+                ctx.remaining_accounts.get(6).unwrap().clone(), // pyth price account
+                ctx.remaining_accounts.get(7).unwrap().clone(), // switchboard price account
             ],
         )?;
         Ok(())
@@ -294,7 +287,7 @@ pub mod examples {
                 ctx.accounts.common_data.multi_vault_pda.clone(),
                 ctx.accounts.common_data.withdraw_vault.clone(),
                 ctx.accounts.common_data.withdraw_vault_pda.clone(),
-                ctx.accounts.common_data.platform_information.clone(),
+                ctx.accounts.common_data.platform_information.to_account_info(),
                 ctx.accounts.common_data.platform_config_data.clone(),
                 ctx.accounts.common_data.lending_program.clone(),
                 ctx.accounts.common_data.multi_burning_shares_token_account.to_account_info(),
@@ -453,7 +446,7 @@ pub struct WithdrawMultiDepositOptimizerVault<'info> {
     /// CHECK: .
     pub withdraw_vault_pda: AccountInfo<'info>,
     /// CHECK: .
-    pub platform_information: AccountInfo<'info>,
+    pub platform_information: Box<Account<'info, tulipv2_sdk_vaults::accounts::lending_optimizer::LendingPlatformV1>>,
     /// CHECK: .
     pub platform_config_data: AccountInfo<'info>,
     #[account(mut)]
@@ -530,23 +523,6 @@ pub struct WithdrawSolendMultiDepositOptimizerVault<'info> {
     /// regardless of the underlying vault htey are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
-    #[account(mut)]
-    /// CHECK: .
-    pub reserve_account: AccountInfo<'info>,
-    #[account(mut)]
-    /// CHECK: .
-    pub reserve_liquidity_supply: Box<Account<'info, TokenAccount>>,
-    #[account(mut)]
-    /// CHECK: .
-    pub reserve_collateral_mint: Box<Account<'info, Mint>>,
-    /// CHECK: .
-    pub lending_market_account: AccountInfo<'info>,
-    /// CHECK: .
-    pub derived_lending_market_authority: AccountInfo<'info>,
-    /// CHECK: .
-    pub reserve_pyth_price_account: AccountInfo<'info>,
-    /// CHECK: .
-    pub reserve_switchboard_price_account: AccountInfo<'info>,
 }
 
 #[derive(Accounts)]

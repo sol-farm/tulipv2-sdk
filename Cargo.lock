@@ -941,17 +941,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "examples"
-version = "0.1.0"
-dependencies = [
- "anchor-lang",
- "anchor-spl",
- "spl-associated-token-account",
- "tulipv2-sdk-common",
- "tulipv2-sdk-vaults",
-]
-
-[[package]]
 name = "failure"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2411,9 +2400,9 @@ dependencies = [
 
 [[package]]
 name = "sighashdb"
-version = "0.1.27"
+version = "0.1.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "038c936415c5f7688ebc6f91f83b604bb8f763e17c88a39d9e5f91ca492b07b0"
+checksum = "c1c3ce1a89ed083f8bc44bda4db0f185cdc6c891196a679a486f1d90d6b974d8"
 
 [[package]]
 name = "signal-hook-registry"
