@@ -1,0 +1,24 @@
+[package]
+name = "examples"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "examples"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.24.2"
+anchor-spl = "0.24.2"
+tulipv2-sdk-common = {path = "../../../common", version = "0.9.17"}
+tulipv2-sdk-vaults = {path = "../../../vaults", version = "0.9.17"}
+tulipv2-sdk-farms = {path = "../../../farms", version = "0.9.17"}
+spl-associated-token-account = "1.0.3"

@@ -102,7 +102,11 @@ impl Farm {
         None
     }
     pub fn serialize(&self) -> std::result::Result<Vec<u8>, std::io::Error> {
-        AnchorSerialize::try_to_vec(&self)
+        let wire_type: [u64; 2] = (*self).into();
+        let mut data_bytes = Vec::with_capacity(16);
+        data_bytes.extend_from_slice(&AnchorSerialize::try_to_vec(&wire_type[0])?);
+        data_bytes.extend_from_slice(&AnchorSerialize::try_to_vec(&wire_type[1])?);
+        Ok(data_bytes)
     }
 }
 

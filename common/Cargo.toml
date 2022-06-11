@@ -1,6 +1,6 @@
 [package]
 name = "tulipv2-sdk-common"
-version = "0.9.10"
+version = "0.9.17"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "common types, traits, and helper functions used by the v2 sdk"
@@ -18,20 +18,19 @@ uint = "0.8"
 num-derive = "0.3"
 num-traits = "0.2"
 thiserror = "1.0"
-static-pubkey = "1.0.2"
-tulipv2-sdk-farms = {path = "../farms", version = "0.9.10"}
+static-pubkey = "1.0.3"
+tulipv2-sdk-farms = {path = "../farms", version = "0.9.16"}
 arrayref = "0.3.6"
 bytemuck = "1.7.2"
-solana-program = "1.9"
-so-defi-utils = "0.1.1"
+solana-program = "1.9.13"
+so-defi-utils = "0.1.0"
 spl-associated-token-account = "1.0.3"
-sighashdb = {version = "0.1.26", default-features = false, features = ["tulipv2"]}
+sighashdb = "0.1.28"
 [dev-dependencies]
 anchor-client = "0.24.2"
 
 [features]
-default = ["optimizers", "logs"]
-optimizers = ["usdc-optimizer", "usdt-optimizer", "sol-optimizer", "ray-optimizer"]
+default = ["usdc-optimizer", "usdt-optimizer", "sol-optimizer", "ray-optimizer", "logs"]
 usdc-optimizer = []
 usdt-optimizer = []
 sol-optimizer = []

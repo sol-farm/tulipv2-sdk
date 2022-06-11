@@ -4,12 +4,16 @@ members = [
     "farms",
     "common",
     "vaults"
+    #"examples/programs/examples"
 ]
 [profile.release]
-lto = "fat"
-codegen-units = 1
-panic = "abort"
-[profile.release.build-override]
 opt-level = 3
 incremental = false
 codegen-units = 1 
+panic = "abort"
+# The build-override table overrides settings for build scripts, proc macros, and their dependencies. 
+# It has the same keys as a normal profile. See the overrides section for more details
+[profile.release.build-override]
+opt-level = 3
+incremental = false
+codegen-units = 1

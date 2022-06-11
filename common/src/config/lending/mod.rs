@@ -2,7 +2,7 @@
 //! that can easily be imported into any program without having to maintain a separate configuration file off-chain for this information.
 //!
 //! By default all of the configuration modules are  enabled, however this can be disabled/enabled using feature flags to help reduce the size of the dependency
-
+use solana_program::pubkey::Pubkey;
 pub mod traits;
 pub mod withdraw;
 

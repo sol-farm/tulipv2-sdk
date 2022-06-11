@@ -79,6 +79,7 @@ impl WithdrawDepositTracking for WithdrawDepositTrackingAddresses {
         let ix_sighash = self.ix_data()?;
         // 8 for the sighash, 16 for the farm_type, 8 for the amount
         let mut ix_data = Vec::with_capacity(32);
+        ix_data.extend_from_slice(&ix_sighash[..]);
         match AnchorSerialize::try_to_vec(&amount) {
             Ok(amount_data) => ix_data.extend_from_slice(&amount_data[..]),
             Err(err) => {
@@ -87,7 +88,6 @@ impl WithdrawDepositTracking for WithdrawDepositTrackingAddresses {
                 return None;
             }
         }
-        ix_data.extend_from_slice(&ix_sighash[..]);
         match farm_type.serialize() {
             Ok(farm_type_data) => ix_data.extend_from_slice(&farm_type_data[..]),
             Err(err) => {

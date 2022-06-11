@@ -138,7 +138,7 @@ impl IssueShares for DepositAddresses {
             AccountMeta::new(self.vault_underlying_account(), false),
             AccountMeta::new(self.shares_mint(), false),
             AccountMeta::new(self.receiving_shares_account(), false),
-            AccountMeta::new(self.deposit_tracking_account(), false),
+            AccountMeta::new(self.depositing_underlying_account(), false),
             AccountMeta::new_readonly(spl_token::id(), false),
         ]
     }
