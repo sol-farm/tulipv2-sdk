@@ -1,6 +1,39 @@
 # tulipv2-sdk
 
-Rust sdk for on-chain (cpi) and off-chain (client-side) usage of Tulip V2 vaults, as well as sparse support for Tulip V1 lending programs.
+# Warning
+
+> **Unaudited, possibly untested sdk** Tulip Protocol takes no responsibility for any  (financial, physical, emotional, etc..) damage  that results from usage of this sdk, nor makes any guarantee as to the correctness of the sdk. Users of these crates take full responsibility for any mishaps that results from the usage of this sdk.
+
+# Overview
+
+`tulipv2-sdk` is a set of crates for interacting with Tulip V2 vaults, and V1 lending programs via CPI, however it is also usable with off-chain rust clients. The goal of this crate is to provide an easy to use sdk for working with the Tulip Protocol, while also serving as a sort of "configuration file".
+
+There are 4 main crates which are detailed below
+
+# Crates
+
+## `common`
+
+The `common` crate bundles together common functionality used by all the other crates, while also containing a module called `config` which contains many sub-modules, each containing all configuration information needed for interacting with a particular vault. For example `common/config/lending/usdc.rs` contains all needed accounts for working with the Tulip V2 USDC lending optimizer vault.
+
+### `deposit_tracking` module
+
+The "Deposit Tracking" account is a user owned account which serves two main purposes, the first acting as a "lockup" account whenever a user deposits assets, locking withdrawal for 10 minutes allowing one or more compounding cycles to take place before a user withdraw, ensuring that compounding rewards can't be gamed via quickly depositing and exiting a vault. Second is providing the ability for users to track their rewards over time.
+
+## `farms`
+
+The `farms` crate provides an enum named `Farm`, which is used to describe different platforms (ie Raydium) and farms within those platforms (ie RAY-USDC). In addition to this the farm key itself is used to enable deterministic derivation of vault addresses that are self describing.
+
+The wire representation of the farm type / farm key, is a 2 element slice of u64's, where the first element (farm identifier) is the protocol, and the second element is the particular vault for that protocol. 
+
+
+## `lending`
+
+Provides very basic support for creating instructions, and issuing CPI calls to Tulip's V1 lending program. It allows for the lending of assets through the `Obligation` account, while also allowing the caller to refresh obligations and refresh reserves.
+
+## `vaults`
+
+Provides all v2 vault account types, and associated helper functions, etc..
 
 # V1 Support
 
@@ -8,38 +41,10 @@ Within the `v1` folder you will find a single `tulipv1-sdk` crate, which provide
 
 # Examples
 
-* See [tulipv2-sdk-examples](https://github.com/sol-farm/tulipv2-sdk-examples)
+For now the only usage examples are in the `examples` folder which contains a basic program to register a deposit trackign account for the USDC lending optimizer, and for depositing into the USDC lending optimizer, and withdrawing from the lending optimizer.
 
-# Warning
+Due to the architecture of Tulip's V2 vaults program, the deposit instructions will fail on localnet as there are some sweeping mechanisms used to sweep funds internally between the various protocols that a single optimizer vault supports.
 
-> **Unaudited, possibly untested code** developers take no responsibility for any (financial, physical, emotional, etc..) damage  that results from usage of these libraries.
+Additionally the localnet setup clones mainnet state to provide a stable set of accounts, etc.. that are used for testing. For instance at the time the snapshot was taken, the USDC lending optimizer was deposited into Solend only. As such the instructions for tulip/mango deposits fail to execute correctly.
 
-
-# Usage
-
-## Lending Optimizers
-
-### Off-Chain Clients
-
-For now this wont compile, but should serve as a sufficient example to get start
-
-```rust
-use tulipv2_sdk_common;
-use tulipv2_sdk_farm;
-use solana_program::signature::Keypair;
-fn main() {
-    let rpc = .. // create rpc client
-    let kp = Keypair::new();
-    let registration_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::register_deposit_tracking_ix(kp.pubkey());
-    let registration_ix = registration_trait.instruction(tulipv2_sdk_farms::Farm::Lending{name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT}).unwrap();
-    let hold_creation_ix = spl_associated_token_account::create_associated_token_account(
-        &kp.pubkey(),
-        &registration_trait.deposit_tracking_pda(),
-        &registration_trait.shares_mint(),
-    );
-    let mut tx = Transaction::new_with_payer(&[hold_creation_ix, registration_ix], Some(&kp.pubkey()));
-    tx.sign(&vec![&kp], rpc.get_latest_blockhash().unwrap();)
-    let sig = rpc.send_and_confirm_transaction(&x).unwrap();
-    println!("sent deposit tracking registration {}", sig);
-}
-```
+These erros have been caught so that when running `anchor test` all tests pass.

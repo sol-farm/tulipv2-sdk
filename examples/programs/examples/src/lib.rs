@@ -1,12 +1,15 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, TokenAccount};
-use tulipv2_sdk_vaults::instructions::{new_withdraw_multi_deposit_optimizer_vault_ix, new_withdraw_deposit_tracking_ix, new_register_deposit_tracking_account_ix, new_issue_shares_ix};
-use tulipv2_sdk_common::msg_panic;
-use tulipv2_sdk_farms::Farm;
-use tulipv2_sdk_common::config::deposit_tracking::traits::RegisterDepositTracking;
 use tulipv2_sdk_common::config::deposit_tracking::traits::IssueShares;
+use tulipv2_sdk_common::config::deposit_tracking::traits::RegisterDepositTracking;
 use tulipv2_sdk_common::config::deposit_tracking::traits::WithdrawDepositTracking;
 use tulipv2_sdk_common::config::lending::traits::WithdrawMultiOptimizerVault;
+use tulipv2_sdk_common::msg_panic;
+use tulipv2_sdk_farms::Farm;
+use tulipv2_sdk_vaults::instructions::{
+    new_issue_shares_ix, new_register_deposit_tracking_account_ix,
+    new_withdraw_deposit_tracking_ix, new_withdraw_multi_deposit_optimizer_vault_ix,
+};
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
@@ -15,10 +18,8 @@ pub mod examples {
     use super::*;
     pub fn register_deposit_tracking_account(
         ctx: Context<RegisterDepositTrackingAccount>,
-        farm_type: [u64; 2]
+        farm_type: [u64; 2],
     ) -> Result<()> {
-
-
         // create the associated
         {
             let ix = spl_associated_token_account::create_associated_token_account(
@@ -43,7 +44,11 @@ pub mod examples {
                 *ctx.accounts.authority.key,
             );
             anchor_lang::solana_program::program::invoke(
-                &registration_trait.instruction(tulipv2_sdk_farms::Farm::Lending{name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT}).unwrap(),
+                &registration_trait
+                    .instruction(tulipv2_sdk_farms::Farm::Lending {
+                        name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+                    })
+                    .unwrap(),
                 &[
                     ctx.accounts.authority.clone(),
                     ctx.accounts.vault.clone(),
@@ -68,7 +73,11 @@ pub mod examples {
     /// use the tokenized shares elsewhere (ie friktion volts), otherwise
     /// its best to leave them within the deposit tracking account otherwise
     /// so that you can measure your accrued rewards automatically.
-    pub fn issue_shares(ctx: Context<IssueSharesInstruction>, amount: u64, farm_type: [u64; 2]) -> Result<()> {
+    pub fn issue_shares(
+        ctx: Context<IssueSharesInstruction>,
+        amount: u64,
+        farm_type: [u64; 2],
+    ) -> Result<()> {
         /*
             if this error is returned, it means the depositing_underlying_account
             has less tokens (X) then requested deposit amount (Y)
@@ -79,12 +88,9 @@ pub mod examples {
         let issue_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
             *ctx.accounts.authority.key,
         );
-    
+
         anchor_lang::solana_program::program::invoke(
-            &issue_trait.instruction(
-                farm_type.into(),
-                amount,
-            ).unwrap(),
+            &issue_trait.instruction(farm_type.into(), amount).unwrap(),
             &[
                 ctx.accounts.authority.clone(),
                 ctx.accounts.vault.clone(),
@@ -102,25 +108,28 @@ pub mod examples {
     /// withdraws `amount` of shares from the deposit tracking account into the `receiving_shares_account`.
     /// these withdrawn shares still accrue rewards, the rewards accrued are no longer tracked by the deposit
     /// tracking account
-    pub fn withdraw_deposit_tracking(ctx: Context<WithdrawDepositTrackingAccount>, amount: u64, farm_type: [u64; 2]) -> Result<()> {
+    pub fn withdraw_deposit_tracking(
+        ctx: Context<WithdrawDepositTrackingAccount>,
+        amount: u64,
+        farm_type: [u64; 2],
+    ) -> Result<()> {
         let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_deposit_tracking_ix(
             *ctx.accounts.authority.key,
         );
         anchor_lang::solana_program::program::invoke(
-            &withdraw_trait.instruction(
-                amount,
-                farm_type.into(),
-            ).unwrap(),
-             &[
-                 ctx.accounts.authority.clone(),
-                 ctx.accounts.clock.to_account_info(),
-                 ctx.accounts.deposit_tracking_account.clone(),
-                 ctx.accounts.deposit_tracking_pda.clone(),
-                 ctx.accounts.deposit_tracking_hold_account.to_account_info(),
-                 ctx.accounts.receiving_shares_account.to_account_info(),
-                 ctx.accounts.shares_mint.to_account_info(),
-                 ctx.accounts.vault.clone(),
-             ],
+            &withdraw_trait
+                .instruction(amount, farm_type.into())
+                .unwrap(),
+            &[
+                ctx.accounts.authority.clone(),
+                ctx.accounts.clock.to_account_info(),
+                ctx.accounts.deposit_tracking_account.clone(),
+                ctx.accounts.deposit_tracking_pda.clone(),
+                ctx.accounts.deposit_tracking_hold_account.to_account_info(),
+                ctx.accounts.receiving_shares_account.to_account_info(),
+                ctx.accounts.shares_mint.to_account_info(),
+                ctx.accounts.vault.clone(),
+            ],
         )?;
         Ok(())
     }
@@ -132,7 +141,7 @@ pub mod examples {
     ) -> Result<()> {
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
-        // and the instruction itself can't be on the stack when the instruction is 
+        // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
             let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
@@ -152,16 +161,37 @@ pub mod examples {
                 ctx.accounts.common_data.multi_vault_pda.clone(),
                 ctx.accounts.common_data.withdraw_vault.clone(),
                 ctx.accounts.common_data.withdraw_vault_pda.clone(),
-                ctx.accounts.common_data.platform_information.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .platform_information
+                    .to_account_info(),
                 ctx.accounts.common_data.platform_config_data.clone(),
                 ctx.accounts.common_data.lending_program.clone(),
-                ctx.accounts.common_data.multi_burning_shares_token_account.to_account_info(),
-                ctx.accounts.common_data.withdraw_burning_shares_token_account.to_account_info(),
-                ctx.accounts.common_data.receiving_underlying_token_account.to_account_info(),
-                ctx.accounts.common_data.multi_underlying_withdraw_queue.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .multi_burning_shares_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_burning_shares_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .receiving_underlying_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .multi_underlying_withdraw_queue
+                    .to_account_info(),
                 ctx.accounts.common_data.multi_shares_mint.to_account_info(),
-                ctx.accounts.common_data.withdraw_shares_mint.to_account_info(),
-                ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_shares_mint
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_vault_underlying_deposit_queue
+                    .to_account_info(),
                 ctx.accounts.mango_group_account.clone(),
                 ctx.accounts.withdraw_vault_mango_account.clone(),
                 ctx.accounts.mango_cache.clone(),
@@ -183,7 +213,7 @@ pub mod examples {
     ) -> Result<()> {
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
-        // and the instruction itself can't be on the stack when the instruction is 
+        // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
             let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
@@ -211,20 +241,41 @@ pub mod examples {
                 ctx.accounts.common_data.multi_vault_pda.clone(),
                 ctx.accounts.common_data.withdraw_vault.clone(),
                 ctx.accounts.common_data.withdraw_vault_pda.clone(),
-                ctx.accounts.common_data.platform_information.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .platform_information
+                    .to_account_info(),
                 ctx.accounts.common_data.platform_config_data.clone(),
                 ctx.accounts.common_data.lending_program.clone(),
-                ctx.accounts.common_data.multi_burning_shares_token_account.to_account_info(),
-                ctx.accounts.common_data.withdraw_burning_shares_token_account.to_account_info(),
-                ctx.accounts.common_data.receiving_underlying_token_account.to_account_info(),
-                ctx.accounts.common_data.multi_underlying_withdraw_queue.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .multi_burning_shares_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_burning_shares_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .receiving_underlying_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .multi_underlying_withdraw_queue
+                    .to_account_info(),
                 ctx.accounts.common_data.multi_shares_mint.to_account_info(),
-                ctx.accounts.common_data.withdraw_shares_mint.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_shares_mint
+                    .to_account_info(),
                 ctx.accounts.common_data.clock.to_account_info(),
                 ctx.accounts.common_data.token_program.clone(),
-                ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_vault_underlying_deposit_queue
+                    .to_account_info(),
                 ctx.remaining_accounts.get(0).unwrap().clone(), // reserve collateral
-                ctx.remaining_accounts.get(1).unwrap().clone(),  // reserve account
+                ctx.remaining_accounts.get(1).unwrap().clone(), // reserve account
                 ctx.remaining_accounts.get(2).unwrap().clone(), // reserve liquidity supply
                 ctx.remaining_accounts.get(3).unwrap().clone(), // reserve collateral mint
                 ctx.remaining_accounts.get(4).unwrap().clone(), // lending market
@@ -243,7 +294,7 @@ pub mod examples {
     ) -> Result<()> {
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
-        // and the instruction itself can't be on the stack when the instruction is 
+        // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
             let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
@@ -263,20 +314,41 @@ pub mod examples {
                 ctx.accounts.common_data.multi_vault_pda.clone(),
                 ctx.accounts.common_data.withdraw_vault.clone(),
                 ctx.accounts.common_data.withdraw_vault_pda.clone(),
-                ctx.accounts.common_data.platform_information.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .platform_information
+                    .to_account_info(),
                 ctx.accounts.common_data.platform_config_data.clone(),
                 ctx.accounts.common_data.lending_program.clone(),
-                ctx.accounts.common_data.multi_burning_shares_token_account.to_account_info(),
-                ctx.accounts.common_data.withdraw_burning_shares_token_account.to_account_info(),
-                ctx.accounts.common_data.receiving_underlying_token_account.to_account_info(),
-                ctx.accounts.common_data.multi_underlying_withdraw_queue.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .multi_burning_shares_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_burning_shares_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .receiving_underlying_token_account
+                    .to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .multi_underlying_withdraw_queue
+                    .to_account_info(),
                 ctx.accounts.common_data.multi_shares_mint.to_account_info(),
-                ctx.accounts.common_data.withdraw_shares_mint.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_shares_mint
+                    .to_account_info(),
                 ctx.accounts.common_data.clock.to_account_info(),
                 ctx.accounts.common_data.token_program.clone(),
-                ctx.accounts.common_data.withdraw_vault_underlying_deposit_queue.to_account_info(),
+                ctx.accounts
+                    .common_data
+                    .withdraw_vault_underlying_deposit_queue
+                    .to_account_info(),
                 ctx.remaining_accounts.get(0).unwrap().clone(), // reserve collateral
-                ctx.remaining_accounts.get(1).unwrap().clone(),  // reserve account
+                ctx.remaining_accounts.get(1).unwrap().clone(), // reserve account
                 ctx.remaining_accounts.get(2).unwrap().clone(), // reserve liquidity supply
                 ctx.remaining_accounts.get(3).unwrap().clone(), // reserve collateral mint
                 ctx.remaining_accounts.get(4).unwrap().clone(), // lending market
@@ -324,7 +396,6 @@ pub struct RegisterDepositTrackingAccount<'info> {
     /// CHECK: .
     pub vault_program: AccountInfo<'info>,
 }
-
 
 #[derive(Accounts)]
 pub struct IssueSharesInstruction<'info> {
@@ -392,7 +463,7 @@ pub struct WithdrawDepositTrackingAccount<'info> {
     /// these shares are no longer being tracked by the deposit tracking
     /// account, and any newly accrued rewards tracked by the deposit tracking
     /// account will reflect the remaining balance that hasn't been withdrawn
-    /// 
+    ///
     /// **the shares that are being withdrawn still accrue rewards the same as shares that are held by the deposit tracking account**
     pub receiving_shares_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
@@ -424,7 +495,8 @@ pub struct WithdrawMultiDepositOptimizerVault<'info> {
     /// CHECK: .
     pub withdraw_vault_pda: AccountInfo<'info>,
     /// CHECK: .
-    pub platform_information: Box<Account<'info, tulipv2_sdk_vaults::accounts::lending_optimizer::LendingPlatformV1>>,
+    pub platform_information:
+        Box<Account<'info, tulipv2_sdk_vaults::accounts::lending_optimizer::LendingPlatformV1>>,
     /// CHECK: .
     pub platform_config_data: AccountInfo<'info>,
     #[account(mut)]
@@ -436,7 +508,7 @@ pub struct WithdrawMultiDepositOptimizerVault<'info> {
     #[account(mut)]
     /// CHECK: .
     /// this is the account owned by the multi vault pda that holds the tokenized
-    /// shares issued by the withdraw vault. 
+    /// shares issued by the withdraw vault.
     pub withdraw_burning_shares_token_account: Box<Account<'info, TokenAccount>>,
     #[account(mut)]
     /// CHECK: .

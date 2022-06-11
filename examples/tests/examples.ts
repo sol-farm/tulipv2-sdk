@@ -401,7 +401,12 @@ describe("examples", () => {
           }
         ]
       }
-    );
+    ).then(() => {
+      console.log("this instruction should not pass in localnet testing")
+      process.exit(255)
+    }).catch(() => {
+      console.log("this test is expected to fail in localnet testing")
+    });
   });
   it("withdraws multi deposit vault through mango", async () => {
     program.rpc.withdrawMultiDepositVaultThroughMango(
