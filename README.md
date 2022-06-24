@@ -15,7 +15,7 @@ There are 4 main crates which are detailed below
 
 # Crates
 
-## `common`
+## [`common`](https://crates.io/crates/tulipv2-sdk-common)
 
 The `common` folder contains a crate `tulipv2-sdk-common` which bundles together common functionality used by all the other crates, while also containing a module called `config` which contains many sub-modules, each containing all configuration information needed for interacting with a particular vault. For example `common/config/lending/usdc.rs` contains all needed accounts for working with the Tulip V2 USDC lending optimizer vault.
 
@@ -23,18 +23,18 @@ The `common` folder contains a crate `tulipv2-sdk-common` which bundles together
 
 The "Deposit Tracking" account is a user owned account which serves two main purposes, the first acting as a "lockup" account whenever a user deposits assets, locking withdrawal for 10 minutes allowing one or more compounding cycles to take place before a user withdraw, ensuring that compounding rewards can't be gamed via quickly depositing and exiting a vault. Second is providing the ability for users to track their rewards over time.
 
-## `farms`
+## [`farms`](https://crates.io/crates/tulipv2-sdk-farms)
 
 The `farms` folder contains a crate `tulipv2-sdk-farms` which provides an enum named `Farm`, which is used to describe different platforms (ie Raydium) and farms within those platforms (ie RAY-USDC). In addition to this the farm key itself is used to enable deterministic derivation of vault addresses that are self describing.
 
 The wire representation of the farm type / farm key, is a 2 element slice of u64's, where the first element (farm identifier) is the protocol, and the second element is the particular vault for that protocol. 
 
 
-## `lending` / v1 support
+## [`lending` / v1 support](https://crates.io/crates/tulipv2-sdk-lending)
 
 The `lending` folder contains a crate `tulipv2-sdk-lending` which provides very basic support for creating instructions, and issuing CPI calls to Tulip's V1 lending program. It allows for the lending of assets through the `Obligation` account, while also allowing the caller to refresh obligations and refresh reserves.
 
-## `vaults`
+## [`vaults`](https://crates.io/crates/tulipv2-sdk-vaults)
 
 The `vaults` folder contains a crate `tulipv2-sdk-vaults` which provides all v2 vault account types, and associated helper functions, etc..
 
