@@ -17,7 +17,7 @@ There are 4 main crates which are detailed below
 
 ## `common`
 
-The `common` crate bundles together common functionality used by all the other crates, while also containing a module called `config` which contains many sub-modules, each containing all configuration information needed for interacting with a particular vault. For example `common/config/lending/usdc.rs` contains all needed accounts for working with the Tulip V2 USDC lending optimizer vault.
+The `common` folder contains a crate `tulipv2-sdk-common` which bundles together common functionality used by all the other crates, while also containing a module called `config` which contains many sub-modules, each containing all configuration information needed for interacting with a particular vault. For example `common/config/lending/usdc.rs` contains all needed accounts for working with the Tulip V2 USDC lending optimizer vault.
 
 ### `deposit_tracking` module
 
@@ -25,22 +25,18 @@ The "Deposit Tracking" account is a user owned account which serves two main pur
 
 ## `farms`
 
-The `farms` crate provides an enum named `Farm`, which is used to describe different platforms (ie Raydium) and farms within those platforms (ie RAY-USDC). In addition to this the farm key itself is used to enable deterministic derivation of vault addresses that are self describing.
+The `farms` folder contains a crate `tulipv2-sdk-farms` which provides an enum named `Farm`, which is used to describe different platforms (ie Raydium) and farms within those platforms (ie RAY-USDC). In addition to this the farm key itself is used to enable deterministic derivation of vault addresses that are self describing.
 
 The wire representation of the farm type / farm key, is a 2 element slice of u64's, where the first element (farm identifier) is the protocol, and the second element is the particular vault for that protocol. 
 
 
-## `lending`
+## `lending` / v1 support
 
-Provides very basic support for creating instructions, and issuing CPI calls to Tulip's V1 lending program. It allows for the lending of assets through the `Obligation` account, while also allowing the caller to refresh obligations and refresh reserves.
+The `lending` folder contains a crate `tulipv2-sdk-lending` which provides very basic support for creating instructions, and issuing CPI calls to Tulip's V1 lending program. It allows for the lending of assets through the `Obligation` account, while also allowing the caller to refresh obligations and refresh reserves.
 
 ## `vaults`
 
-Provides all v2 vault account types, and associated helper functions, etc..
-
-# V1 Support
-
-Within the `v1` folder you will find a single `tulipv1-sdk` crate, which provides selected functions, accounts, etc... of v1
+The `vaults` folder contains a crate `tulipv2-sdk-vaults` which provides all v2 vault account types, and associated helper functions, etc..
 
 # Examples
 
