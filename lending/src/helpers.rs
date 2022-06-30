@@ -43,22 +43,41 @@ pub fn deposit_reserve_liquidity<'info>(
         *lending_market.key,
         *user_transfer_authority.key,
     );
-    solana_program::program::invoke_signed(
-        &ix,
-        &[
-            source_liquidity.clone(),
-            destination_collateral.clone(),
-            reserve.clone(),
-            reserve_liquidity.clone(),
-            reserve_collateral_mint.clone(),
-            lending_market.clone(),
-            lending_market_authority.clone(),
-            user_transfer_authority.clone(),
-            clock.clone(),
-            token_program.clone(),
-        ],
-        signer_seeds,
-    )?;
+    if signer_seeds.len() == 0 {
+        solana_program::program::invoke(
+            &ix,
+            &[
+                source_liquidity.clone(),
+                destination_collateral.clone(),
+                reserve.clone(),
+                reserve_liquidity.clone(),
+                reserve_collateral_mint.clone(),
+                lending_market.clone(),
+                lending_market_authority.clone(),
+                user_transfer_authority.clone(),
+                clock.clone(),
+                token_program.clone(),
+            ],
+        )?;
+    } else {
+        solana_program::program::invoke_signed(
+            &ix,
+            &[
+                source_liquidity.clone(),
+                destination_collateral.clone(),
+                reserve.clone(),
+                reserve_liquidity.clone(),
+                reserve_collateral_mint.clone(),
+                lending_market.clone(),
+                lending_market_authority.clone(),
+                user_transfer_authority.clone(),
+                clock.clone(),
+                token_program.clone(),
+            ],
+            signer_seeds,
+        )?;
+    }
+
     Ok(())
 }
 

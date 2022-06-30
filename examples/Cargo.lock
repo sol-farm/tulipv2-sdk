@@ -529,6 +529,7 @@ dependencies = [
  "spl-associated-token-account",
  "tulipv2-sdk-common",
  "tulipv2-sdk-farms",
+ "tulipv2-sdk-lending",
  "tulipv2-sdk-vaults",
 ]
 
@@ -1338,6 +1339,19 @@ version = "0.9.17"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
+]
+
+[[package]]
+name = "tulipv2-sdk-lending"
+version = "0.9.17"
+dependencies = [
+ "itertools",
+ "num-derive",
+ "num-traits",
+ "solana-program",
+ "spl-token",
+ "thiserror",
+ "tulipv2-sdk-common",
 ]
 
 [[package]]
