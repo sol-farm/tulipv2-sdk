@@ -358,8 +358,127 @@ pub mod examples {
         )?;
         Ok(())
     }
+    pub fn deposit_reserve_liquidity<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, DepositReserveLiquidity<'info>>,
+        amount: u64,
+    ) -> Result<()> {
+        tulipv2_sdk_lending::helpers::refresh_reserve(
+            &ctx.accounts.lending_program,
+            &ctx.accounts.clock.to_account_info(),
+            &ctx.accounts.reserve,
+            &ctx.accounts.pyth_price_account,
+        )?;
+        tulipv2_sdk_lending::helpers::deposit_reserve_liquidity(
+            &ctx.accounts.lending_program,
+            &ctx.accounts.source_liquidity_token_account.to_account_info(),
+            &ctx.accounts.destination_collateral.to_account_info(),
+            &ctx.accounts.reserve,
+            &ctx.accounts.reserve_liquidity.to_account_info(),
+            &ctx.accounts.reserve_collateral_mint.to_account_info(),
+            &ctx.accounts.lending_market,
+            &ctx.accounts.lending_market_authority,
+            &ctx.accounts.authority,
+            &ctx.accounts.clock.to_account_info(),
+            &ctx.accounts.token_program,
+            &[],
+            amount
+        )?;
+        Ok(())
+    }
+    pub fn redeem_reserve_collateral<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, RedeemReserveLiquidity<'info>>,
+        amount: u64,
+    ) -> Result<()> {
+        tulipv2_sdk_lending::helpers::refresh_reserve(
+            &ctx.accounts.lending_program,
+            &ctx.accounts.clock.to_account_info(),
+            &ctx.accounts.reserve,
+            &ctx.accounts.pyth_price_account,
+        )?;
+        tulipv2_sdk_lending::helpers::redeem_reserve_collateral(
+            &ctx.accounts.lending_program,
+            &ctx.accounts.source_collateral.to_account_info(),
+            &ctx.accounts.destination_liquidity.to_account_info(),
+            &ctx.accounts.reserve,
+            &ctx.accounts.reserve_collateral_mint.to_account_info(),
+            &ctx.accounts.reserve_liquidity.to_account_info(),
+            &ctx.accounts.lending_market,
+            &ctx.accounts.lending_market_authority,
+            &ctx.accounts.authority,
+            &ctx.accounts.clock.to_account_info(),
+            &ctx.accounts.token_program,
+            &[],
+            amount
+        )?;
+        Ok(())
+    }
 }
-
+#[derive(Accounts)]
+pub struct RedeemReserveLiquidity<'info> {
+    /// CHECK: ..
+    #[account(mut, signer)]
+    pub authority: AccountInfo<'info>,
+    /// CHECK: ..
+    #[account(mut)]
+    pub source_collateral: Box<Account<'info, TokenAccount>>,
+    /// CHECK: ..
+    #[account(mut)]
+    pub destination_liquidity: Box<Account<'info, TokenAccount>>,
+    /// CHECK: ..
+    #[account(mut)]
+    pub reserve: AccountInfo<'info>,
+    /// CHECK: ..
+    #[account(mut)]
+    pub reserve_liquidity: Box<Account<'info, TokenAccount>>,
+    /// CHECK: ..
+    #[account(mut)]
+    reserve_collateral_mint: Box<Account<'info, Mint>>,
+    /// CHECK: ..
+    pub lending_market: AccountInfo<'info>,
+    /// CHECK: ..
+    pub lending_market_authority: AccountInfo<'info>,
+    /// CHECK: ..
+    pub clock: Sysvar<'info, Clock>,
+    /// CHECK: ..
+    pub lending_program: AccountInfo<'info>,
+    /// CHECK: ..
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: ..
+    pub pyth_price_account: AccountInfo<'info>,
+}
+#[derive(Accounts)]
+pub struct DepositReserveLiquidity<'info> {
+    /// CHECK: ..
+    #[account(mut, signer)]
+    pub authority: AccountInfo<'info>,
+    /// CHECK: ..
+    #[account(mut)]
+    pub source_liquidity_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: ..
+    #[account(mut)]
+    pub destination_collateral: Box<Account<'info, TokenAccount>>,
+    /// CHECK: ..
+    #[account(mut)]
+    pub reserve: AccountInfo<'info>,
+    /// CHECK: ..
+    #[account(mut)]
+    pub reserve_liquidity: Box<Account<'info, TokenAccount>>,
+    /// CHECK: ..
+    #[account(mut)]
+    reserve_collateral_mint: Box<Account<'info, Mint>>,
+    /// CHECK: ..
+    pub lending_market: AccountInfo<'info>,
+    /// CHECK: ..
+    pub lending_market_authority: AccountInfo<'info>,
+    /// CHECK: ..
+    pub clock: Sysvar<'info, Clock>,
+    /// CHECK: ..
+    pub lending_program: AccountInfo<'info>,
+    /// CHECK: ..
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: ..
+    pub pyth_price_account: AccountInfo<'info>,
+}
 #[derive(Accounts)]
 pub struct RegisterDepositTrackingAccount<'info> {
     #[account(mut, signer)]

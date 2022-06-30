@@ -219,8 +219,8 @@ describe("examples", () => {
   let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
   let yourSharesTokenAccount: anchor.web3.PublicKey;
 
-  let ten = new anchor.BN(10).mul(new anchor.BN(10).pow(new anchor.BN(6)));
-
+  let nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+  let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
   it("registers deposit tracking account", async () => {
     console.log("progrmaId ", programId);
     console.log("usdcv1 vault ", usdcv1Vault);
@@ -286,7 +286,7 @@ describe("examples", () => {
       usdcv1SharesMint
     );
     let tx = await program.rpc.issueShares(
-      ten,
+      nine,
       [new anchor.BN(1), new anchor.BN(65537)],
       {
         options: {
@@ -316,7 +316,7 @@ describe("examples", () => {
     console.log("in production this would fail, as 15 minutes need to pass before lockup is expired")
     let tx = await program.rpc.withdrawDepositTracking(
       // fixed amount we get for 10 USDC based on the program state which has been dumped to disk
-      new anchor.BN(9968969),
+      new anchor.BN(8972072),
       [new anchor.BN(1), new anchor.BN(65537)],
       {
         options: {skipPreflight: true},
@@ -338,7 +338,7 @@ describe("examples", () => {
   });
   it("withdraws multi deposit vault through tulip", async () => {
     let tx = await program.rpc.withdrawMultiDepositVaultThroughTulip(
-      new anchor.BN(9968969),
+      new anchor.BN(8972072),
       {
         options: {skipPreflight: true},
         accounts: {
@@ -410,7 +410,7 @@ describe("examples", () => {
   });
   it("withdraws multi deposit vault through mango", async () => {
     program.rpc.withdrawMultiDepositVaultThroughMango(
-      new anchor.BN(9968969),
+      new anchor.BN(8972072),
       {
         options: {skipPreflight: true},
         accounts: {
@@ -453,7 +453,7 @@ describe("examples", () => {
   });
   it("withdraws multi deposit vault through solend", async () => {
    program.rpc.withdrawMultiDepositVaultThroughSolend(
-      new anchor.BN(9968969),
+      new anchor.BN(8972072),
       {
         options: {skipPreflight: true},
         accounts: {
@@ -524,10 +524,58 @@ describe("examples", () => {
     ).catch(() => {
       console.log("test failure is expected in localnet")
     })
-    .then(() => {
-      process.exit(1)
-    });
+    .then(() => {});
   });
+  let yourCollateralTokenAccount: anchor.web3.PublicKey;
+  it("deposits reserve liquidity", async () => {
+    yourCollateralTokenAccount = await createAssociatedTokenAccount(
+      provider,
+      provider.wallet.publicKey,
+      tulipReserveCollateralMint,
+    )
+    const tx = await program.rpc.depositReserveLiquidity(one, {
+      options: {
+        skipPreflight: true,
+      },
+      accounts: {
+        authority: provider.wallet.publicKey,
+        sourceLiquidityTokenAccount: yourUnderlyingTokenAccount,
+        destinationCollateral: yourCollateralTokenAccount,
+        reserve: tulipReserveAccount,
+        reserveLiquidity: tulipReserveLiquiditySupply,
+        reserveCollateralMint: tulipReserveCollateralMint,
+        lendingMarket: tulipLendingMarketAccount,
+        lendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        lendingProgram: tulipProgramId,
+        tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        pythPriceAccount: tulipReservePythPriceAccount,
+      }
+    })
+    console.log("sent deposit reserve liquidity tx ", tx);
+  })
+  it("redeems reserve collateral", async() => {
+    const bal = await provider.connection.getTokenAccountBalance(yourCollateralTokenAccount);
+    const tx = await program.rpc.redeemReserveCollateral(
+      new anchor.BN(bal.value.amount),
+      {
+        accounts: {
+          authority: provider.wallet.publicKey,
+          destinationLiquidity: yourUnderlyingTokenAccount,
+          sourceCollateral: yourCollateralTokenAccount,
+          reserve: tulipReserveAccount,
+          reserveLiquidity: tulipReserveLiquiditySupply,
+          reserveCollateralMint: tulipReserveCollateralMint,
+          lendingMarket: tulipLendingMarketAccount,
+          lendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          lendingProgram: tulipProgramId,
+          tokenProgram: splToken.TOKEN_PROGRAM_ID,
+          pythPriceAccount: tulipReservePythPriceAccount,
+        }
+      }
+    )
+  })
 });
 
 const timer = ms => new Promise( res => setTimeout(res, ms));
