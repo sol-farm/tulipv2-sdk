@@ -3470,6 +3470,7 @@ dependencies = [
  "num-traits",
  "proptest",
  "ring",
+ "sighashdb",
  "solana-client",
  "solana-program",
  "spl-token",
