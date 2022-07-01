@@ -1,4 +1,6 @@
 use anchor_lang::prelude::*;
+use sighashdb::GlobalSighashDB;
+use solana_program::instruction::Instruction;
 
 
 #[derive(Accounts)]
@@ -63,7 +65,7 @@ pub struct MarketAccounts<'info> {
 }
 
 pub fn swap_tokens_orca_stats<'info>(
-    accounts: RaydiumSwap<'info>,
+    accounts: NewSerumSwap<'info>,
     obligation_index: u8,
 ) -> Option<Instruction> {
     let ix_sighash = GlobalSighashDB.get_deprecated("swap_tokens_orca_stats")?;
