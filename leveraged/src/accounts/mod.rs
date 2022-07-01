@@ -1,7 +1,14 @@
 pub mod user_farm;
 pub mod leveraged_farm;
+pub mod derivations;
+pub mod position_info;
 
 use anchor_lang::prelude::*;
+
+
+pub const POSITION_INFO_ACCOUNT_SIZE: usize = 300;
+pub const USER_FARM_ACCOUNT_SIZE: usize = 247;
+pub const LEVERAGED_FARM_ACCOUNT_SIZE: usize = 1616;
 
 /// Position is the current state of the obligation
 #[derive(PartialEq, PartialOrd, Debug, Clone, Copy, AnchorSerialize, AnchorDeserialize)]

@@ -1,4 +1,5 @@
 pub mod accounts;
+pub mod instructions;
 
 use anchor_lang::{solana_program, solana_program::pubkey::Pubkey};
 
