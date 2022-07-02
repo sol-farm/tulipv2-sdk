@@ -8,3 +8,5 @@ pub mod orca_add_liquidity_queue;
 pub mod add_liquidity_stats;
 pub mod withdraw_orca_vault_dd_close;
 pub mod close_position_info;
+pub mod withdraw_orca_vault;
+pub mod deposit_raydium_vault;
