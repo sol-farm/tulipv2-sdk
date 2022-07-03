@@ -37,6 +37,7 @@ pub struct DepositObligationCollateral<'info> {
 
 pub fn top_up_position_stats<'info>(
     accounts: DepositObligationCollateral<'info>,
+    position_info_account: &AccountInfo<'info>,
     coin_amount: u64,
     pc_amount: u64,
     obligation_index: u8,
@@ -47,9 +48,14 @@ pub fn top_up_position_stats<'info>(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&coin_amount).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&pc_amount).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
+
+
+    let mut accounts = accounts.to_account_metas(None);
+    accounts.push(AccountMeta::new(position_info_account.key(), false));
+
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts.to_account_metas(None),
+        accounts: accounts,
         data: ix_data,
     })
 }
