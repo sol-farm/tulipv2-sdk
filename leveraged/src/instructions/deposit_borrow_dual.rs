@@ -47,6 +47,8 @@ pub struct DepositBorrowDual<'info> {
 
 pub fn deposit_borrow_dual<'info>(
     accounts: DepositBorrowDual<'info>,
+    position_info_account: &AccountInfo<'info>,
+    system_program: &AccountInfo<'info>,
     coin_amount: u64,
     pc_amount: u64,
     coin_borrow_amount: u64,
@@ -61,9 +63,15 @@ pub fn deposit_borrow_dual<'info>(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&coin_borrow_amount).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&pc_borrow_amount).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
+
+
+    let mut accounts = accounts.to_account_metas(None);
+    accounts.push(AccountMeta::new(position_info_account.key(), false));
+    accounts.push(AccountMeta::new_readonly(system_program.key(), false));
+
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts.to_account_metas(None),
+        accounts: accounts,
         data: ix_data,
     })
 }
