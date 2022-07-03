@@ -63,6 +63,7 @@ pub struct OrcaAddLiquidityQueue<'info> {
 
 pub fn orca_add_liquidity_queue<'info>(
     accounts: OrcaAddLiquidityQueue<'info>,
+    position_info_account: &AccountInfo<'info>,
     account_nonce: u8,
     obligation_index: u8
 ) -> Option<Instruction> {
@@ -71,9 +72,14 @@ pub fn orca_add_liquidity_queue<'info>(
     ix_data.extend_from_slice(&ix_sighash[..]);
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&account_nonce).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
+
+
+    let mut accounts = accounts.to_account_metas(None);
+    accounts.push(AccountMeta::new(position_info_account.key(), false));
+
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts.to_account_metas(None),
+        accounts: accounts,
         data: ix_data,
     })
 }
