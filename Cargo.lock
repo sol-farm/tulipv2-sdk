@@ -3460,6 +3460,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "tulipv2-sdk-leveraged"
+version = "0.9.17"
+dependencies = [
+ "anchor-lang",
+ "data-encoding",
+ "itertools",
+ "num-derive",
+ "num-traits",
+ "proptest",
+ "ring",
+ "sighashdb",
+ "solana-client",
+ "solana-program",
+ "spl-token",
+ "static-pubkey",
+ "thiserror",
+ "tulipv2-sdk-common",
+ "type-layout",
+]
+
+[[package]]
 name = "tulipv2-sdk-vaults"
 version = "0.9.17"
 dependencies = [
