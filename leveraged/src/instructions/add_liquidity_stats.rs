@@ -67,15 +67,20 @@ pub struct AddLiquidity<'info> {
 
 pub fn add_liquidity_stats<'info>(
     accounts: AddLiquidity<'info>,
+    position_info_account: &AccountInfo<'info>,
     obligation_index: u8,
 ) -> Option<Instruction> {
     let ix_sighash = GlobalSighashDB.get_deprecated("add_liquidity_stats")?;
     let mut ix_data = Vec::with_capacity(9);
     ix_data.extend_from_slice(&ix_sighash[..]);
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
+
+    let mut accounts = accounts.to_account_metas(None);
+    accounts.push(AccountMeta::new(position_info_account.key(), false));
+
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts.to_account_metas(None),
+        accounts: accounts,
         data: ix_data,
     })
 }
