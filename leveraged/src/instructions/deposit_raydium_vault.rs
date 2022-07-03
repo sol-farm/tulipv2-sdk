@@ -61,6 +61,10 @@ pub struct DepositFarm<'info> {
 
 pub fn deposit_vault<'info>(
     accounts: DepositFarm<'info>,
+    lending_market_account: &AccountInfo<'info>,
+    user_farm_obligation: &AccountInfo<'info>,
+    lending_market_authority: &AccountInfo<'info>,
+    lending_program: &AccountInfo<'info>,
     nonce: u8,
     meta_nonce: u8,
     obligation_index: u64,
@@ -71,9 +75,17 @@ pub fn deposit_vault<'info>(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&nonce).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&meta_nonce).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
+
+
+    let mut accounts = accounts.to_account_metas(None);
+    accounts.push(AccountMeta::new_readonly(lending_market_account.key(), false));
+    accounts.push(AccountMeta::new(user_farm_obligation.key(), false));
+    accounts.push(AccountMeta::new_readonly(lending_market_authority.key(), false));
+    accounts.push(AccountMeta::new_readonly(lending_program.key(), false));
+
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts.to_account_metas(None),
+        accounts: accounts,
         data: ix_data,
     })
 }
