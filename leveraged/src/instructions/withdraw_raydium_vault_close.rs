@@ -50,6 +50,13 @@ pub struct WithdrawFarm<'info> {
 
 pub fn withdraw_raydium_vault_close<'info>(
     accounts: WithdrawFarm<'info>,
+    lending_market_account: &AccountInfo<'info>,
+    user_farm_obligation: &AccountInfo<'info>,
+    lending_market_authority: &AccountInfo<'info>,
+    lending_program: &AccountInfo<'info>,
+    position_info_account: &AccountInfo<'info>,
+    system_program: &AccountInfo<'info>,
+    rent: &AccountInfo<'info>,
     meta_nonce: u8,
     nonce: u8,
     obligation_index: u8,
@@ -64,9 +71,19 @@ pub fn withdraw_raydium_vault_close<'info>(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&withdraw_percent).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&close_method).unwrap());
+
+    let mut accounts = accounts.to_account_metas(None);
+    accounts.push(AccountMeta::new_readonly(lending_market_account.key(), false));
+    accounts.push(AccountMeta::new(user_farm_obligation.key(), false));
+    accounts.push(AccountMeta::new_readonly(lending_market_authority.key(), false));
+    accounts.push(AccountMeta::new_readonly(lending_program.key(), false));
+    accounts.push(AccountMeta::new(position_info_account.key(), false));
+    accounts.push(AccountMeta::new_readonly(system_program.key(), false));
+    accounts.push(AccountMeta::new_readonly(rent.key(), false));
+
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts.to_account_metas(None),
+        accounts: accounts,
         data: ix_data,
     })
 }

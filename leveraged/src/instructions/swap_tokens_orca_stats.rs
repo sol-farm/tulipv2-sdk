@@ -90,7 +90,7 @@ pub fn swap_tokens_orca_stats<'info>(
 
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts.to_account_metas(None),
+        accounts: accounts,
         data: ix_data,
     })
 }
