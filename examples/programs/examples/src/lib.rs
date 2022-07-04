@@ -412,6 +412,11 @@ pub mod examples {
         )?;
         Ok(())
     }
+    pub fn create_user_farm(
+        ctx: Context<CreateUserFarm>,
+    ) -> Result<()> {
+        
+    }
 }
 #[derive(Accounts)]
 pub struct RedeemReserveLiquidity<'info> {
@@ -700,4 +705,25 @@ pub struct WithdrawTulipMultiDepositOptimizerVault<'info> {
     /// regardless of the underlying vault htey are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
+}
+
+#[derive(Accounts)]
+pub struct CreateUserFarm {
+    #[account(signer)]
+    pub authority: Pubkey,
+    #[account(mut)]
+    pub user_farm: Pubkey,
+    #[account(mut)]
+    pub user_farm_obligation: Pubkey,
+    #[account(mut)]
+    pub lending_market: Pubkey,
+    pub global: Pubkey,
+    pub leveraged_farm: Pubkey,
+    pub clock: Pubkey,
+    pub rent: Pubkey,
+    pub system_program: Pubkey,
+    pub lending_program: Pubkey,
+    pub token_program: Pubkey,
+    #[account(mut)]
+    pub obligation_vault_address: Pubkey,
 }
