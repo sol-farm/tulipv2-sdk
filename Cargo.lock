@@ -3460,7 +3460,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tulipv2-sdk-leveraged"
+name = "tulipv2-sdk-levfarm"
 version = "0.9.17"
 dependencies = [
  "anchor-lang",

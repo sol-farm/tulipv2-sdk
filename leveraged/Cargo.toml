@@ -1,9 +1,9 @@
 [package]
-name = "tulipv2-sdk-leveraged"
+name = "tulipv2-sdk-levfarm"
 version = "0.9.17"
 edition = "2021"
 authors = ["Tulip Protocol"]
-description = "lending instructions for v1 leveraged yield farming"
+description = "farm instructions for v1 leveraged yield farming"
 keywords = ["solana", "anchor", "tulip-protocol"]
 license = "MIT/Apache-2.0"
 documentation = "https://docs.rs/tulipv2-sdk-vaults"
