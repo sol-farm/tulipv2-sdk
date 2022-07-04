@@ -30,9 +30,11 @@ sighashdb = "0.1.28"
 anchor-client = "0.24.2"
 
 [features]
-default = ["usdc-optimizer", "usdt-optimizer", "sol-optimizer", "ray-optimizer"]
+default = ["usdc-optimizer", "usdt-optimizer", "sol-optimizer", "ray-optimizer", "levfarm", "rayusdc-levfarm"]
 usdc-optimizer = []
 usdt-optimizer = []
 sol-optimizer = []
 ray-optimizer = []
 logs = []
+levfarm = []
+rayusdc-levfarm = []

@@ -1325,90 +1325,79 @@ filename = "deps/accounts/GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd.json"
 
 
 
-[[test.validator.clone]] # ray-usdc raydium v1 vault account
+[[test.validator.account]] # ray-usdc raydium v1 vault account
 address = "HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG"
 filename = "deps/accounts/HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG.json"
-
-
-[[test.validator.clone]] # ray-usdc serum market
+[[test.validator.account]] # ray-usdc serum market
 address = "2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep,"
 filename = "deps/accounts/2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep,.json"
-
-
-[[test.validator.clone]] # ray-usdc req q
+[[test.validator.account]] # ray-usdc req q
+address = "39mE6bYktM1XAKKmB6WN971X3Sa1yGkHxtCTWMkVrwN2"
+filename = "deps/accounts/39mE6bYktM1XAKKmB6WN971X3Sa1yGkHxtCTWMkVrwN2.json"
+[[test.validator.account]] # ray-usdc evt q
 address = "H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz"
 filename = "deps/accounts/H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz.json"
-
-[[test.validator.clone]] # ray-usdc evt q
+[[test.validator.account]] # ray-usdc bids
 address = "Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5"
 filename = "deps/accounts/Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5.json"
-
-[[test.validator.clone]] # ray-usdc bids
-address = "Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5"
-filename = "deps/accounts/Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5.json"
-
-[[test.validator.clone]] # ray-usdc asks
+[[test.validator.account]] # ray-usdc asks
 address = "DC1HsWWRCXVg3wk2NndS5LTbce3axwUwUZH1RgnV4oDN"
 filename = "deps/accounts/DC1HsWWRCXVg3wk2NndS5LTbce3axwUwUZH1RgnV4oDN.json"
-
-
-[[test.validator.clone]] # ray-usdc serum coin vault
+[[test.validator.account]] # ray-usdc serum coin vault
 address = "GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa"
 filename = "deps/accounts/GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa.json"
-
-[[test.validator.clone]] # ray-usdc serum pc vault
-address = "22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe,"
+[[test.validator.account]] # ray-usdc serum pc vault
+address = "22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe"
 filename = "deps/accounts/22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe,.json"
-
-[[test.validator.clone]] # lev farm serum fee receiver
+[[test.validator.account]] # lev farm serum fee receiver
 address = "PgjTxGVTmFGQjGX8DrETmT68hRt6Jyps4SFTnxJcf3S"
 filename = "deps/accounts/PgjTxGVTmFGQjGX8DrETmT68hRt6Jyps4SFTnxJcf3S.json"
-[[test.validator.clone]] # ray-usdc serum open olders
+[[test.validator.account]] # ray-usdc serum open olders
 address = "CAjCs8wTVXg28ViAxsECxAa7WiwZU53rnWLiNikBeXG3"
 filename = "deps/accounts/CAjCs8wTVXg28ViAxsECxAa7WiwZU53rnWLiNikBeXG3.json"
-[[test.validator.clone]] # ray usdc lp mint
+[[test.validator.account]] # ray usdc lp mint
 address = "FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m"
 filename = "deps/accounts/FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m.json"
-[[test.validator.clone]] # ray-usdc amm id
+[[test.validator.account]] # ray-usdc amm id
 address = "6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg"
 filename = "deps/accounts/6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg.json"
-[[test.validator.clone]] # ray usdc amm open orders
+[[test.validator.account]] # ray usdc amm open orders
 address = "J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW"
 filename = "deps/accounts/J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW.json"
-[[test.validator.clone]] # ray usdc quantities or target order
+[[test.validator.account]] # ray usdc quantities or target order
 address = "3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT"
 filename = "deps/accounts/3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT.json"
-[[test.validator.clone]] # raydium coin account
+[[test.validator.account]] # raydium coin account
 address = "FdmKUE4UMiJYFK5ogCngHzShuVKrFXBamPWcewDr31th"
 filename = "deps/accounts/FdmKUE4UMiJYFK5ogCngHzShuVKrFXBamPWcewDr31th.json"
-[[test.validator.clone]] # raydium pc account
+[[test.validator.account]] # raydium pc account
 address = "Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk"
 filename = "deps/accounts/Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk.json"
-[[test.validator.clone]] # raydium pool temp account
+[[test.validator.account]] # raydium pool temp account
 address = "D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB"
 filename = "deps/accounts/D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB.json"
-[[test.validator.clone]] # raydium pool withdraw queue
+[[test.validator.account]] # raydium pool withdraw queue
 address = "ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr"
 filename = "deps/accounts/ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr/.json"
-[[test.validator.clone]] # ray base reserve
+[[test.validator.account]] # ray base reserve
 address = "9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF"
 filename = "deps/accounts/9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF.json"
-[[test.validator.clone]] # lev farm base token account
+[[test.validator.account]] # lev farm base token account
 address = "9k3gGV5WCWug8BNCemv3McAC12p8Tqhxb6GN5hBkmfDE"
 filename = "deps/accounts/9k3gGV5WCWug8BNCemv3McAC12p8Tqhxb6GN5hBkmfDE.json" 
-[[test.validator.clone]] # lev farm quote token account
+[[test.validator.account]] # lev farm quote token account
 address = "2nHaWRW4PkutKbpDGvVwJ2JkcW1dKA6gMgLv4rPAmqLk"
 filename = "deps/accounts/2nHaWRW4PkutKbpDGvVwJ2JkcW1dKA6gMgLv4rPAmqLk.json"
-[[test.validator.clone]] # lp token pyth price account
+[[test.validator.account]] # lp token pyth price account
 address = "AV5GeH126btrRE9uq36tZWjdgCuLc1DdzKEatdjmoNex"
 filename = "deps/accounts/AV5GeH126btrRE9uq36tZWjdgCuLc1DdzKEatdjmoNex.json"
-[[test.validator.clone]] # coin token pyth price account
+[[test.validator.account]] # coin token pyth price account
 address = "83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF"
 filename = "deps/accounts/83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF.json"
-[[test.validator.clone]] # coin reserve fee receiver
+[[test.validator.account]] # coin reserve fee receiver
 address = "4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj"
 filename = "deps/accounts/4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj.json"
-[[test.validator.clone]] # pc reserve fee receiver
+[[test.validator.account]] # pc reserve fee receiver
 address = "GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU"
 filename = "deps/accounts/GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU.json"
 ###############

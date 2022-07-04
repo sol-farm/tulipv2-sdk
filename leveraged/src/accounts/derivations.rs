@@ -80,3 +80,19 @@ pub fn derive_user_position_info_address(
         &program_id,
     )
 }
+
+pub fn derive_user_farm_obligation_address(
+    authority: Pubkey,
+    user_farm_addr: Pubkey,
+    program_id: Pubkey, // this is the farm rpogram id
+    obligation_index: u8,
+) -> (Pubkey, u8) {
+    Pubkey::find_program_address(
+        &[
+            authority.as_ref(),
+            user_farm_addr.as_ref(),
+            &(obligation_index as u64).to_le_bytes()[..],
+        ],
+        &program_id,
+    )
+}

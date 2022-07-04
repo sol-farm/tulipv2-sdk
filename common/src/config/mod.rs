@@ -14,6 +14,9 @@
 pub mod deposit_tracking;
 pub mod lending;
 
+#[cfg(feature = "levfarm")]
+pub mod levfarm;
+
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
 use static_pubkey::static_pubkey;
