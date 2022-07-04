@@ -356,3 +356,55 @@ export async function sleep(ms) {
 }
 
 
+export async function findUserFarmObligationAddress(
+  authority: anchor.web3.PublicKey,
+  userFarmAddr: anchor.web3.PublicKey,
+  lendingProgramId: anchor.web3.PublicKey,
+  obligationIndex: anchor.BN,
+): Promise<[anchor.web3.PublicKey, number]> {
+  let seeds = [
+      authority.toBuffer(),
+      userFarmAddr.toBuffer(),
+      obligationIndex.toArrayLike(Buffer, "le", 8),
+  ]
+  return anchor.web3.PublicKey.findProgramAddress(
+      seeds,
+      lendingProgramId,
+  )
+}
+
+// finds a UserFarm account address 
+export async function findUserFarmAddress(
+  // the user's main wallet account
+  authority: anchor.web3.PublicKey,
+  // the id of the lending program
+  programId: anchor.web3.PublicKey,
+  // the index of the account
+  // 0 = first account, 1 = second account, etc...
+  index: anchor.BN,
+  // the enum of the particular farm
+  // 0 = ray-usdc lp, 1 = ray-sol lp
+  farm: anchor.BN,
+): Promise<[anchor.web3.PublicKey, number]> {
+  let seeds = [
+      authority.toBuffer(),
+      index.toArrayLike(Buffer, "le", 8),
+      farm.toArrayLike(Buffer, "le", 8),
+  ]
+  return anchor.web3.PublicKey.findProgramAddress(
+      seeds,
+      programId,
+  )
+} 
+
+export async function findUserFArmObligationVaultAddress(
+  userFarmAccount: anchor.web3.PublicKey,
+  obligationIndex: anchor.BN,
+  farmProgramId: anchor.web3.PublicKey,
+) {
+  let seeds = [
+      userFarmAccount.toBuffer(),
+      obligationIndex.toArrayLike(Buffer, "le", 8),
+  ];
+  return anchor.web3.PublicKey.findProgramAddress(seeds, farmProgramId)
+}

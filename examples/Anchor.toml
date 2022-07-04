@@ -1329,8 +1329,8 @@ filename = "deps/accounts/GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd.json"
 address = "HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG"
 filename = "deps/accounts/HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG.json"
 [[test.validator.account]] # ray-usdc serum market
-address = "2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep,"
-filename = "deps/accounts/2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep,.json"
+address = "2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep"
+filename = "deps/accounts/2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep.json"
 [[test.validator.account]] # ray-usdc req q
 address = "39mE6bYktM1XAKKmB6WN971X3Sa1yGkHxtCTWMkVrwN2"
 filename = "deps/accounts/39mE6bYktM1XAKKmB6WN971X3Sa1yGkHxtCTWMkVrwN2.json"
@@ -1348,7 +1348,7 @@ address = "GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa"
 filename = "deps/accounts/GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa.json"
 [[test.validator.account]] # ray-usdc serum pc vault
 address = "22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe"
-filename = "deps/accounts/22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe,.json"
+filename = "deps/accounts/22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe.json"
 [[test.validator.account]] # lev farm serum fee receiver
 address = "PgjTxGVTmFGQjGX8DrETmT68hRt6Jyps4SFTnxJcf3S"
 filename = "deps/accounts/PgjTxGVTmFGQjGX8DrETmT68hRt6Jyps4SFTnxJcf3S.json"
@@ -1378,7 +1378,7 @@ address = "D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB"
 filename = "deps/accounts/D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB.json"
 [[test.validator.account]] # raydium pool withdraw queue
 address = "ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr"
-filename = "deps/accounts/ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr/.json"
+filename = "deps/accounts/ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr.json"
 [[test.validator.account]] # ray base reserve
 address = "9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF"
 filename = "deps/accounts/9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF.json"

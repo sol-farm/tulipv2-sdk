@@ -8,7 +8,7 @@ use crate::instructions::create_user_farm;
 
 /// returns an instruction that can be used to create a user farm account, and initialize
 /// the first obligation/position
-pub fn new_create_user_farm(
+pub fn new_create_user_farm_ix(
     authority: Pubkey,
     farm: Farms,
 ) -> Option<Instruction> {

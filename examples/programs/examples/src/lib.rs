@@ -412,10 +412,20 @@ pub mod examples {
         )?;
         Ok(())
     }
-    pub fn create_user_farm(
+    pub fn create_user_farm<'info>(
         ctx: Context<CreateUserFarm>,
+        farm: u64,
     ) -> Result<()> {
-        
+        let farm = tulipv2_sdk_levfarm::accounts::Farms::from(farm);
+        let ix = tulipv2_sdk_levfarm::helpers::new_create_user_farm_ix(
+            ctx.accounts.authority.key(),
+            farm,
+        ).unwrap();
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &ctx.accounts.to_account_infos(),
+        )?;
+        Ok(())
     }
 }
 #[derive(Accounts)]
@@ -708,22 +718,34 @@ pub struct WithdrawTulipMultiDepositOptimizerVault<'info> {
 }
 
 #[derive(Accounts)]
-pub struct CreateUserFarm {
+pub struct CreateUserFarm<'info> {
     #[account(signer)]
-    pub authority: Pubkey,
+    /// CHECK: .
+    pub authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub user_farm: Pubkey,
+    pub user_farm: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub user_farm_obligation: Pubkey,
+    pub user_farm_obligation: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub lending_market: Pubkey,
-    pub global: Pubkey,
-    pub leveraged_farm: Pubkey,
-    pub clock: Pubkey,
-    pub rent: Pubkey,
-    pub system_program: Pubkey,
-    pub lending_program: Pubkey,
-    pub token_program: Pubkey,
+    pub lending_market: AccountInfo<'info>,
+    /// CHECK: .
+    pub global: AccountInfo<'info>,
+    /// CHECK: .
+    pub leveraged_farm: AccountInfo<'info>,
+    /// CHECK: .
+    pub clock: AccountInfo<'info>,
+    /// CHECK: .
+    pub rent: AccountInfo<'info>,
+    /// CHECK: .
+    pub system_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub lending_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub obligation_vault_address: Pubkey,
+    pub obligation_vault_address: AccountInfo<'info>,
 }

@@ -28,7 +28,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sleep = exports.deriveSunnyVaultAddress = exports.deriveQuarryVaultConfigDataAddress = exports.deriveQuarryVaultRewardTokenAccount = exports.deriveQuarryMinerAddress = exports.deriveOrcaDDWithdrawQueueAddress = exports.deriveEphemeralTrackingAddress = exports.deriveMultiDepositStateTransitionAddress = exports.deriveTrackingOrcaDDQueueAddress = exports.deriveOrcaDDCompoundQueueAddress = exports.deriveOrcaUserFarmAddress = exports.deriveMangoAccountAddress = exports.deriveLendingPlatformConfigDataAddress = exports.deriveLndingPlatformInformationAccountAddress = exports.deriveLendingPlatformAccountAddress = exports.findAssociatedStakeInfoAddress = exports.createAssociatedTokenAccount = exports.deriveTrackingQueueAddress = exports.deriveTrackingPdaAddress = exports.deriveTrackingAddress = exports.deriveSerumFeeRecipientAddress = exports.deriveSerumTradeOpenOrdersAddress = exports.deriveSerumTradePdaAddress = exports.deriveSerumTradeAccount = exports.deriveCompoundQueueAddress = exports.deriveWithdrawQueueAddress = exports.deriveRaydiumUserStakeInfoAddress = exports.deriveSharesMintAddress = exports.deriveVaultPdaAddress = exports.deriveVaultAddress = exports.deriveManagementAddress = void 0;
+exports.findUserFArmObligationVaultAddress = exports.findUserFarmAddress = exports.findUserFarmObligationAddress = exports.sleep = exports.deriveSunnyVaultAddress = exports.deriveQuarryVaultConfigDataAddress = exports.deriveQuarryVaultRewardTokenAccount = exports.deriveQuarryMinerAddress = exports.deriveOrcaDDWithdrawQueueAddress = exports.deriveEphemeralTrackingAddress = exports.deriveMultiDepositStateTransitionAddress = exports.deriveTrackingOrcaDDQueueAddress = exports.deriveOrcaDDCompoundQueueAddress = exports.deriveOrcaUserFarmAddress = exports.deriveMangoAccountAddress = exports.deriveLendingPlatformConfigDataAddress = exports.deriveLndingPlatformInformationAccountAddress = exports.deriveLendingPlatformAccountAddress = exports.findAssociatedStakeInfoAddress = exports.createAssociatedTokenAccount = exports.deriveTrackingQueueAddress = exports.deriveTrackingPdaAddress = exports.deriveTrackingAddress = exports.deriveSerumFeeRecipientAddress = exports.deriveSerumTradeOpenOrdersAddress = exports.deriveSerumTradePdaAddress = exports.deriveSerumTradeAccount = exports.deriveCompoundQueueAddress = exports.deriveWithdrawQueueAddress = exports.deriveRaydiumUserStakeInfoAddress = exports.deriveSharesMintAddress = exports.deriveVaultPdaAddress = exports.deriveVaultAddress = exports.deriveManagementAddress = void 0;
 const anchor = __importStar(require("@project-serum/anchor"));
 const serumAssoToken = __importStar(require("@project-serum/associated-token"));
 const spl_token_1 = require("@solana/spl-token");
@@ -247,3 +247,46 @@ function sleep(ms) {
     });
 }
 exports.sleep = sleep;
+function findUserFarmObligationAddress(authority, userFarmAddr, lendingProgramId, obligationIndex) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let seeds = [
+            authority.toBuffer(),
+            userFarmAddr.toBuffer(),
+            obligationIndex.toArrayLike(Buffer, "le", 8),
+        ];
+        return anchor.web3.PublicKey.findProgramAddress(seeds, lendingProgramId);
+    });
+}
+exports.findUserFarmObligationAddress = findUserFarmObligationAddress;
+// finds a UserFarm account address 
+function findUserFarmAddress(
+// the user's main wallet account
+authority, 
+// the id of the lending program
+programId, 
+// the index of the account
+// 0 = first account, 1 = second account, etc...
+index, 
+// the enum of the particular farm
+// 0 = ray-usdc lp, 1 = ray-sol lp
+farm) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let seeds = [
+            authority.toBuffer(),
+            index.toArrayLike(Buffer, "le", 8),
+            farm.toArrayLike(Buffer, "le", 8),
+        ];
+        return anchor.web3.PublicKey.findProgramAddress(seeds, programId);
+    });
+}
+exports.findUserFarmAddress = findUserFarmAddress;
+function findUserFArmObligationVaultAddress(userFarmAccount, obligationIndex, farmProgramId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let seeds = [
+            userFarmAccount.toBuffer(),
+            obligationIndex.toArrayLike(Buffer, "le", 8),
+        ];
+        return anchor.web3.PublicKey.findProgramAddress(seeds, farmProgramId);
+    });
+}
+exports.findUserFArmObligationVaultAddress = findUserFArmObligationVaultAddress;
