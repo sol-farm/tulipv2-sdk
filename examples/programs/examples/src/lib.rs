@@ -1009,7 +1009,6 @@ pub struct DepositBorrowDual<'info> {
     #[account(mut)]
     pub pc_reserve_liquidity_fee_receiver: AccountInfo<'info>,
     /// CHECK: .
-    #[account(mut)]
     pub borrow_authorizer: AccountInfo<'info>,
     /// CHECK: .
     pub lp_pyth_price_account: AccountInfo<'info>,

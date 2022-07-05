@@ -1078,9 +1078,9 @@ dependencies = [
 
 [[package]]
 name = "sighashdb"
-version = "0.1.31"
+version = "0.1.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5f19acac2f5947e1fe98df97fb9bf074d52db14940c66a9961f140b6ee3bc6b5"
+checksum = "e931c141f109d66086a2494f2a7f463e4e4760dead9ae0d0684e0aeff5cf7867"
 
 [[package]]
 name = "smallvec"
