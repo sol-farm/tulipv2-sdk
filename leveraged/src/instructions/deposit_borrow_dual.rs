@@ -71,6 +71,7 @@ impl ToAccountMetas for DepositBorrowDual {
             AccountMeta::new(self.coin_source_token_account, false),
             AccountMeta::new(self.coin_destination_token_account, false),
             AccountMeta::new(self.pc_source_token_account, false),
+            AccountMeta::new(self.pc_destination_token_account, false),
             AccountMeta::new(self.pc_deposit_reserve_account, false),
             AccountMeta::new(self.coin_deposit_reserve_account, false),
             AccountMeta::new_readonly(self.pc_reserve_liquidity_oracle, false),
@@ -83,7 +84,7 @@ impl ToAccountMetas for DepositBorrowDual {
             AccountMeta::new(self.pc_source_reserve_liquidity_token_account, false),
             AccountMeta::new(self.pc_reserve_liquidity_fee_receiver, false),
             AccountMeta::new(self.borrow_authorizer, false),
-            AccountMeta::new(self.lp_pyth_price_account, false),
+            AccountMeta::new_readonly(self.lp_pyth_price_account, false),
             AccountMeta::new(self.vault_account, false),
             AccountMeta::new_readonly(self.rent, false),
         ]

@@ -528,11 +528,53 @@ pub mod examples {
     }
     pub fn deposit_borrow_dual<'info>(
         ctx: Context<DepositBorrowDual<'info>>,
+        coin_amount: u64,
+        pc_amount: u64,
         coin_borrow: u64,
         pc_borrow: u64,
-        obligation_index: u64,
+        obligation_index: u8,
     ) -> Result<()> {
         let deposit_borrow_dual: tulipv2_sdk_levfarm::instructions::deposit_borrow_dual::DepositBorrowDual = ctx.accounts.into();
+        let ix = tulipv2_sdk_levfarm::helpers::new_deposit_borrow_dual_ix(
+            deposit_borrow_dual,
+            ctx.accounts.position_info_account.key(),
+            ctx.accounts.system_program.key(),
+            coin_amount,
+            pc_amount,
+            coin_borrow,
+            pc_borrow,
+            obligation_index,
+        ).unwrap();
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &[
+                ctx.accounts.authority.clone(),
+                ctx.accounts.user_farm.clone(),
+                ctx.accounts.leveraged_farm.clone(),
+                ctx.accounts.user_farm_obligation.clone(),
+                ctx.accounts.coin_source_token_account.clone(),
+                ctx.accounts.coin_destination_token_account.clone(),
+                ctx.accounts.pc_source_token_account.clone(),
+                ctx.accounts.pc_destination_token_account.clone(),
+                ctx.accounts.pc_deposit_reserve_account.clone(),
+                ctx.accounts.coin_deposit_reserve_account.clone(),
+                ctx.accounts.pc_reserve_liquidity_oracle.clone(),
+                ctx.accounts.pc_reserve_liquidity_oracle.clone(),
+                ctx.accounts.lending_market_account.clone(),
+                ctx.accounts.derived_lending_market_authority.clone(),
+                ctx.accounts.token_program.clone(),
+                ctx.accounts.lending_program.clone(),
+                ctx.accounts.coin_source_reserve_liquidity_token_account.clone(),
+                ctx.accounts.pc_source_reserve_liquidity_token_account.clone(),
+                ctx.accounts.pc_reserve_liquidity_fee_receiver.clone(),
+                ctx.accounts.borrow_authorizer.clone(),
+                ctx.accounts.lp_pyth_price_account.clone(),
+                ctx.accounts.vault_account.clone(),
+                ctx.accounts.rent.clone(),
+                ctx.accounts.position_info_account.clone(),
+                ctx.accounts.system_program.clone(),
+            ]
+        )?;
         Ok(())
     }
 }
@@ -967,6 +1009,7 @@ pub struct DepositBorrowDual<'info> {
     #[account(mut)]
     pub pc_reserve_liquidity_fee_receiver: AccountInfo<'info>,
     /// CHECK: .
+    #[account(mut)]
     pub borrow_authorizer: AccountInfo<'info>,
     /// CHECK: .
     pub lp_pyth_price_account: AccountInfo<'info>,
@@ -976,7 +1019,10 @@ pub struct DepositBorrowDual<'info> {
     /// CHECK: .
     pub rent: AccountInfo<'info>,
     /// CHECK: .
+    #[account(mut)]
     pub position_info_account: AccountInfo<'info>,
     /// CHECK: .
     pub system_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub tulip_leveraged_farm_program: AccountInfo<'info>,
 }

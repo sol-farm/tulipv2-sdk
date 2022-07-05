@@ -92,6 +92,21 @@ const tulipLevFarmGlobalAccount = new anchor.web3.PublicKey("HLuVf6p3SqgEKy8poYA
 const tulipRayUsdcLevFarmAccount = new anchor.web3.PublicKey("84ayseJgpJavzfeESgRdyfMoDo2bs4J2YUBjMT4iTs66");
 const rayUsdcLpTokenMint = new anchor.web3.PublicKey("FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m");
 const rayTokenMint = new anchor.web3.PublicKey("4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R");
+const rayUsdcLevFarmBaseTokenAccount = new anchor.web3.PublicKey("9k3gGV5WCWug8BNCemv3McAC12p8Tqhxb6GN5hBkmfDE");
+const rayUsdcLevFarmQuoteTokenAccount = new anchor.web3.PublicKey("2nHaWRW4PkutKbpDGvVwJ2JkcW1dKA6gMgLv4rPAmqLk");
+const borrowAuthorizer = new anchor.web3.PublicKey("Gp1oj71gwapSBjSQoPkWxEyjXxDxrtBVe1ijsVThknXT");
+const coinDepositReserveAccount = new anchor.web3.PublicKey("9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF");
+const pcDepositReserveAccount = new anchor.web3.PublicKey("FTkSmGsJ3ZqDSHdcnY7ejN1pWV3Ej7i88MYpZyyaqgGt");
+const coinReserveLiquidityOracle = new anchor.web3.PublicKey("83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF");
+const pcReserveLiquidityOracle = new anchor.web3.PublicKey("ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB");
+const lpPythPriceAccount = new anchor.web3.PublicKey("AV5GeH126btrRE9uq36tZWjdgCuLc1DdzKEatdjmoNex");
+const coinSourceReserveLiquidityTokenAccount = new anchor.web3.PublicKey("9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y");
+const pcSourceReserveLiquidityTokenAccount = new anchor.web3.PublicKey("64QJd6MYXUjCBvCaZKaqxiKmaMkPUdNonE1KuY1YoGGb");
+const coinReserveLiquidityFeeReceiver = new anchor.web3.PublicKey("4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj");
+const pcReserveLiquidityFeeReceiver = new anchor.web3.PublicKey("GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU");
+const v1RayUsdcVaultAccount = new anchor.web3.PublicKey("HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG");
+const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+const one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 describe("examples", () => {
     let provider = anchor.AnchorProvider.env();
     anchor.setProvider(provider);
@@ -377,8 +392,6 @@ describe("test lending instructions via usdc ", () => __awaiter(void 0, void 0, 
     anchor.setProvider(provider);
     const program = anchor.workspace.Examples;
     const programId = program.programId;
-    let nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
-    let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
     let yourCollateralTokenAccount;
     let yourUnderlyingTokenAccount;
     it("gets underlying token accounts", () => __awaiter(void 0, void 0, void 0, function* () {
@@ -473,11 +486,74 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
     }));
     let userFarmObligation2VaultAddress;
     let userFarmObligation2Address;
+    let yourUsdcTokenAccount;
+    let yourRayTokenAccount;
     it("create user farm obligation", () => __awaiter(void 0, void 0, void 0, function* () {
-        let [_userFarmObligationVault, _userFarmObligationVaultNonce] = yield (0, utils_1.findUserFArmObligationVaultAddress)(userFarmAddress, new anchor.BN(0), tulipLeveragedFarmProgramId);
+        yourUsdcTokenAccount = yield (0, spl_token_1.getAssociatedTokenAddress)(usdcTokenMint, provider.wallet.publicKey);
+        yourRayTokenAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, provider.wallet.publicKey, rayTokenMint);
+        let [_userFarmObligationVault, _userFarmObligationVaultNonce] = yield (0, utils_1.findUserFArmObligationVaultAddress)(userFarmAddress, new anchor.BN(1), tulipLeveragedFarmProgramId);
         userFarmObligation2VaultAddress = _userFarmObligationVault;
-        let [_userFarmObligation, _userFarmObligationNonce] = yield (0, utils_1.findUserFarmObligationAddress)(provider.wallet.publicKey, userFarmAddress, tulipLendingProgramId, new anchor.BN(0));
+        let [_userFarmObligation, _userFarmObligationNonce] = yield (0, utils_1.findUserFarmObligationAddress)(provider.wallet.publicKey, userFarmAddress, tulipLeveragedFarmProgramId, new anchor.BN(1));
         userFarmObligation2Address = _userFarmObligation;
+        const tx = yield program.rpc.createUserFarmObligation(new anchor.BN(0), new anchor.BN(1), {
+            options: {
+                skipPreflight: true,
+            },
+            accounts: {
+                authority: provider.wallet.publicKey,
+                userFarm: userFarmAddress,
+                userFarmObligation: userFarmObligation2Address,
+                lendingMarket: tulipLendingMarketAccount,
+                leveragedFarm: tulipRayUsdcLevFarmAccount,
+                clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+                rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+                systemProgram: anchor.web3.SystemProgram.programId,
+                lendingProgram: tulipLendingProgramId,
+                tokenProgram: splToken.TOKEN_PROGRAM_ID,
+                obligationVaultAddress: userFarmObligation2VaultAddress,
+                tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId,
+            }
+        });
+        console.log("sent create user farm token account tx ", tx);
+    }));
+    let positionInfoAccount;
+    it("deposits coin, borrow coin", () => __awaiter(void 0, void 0, void 0, function* () {
+        let [_posInfo, _posNonce] = yield (0, utils_1.findUserPositionInfoAddress)(userFarmAddress, tulipLeveragedFarmProgramId, new anchor.BN(0));
+        positionInfoAccount = _posInfo;
+        const tx = yield program.rpc.depositBorrowDual(one, new anchor.BN(0), one.div(new anchor.BN(2)), new anchor.BN(0), new anchor.BN(0), {
+            options: {
+                skipPreflight: true,
+            },
+            accounts: {
+                authority: provider.wallet.publicKey,
+                userFarm: userFarmAddress,
+                leveragedFarm: tulipRayUsdcLevFarmAccount,
+                userFarmObligation: userFarmObligation1Address,
+                coinSourceTokenAccount: yourUsdcTokenAccount,
+                coinDestinationTokenAccount: rayUsdcLevFarmBaseTokenAccount,
+                pcSourceTokenAccount: yourRayTokenAccount,
+                pcDestinationTokenAccount: rayUsdcLevFarmQuoteTokenAccount,
+                coinDepositReserveAccount,
+                pcDepositReserveAccount,
+                coinReserveLiquidityOracle,
+                pcReserveLiquidityOracle,
+                lendingMarketAccount: tulipLendingMarketAccount,
+                derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+                tokenProgram: splToken.TOKEN_PROGRAM_ID,
+                lendingProgram: tulipLendingProgramId,
+                coinSourceReserveLiquidityTokenAccount: tulipReserveLiquiditySupply,
+                pcSourceReserveLiquidityTokenAccount,
+                coinReserveLiquidityFeeReceiver,
+                pcReserveLiquidityFeeReceiver,
+                borrowAuthorizer,
+                lpPythPriceAccount,
+                vaultAccount: v1RayUsdcVaultAccount,
+                rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+                positionInfoAccount,
+                systemProgram: anchor.web3.SystemProgram.programId,
+                tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId
+            }
+        });
     }));
 }));
 const timer = ms => new Promise(res => setTimeout(res, ms));

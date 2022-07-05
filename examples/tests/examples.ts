@@ -759,8 +759,13 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
     const tx = await program.rpc.depositBorrowDual(
       one,
       new anchor.BN(0),
+      one.div(new anchor.BN(2)),
+      new anchor.BN(0),
       new anchor.BN(0),
       {
+        options: {
+          skipPreflight: true,
+        },
         accounts: {
           authority: provider.wallet.publicKey,
           userFarm: userFarmAddress,
@@ -787,8 +792,8 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
           vaultAccount: v1RayUsdcVaultAccount,
           rent: anchor.web3.SYSVAR_RENT_PUBKEY,
           positionInfoAccount,
-          systemProgram: anchor.web3.SystemProgram.programId
-
+          systemProgram: anchor.web3.SystemProgram.programId,
+          tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId
         }
       }
     )
