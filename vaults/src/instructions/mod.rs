@@ -15,10 +15,10 @@ pub const WITHDRAW_DEPOSIT_TRACKING_SIGHASH: [u8; 8] = [3, 232, 22, 105, 242, 88
 /// sighash used by the `withdraw_multi_deposit_optimizer_vault` instruction
 pub const WITHDRAW_MULTI_DEPOSIT_OPTIMIZER_VAULT_SIGHASH: [u8; 8] =
     [94, 147, 111, 141, 204, 247, 197, 86];
-/// sighash used by the `issue_shares` istruction
+/// sighash used by the `issue_shares` instruction
 pub const ISSUE_SHARES_SIGHASH: [u8; 8] = [110, 72, 179, 47, 131, 109, 115, 103];
 
-/// returns a new instruction used to regsiter a deposit tracking account
+/// returns a new instruction used to register a deposit tracking account
 /// with a given vault.
 pub fn new_register_deposit_tracking_account_ix(
     authority: Pubkey,
@@ -120,7 +120,7 @@ pub fn new_withdraw_deposit_tracking_ix(
 
 /// returns a new instruction to withdraw funds from the multi deposit optimizer vault.
 /// the `standalone_vault_accounts` argument are ProgramType specific accounts, which are
-/// expceted to be in the following order depending on the ProgramType.
+/// expected to be in the following order depending on the ProgramType.
 ///
 /// You may request a withdrawal from any of the standalone vaults which have a deposited
 /// balance greater than 0. It's up to the caller to decide which of the active standalone vaults to withdraw from.

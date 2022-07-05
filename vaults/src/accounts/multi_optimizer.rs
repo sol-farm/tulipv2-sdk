@@ -19,14 +19,14 @@ use type_layout::TypeLayout;
 pub const MULTI_DEPOSIT_OPTIMIZER_ACCOUNT_SIZE: usize = 2072;
 pub const MULTI_REBALANCE_TRANSITION_ACCOUNT_SIZE: usize = 408;
 /// the max number of allowed slots in between when a standalone vault
-/// rebase happens, and a multideposit rebase takes place.
+/// rebase happens, and a multi-deposit rebase takes place.
 ///
 /// 360 slots is approximately 3 minutes
 pub const STANDALONE_VAULT_REBASE_SLOT_WINDOW: u64 = 360;
 pub const MAX_STANDALONE_VAULTS: usize = 6;
 
 #[cfg_attr(not(target_arch = "bpf"), derive(Debug))]
-/// wrapper type of Vec<StandaloneVaultCacheV1> intented to be a return type
+/// wrapper type of Vec<StandaloneVaultCacheV1> intended to be a return type
 /// for vaults containing a deposit greater than 0
 pub struct ActiveStandaloneVaults(Vec<StandaloneVaultCacheV1>);
 
@@ -39,10 +39,10 @@ pub struct ActiveStandaloneVaults(Vec<StandaloneVaultCacheV1>);
 /// multi-platform farming
 pub struct MultiDepositOptimizerV1 {
     pub base: VaultBaseV1,
-    /// the slot at which a rebase last occured
+    /// the slot at which a rebase last occurred
     pub last_rebase_slot: u64,
     /// standalone vaults providing specific lending functionality
-    /// for a given asset to a given paltform. for example Tulip USDC
+    /// for a given asset to a given platform. for example Tulip USDC
     /// would be a standalone vault for Tulip USDC lending
     pub standalone_vaults: [StandaloneVaultCacheV1; 6],
     /// the standalone that incoming funds which are in the deposit queue
@@ -66,10 +66,10 @@ pub struct MultiDepositOptimizerV1 {
 /// that is part of a multi-deposit lending optimizer
 pub struct StandaloneVaultCacheV1 {
     /// the address of the member vault account
-    /// that is, the address of the LendingOptimiverV1 vault
+    /// that is, the address of the LendingOptimizerV1 vault
     pub vault_address: Pubkey,
     /// the amount of underlying asset which has been
-    /// depositedi nto this member vault
+    /// deposited into this member vault
     pub deposited_balance: u64,
     /// the program type being farmed by this member vault
     pub program_type: ProgramType,
@@ -86,12 +86,12 @@ pub struct StandaloneVaultCacheV1 {
     pub buffer: [u64; 6],
 }
 
-#[account] // not zero copy so we dont care about padding
+#[account] // not zero copy so we don't care about padding
 #[cfg_attr(not(target_arch = "bpf"), derive(Derivative))]
 #[cfg_attr(not(target_arch = "bpf"), derive(TypeLayout))]
 #[cfg_attr(not(target_arch = "bpf"), derivative(Debug))]
 pub struct RebalanceStateTransitionV1 {
-    /// the address of the muli deposit optimizer this transition account belongs too
+    /// the address of the multi-deposit optimizer this transition account belongs too
     pub optimizer_vault: Pubkey,
     /// amount to remove from vault/platform_a
     /// this is used for internal tracking, and will not represent the
@@ -136,7 +136,7 @@ impl super::Base for MultiDepositOptimizerV1 {
     }
     /// unlike the majority of other vault implementations
     /// the lending optimizer initializes deposits, withdraws
-    /// and compoudning to disabled
+    /// and compounding to disabled
     fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
@@ -197,7 +197,7 @@ impl MultiDepositOptimizerV1 {
         }
         Ok(top_two)
     }
-    /// returns the bottom two standalone vaults sorted in ascendign order of total_deposited_balance
+    /// returns the bottom two standalone vaults sorted in ascending order of total_deposited_balance
     /// returns an InsufficientFunds if no vaults have deposits
     pub fn bottom_two_deposits(&self) -> Result<[StandaloneVaultCacheV1; 2]> {
         // filter our standalone vaults with a default_key as the address
@@ -354,7 +354,7 @@ impl ActiveStandaloneVaults {
     pub fn bottom_two(&self) -> [StandaloneVaultCacheV1; 2] {
         // the index of the first non zero deposited balance vault
         // handle the best case scenario where we have a deposit into all vaults first
-        // as its the shorest path
+        // as its the shortest path
         let mut first_non_zero_idx = 0;
         for (idx, vault) in self.0.iter().enumerate() {
             if vault.deposited_balance > 0 {

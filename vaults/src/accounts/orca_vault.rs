@@ -70,7 +70,7 @@ pub struct OrcaVaultDataV1 {
     /// the pool's account that's used to store the amm information
     /// orca equivalent of raydium amm id, or serum market
     pub pool_swap_account: Pubkey,
-    /// the vault's token account for the reward otken
+    /// the vault's token account for the reward token
     /// given out by a farm
     pub vault_reward_token_account: Pubkey,
     /// the vault's farm token account, which is the token
@@ -128,7 +128,7 @@ impl super::Base for OrcaVaultV1 {
     }
     /// unlike the majority of other vault implementations
     /// the lending optimizer initializes deposits, withdraws
-    /// and compoudning to disabled
+    /// and compounding to disabled
     fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
@@ -161,7 +161,7 @@ impl super::Base for OrcaDoubleDipVaultV1 {
     }
 }
 
-/// used to derive the address of the double dip compound queue acocount
+/// used to derive the address of the double dip compound queue account
 /// it holds the aquafarm tokens which will be compounded into double dips
 pub fn derive_dd_compound_queue_address(vault: &Pubkey, farm_token_mint: &Pubkey) -> (Pubkey, u8) {
     Pubkey::find_program_address(

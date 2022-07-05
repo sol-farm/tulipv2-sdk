@@ -53,7 +53,7 @@ pub struct InitFeeArgsV1;
 /// derive the address of a vault, using the tag as an additional seed. while the
 /// tag can be up any series of `u8`'s up to 32 bytes in length, it is intended to be used
 /// with strings. there is no hard requirements for the format of this tag, however it is
-/// recommended that if the tag is 31 bytes or less, you use a newline delimiater (\n)
+/// recommended that if the tag is 31 bytes or less, you use a newline delimiter (\n)
 /// so that UI, and other clients can render the data correctly
 pub fn derive_vault_address(farm: &tulipv2_sdk_farms::Farm, tag: [u8; 32]) -> (Pubkey, u8) {
     let parts: [u64; 2] = (*farm).into();
@@ -287,7 +287,7 @@ mod test {
         assert_eq!(queue_nonce, 253);
 
         let (c_queue, c_queue_nonce) = derive_compound_queue_address(&vault, &DEFAULT_KEY);
-        println!("c queue {}, c queue noce {}", c_queue, c_queue_nonce);
+        println!("c queue {}, c queue nonce {}", c_queue, c_queue_nonce);
         assert_eq!(
             c_queue.to_string(),
             "4x6xMfuuBzvHTFz18N3oB7TviwJQ1JRhQEewnsuUWqrF".to_string()
