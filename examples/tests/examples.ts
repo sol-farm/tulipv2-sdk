@@ -799,7 +799,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
         }
       }
     )
-    console.log("sent deposit_dual_borrw tx ", sig);
+    console.log("sent deposit_dual_borrw tx ", tx);
   })
 })
 
