@@ -320,7 +320,6 @@ describe("examples", () => {
       provider.wallet.publicKey,
       usdcv1SharesMint
     );
-    return;
     let tx = await program.rpc.issueShares(
       one.mul(new anchor.BN(4)),
       [new anchor.BN(1), new anchor.BN(65537)],
@@ -352,7 +351,7 @@ describe("examples", () => {
     console.log("in production this would fail, as 15 minutes need to pass before lockup is expired")
     let tx = await program.rpc.withdrawDepositTracking(
       // fixed amount we get for 10 USDC based on the program state which has been dumped to disk
-      new anchor.BN(8972072),
+      new anchor.BN(3987587),
       [new anchor.BN(1), new anchor.BN(65537)],
       {
         options: {skipPreflight: true},
@@ -374,7 +373,7 @@ describe("examples", () => {
   });
   it("withdraws multi deposit vault through tulip", async () => {
     let tx = await program.rpc.withdrawMultiDepositVaultThroughTulip(
-      new anchor.BN(8972072),
+      new anchor.BN(3987587),
       {
         options: {skipPreflight: true},
         accounts: {
@@ -446,7 +445,7 @@ describe("examples", () => {
   });
   it("withdraws multi deposit vault through mango", async () => {
     program.rpc.withdrawMultiDepositVaultThroughMango(
-      new anchor.BN(8972072),
+      new anchor.BN(3987587),
       {
         options: {skipPreflight: true},
         accounts: {
@@ -489,7 +488,7 @@ describe("examples", () => {
   });
   it("withdraws multi deposit vault through solend", async () => {
    program.rpc.withdrawMultiDepositVaultThroughSolend(
-      new anchor.BN(8972072),
+      new anchor.BN(3987587),
       {
         options: {skipPreflight: true},
         accounts: {
@@ -581,7 +580,6 @@ describe("test lending instructions via usdc ", async () => {
   })
 
   it("deposits reserve liquidity", async () => {
-    return;
     yourCollateralTokenAccount = await createAssociatedTokenAccount(
       provider,
       provider.wallet.publicKey,
@@ -759,7 +757,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
     positionInfoAccount = _posInfo;
     const tx = await program.rpc.depositBorrowDual(
       new anchor.BN(0),
-      one.mul(new anchor.BN(10)),
+      one.mul(new anchor.BN(4)),
       one,
       new anchor.BN(0),
       new anchor.BN(0),
