@@ -578,6 +578,10 @@ pub mod examples {
         )?;
         Ok(())
     }
+    pub fn deposit_raydium_vault<'info>(
+        ctx: Context<DepositFarm>,
+
+    )
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -1035,4 +1039,67 @@ pub struct DepositBorrowDual<'info> {
     pub system_program: AccountInfo<'info>,
     /// CHECK: .
     pub tulip_leveraged_farm_program: AccountInfo<'info>,
+}
+
+
+#[derive(Accounts)]
+pub struct DepositFarm<'info> {
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_farm: Loader<'info, UserFarm>,
+    #[account(mut)]
+    pub obligation_vault_address: AccountInfo<'info>,
+    #[account(mut)]
+    pub leveraged_farm: Loader<'info, LeveragedFarm>,
+    pub vault_program: AccountInfo<'info>,
+
+    #[account(mut)]
+    // the lp token account owned by authority
+    pub authority_token_account: CpiAccount<'info, TokenAccount>,
+    #[account(mut)]
+    // the account of the vault pda
+    vpub ault_pda_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub vault: AccountInfo<'info>,
+    #[account(mut)]
+    // lp token account owned by vault pda which holds the lp tokens
+    pub lp_token_account: AccountInfo<'info>,
+
+    #[account(mut)]
+    pub user_balance_account: AccountInfo<'info>,
+
+    pub system_program: AccountInfo<'info>,
+
+    pub stake_program_id: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_id: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_info_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_lp_token_account: AccountInfo<'info>,
+
+    #[account(mut)]
+    pub user_reward_a_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_reward_a_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_reward_b_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_reward_b_token_account: AccountInfo<'info>,
+
+    pub clock: AccountInfo<'info>,
+    pub rent: AccountInfo<'info>,
+    pub token_program_id: AccountInfo<'info>,
+
+    #[account(mut)]
+    pub user_balance_metadata: AccountInfo<'info>,
+
+    pub lending_market_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_farm_obligation: AccountInfo<'info>,
+    pub lending_market_authority: AccountInfo<'info>,,
+    pub lending_program: AccountInfo<'info>,
 }
