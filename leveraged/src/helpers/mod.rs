@@ -1,4 +1,4 @@
-use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::deposit_borrow_dual};
+use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault}};
 
 use super::*;
 use anchor_lang::prelude::*;
@@ -104,6 +104,16 @@ pub fn new_deposit_borrow_dual_ix(
         pc_borrow_amount,
         obligation_index,
     )
+}
+
+
+pub fn new_deposit_raydium_vault_ix(
+    accounts: deposit_raydium_vault::DepositFarm,
+    nonce: u8,
+    meta_nonce: u8,
+    obligation_index: u64,
+) -> Option<Instruction> {
+None
 }
 
 pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
