@@ -750,7 +750,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
     console.log("sent create user farm token account tx ", tx)
   })
   let positionInfoAccount: anchor.web3.PublicKey;
-  it("deposits coin, borrow coin", async () => {
+  it("deposits pc, borrow pc", async () => {
     let [_posInfo, _posNonce] = await findUserPositionInfoAddress(
       userFarmAddress,
       tulipLeveragedFarmProgramId,
@@ -760,8 +760,8 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
     const tx = await program.rpc.depositBorrowDual(
       new anchor.BN(0),
       one.mul(new anchor.BN(10)),
+      one,
       new anchor.BN(0),
-      one.div(new anchor.BN(2)),
       new anchor.BN(0),
       {
         options: {
@@ -784,7 +784,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
           derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
           tokenProgram: splToken.TOKEN_PROGRAM_ID,
           lendingProgram: tulipLendingProgramId,
-          coinSourceReserveLiquidityTokenAccount: tulipReserveLiquiditySupply,
+          coinSourceReserveLiquidityTokenAccount,
           pcSourceReserveLiquidityTokenAccount,
           coinReserveLiquidityFeeReceiver,
           pcReserveLiquidityFeeReceiver,
@@ -799,6 +799,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
         }
       }
     )
+    console.log("sent deposit_dual_borrw tx ", sig);
   })
 })
 
