@@ -237,7 +237,7 @@ const v1RayUsdcVaultAccount = new anchor.web3.PublicKey("HvNpbHuQUqGG748ZzgzcH52
 
 
 
-const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+//const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 const one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 
 describe("examples", () => {
@@ -256,7 +256,6 @@ describe("examples", () => {
   let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
   let yourSharesTokenAccount: anchor.web3.PublicKey;
 
-  let nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
   it("registers deposit tracking account", async () => {
     console.log("progrmaId ", programId);
     console.log("usdcv1 vault ", usdcv1Vault);
@@ -322,7 +321,7 @@ describe("examples", () => {
       usdcv1SharesMint
     );
     let tx = await program.rpc.issueShares(
-      nine,
+      one.mul(new anchor.BN(4)),
       [new anchor.BN(1), new anchor.BN(65537)],
       {
         options: {
@@ -757,10 +756,10 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
     );
     positionInfoAccount = _posInfo;
     const tx = await program.rpc.depositBorrowDual(
+      one.mul(new anchor.BN(4)),
+      new anchor.BN(0),
+      new anchor.BN(0),
       one,
-      new anchor.BN(0),
-      one.div(new anchor.BN(2)),
-      new anchor.BN(0),
       new anchor.BN(0),
       {
         options: {
