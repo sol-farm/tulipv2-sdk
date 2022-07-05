@@ -6,6 +6,8 @@ pub mod ray_usdc;
 
 pub const GLOBAL: Pubkey = static_pubkey!("HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8VdJKqjF");
 pub const LENDING_PROGRAM: Pubkey = static_pubkey!("4bcFeLv4nydFrsZqV5CgwCVrPhkQKsXtzfy2KyMz7ozM");
+pub const ORCA_VAULT_PROGRAM: Pubkey = static_pubkey!("FoNqK2xudK7TfKjPFxpzAcTaU2Wwyt81znT4RjJBLFQp");
+pub const RAYDIUM_VAULT_PROGRAM: Pubkey = static_pubkey!("7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4");
 
 pub struct LevFarmConfig {
     pub lending_program: Pubkey,
@@ -40,4 +42,7 @@ pub struct LevFarmConfig {
     pub pc_reserve_fee_receiver: Pubkey,
     pub base_reserve: Pubkey,
     pub quote_reserve: Pubkey,
+    pub solfarm_vault_program: Pubkey,
+    pub base_token_mint: Pubkey,
+    pub quote_token_mint: Pubkey,
 }

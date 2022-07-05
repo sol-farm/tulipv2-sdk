@@ -359,7 +359,7 @@ export async function sleep(ms) {
 export async function findUserFarmObligationAddress(
   authority: anchor.web3.PublicKey,
   userFarmAddr: anchor.web3.PublicKey,
-  lendingProgramId: anchor.web3.PublicKey,
+  programId: anchor.web3.PublicKey,
   obligationIndex: anchor.BN,
 ): Promise<[anchor.web3.PublicKey, number]> {
   let seeds = [
@@ -369,7 +369,7 @@ export async function findUserFarmObligationAddress(
   ]
   return anchor.web3.PublicKey.findProgramAddress(
       seeds,
-      lendingProgramId,
+      programId,
   )
 }
 

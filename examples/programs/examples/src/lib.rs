@@ -416,10 +416,94 @@ pub mod examples {
         ctx: Context<CreateUserFarm>,
         farm: u64,
     ) -> Result<()> {
+        {
+            let ix = spl_associated_token_account::create_associated_token_account(
+                ctx.accounts.authority.key,
+                ctx.accounts.user_farm.key,
+                ctx.accounts.lp_token_mint.key,
+            );
+            anchor_lang::solana_program::program::invoke(
+                &ix,
+                &[
+                    ctx.accounts.authority.clone(),
+                    ctx.accounts.user_farm.clone(),
+                    ctx.accounts.lp_token_mint.clone(),
+                    ctx.accounts.token_program.clone(),
+                    ctx.accounts.user_farm_lp_token_account.clone(),
+                    ctx.accounts.rent.clone(),
+                ]
+            )?
+        }
+        {
+            let ix = spl_associated_token_account::create_associated_token_account(
+                ctx.accounts.authority.key,
+                ctx.accounts.user_farm.key,
+                ctx.accounts.base_token_mint.key,
+            );
+            anchor_lang::solana_program::program::invoke(
+                &ix,
+                &[
+                    ctx.accounts.authority.clone(),
+                    ctx.accounts.user_farm.clone(),
+                    ctx.accounts.base_token_mint.clone(),
+                    ctx.accounts.token_program.clone(),
+                    ctx.accounts.user_farm_base_token_account.clone(),
+                    ctx.accounts.rent.clone(),
+                ]
+            )?
+        }
+        {
+            let ix = spl_associated_token_account::create_associated_token_account(
+                ctx.accounts.authority.key,
+                ctx.accounts.user_farm.key,
+                ctx.accounts.quote_token_mint.key,
+            );
+            anchor_lang::solana_program::program::invoke(
+                &ix,
+                &[
+                    ctx.accounts.authority.clone(),
+                    ctx.accounts.user_farm.clone(),
+                    ctx.accounts.quote_token_mint.clone(),
+                    ctx.accounts.token_program.clone(),
+                    ctx.accounts.user_farm_quote_token_account.clone(),
+                    ctx.accounts.rent.clone(),
+                ]
+            )?
+        }
         let farm = tulipv2_sdk_levfarm::accounts::Farms::from(farm);
         let ix = tulipv2_sdk_levfarm::helpers::new_create_user_farm_ix(
             ctx.accounts.authority.key(),
             farm,
+        ).unwrap();
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &[
+                ctx.accounts.authority.clone(),
+                ctx.accounts.user_farm.clone(),
+                ctx.accounts.user_farm_obligation.clone(),
+                ctx.accounts.lending_market.clone(),
+                ctx.accounts.global.clone(),
+                ctx.accounts.leveraged_farm.clone(),
+                ctx.accounts.clock.clone(),
+                ctx.accounts.rent.clone(),
+                ctx.accounts.system_program.clone(),
+                ctx.accounts.lending_program.clone(),
+                ctx.accounts.token_program.clone(),
+                ctx.accounts.obligation_vault_address.clone(),
+            ]
+        )?;
+        Ok(())
+    }
+    pub fn create_user_farm_obligation<'info>(
+        ctx: Context<CreateUserFarmObligation>,
+        farm: u64,
+        obligation_index: u64,
+    ) -> Result<()> {
+        let farm = tulipv2_sdk_levfarm::accounts::Farms::from(farm);
+        let ix = tulipv2_sdk_levfarm::helpers::new_create_user_farm_obligation_ix(
+            ctx.accounts.authority.key(),
+            farm,
+            obligation_index,
         ).unwrap();
         anchor_lang::solana_program::program::invoke(
             &ix,
@@ -748,4 +832,55 @@ pub struct CreateUserFarm<'info> {
     /// CHECK: .
     #[account(mut)]
     pub obligation_vault_address: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm_lp_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm_base_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm_quote_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    /// CHECK: .
+    pub lp_token_mint: AccountInfo<'info>,
+    /// CHECK: .
+    pub base_token_mint: AccountInfo<'info>,
+    /// CHECK: .
+    pub quote_token_mint: AccountInfo<'info>,
+    /// CHECK: .
+    pub associated_token_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub tulip_leveraged_farm_program: AccountInfo<'info>,
+}
+
+#[derive(Accounts)]
+pub struct CreateUserFarmObligation<'info> {
+    #[account(signer)]
+    /// CHECK: .
+    pub authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm: AccountInfo<'info>,
+    /// CHECK: .
+    pub leveraged_farm: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm_obligation: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub lending_market: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub obligation_vault_address: AccountInfo<'info>,
+    /// CHECK: .
+    pub clock: Sysvar<'info, Clock>,
+    /// CHECK: .
+    pub rent: Sysvar<'info, Rent>,
+    /// CHECK: .
+    pub lending_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub system_program: AccountInfo<'info>,
 }

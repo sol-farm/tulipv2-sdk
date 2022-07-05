@@ -115,7 +115,9 @@ program = "./deps/atrix/farm.so"
 [[test.genesis]]
 address = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
 program = "./deps/misc/associated_token.so"
-
+[[test.genesis]]
+address = "Bt2WPMmbwHPk36i4CRucNDyLcmoGdC7xEdrVuxgJaNE6"
+program = "./deps/tulip/lev_farm.so"
 
 ##############
 # token mints
@@ -1324,7 +1326,9 @@ address = "GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd"
 filename = "deps/accounts/GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd.json"
 
 
-
+[[test.validator.account]] # ray-usdc lev farm accounts
+address = "84ayseJgpJavzfeESgRdyfMoDo2bs4J2YUBjMT4iTs66"
+filename = "deps/accounts/84ayseJgpJavzfeESgRdyfMoDo2bs4J2YUBjMT4iTs66.json"
 [[test.validator.account]] # ray-usdc raydium v1 vault account
 address = "HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG"
 filename = "deps/accounts/HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG.json"

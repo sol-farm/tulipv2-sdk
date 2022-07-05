@@ -25,11 +25,12 @@ pub struct CreateUserFarm {
 
 pub fn create_user_farm(
     accounts: CreateUserFarm,
+    solfarm_vault_program: Pubkey,
 ) -> Option<Instruction> {
     let ix_sighash = GlobalSighashDB.get_deprecated("create_user_farm")?;
     let mut ix_data = Vec::with_capacity(40);
     ix_data.extend_from_slice(&ix_sighash[..]);
-    ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&crate::ID).unwrap());
+    ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&solfarm_vault_program).unwrap());
     Some(Instruction {
         program_id: crate::ID,
         accounts: accounts.to_account_metas(None),
@@ -38,7 +39,7 @@ pub fn create_user_farm(
 }
 
 impl ToAccountMetas for CreateUserFarm {
-    fn to_account_metas(&self, is_signer: Option<bool>) -> Vec<AccountMeta> {
+    fn to_account_metas(&self, _is_signer: Option<bool>) -> Vec<AccountMeta> {
         vec![
             AccountMeta::new(self.authority, true),
             AccountMeta::new(self.user_farm, false),

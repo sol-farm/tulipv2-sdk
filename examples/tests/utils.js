@@ -247,14 +247,14 @@ function sleep(ms) {
     });
 }
 exports.sleep = sleep;
-function findUserFarmObligationAddress(authority, userFarmAddr, lendingProgramId, obligationIndex) {
+function findUserFarmObligationAddress(authority, userFarmAddr, programId, obligationIndex) {
     return __awaiter(this, void 0, void 0, function* () {
         let seeds = [
             authority.toBuffer(),
             userFarmAddr.toBuffer(),
             obligationIndex.toArrayLike(Buffer, "le", 8),
         ];
-        return anchor.web3.PublicKey.findProgramAddress(seeds, lendingProgramId);
+        return anchor.web3.PublicKey.findProgramAddress(seeds, programId);
     });
 }
 exports.findUserFarmObligationAddress = findUserFarmObligationAddress;

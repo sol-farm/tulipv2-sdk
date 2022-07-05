@@ -2,12 +2,12 @@ use anchor_lang::solana_program;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use static_pubkey::static_pubkey;
 
-use super::{LevFarmConfig, GLOBAL, LENDING_PROGRAM};
+use super::{LevFarmConfig, GLOBAL, LENDING_PROGRAM, RAYDIUM_VAULT_PROGRAM};
 
 /// configuration variables for the leverage farm program
 pub mod farm_config {
     use super::*;
-    pub const ACCOUNT: Pubkey = static_pubkey!("5NvAB6MzoVBPVC2BgzL7ZkyRZjvZjpy5kYax1pGtrfdi");
+    pub const ACCOUNT: Pubkey = static_pubkey!("84ayseJgpJavzfeESgRdyfMoDo2bs4J2YUBjMT4iTs66");
     pub const VAULT_ACCOUNT: Pubkey = static_pubkey!("HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG");
     pub const BASE_TOKEN_ACCOUNT: Pubkey = static_pubkey!("9k3gGV5WCWug8BNCemv3McAC12p8Tqhxb6GN5hBkmfDE");
     pub const QUOTE_TOKEN_ACCOUNT: Pubkey = static_pubkey!("2nHaWRW4PkutKbpDGvVwJ2JkcW1dKA6gMgLv4rPAmqLk");
@@ -25,6 +25,8 @@ pub mod market_config {
     pub const SERUM_FEE_RECEIVER: Pubkey = static_pubkey!("PgjTxGVTmFGQjGX8DrETmT68hRt6Jyps4SFTnxJcf3S");
     pub const SERUM_OPEN_ORDERS: Pubkey = static_pubkey!("CAjCs8wTVXg28ViAxsECxAa7WiwZU53rnWLiNikBeXG3");
     pub const LP_MINT: Pubkey = static_pubkey!("FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m");
+    pub const COIN_TOKEN_MINT: Pubkey = static_pubkey!("4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R");
+    pub const PC_TOKEN_MINT: Pubkey = static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
     pub const AMM_ID: Pubkey = static_pubkey!("6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg");
     pub const AMM_OPEN_ORDERS: Pubkey = static_pubkey!("J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW");
     pub const AMM_QUANTITIES_OR_TARGET_ORDERS: Pubkey = static_pubkey!("3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT");
@@ -87,5 +89,8 @@ pub fn get_lev_farm_config() -> LevFarmConfig {
         pc_reserve_fee_receiver: PC_RESERVE_FEE_RECEIVER, 
         base_reserve: BASE_RESERVE, 
         quote_reserve: QUOTE_RESERVE,
+        solfarm_vault_program: RAYDIUM_VAULT_PROGRAM,
+        base_token_mint: COIN_TOKEN_MINT,
+        quote_token_mint: PC_TOKEN_MINT,
     }
 }
