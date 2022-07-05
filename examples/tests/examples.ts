@@ -39,6 +39,7 @@ import {
   findUserFarmAddress,
   findUserFArmObligationVaultAddress,
   findUserFarmObligationAddress,
+  findUserPositionInfoAddress,
 } from "./utils";
 import { findProgramAddressSync } from "@project-serum/anchor/dist/cjs/utils/pubkey";
 import { ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
@@ -220,6 +221,24 @@ const tulipRayUsdcLevFarmAccount = new anchor.web3.PublicKey(
 )
 const rayUsdcLpTokenMint = new anchor.web3.PublicKey("FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m")
 const rayTokenMint = new anchor.web3.PublicKey("4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R");
+const rayUsdcLevFarmBaseTokenAccount = new anchor.web3.PublicKey("9k3gGV5WCWug8BNCemv3McAC12p8Tqhxb6GN5hBkmfDE")
+const rayUsdcLevFarmQuoteTokenAccount = new anchor.web3.PublicKey("2nHaWRW4PkutKbpDGvVwJ2JkcW1dKA6gMgLv4rPAmqLk");
+const borrowAuthorizer = new anchor.web3.PublicKey("Gp1oj71gwapSBjSQoPkWxEyjXxDxrtBVe1ijsVThknXT");
+const coinDepositReserveAccount = new anchor.web3.PublicKey("9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF");
+const pcDepositReserveAccount = new anchor.web3.PublicKey("FTkSmGsJ3ZqDSHdcnY7ejN1pWV3Ej7i88MYpZyyaqgGt");
+const coinReserveLiquidityOracle = new anchor.web3.PublicKey("83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF");
+const pcReserveLiquidityOracle = new anchor.web3.PublicKey("ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB");
+const lpPythPriceAccount = new anchor.web3.PublicKey("AV5GeH126btrRE9uq36tZWjdgCuLc1DdzKEatdjmoNex");
+const coinSourceReserveLiquidityTokenAccount = new anchor.web3.PublicKey("9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y");
+const pcSourceReserveLiquidityTokenAccount = new anchor.web3.PublicKey("64QJd6MYXUjCBvCaZKaqxiKmaMkPUdNonE1KuY1YoGGb");
+const coinReserveLiquidityFeeReceiver = new anchor.web3.PublicKey("4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj");
+const pcReserveLiquidityFeeReceiver = new anchor.web3.PublicKey("GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU");
+const v1RayUsdcVaultAccount = new anchor.web3.PublicKey("HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG");
+
+
+
+const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+const one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 
 describe("examples", () => {
   let provider = anchor.AnchorProvider.env();
@@ -551,10 +570,6 @@ describe("test lending instructions via usdc ", async () => {
   const program = anchor.workspace.Examples as Program<Examples>;
 
   const programId = program.programId;
-
-  let nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
-  let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
-
   let yourCollateralTokenAccount: anchor.web3.PublicKey;
   let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
 
@@ -687,8 +702,18 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
   })
   let userFarmObligation2VaultAddress: anchor.web3.PublicKey;
   let userFarmObligation2Address: anchor.web3.PublicKey;
+  let yourUsdcTokenAccount: anchor.web3.PublicKey;
+  let yourRayTokenAccount: anchor.web3.PublicKey;
   it("create user farm obligation", async () => {
-
+    yourUsdcTokenAccount =  await getAssociatedTokenAddress(
+      usdcTokenMint,
+      provider.wallet.publicKey,
+    )
+    yourRayTokenAccount = await createAssociatedTokenAccount(
+      provider,
+      provider.wallet.publicKey,
+      rayTokenMint,
+    )
     let [_userFarmObligationVault, _userFarmObligationVaultNonce] = await findUserFArmObligationVaultAddress(
       userFarmAddress,
       new anchor.BN(1),
@@ -722,6 +747,51 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
       }
     })
     console.log("sent create user farm token account tx ", tx)
+  })
+  let positionInfoAccount: anchor.web3.PublicKey;
+  it("deposits coin, borrow coin", async () => {
+    let [_posInfo, _posNonce] = await findUserPositionInfoAddress(
+      userFarmAddress,
+      tulipLeveragedFarmProgramId,
+      new anchor.BN(0)
+    );
+    positionInfoAccount = _posInfo;
+    const tx = await program.rpc.depositBorrowDual(
+      one,
+      new anchor.BN(0),
+      new anchor.BN(0),
+      {
+        accounts: {
+          authority: provider.wallet.publicKey,
+          userFarm: userFarmAddress,
+          leveragedFarm: tulipRayUsdcLevFarmAccount,
+          userFarmObligation: userFarmObligation1Address,
+          coinSourceTokenAccount: yourUsdcTokenAccount,
+          coinDestinationTokenAccount: rayUsdcLevFarmBaseTokenAccount,
+          pcSourceTokenAccount: yourRayTokenAccount,
+          pcDestinationTokenAccount: rayUsdcLevFarmQuoteTokenAccount,
+          coinDepositReserveAccount,
+          pcDepositReserveAccount,
+          coinReserveLiquidityOracle,
+          pcReserveLiquidityOracle,
+          lendingMarketAccount: tulipLendingMarketAccount,
+          derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+          tokenProgram: splToken.TOKEN_PROGRAM_ID,
+          lendingProgram: tulipLendingProgramId,
+          coinSourceReserveLiquidityTokenAccount: tulipReserveLiquiditySupply,
+          pcSourceReserveLiquidityTokenAccount,
+          coinReserveLiquidityFeeReceiver,
+          pcReserveLiquidityFeeReceiver,
+          borrowAuthorizer,
+          lpPythPriceAccount,
+          vaultAccount: v1RayUsdcVaultAccount,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+          positionInfoAccount,
+          systemProgram: anchor.web3.SystemProgram.programId
+
+        }
+      }
+    )
   })
 })
 

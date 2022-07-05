@@ -11,6 +11,8 @@ use tulipv2_sdk_vaults::instructions::{
     new_withdraw_deposit_tracking_ix, new_withdraw_multi_deposit_optimizer_vault_ix,
 };
 
+pub mod implementations;
+
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
@@ -524,6 +526,15 @@ pub mod examples {
         )?;
         Ok(())
     }
+    pub fn deposit_borrow_dual<'info>(
+        ctx: Context<DepositBorrowDual<'info>>,
+        coin_borrow: u64,
+        pc_borrow: u64,
+        obligation_index: u64,
+    ) -> Result<()> {
+        let deposit_borrow_dual: tulipv2_sdk_levfarm::instructions::deposit_borrow_dual::DepositBorrowDual = ctx.accounts.into();
+        Ok(())
+    }
 }
 #[derive(Accounts)]
 pub struct RedeemReserveLiquidity<'info> {
@@ -898,4 +909,74 @@ pub struct CreateUserFarmObligation<'info> {
     pub system_program: AccountInfo<'info>,
     /// CHECK: .
     pub tulip_leveraged_farm_program: AccountInfo<'info>,
+}
+
+#[derive(Accounts)]
+pub struct DepositBorrowDual<'info> {
+    #[account(signer)]
+    /// CHECK: .
+    pub authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm: AccountInfo<'info>,
+    /// CHECK: .
+    pub leveraged_farm: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm_obligation: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub coin_source_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub coin_destination_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pc_source_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pc_destination_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub coin_deposit_reserve_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pc_deposit_reserve_account: AccountInfo<'info>,
+    /// CHECK: .
+    pub coin_reserve_liquidity_oracle: AccountInfo<'info>,
+    /// CHECK: .
+    pub pc_reserve_liquidity_oracle: AccountInfo<'info>,
+    /// CHECK: .
+    pub lending_market_account: AccountInfo<'info>,
+    /// CHECK: .
+    pub derived_lending_market_authority: AccountInfo<'info>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub lending_program: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub coin_source_reserve_liquidity_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pc_source_reserve_liquidity_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub coin_reserve_liquidity_fee_receiver: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pc_reserve_liquidity_fee_receiver: AccountInfo<'info>,
+    /// CHECK: .
+    pub borrow_authorizer: AccountInfo<'info>,
+    /// CHECK: .
+    pub lp_pyth_price_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub vault_account: AccountInfo<'info>,
+    /// CHECK: .
+    pub rent: AccountInfo<'info>,
+    /// CHECK: .
+    pub position_info_account: AccountInfo<'info>,
+    /// CHECK: .
+    pub system_program: AccountInfo<'info>,
 }

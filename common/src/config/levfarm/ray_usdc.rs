@@ -40,13 +40,17 @@ pub mod reserve_config {
     use super::*;
     pub const LENDING_MARKET: Pubkey = static_pubkey!("D1cqtVThyebK9KXKGXrCEuiqaNf5L4UfM1vHgCqiJxym");
     pub const LENDING_MARKET_AUTHORITY: Pubkey = static_pubkey!("8gEGZbUfVE1poBq71VHKX9LU7ca4x8wTUyZgcbyQe51s");
-    pub const LP_PRICE_ACCOUNT: Pubkey = static_pubkey!("AV5GeH126btrRE9uq36tZWjdgCuLc1DdzKEatdjmoNex");
-    pub const COIN_PRICE_ACCOUNT: Pubkey = static_pubkey!("83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF");
-    pub const PC_PRICE_ACCOUNT: Pubkey = static_pubkey!("ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB");
+    pub const PYTH_LP_PRICE_ACCOUNT: Pubkey = static_pubkey!("AV5GeH126btrRE9uq36tZWjdgCuLc1DdzKEatdjmoNex");
+    pub const PYTH_COIN_PRICE_ACCOUNT: Pubkey = static_pubkey!("83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF");
+    pub const PYTH_PC_PRICE_ACCOUNT: Pubkey = static_pubkey!("ExzpbWgczTgd8J58BrnESndmzBkRVfc6PhFjSGiQXgAB");
     pub const COIN_RESERVE_FEE_RECEIVER: Pubkey = static_pubkey!("4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj");
     pub const PC_RESERVE_FEE_RECEIVER: Pubkey = static_pubkey!("GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU");
     pub const BASE_RESERVE: Pubkey = static_pubkey!("9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF");
     pub const QUOTE_RESERVE: Pubkey = static_pubkey!("FTkSmGsJ3ZqDSHdcnY7ejN1pWV3Ej7i88MYpZyyaqgGt");
+    pub const BASE_RESERVE_LIQUIDITY_SUPPLY: Pubkey = static_pubkey!("9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y");
+    pub const QUOTE_RESERVE_LIQUIDITY_SUPPLY: Pubkey = static_pubkey!("64QJd6MYXUjCBvCaZKaqxiKmaMkPUdNonE1KuY1YoGGb");
+    pub const BASE_RESERVE_COLLATERAL_MINT: Pubkey = static_pubkey!("8Lg7TowFuMQoGiTsLE6qV9x3czRgDmVy8f8Vv8KS4uW");
+    pub const QUOTE_RESERVE_COLLATERAL_MINT: Pubkey = static_pubkey!("Amig8TisuLpzun8XyGfC5HJHHGUQEscjLgoTWsCCKihg");
 }
 
 
@@ -82,9 +86,9 @@ pub fn get_lev_farm_config() -> LevFarmConfig {
         amm_withdraw_queue: AMM_WITHDRAW_QUEUE,
         lending_market: LENDING_MARKET,
         lending_market_authority: LENDING_MARKET_AUTHORITY,
-        lp_price_account: LP_PRICE_ACCOUNT, 
-        coin_price_account: COIN_PRICE_ACCOUNT, 
-        pc_price_account: PC_PRICE_ACCOUNT, 
+        lp_price_account: PYTH_LP_PRICE_ACCOUNT, 
+        coin_price_account: PYTH_COIN_PRICE_ACCOUNT, 
+        pc_price_account: PYTH_PC_PRICE_ACCOUNT, 
         coin_reserve_fee_receiver: COIN_RESERVE_FEE_RECEIVER, 
         pc_reserve_fee_receiver: PC_RESERVE_FEE_RECEIVER, 
         base_reserve: BASE_RESERVE, 

@@ -8,6 +8,7 @@ pub const GLOBAL: Pubkey = static_pubkey!("HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8
 pub const LENDING_PROGRAM: Pubkey = static_pubkey!("4bcFeLv4nydFrsZqV5CgwCVrPhkQKsXtzfy2KyMz7ozM");
 pub const ORCA_VAULT_PROGRAM: Pubkey = static_pubkey!("FoNqK2xudK7TfKjPFxpzAcTaU2Wwyt81znT4RjJBLFQp");
 pub const RAYDIUM_VAULT_PROGRAM: Pubkey = static_pubkey!("7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4");
+pub const BORROW_AUTHORIZER: Pubkey = static_pubkey!("Gp1oj71gwapSBjSQoPkWxEyjXxDxrtBVe1ijsVThknXT");
 
 pub struct LevFarmConfig {
     pub lending_program: Pubkey,

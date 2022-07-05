@@ -1,4 +1,4 @@
-use crate::accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}};
+use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::deposit_borrow_dual};
 
 use super::*;
 use anchor_lang::prelude::*;
@@ -81,6 +81,29 @@ pub fn new_create_user_farm_obligation_ix(
         obligation_vault_address,
         user_farm_obligation,
     })
+}
+
+
+pub fn new_deposit_borrow_dual_ix(
+    accounts: deposit_borrow_dual::DepositBorrowDual,
+    position_info_account: Pubkey,
+    system_program: Pubkey,
+    coin_amount: u64,
+    pc_amount: u64,
+    coin_borrow_amount: u64,
+    pc_borrow_amount: u64,
+    obligation_index: u8,
+) -> Option<Instruction> {
+    deposit_borrow_dual::deposit_borrow_dual(
+        accounts,
+        position_info_account,
+        system_program,
+        coin_amount,
+        pc_amount,
+        coin_borrow_amount,
+        pc_borrow_amount,
+        obligation_index,
+    )
 }
 
 pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {

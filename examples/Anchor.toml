@@ -1407,4 +1407,7 @@ filename = "deps/accounts/4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj.json"
 [[test.validator.account]] # pc reserve fee receiver
 address = "GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU"
 filename = "deps/accounts/GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU.json"
+[[test.validator.account]] # base reserve liq supply
+address = "9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y"
+filename = "deps/accounts/9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y.json"
 ###############

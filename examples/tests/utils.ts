@@ -408,3 +408,16 @@ export async function findUserFArmObligationVaultAddress(
   ];
   return anchor.web3.PublicKey.findProgramAddress(seeds, farmProgramId)
 }
+
+export async function findUserPositionInfoAddress(
+  userFarmAddress: anchor.web3.PublicKey,
+  programId: anchor.web3.PublicKey,
+  obligationIndex: anchor.BN,
+): Promise<[anchor.web3.PublicKey, number]> {
+  let seeds = [
+    Buffer.from("position_info"),
+    userFarmAddress.toBuffer(),
+    obligationIndex.toArrayLike(Buffer, "le", 8),
+  ]
+  return anchor.web3.PublicKey.findProgramAddress(seeds, programId)
+}
