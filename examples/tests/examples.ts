@@ -320,6 +320,7 @@ describe("examples", () => {
       provider.wallet.publicKey,
       usdcv1SharesMint
     );
+    return;
     let tx = await program.rpc.issueShares(
       one.mul(new anchor.BN(4)),
       [new anchor.BN(1), new anchor.BN(65537)],
@@ -580,6 +581,7 @@ describe("test lending instructions via usdc ", async () => {
   })
 
   it("deposits reserve liquidity", async () => {
+    return;
     yourCollateralTokenAccount = await createAssociatedTokenAccount(
       provider,
       provider.wallet.publicKey,
@@ -756,10 +758,10 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
     );
     positionInfoAccount = _posInfo;
     const tx = await program.rpc.depositBorrowDual(
-      one.mul(new anchor.BN(4)),
       new anchor.BN(0),
+      one.mul(new anchor.BN(10)),
       new anchor.BN(0),
-      one,
+      one.div(new anchor.BN(2)),
       new anchor.BN(0),
       {
         options: {
@@ -770,9 +772,9 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
           userFarm: userFarmAddress,
           leveragedFarm: tulipRayUsdcLevFarmAccount,
           userFarmObligation: userFarmObligation1Address,
-          coinSourceTokenAccount: yourUsdcTokenAccount,
+          coinSourceTokenAccount: yourRayTokenAccount,
           coinDestinationTokenAccount: rayUsdcLevFarmBaseTokenAccount,
-          pcSourceTokenAccount: yourRayTokenAccount,
+          pcSourceTokenAccount: yourUsdcTokenAccount,
           pcDestinationTokenAccount: rayUsdcLevFarmQuoteTokenAccount,
           coinDepositReserveAccount,
           pcDepositReserveAccount,
