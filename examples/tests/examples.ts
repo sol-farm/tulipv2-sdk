@@ -794,6 +794,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
           positionInfoAccount,
           systemProgram: anchor.web3.SystemProgram.programId,
           tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId
+
         }
       }
     )

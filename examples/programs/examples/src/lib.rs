@@ -566,6 +566,7 @@ pub mod examples {
                 ctx.accounts.lending_program.clone(),
                 ctx.accounts.coin_source_reserve_liquidity_token_account.clone(),
                 ctx.accounts.pc_source_reserve_liquidity_token_account.clone(),
+                ctx.accounts.coin_reserve_liquidity_fee_receiver.clone(),
                 ctx.accounts.pc_reserve_liquidity_fee_receiver.clone(),
                 ctx.accounts.borrow_authorizer.clone(),
                 ctx.accounts.lp_pyth_price_account.clone(),
@@ -578,6 +579,16 @@ pub mod examples {
         Ok(())
     }
 }
+
+#[derive(AnchorSerialize, AnchorDeserialize)]
+pub struct DepositBorrowDualArgs {
+    coin_amount: u64,
+    pc_amount: u64,
+    coin_borrow: u64,
+    pc_borrow: u64,
+    obligation_index: u8,
+}
+
 #[derive(Accounts)]
 pub struct RedeemReserveLiquidity<'info> {
     /// CHECK: ..

@@ -64,7 +64,7 @@ pub fn deposit_borrow_dual(
 impl ToAccountMetas for DepositBorrowDual {
     fn to_account_metas(&self, _is_signer: Option<bool>) -> Vec<AccountMeta> {
         vec![
-            AccountMeta::new_readonly(self.authority, true),
+            AccountMeta::new(self.authority, true),
             AccountMeta::new(self.user_farm, false),
             AccountMeta::new_readonly(self.leveraged_farm, false),
             AccountMeta::new(self.user_farm_obligation, false),
@@ -82,6 +82,7 @@ impl ToAccountMetas for DepositBorrowDual {
             AccountMeta::new_readonly(self.lending_program, false),
             AccountMeta::new(self.coin_source_reserve_liquidity_token_account, false),
             AccountMeta::new(self.pc_source_reserve_liquidity_token_account, false),
+            AccountMeta::new(self.coin_reserve_liquidity_fee_receiver, false),
             AccountMeta::new(self.pc_reserve_liquidity_fee_receiver, false),
             AccountMeta::new_readonly(self.borrow_authorizer, false),
             AccountMeta::new_readonly(self.lp_pyth_price_account, false),
