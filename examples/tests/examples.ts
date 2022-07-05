@@ -691,17 +691,37 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
 
     let [_userFarmObligationVault, _userFarmObligationVaultNonce] = await findUserFArmObligationVaultAddress(
       userFarmAddress,
-      new anchor.BN(0),
+      new anchor.BN(1),
       tulipLeveragedFarmProgramId,
     );
     userFarmObligation2VaultAddress = _userFarmObligationVault;
     let [_userFarmObligation, _userFarmObligationNonce] = await findUserFarmObligationAddress(
       provider.wallet.publicKey,
       userFarmAddress,
-      tulipLendingProgramId,
-      new anchor.BN(0),
+      tulipLeveragedFarmProgramId,
+      new anchor.BN(1),
     );
     userFarmObligation2Address = _userFarmObligation;
+    const tx = await program.rpc.createUserFarmObligation(new anchor.BN(0), new anchor.BN(1), {
+      options: {
+        skipPreflight: true,
+      },
+      accounts: {
+        authority: provider.wallet.publicKey,
+        userFarm: userFarmAddress,
+        userFarmObligation: userFarmObligation2Address,
+        lendingMarket: tulipLendingMarketAccount,
+        leveragedFarm: tulipRayUsdcLevFarmAccount,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        lendingProgram: tulipLendingProgramId,
+        tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        obligationVaultAddress: userFarmObligation2VaultAddress,
+        tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId,
+      }
+    })
+    console.log("sent create user farm token account tx ", tx)
   })
 })
 

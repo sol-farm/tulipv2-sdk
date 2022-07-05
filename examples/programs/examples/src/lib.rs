@@ -502,12 +502,25 @@ pub mod examples {
         let farm = tulipv2_sdk_levfarm::accounts::Farms::from(farm);
         let ix = tulipv2_sdk_levfarm::helpers::new_create_user_farm_obligation_ix(
             ctx.accounts.authority.key(),
+            ctx.accounts.user_farm.key(),
             farm,
             obligation_index,
         ).unwrap();
         anchor_lang::solana_program::program::invoke(
             &ix,
-            &ctx.accounts.to_account_infos(),
+            &[
+                ctx.accounts.authority.clone(),
+                ctx.accounts.user_farm.clone(),
+                ctx.accounts.leveraged_farm.clone(),
+                ctx.accounts.user_farm_obligation.clone(),
+                ctx.accounts.lending_market.clone(),
+                ctx.accounts.obligation_vault_address.clone(),
+                ctx.accounts.clock.clone(),
+                ctx.accounts.rent.clone(),
+                ctx.accounts.lending_program.clone(),
+                ctx.accounts.token_program.clone(),
+                ctx.accounts.system_program.clone(),
+            ]
         )?;
         Ok(())
     }
@@ -856,7 +869,7 @@ pub struct CreateUserFarm<'info> {
 
 #[derive(Accounts)]
 pub struct CreateUserFarmObligation<'info> {
-    #[account(signer)]
+    #[account(mut, signer)]
     /// CHECK: .
     pub authority: AccountInfo<'info>,
     /// CHECK: .
@@ -874,13 +887,15 @@ pub struct CreateUserFarmObligation<'info> {
     #[account(mut)]
     pub obligation_vault_address: AccountInfo<'info>,
     /// CHECK: .
-    pub clock: Sysvar<'info, Clock>,
+    pub clock: AccountInfo<'info>,
     /// CHECK: .
-    pub rent: Sysvar<'info, Rent>,
+    pub rent: AccountInfo<'info>,
     /// CHECK: .
     pub lending_program: AccountInfo<'info>,
     /// CHECK: .
     pub token_program: AccountInfo<'info>,
     /// CHECK: .
     pub system_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub tulip_leveraged_farm_program: AccountInfo<'info>,
 }

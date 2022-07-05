@@ -1329,6 +1329,9 @@ filename = "deps/accounts/GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd.json"
 [[test.validator.account]] # ray-usdc lev farm accounts
 address = "84ayseJgpJavzfeESgRdyfMoDo2bs4J2YUBjMT4iTs66"
 filename = "deps/accounts/84ayseJgpJavzfeESgRdyfMoDo2bs4J2YUBjMT4iTs66.json"
+[[test.validator.account]] # lev farm global account
+address = "HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8VdJKqjF"
+filename = "deps/accounts/HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8VdJKqjF.json"
 [[test.validator.account]] # ray-usdc raydium v1 vault account
 address = "HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG"
 filename = "deps/accounts/HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG.json"

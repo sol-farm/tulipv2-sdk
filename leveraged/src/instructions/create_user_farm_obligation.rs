@@ -30,7 +30,7 @@ pub fn create_user_farm_obligation(
 impl ToAccountMetas for CreateUserFarmObligation {
     fn to_account_metas(&self, _is_signer: Option<bool>) -> Vec<AccountMeta> {
         vec![
-            AccountMeta::new_readonly(self.authority, true),
+            AccountMeta::new(self.authority, true),
             AccountMeta::new(self.user_farm, false),
             AccountMeta::new_readonly(self.leveraged_farm ,false),
             AccountMeta::new(self.user_farm_obligation, false),

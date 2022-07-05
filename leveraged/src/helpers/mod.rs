@@ -31,7 +31,6 @@ pub fn new_create_user_farm_ix(
         crate::ID,
         0,
     ).0;
-    msg!("ufa {}, ova {}, ufo {}", user_farm_address, obligation_vault_address, user_farm_obligation);
     create_user_farm::create_user_farm(create_user_farm::CreateUserFarm {
         authority,
         user_farm: user_farm_address,
@@ -53,16 +52,11 @@ pub fn new_create_user_farm_ix(
 /// withing a user farm, up to a maximum of 2 additional
 pub fn new_create_user_farm_obligation_ix(
     authority: Pubkey,
+    user_farm_address: Pubkey,
     farm: Farms,
     obligation_index: u64,
 ) -> Option<Instruction> {
     let levfarm_config = lev_farm_config(farm)?;
-    let user_farm_address = derive_user_farm_address(
-        authority,
-        crate::ID,
-        obligation_index,
-        farm,
-    ).0;
     let obligation_vault_address = derive_user_farm_obligation_vault_address(
         user_farm_address,
         crate::ID,
