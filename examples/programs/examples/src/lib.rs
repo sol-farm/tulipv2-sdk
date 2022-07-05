@@ -558,7 +558,7 @@ pub mod examples {
                 ctx.accounts.pc_destination_token_account.clone(),
                 ctx.accounts.pc_deposit_reserve_account.clone(),
                 ctx.accounts.coin_deposit_reserve_account.clone(),
-                ctx.accounts.pc_reserve_liquidity_oracle.clone(),
+                ctx.accounts.coin_reserve_liquidity_oracle.clone(),
                 ctx.accounts.pc_reserve_liquidity_oracle.clone(),
                 ctx.accounts.lending_market_account.clone(),
                 ctx.accounts.derived_lending_market_authority.clone(),

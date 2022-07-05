@@ -74,7 +74,7 @@ impl ToAccountMetas for DepositBorrowDual {
             AccountMeta::new(self.pc_destination_token_account, false),
             AccountMeta::new(self.pc_deposit_reserve_account, false),
             AccountMeta::new(self.coin_deposit_reserve_account, false),
-            AccountMeta::new_readonly(self.pc_reserve_liquidity_oracle, false),
+            AccountMeta::new_readonly(self.coin_reserve_liquidity_oracle, false),
             AccountMeta::new_readonly(self.pc_reserve_liquidity_oracle, false),
             AccountMeta::new_readonly(self.lending_market_account, false),
             AccountMeta::new_readonly(self.derived_lending_market_authority, false),
