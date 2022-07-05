@@ -137,7 +137,7 @@ impl From<&str> for Farm {
 impl Default for Farm {
     fn default() -> Self {
         Self::Unknown {
-            name: Unknown::Uknown,
+            name: Unknown::Unknown,
         }
     }
 }
@@ -182,7 +182,7 @@ impl From<[u64; 2]> for Farm {
                 name: val[1].into(),
             },
             _ => Farm::Unknown {
-                name: Unknown::Uknown,
+                name: Unknown::Unknown,
             },
         }
     }
@@ -219,7 +219,7 @@ fn farm_from_str(val: &str) -> Farm {
     let parts: Vec<_> = val.split('-').collect();
     if parts.len() <= 1 {
         return Farm::Unknown {
-            name: Unknown::Uknown,
+            name: Unknown::Unknown,
         };
     }
     match parts[0] {
@@ -248,7 +248,7 @@ fn farm_from_str(val: &str) -> Farm {
             }
         }
         _ => Farm::Unknown {
-            name: Unknown::Uknown,
+            name: Unknown::Unknown,
         },
     }
 }
@@ -532,7 +532,7 @@ mod test {
         assert!(
             Farm::from([100_u64, 0_u64])
                 == Farm::Unknown {
-                    name: Unknown::Uknown
+                    name: Unknown::Unknown
                 }
         );
         assert!(Farm::from([100_u64, 0_u64]).name() == *"UNKNOWN");

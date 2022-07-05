@@ -3,5 +3,5 @@ use anchor_lang::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, AnchorSerialize, AnchorDeserialize)]
 pub enum Unknown {
-    Uknown,
+    Unknown,
 }
