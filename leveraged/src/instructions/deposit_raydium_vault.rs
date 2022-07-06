@@ -79,6 +79,7 @@ impl ToAccountMetas for DepositFarm {
             AccountMeta::new_readonly(self.stake_program_id, false),
             AccountMeta::new(self.pool_id, false),
             AccountMeta::new(self.pool_authority, false),
+            AccountMeta::new(self.vault_info_account, false),
             AccountMeta::new(self.pool_lp_token_account, false),
             AccountMeta::new(self.user_reward_a_token_account, false),
             AccountMeta::new(self.pool_reward_a_token_account, false),

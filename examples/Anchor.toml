@@ -118,7 +118,9 @@ program = "./deps/misc/associated_token.so"
 [[test.genesis]]
 address = "Bt2WPMmbwHPk36i4CRucNDyLcmoGdC7xEdrVuxgJaNE6"
 program = "./deps/tulip/lev_farm.so"
-
+[[test.genesis]]
+address = "7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4"
+program = "./deps/tulip/rayv1.so"
 ##############
 # token mints
 ##############
@@ -1416,4 +1418,7 @@ filename = "deps/accounts/E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB.json"
 [[test.validator.account]] # ray usdc v1 vault rewarda token account"
 address = "9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB"
 filename = "deps/accounts/9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB.json"
+[[test.validator.account]] # ray usdc pool id
+address = "CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS"
+filename = "deps/accounts/CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS.json"
 ###############

@@ -238,6 +238,7 @@ const coinReserveLiquidityFeeReceiver = new anchor.web3.PublicKey("4bRQL2hLqfinN
 const pcReserveLiquidityFeeReceiver = new anchor.web3.PublicKey("GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU");
 const v1RayUsdcVaultAccount = new anchor.web3.PublicKey("HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG");
 const v1RayUsdcOldVaultInfoAccount = new anchor.web3.PublicKey("8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA")
+const v1RayUsdcVaultInfoAccount = new anchor.web3.PublicKey("Gf38RxSF3FguiBVYfsB8AmpPyNkGCrNDE7LNvr6U8n7C");
 const rayUsdcAmmId = new anchor.web3.PublicKey("6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg")
 const v1RaydiumVaultsProgram = new anchor.web3.PublicKey("7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4")
 const rayUsdcSerumVaultSigner = new anchor.web3.PublicKey("FmhXe9uG6zun49p222xt3nG1rBAkWvzVz7dxERQ6ouGw");
@@ -953,9 +954,11 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
     const v1RayUsdcVaultRewardATokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
     const v1RayUsdcVaultRewardBTokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
     const v1RayUsdcVaultLpTokenAccount = new anchor.web3.PublicKey("E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB");
+    const v1RayUsdcPoolLpTokenAccount = new anchor.web3.PublicKey("BNnXLFGva3K8ACruAc1gaP49NCbLkyE6xWhGV4G2HLrs");
     const v1RayUsdcPoolRewardATokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
     const v1RayUsdcPoolRewardBTokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
     const v1RayUsdcPoolAuthority = new anchor.web3.PublicKey("5KQFnDd33J5NaMC9hQ64P5XzaaSz8Pt7NBCkZFYn1po");
+    const rayUsdcPoolId = new anchor.web3.PublicKey("CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS");
     const tx = await program.rpc.depositRaydiumVault(
       new anchor.BN(0),
       {
@@ -975,10 +978,10 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
           userBalanceAccount: vaultBalanceAccount,
           systemProgram: anchor.web3.SystemProgram.programId,
           stakeProgramId: raydiumStakeProgramId,
-          poolId: rayUsdcAmmId,
+          poolId: rayUsdcPoolId,
           poolAuthority: v1RayUsdcPoolAuthority,
-          vaultInfoAccount: v1RayUsdcOldVaultInfoAccount,
-          poolLpTokenAccount: v1RayUsdcVaultLpTokenAccount,
+          vaultInfoAccount: v1RayUsdcVaultInfoAccount,
+          poolLpTokenAccount: v1RayUsdcPoolLpTokenAccount,
           userRewardATokenAccount: v1RayUsdcVaultRewardATokenAccount,
           poolRewardATokenAccount: v1RayUsdcPoolRewardATokenAccount,
           userRewardBTokenAccount: v1RayUsdcVaultRewardBTokenAccount,

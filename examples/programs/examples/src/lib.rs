@@ -707,6 +707,7 @@ pub mod examples {
                     ctx.accounts.stake_program_id.clone(),
                     ctx.accounts.pool_id.clone(),
                     ctx.accounts.pool_authority.clone(),
+                    ctx.accounts.vault_info_account.clone(),
                     ctx.accounts.pool_lp_token_account.to_account_info(),
                     ctx.accounts.user_reward_a_token_account.to_account_info(),
                     ctx.accounts.pool_reward_a_token_account.to_account_info(),

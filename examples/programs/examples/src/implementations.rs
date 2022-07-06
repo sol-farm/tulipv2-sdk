@@ -35,13 +35,13 @@ impl<'info> From<&mut DepositLevFarm<'info>> for tulipv2_sdk_levfarm::instructio
     fn from(farm_accounts: &mut DepositLevFarm<'info>) -> Self {
         Self {
             authority: farm_accounts.authority.key(), 
-            user_farm: tulipv2_sdk_common::DEFAULT_KEY,  // this needs to be manually overwrritten
+            user_farm: farm_accounts.user_farm.key(),
             obligation_vault_address: farm_accounts.obligation_vault_address.key(), 
-            leveraged_farm: tulipv2_sdk_common::DEFAULT_KEY,  // this needs to be manually overwrritten
+            leveraged_farm: farm_accounts.leveraged_farm.key(),  
             vault_program: farm_accounts.vault_program.key(), 
             authority_token_account: farm_accounts.authority_token_account.key(), 
             vault_pda_account: farm_accounts.vault_pda_account.key(), 
-            vault: tulipv2_sdk_common::DEFAULT_KEY, 
+            vault: farm_accounts.vault.key(), 
             lp_token_account: farm_accounts.lp_token_account.key(), 
             user_balance_account: farm_accounts.user_balance_account.key(), 
             system_program: anchor_lang::solana_program::system_program::id(), 
