@@ -2,61 +2,40 @@ use anchor_lang::prelude::*;
 use sighashdb::GlobalSighashDB;
 use solana_program::instruction::Instruction;
 
-#[derive(Accounts)]
-pub struct WithdrawFarm<'info> {
-    #[account(signer)]
-    pub authority: AccountInfo<'info>,
-    #[account(mut)]
-    pub user_farm: AccountInfo<'info>,
-    #[account(mut)]
-    pub obligation_vault_address: AccountInfo<'info>,
-    pub leveraged_farm: AccountInfo<'info>,
-    #[account(mut)]
-    pub authority_token_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub vault: AccountInfo<'info>,
-    pub vault_program: AccountInfo<'info>,
-
-    #[account(mut)]
-    pub user_balance_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub user_info_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub user_lp_token_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub user_reward_a_token_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub pool_reward_a_token_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub user_reward_b_token_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub pool_reward_b_token_account: AccountInfo<'info>,
-    pub token_program_id: AccountInfo<'info>,
-    pub clock: Sysvar<'info, Clock>,
-    // the account of the vault pda
-    #[account(mut)]
-    pub vault_pda_account: AccountInfo<'info>,
-    #[account(mut)]
-    // the token account associated with the lp token that the pool holds
-    pub pool_lp_token_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub pool_authority: AccountInfo<'info>,
-    #[account(mut)]
-    pub pool_id: AccountInfo<'info>,
-    pub stake_program_id: AccountInfo<'info>,
-    #[account(mut)]
-    pub user_balance_meta: AccountInfo<'info>,
+pub struct WithdrawFarm{
+    pub authority: Pubkey,
+    pub user_farm: Pubkey,
+    pub obligation_vault_address: Pubkey,
+    pub leveraged_farm: Pubkey,
+    pub authority_token_account: Pubkey,
+    pub vault: Pubkey,
+    pub vault_program: Pubkey,
+    pub user_balance_account: Pubkey,
+    pub user_info_account: Pubkey,
+    pub user_lp_token_account: Pubkey,
+    pub user_reward_a_token_account: Pubkey,
+    pub pool_reward_a_token_account: Pubkey,
+    pub user_reward_b_token_account: Pubkey,
+    pub pool_reward_b_token_account: Pubkey,
+    pub token_program_id: Pubkey,
+    pub clock: Pubkey,
+    pub vault_pda_account: Pubkey,
+    pub pool_lp_token_account: Pubkey,
+    pub pool_authority: Pubkey,
+    pub pool_id: Pubkey,
+    pub stake_program_id: Pubkey,
+    pub user_balance_meta: Pubkey,
 }
 
-pub fn withdraw_raydium_vault_close<'info>(
-    accounts: WithdrawFarm<'info>,
-    lending_market_account: &AccountInfo<'info>,
-    user_farm_obligation: &AccountInfo<'info>,
-    lending_market_authority: &AccountInfo<'info>,
-    lending_program: &AccountInfo<'info>,
-    position_info_account: &AccountInfo<'info>,
-    system_program: &AccountInfo<'info>,
-    rent: &AccountInfo<'info>,
+pub fn withdraw_raydium_vault_close(
+    accounts: Box<WithdrawFarm>,
+    lending_market_account: Pubkey,
+    user_farm_obligation: Pubkey,
+    lending_market_authority: Pubkey,
+    lending_program: Pubkey,
+    position_info_account: &Pubkey,
+    system_program: Pubkey,
+    rent: Pubkey,
     meta_nonce: u8,
     nonce: u8,
     obligation_index: u8,
@@ -86,4 +65,33 @@ pub fn withdraw_raydium_vault_close<'info>(
         accounts: accounts,
         data: ix_data,
     })
+}
+
+impl ToAccountMetas for WithdrawFarm {
+    fn to_account_metas(&self, _is_signer: Option<bool>) -> Vec<AccountMeta> {
+        vec![
+            AccountMeta::new(self.authority, true),
+            AccountMeta::new(self.user_farm, false),
+            AccountMeta::new(self.obligation_vault_address, false),
+            AccountMeta::new(self.leveraged_farm, false),
+            AccountMeta::new(self.authority_token_account, false),
+            AccountMeta::new(self.vault, false),
+            AccountMeta::new_readonly(self.vault_program, false),
+            AccountMeta::new(self.user_balance_account, false),
+            AccountMeta::new(self.user_info_account, false),
+            AccountMeta::new(self.user_lp_token_account, false),
+            AccountMeta::new(self.user_reward_a_token_account, false),
+            AccountMeta::new(self.pool_reward_a_token_account, false),
+            AccountMeta::new(self.user_reward_b_token_account, false),
+            AccountMeta::new(self.pool_reward_b_token_account, false),
+            AccountMeta::new_readonly(self.token_program_id, false),
+            AccountMeta::new_readonly(self.clock, false),
+            AccountMeta::new(self.vault_pda_account, false),
+            AccountMeta::new(self.pool_lp_token_account, false),
+            AccountMeta::new(self.pool_authority, false),
+            AccountMeta::new(self.pool_id, false),
+            AccountMeta::new_readonly(self.stake_program_id, false),
+            AccountMeta::new(self.user_balance_meta, false),
+        ]   
+    }
 }

@@ -728,6 +728,16 @@ pub mod examples {
         };
         Ok(())
     }
+    pub fn withdraw_raydium_vault_close<'info>(
+        ctx: Context<WithdrawRaydiumLevFarm<'info>>,
+    ) -> Result<()> {
+        {
+            let ix = {
+                let withdraw_farm: Box<tulipv2_sdk_levfarm::instruction::withdraw_raydium_vault_close::WithdrawFarm> = Box::new(ctx.accounts.into());
+            }
+        }
+        Ok(())
+    }
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -1410,4 +1420,50 @@ pub struct AddLiquidity<'info> {
     pub dex_program: AccountInfo<'info>,
     /// CHECK: .
     pub tulip_leveraged_farm_program: AccountInfo<'info>,
+}
+
+#[derive(Accounts)]
+pub struct WithdrawRaydiumLevFarm<'info> {
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_farm: AccountInfo<'info>,
+    #[account(mut)]
+    pub obligation_vault_address: AccountInfo<'info>,
+    pub leveraged_farm: AccountInfo<'info>,
+    #[account(mut)]
+    pub authority_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub vault: AccountInfo<'info>,
+    pub vault_program: AccountInfo<'info>,
+
+    #[account(mut)]
+    pub user_balance_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_info_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_lp_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_reward_a_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_reward_a_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_reward_b_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_reward_b_token_account: AccountInfo<'info>,
+    pub token_program_id: AccountInfo<'info>,
+    pub clock: Sysvar<'info, Clock>,
+    // the account of the vault pda
+    #[account(mut)]
+    pub vault_pda_account: AccountInfo<'info>,
+    #[account(mut)]
+    // the token account associated with the lp token that the pool holds
+    pub pool_lp_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub pool_id: AccountInfo<'info>,
+    pub stake_program_id: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_balance_meta: AccountInfo<'info>,
 }

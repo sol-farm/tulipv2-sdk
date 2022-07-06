@@ -122,3 +122,33 @@ impl<'info> From<&mut AddLiquidity<'info>> for tulipv2_sdk_levfarm::instructions
         }
     }
 }
+
+
+impl<'info> From<&mut WithdrawRaydiumLevFarm<'info>> for tulipv2_sdk_levfarm::instructions::deposit_borrow_dual::DepositBorrowDual {
+    fn from(farm_accounts: &mut WithdrawRaydiumLevFarm<'info>) -> Self {
+        Self {
+            authority: farm_accounts.authority.key(),
+            user_farm: farm_accounts.user_farm.key(),
+            obligation_vault_address: farm_accounts.obligation_vault_address.key(),
+            leveraged_farm: farm_accounts.leveraged_farm.key(),
+            authority_token_account: farm_accounts.authority_token_account.key(),
+            vault: farm_accounts.vault.key(),
+            vault_program: farm_accounts.vault_program.key(),
+            user_balance_account: farm_accounts.user_balance_account.key(),
+            user_info_account: farm_accounts.user_info_account.key(),
+            user_lp_token_account: farm_accounts.user_lp_token_account.key(),
+            user_reward_a_token_account: farm_accounts.user_reward_a_token_account.key(),
+            pool_reward_a_token_account: farm_accounts.pool_reward_a_token_account.key(),
+            user_reward_b_token_account: farm_accounts.user_reward_b_token_account.key(),
+            pool_reward_b_token_account: farm_accounts.pool_reward_b_token_account.key(),
+            token_program_id: farm_accounts.token_program_id.key(),
+            clock: farm_accounts.clock.key(),
+            vault_pda_account: farm_accounts.vault_pda_account.key(),
+            pool_lp_token_account: farm_accounts.pool_lp_token_account.key(),
+            pool_authority: farm_accounts.pool_authority.key(),
+            pool_id: farm_accounts.pool_id.key(),
+            stake_program_id: farm_accounts.stake_program_id.key(),
+            user_balance_meta: farm_accounts.user_balance_meta.key(),
+        }
+    }
+}

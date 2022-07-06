@@ -1,4 +1,4 @@
-use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault, swap_tokens_raydium_stats, add_liquidity_stats}};
+use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault, swap_tokens_raydium_stats, add_liquidity_stats, withdraw_raydium_vault_close}};
 
 use super::*;
 use anchor_lang::prelude::*;
@@ -169,6 +169,51 @@ pub fn new_deposit_raydium_vault_ix(
         balanace_metadata_nonce,
         obligation_index
     )
+}
+
+pub fn new_withdraw_raydium_vault_ix(
+    accounts: Box<withdraw_raydium_vault_close::WithdrawFarm>,
+    lending_market_account: Pubkey,
+    user_farm_obligation: Pubkey,
+    lending_market_authority: Pubkey,
+    lending_program: Pubkey,
+    position_info_account: &Pubkey,
+    system_program: Pubkey,
+    rent: Pubkey,
+    obligation_index: u8,
+    withdraw_percent: u8,
+    close_method: u8,
+    farm: Farms,
+) -> Option<Instruction> {
+    let (user_balance_account, balance_account_nonce) = Pubkey::find_program_address(
+        &[
+            vault_info_account(farm).unwrap().as_ref(),
+            accounts.obligation_vault_address.as_ref(),
+        ],
+        &accounts.vault_program
+    );
+    let (_, balanace_metadata_nonce) = Pubkey::find_program_address(
+        &[
+            user_balance_account.as_ref(),
+            accounts.obligation_vault_address.as_ref(),
+        ],
+        &accounts.vault_program,
+    );
+    withdraw_raydium_vault_close::withdraw_raydium_vault_close(
+        accounts,
+        lending_market_account,
+        user_farm_obligation,
+        lending_market_authority,
+        lending_program,
+        position_info_account,
+        system_program,
+        rent,
+        balanace_metadata_nonce,
+        balance_account_nonce,
+        obligation_index,
+        withdraw_percent,
+        close_method,
+    )   
 }
 
 pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
