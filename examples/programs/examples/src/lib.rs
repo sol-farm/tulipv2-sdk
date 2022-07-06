@@ -580,7 +580,7 @@ pub mod examples {
     }
     pub fn swap_tokens_raydium_stats<'info>(
         ctx: Context<'_, '_, '_, 'info, RaydiumSwap<'info>>,
-        obligation_index: u8,
+        obligation_index: u64,
     ) -> Result<()> {
         let ix = {
             let swap_tokens: Box<tulipv2_sdk_levfarm::instructions::swap_tokens_raydium_stats::RaydiumSwap> = Box::new(ctx.accounts.into());
@@ -590,7 +590,7 @@ pub mod examples {
                 ctx.remaining_accounts.get(1).unwrap().key(),
                 ctx.remaining_accounts.get(2).unwrap().key(),
                 ctx.remaining_accounts.get(3).unwrap().key(),
-                obligation_index,
+                obligation_index as u8,
             ).unwrap()
         };
         anchor_lang::solana_program::program::invoke(
@@ -629,22 +629,23 @@ pub mod examples {
     }
     pub fn add_liquidity_stats<'info>(
         ctx: Context<'_, '_, '_, 'info, AddLiquidity<'info>>,
-        obligation_index: u8
+        obligation_index: u64
     ) -> Result<()> {
         {
             let ix = {
-                add_liq: Box<tulipv2_sdk_levfarm::instructions::add_liquidity_stats::AddLiquidity> = Box::new(ctx.accounts.into());
+                let add_liq: Box<tulipv2_sdk_levfarm::instructions::add_liquidity_stats::AddLiquidity> = Box::new(ctx.accounts.into());
                 tulipv2_sdk_levfarm::helpers::new_add_liquidity_stats_ix(
                     add_liq,
                     ctx.remaining_accounts.get(0).unwrap().key(),
-                    obligation_index
-                )
-            }
+                    obligation_index as u8
+                ).unwrap()
+            };
             anchor_lang::solana_program::program::invoke(
                 &ix,
                 &[]
-            )
+            )?;
         }
+        Ok(())
     }
     // you would likely want to provide the nonce values off-chain in a struct
     // to avoid the pubkey derivation costs
@@ -1323,63 +1324,60 @@ pub struct RaydiumSwap<'info> {
 
 #[derive(Accounts)]
 pub struct AddLiquidity<'info> {
+    /// CHECK: .
     #[account(signer)]
     pub authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    // seems to be false positive
-    //#[soteria(ignore)]
     pub user_farm: AccountInfo<'info>,
-    // fairly certain false positive
+    /// CHECK: .
     #[account(mut)]
-    //#[soteria(ignore)]
     pub leveraged_farm: AccountInfo<'info>,
-    // fairly certain false positive
-    //#[soteria(ignore)]
+    /// CHECK: .
     pub liquidity_program_id: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub amm_id: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub amm_authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub amm_open_orders: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    //#[soteria(ignore)]
     pub amm_quantities_or_target_orders: AccountInfo<'info>,
-    // fairly certain false positive
+    /// CHECK: .
     #[account(mut)]
-    //#[soteria(ignore)]
     pub lp_mint_address: Box<Account<'info, Mint>>,
-    // for RAY-USDC this would be the pool's
-    // RAY token account
-    // this seems to be a false positive
     #[account(mut)]
-    //#[soteria(ignore)]
     pub pool_coin_token_account: Box<Account<'info, TokenAccount>>,
-    // for RAY-USDC this would be the pool's
-    // USDC token account
     #[account(mut)]
     pub pool_pc_token_account: Box<Account<'info, TokenAccount>>,
-    // seems to be a false positive
+    /// CHECK: .
     #[account(mut)]
-    //#[soteria(ignore)]
     pub serum_market: AccountInfo<'info>,
-    // this seems to be a false positive
-    //#[soteria(ignore)]
+    /// CHECK: .
     pub token_program: AccountInfo<'info>,
     #[account(mut)]
-    // this seems to be a false positive
-    //#[soteria(ignore)]
-    pub lev_farm_coin_token_account: ABox<Account<'info, TokenAccount>>,
+    pub lev_farm_coin_token_account: Box<Account<'info, TokenAccount>>,
     #[account(mut)]
     pub lev_farm_pc_token_account: Box<Account<'info, TokenAccount>>,
     #[account(mut)]
     pub user_lp_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     pub pyth_price_account: AccountInfo<'info>,
+    /// CHECK: .
     pub lending_market_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub user_farm_obligation: AccountInfo<'info>,
+    /// CHECK: .
     pub derived_lending_market_authority: AccountInfo<'info>,
+    /// CHECK: .
     pub lending_program: AccountInfo<'info>,
+    /// CHECK: .
     pub clock: Sysvar<'info, Clock>,
+    /// CHECK: .
     pub dex_program: AccountInfo<'info>,
 }

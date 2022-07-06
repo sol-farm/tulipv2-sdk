@@ -74,7 +74,7 @@ impl ToAccountMetas for AddLiquidity {
             AccountMeta::new_readonly(self.derived_lending_market_authority, false),
             AccountMeta::new_readonly(self.lending_program, false),
             AccountMeta::new_readonly(self.clock, false),
-            AccountMeta::new(self.dex_program, false),
+            AccountMeta::new_readonly(self.dex_program, false),
         ]
     }
 }

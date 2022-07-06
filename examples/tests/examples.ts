@@ -884,6 +884,47 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
       ],
     })
   })
+  it("adds liquidity stats", async () => {
+    const tx = await program.rpc.addLiquidityStats(
+      new anchor.BN(0), {
+        options: {
+          skipPreflight: true,
+        },
+        accounts: {
+          authority: provider.wallet.publicKey,
+          leveragedFarm: tulipRayUsdcLevFarmAccount,
+          userFarm: userFarmAddress,
+          userFarmObligation: userFarmObligation1Address,
+          tokenProgram: splToken.TOKEN_PROGRAM_ID,
+          ammId: rayUsdcAmmId,
+          ammAuthority: rayUsdcAmmAuthority,
+          ammOpenOrders: rayUsdcAmmOpenOrders,
+          ammQuantitiesOrTargetOrders: rayUsdcAmmQuantitiesOrTargetOrders,
+          serumMarket: rayUsdcSerumMarket,
+          lendingProgram: tulipLendingProgramId,
+          liquidityProgramId: raydiumLiquidityProgram,
+          lpMintAddress: rayUsdcLpTokenMint,
+          poolCoinTokenAccount: rayUsdcAmmPoolCoinTokenAccount,
+          poolPcTokenAccount: rayUsdcAmmPoolPcTokenAccount,
+          userLpTokenAccount: userFarmObligationVault1LpTokenAccount,
+          levFarmCoinTokenAccount: rayUsdcLevFarmBaseTokenAccount,
+          levFarmPcTokenAccount: rayUsdcLevFarmQuoteTokenAccount,
+          pythPriceAccount: lpPythPriceAccount,
+          lendingMarketAccount: tulipLendingMarketAccount,
+          derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          dexProgram: serumProgramId,
+        },
+        remainingAccounts: [
+          {
+            pubkey: positionInfoAccount,
+            isWritable: true,
+            isSigner: false,
+          }
+        ]
+      }
+    )
+  })
   let vaultBalanceAccount: anchor.web3.PublicKey;
   let vaultBalanceMetadataAccount: anchor.web3.PublicKey;
   let vaultRewardAccount: anchor.web3.PublicKey;
