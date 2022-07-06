@@ -61,3 +61,33 @@ impl<'info> From<&mut DepositLevFarm<'info>> for tulipv2_sdk_levfarm::instructio
         }
     }
 }
+impl<'info> From<&mut RaydiumSwap<'info>> for tulipv2_sdk_levfarm::instructions::swap_tokens_raydium_stats::RaydiumSwap {
+    #[inline(always)]
+    fn from(farm_accounts: &mut RaydiumSwap<'info>) -> Self {
+        Self {
+            authority: farm_accounts.authority.key(),
+            leveraged_farm: farm_accounts.leveraged_farm.key(),
+            user_farm: farm_accounts.user_farm.key(),
+            user_farm_obligation: farm_accounts.user_farm_obligation.key(),
+            token_program: farm_accounts.token_program.key(),
+            vault_signer: farm_accounts.vault_signer.key(),
+            swap_or_liquidity_program_id: farm_accounts.swap_or_liquidity_program_id.key(),
+            amm_id: farm_accounts.amm_id.key(),
+            amm_authority: farm_accounts.amm_authority.key(),
+            amm_open_orders: farm_accounts.amm_open_orders.key(),
+            amm_quantities_or_target_orders: farm_accounts.amm_quantities_or_target_orders.key(),
+            pool_coin_tokenaccount: farm_accounts.pool_coin_tokenaccount.key(),
+            pool_pc_tokenaccount: farm_accounts.pool_pc_tokenaccount.key(),
+            serum_program_id: farm_accounts.serum_program_id.key(),
+            serum_market: farm_accounts.serum_market.key(),
+            serum_bids: farm_accounts.serum_bids.key(),
+            serum_asks: farm_accounts.serum_asks.key(),
+            serum_event_queue: farm_accounts.serum_event_queue.key(),
+            serum_coin_vault_account: farm_accounts.serum_coin_vault_account.key(),
+            serum_pc_vault_account: farm_accounts.serum_pc_vault_account.key(),
+            serum_vault_signer: farm_accounts.serum_vault_signer.key(),
+            coin_wallet: farm_accounts.coin_wallet.key(),
+            pc_wallet: farm_accounts.pc_wallet.key(),
+        }
+    }
+}

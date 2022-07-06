@@ -108,8 +108,22 @@ const v1RayUsdcVaultAccount = new anchor.web3.PublicKey("HvNpbHuQUqGG748ZzgzcH52
 const v1RayUsdcOldVaultInfoAccount = new anchor.web3.PublicKey("8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA");
 const rayUsdcAmmId = new anchor.web3.PublicKey("6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg");
 const v1RaydiumVaultsProgram = new anchor.web3.PublicKey("7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4");
+const rayUsdcSerumVaultSigner = new anchor.web3.PublicKey("FmhXe9uG6zun49p222xt3nG1rBAkWvzVz7dxERQ6ouGw");
 let raydiumStakeProgramId = new anchor.web3.PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q");
 let raydiumStakeProgramIdV5 = new anchor.web3.PublicKey("9KEPoZmtHUrBbhWN1v1KWLMkkvwY6WLtAVUCPRtRjP4z");
+const raydiumLiquidityProgram = new anchor.web3.PublicKey("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8");
+const rayUsdcAmmAuthority = new anchor.web3.PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1");
+const rayUsdcAmmOpenOrders = new anchor.web3.PublicKey("J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW");
+const rayUsdcAmmQuantitiesOrTargetOrders = new anchor.web3.PublicKey("3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT");
+const rayUsdcAmmPoolCoinTokenAccount = new anchor.web3.PublicKey("FdmKUE4UMiJYFK5ogCngHzShuVKrFXBamPWcewDr31th");
+const rayUsdcAmmPoolPcTokenAccount = new anchor.web3.PublicKey("Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk");
+const serumProgramId = new anchor.web3.PublicKey("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin");
+const rayUsdcSerumMarket = new anchor.web3.PublicKey("2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep");
+const rayUsdcSerumBids = new anchor.web3.PublicKey("Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5");
+const rayUsdcSerumAsks = new anchor.web3.PublicKey("DC1HsWWRCXVg3wk2NndS5LTbce3axwUwUZH1RgnV4oDN");
+const rayUsdcSerumEventQueue = new anchor.web3.PublicKey("H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz");
+const rayUsdcSerumCoinVault = new anchor.web3.PublicKey("GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa");
+const rayUsdcSerumPcVault = new anchor.web3.PublicKey("GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa");
 //const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 const one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 describe("examples", () => {
@@ -562,6 +576,42 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
         });
         console.log("sent deposit_dual_borrw tx ", tx);
     }));
+    it("swaps tokens", () => __awaiter(void 0, void 0, void 0, function* () {
+        const tx = yield program.rpc.swapTokensRaydiumStats(new anchor.BN(0), {
+            options: {
+                skipPreflight: true
+            },
+            accounts: {
+                authority: provider.wallet.publicKey,
+                leveragedFarm: tulipRayUsdcLevFarmAccount,
+                userFarm: userFarmAddress,
+                userFarmObligation: userFarmObligation1Address,
+                tokenProgram: splToken.TOKEN_PROGRAM_ID,
+                vaultSigner: rayUsdcSerumVaultSigner,
+                swapOrLiquidityProgramId: raydiumLiquidityProgram,
+                ammId: rayUsdcAmmId,
+                ammAuthority: rayUsdcAmmAuthority,
+                ammOpenOrders: rayUsdcAmmOpenOrders,
+                ammQuantitiesOrTargetOrders: rayUsdcAmmQuantitiesOrTargetOrders,
+                poolCoinTokenaccount: rayUsdcAmmPoolCoinTokenAccount,
+                poolPcTokenaccount: rayUsdcAmmPoolPcTokenAccount,
+                serumProgramId,
+                serumMarket: rayUsdcSerumMarket,
+                serumBids: rayUsdcSerumBids,
+                serumAsks: rayUsdcSerumAsks,
+                serumEventQueue: rayUsdcSerumEventQueue,
+                serumCoinVaultAccount: rayUsdcSerumCoinVault,
+                serumPcVaultAccount: rayUsdcSerumPcVault,
+                serumVaultSigner: rayUsdcSerumVaultSigner,
+                coinWallet: rayUsdcLevFarmBaseTokenAccount,
+                pcWallet: rayUsdcLevFarmQuoteTokenAccount,
+                positionInfoAccount,
+                lendingMarket: tulipLendingMarketAccount,
+                lendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+                lendingProgram: tulipLendingProgramId,
+            }
+        });
+    }));
     let vaultBalanceAccount;
     let vaultBalanceMetadataAccount;
     let vaultRewardAccount;
@@ -574,12 +624,15 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
         [vaultRewardAccount, c] = yield (0, utils_1.findVaultRewardAccount)(vaultBalanceAccount, userFarmObligation1Address, v1RaydiumVaultsProgram);
         const v1RayUsdcVaultPda = new anchor.web3.PublicKey("38dsJ6n4y6ffCDSZXhYYiMXQCgfzqHK5XSytL2fApeGc");
         const v1RayUsdcVaultRewardATokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
-        const v1RayUsdcVaultRewardBTokenAccount = new anchor.web3.PublicKey("4fTYCyFfSsPX58LAfj2AWWBjzqi3D3jYh6EEUAaSHrAK");
+        const v1RayUsdcVaultRewardBTokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
         const v1RayUsdcVaultLpTokenAccount = new anchor.web3.PublicKey("E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB");
         const v1RayUsdcPoolRewardATokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
         const v1RayUsdcPoolRewardBTokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
         const v1RayUsdcPoolAuthority = new anchor.web3.PublicKey("5KQFnDd33J5NaMC9hQ64P5XzaaSz8Pt7NBCkZFYn1po");
         const tx = yield program.rpc.depositRaydiumVault(new anchor.BN(0), {
+            options: {
+                skipPreflight: true
+            },
             accounts: {
                 authority: provider.wallet.publicKey,
                 userFarm: userFarmAddress,
@@ -609,7 +662,8 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
                 userFarmObligation: userFarmObligation1Address,
                 lendingMarketAuthority: tulipDerivedLendingMarketAuthority,
                 lendingProgram: tulipLendingProgramId,
-            }
+                tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId
+            },
         });
     }));
 }));

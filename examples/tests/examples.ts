@@ -257,7 +257,6 @@ const rayUsdcSerumAsks = new anchor.web3.PublicKey("DC1HsWWRCXVg3wk2NndS5LTbce3a
 const rayUsdcSerumEventQueue = new anchor.web3.PublicKey("H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz");
 const rayUsdcSerumCoinVault = new anchor.web3.PublicKey("GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa");
 const rayUsdcSerumPcVault = new anchor.web3.PublicKey("GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa");
-const rayUsdcSerumVaultSigner = new anchor.web3.PublicKey("FmhXe9uG6zun49p222xt3nG1rBAkWvzVz7dxERQ6ouGw");
 //const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 const one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 
@@ -828,6 +827,9 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
   })
   it("swaps tokens", async() => {
     const tx = await program.rpc.swapTokensRaydiumStats(new anchor.BN(0), {
+      options: {
+        skipPreflight: true
+      },
       accounts: {
         authority: provider.wallet.publicKey,
         leveragedFarm: tulipRayUsdcLevFarmAccount,
@@ -853,7 +855,33 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
         coinWallet: rayUsdcLevFarmBaseTokenAccount,
         pcWallet: rayUsdcLevFarmQuoteTokenAccount,
         positionInfoAccount,
-      }
+        lendingMarket: tulipLendingMarketAccount,
+        lendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+        lendingProgram: tulipLendingProgramId,
+        tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId
+      },
+      remainingAccounts: [
+        {
+          pubkey: tulipLendingMarketAccount,
+          isWritable: false,
+          isSigner: false
+        },
+        {
+          pubkey: tulipDerivedLendingMarketAuthority,
+          isWritable: false,
+          isSigner: false,
+        },
+        {
+          pubkey: tulipLendingProgramId,
+          isWritable: false,
+          isSigner: false,
+        },
+        {
+          pubkey: positionInfoAccount,
+          isWritable: true,
+          isSigner: false,
+        }
+      ],
     })
   })
   let vaultBalanceAccount: anchor.web3.PublicKey;

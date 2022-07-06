@@ -1,4 +1,4 @@
-use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault}};
+use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault, swap_tokens_raydium_stats}};
 
 use super::*;
 use anchor_lang::prelude::*;
@@ -102,6 +102,24 @@ pub fn new_deposit_borrow_dual_ix(
         pc_amount,
         coin_borrow_amount,
         pc_borrow_amount,
+        obligation_index,
+    )
+}
+
+pub fn new_swap_tokens_raydium_stats_ix(
+    accounts: Box<swap_tokens_raydium_stats::RaydiumSwap>,
+    lending_market: Pubkey,
+    lending_market_authority: Pubkey,
+    lending_program: Pubkey,
+    position_info_account: Pubkey,
+    obligation_index: u8,
+) -> Option<Instruction> {
+    swap_tokens_raydium_stats::swap_tokens_raydium_stats(
+        accounts,
+        lending_market,
+        lending_market_authority,
+        lending_program,
+        position_info_account,
         obligation_index,
     )
 }

@@ -4,52 +4,34 @@ use solana_program::instruction::Instruction;
 
 
 pub struct RaydiumSwap {
-    //#[account(signer)]
     pub authority: Pubkey,
-    //#[account(mut)]
     pub leveraged_farm: Pubkey,
-    //#[account(mut)]
     pub user_farm: Pubkey,
-    //#[account(mut)]
     pub user_farm_obligation: Pubkey,
     pub token_program: Pubkey,
     pub vault_signer: Pubkey,
     pub swap_or_liquidity_program_id: Pubkey,
-    //#[account(mut)]
     pub amm_id: Pubkey,
-    //#[account(mut)]
     pub amm_authority: Pubkey,
-    //#[account(mut)]
     pub amm_open_orders: Pubkey,
-    //#[account(mut)]
     pub amm_quantities_or_target_orders: Pubkey,
-    //#[account(mut)]
     pub pool_coin_tokenaccount: Pubkey,
-    //#[account(mut)]
     pub pool_pc_tokenaccount: Pubkey,
     pub serum_program_id: Pubkey,
-    //#[account(mut)]
     pub serum_market: Pubkey,
-    //#[account(mut)]
     pub serum_bids: Pubkey,
-    //#[account(mut)]
     pub serum_asks: Pubkey,
-    //#[account(mut)]
     pub serum_event_queue: Pubkey,
-    //#[account(mut)]
     pub serum_coin_vault_account: Pubkey,
-    //#[account(mut)]
     pub serum_pc_vault_account: Pubkey,
-    //#[account(mut)]
     pub serum_vault_signer: Pubkey,
-    //#[account(mut)]
     pub coin_wallet: Pubkey,
-    //#[account(mut)]
     pub pc_wallet: Pubkey,
 }
 
+#[inline(always)]
 pub fn swap_tokens_raydium_stats(
-    accounts: RaydiumSwap,
+    accounts:  Box<RaydiumSwap>,
     lending_market_account: Pubkey,
     lending_market_authority: Pubkey,
     lending_program: Pubkey,
@@ -84,7 +66,7 @@ impl ToAccountMetas for RaydiumSwap {
             AccountMeta::new(self.user_farm,false),
             AccountMeta::new(self.user_farm_obligation ,false),
             AccountMeta::new_readonly(self.token_program,false),
-            AccountMeta::new_readonly(self.vault_signer,false),
+            AccountMeta::new_readonly(self.leveraged_farm,false),
             AccountMeta::new_readonly(self.swap_or_liquidity_program_id,false),
             AccountMeta::new(self.amm_id,false),
             AccountMeta::new(self.amm_authority,false),

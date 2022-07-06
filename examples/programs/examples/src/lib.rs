@@ -579,9 +579,52 @@ pub mod examples {
         Ok(())
     }
     pub fn swap_tokens_raydium_stats<'info>(
-        ctx: Context<RaydiumSwap<'info>>,
-        obligation_index: u64,
+        ctx: Context<'_, '_, '_, 'info, RaydiumSwap<'info>>,
+        obligation_index: u8,
     ) -> Result<()> {
+        let ix = {
+            let swap_tokens: Box<tulipv2_sdk_levfarm::instructions::swap_tokens_raydium_stats::RaydiumSwap> = Box::new(ctx.accounts.into());
+            tulipv2_sdk_levfarm::helpers::new_swap_tokens_raydium_stats_ix(
+                swap_tokens,
+                ctx.remaining_accounts.get(0).unwrap().key(),
+                ctx.remaining_accounts.get(1).unwrap().key(),
+                ctx.remaining_accounts.get(2).unwrap().key(),
+                ctx.remaining_accounts.get(3).unwrap().key(),
+                obligation_index,
+            ).unwrap()
+        };
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &[
+                ctx.accounts.authority.clone(),
+                ctx.accounts.leveraged_farm.clone(),
+                ctx.accounts.user_farm.clone(),
+                ctx.accounts.user_farm_obligation.clone(),
+                ctx.accounts.token_program.clone(),
+                ctx.accounts.vault_signer.clone(),
+                ctx.accounts.swap_or_liquidity_program_id.clone(),
+                ctx.accounts.amm_id.clone(),
+                ctx.accounts.amm_authority.clone(),
+                ctx.accounts.amm_open_orders.clone(),
+                ctx.accounts.amm_quantities_or_target_orders.clone(),
+                ctx.accounts.pool_coin_tokenaccount.clone(),
+                ctx.accounts.pool_pc_tokenaccount.clone(),
+                ctx.accounts.serum_program_id.clone(),
+                ctx.accounts.serum_market.clone(),
+                ctx.accounts.serum_bids.clone(),
+                ctx.accounts.serum_asks.clone(),
+                ctx.accounts.serum_event_queue.clone(),
+                ctx.accounts.serum_coin_vault_account.clone(),
+                ctx.accounts.serum_pc_vault_account.clone(),
+                ctx.accounts.serum_vault_signer.clone(),
+                ctx.accounts.coin_wallet.clone(),
+                ctx.accounts.pc_wallet.clone(),
+                ctx.remaining_accounts.get(0).unwrap().clone(),
+                ctx.remaining_accounts.get(1).unwrap().clone(),
+                ctx.remaining_accounts.get(2).unwrap().clone(),
+                ctx.remaining_accounts.get(3).unwrap().clone(),
+            ],
+        )?;
         Ok(())
     }
     // you would likely want to provide the nonce values off-chain in a struct
@@ -1244,7 +1287,15 @@ pub struct RaydiumSwap<'info> {
     /// CHECK: .
     #[account(mut)]
     pub pc_wallet: AccountInfo<'info>,
-    #[account(mut)]
     /// CHECK: .
-    pub position_info_account: AccountInfo<'info>,
+    pub tulip_leveraged_farm_program: AccountInfo<'info>,
+    ///// CHECK: .
+    //pub lending_market: AccountInfo<'info>,
+    ///// CHECK: .
+    //pub lending_market_authority: AccountInfo<'info>,
+    ///// CHECK: .
+    //pub lending_program: AccountInfo<'info>,
+    //#[account(mut)]
+    ///// CHECK: .
+    //pub position_info_account: AccountInfo<'info>,
 }
