@@ -34,19 +34,19 @@ pub struct LendingOptimizerV1 {
     pub current_farm_program: Pubkey,
     /// address of the platform information account
     pub current_platform_information: Pubkey,
-    /// the current number of platforms that can be choosen from
+    /// the current number of platforms that can be chosen from
     /// for rebalancing
     pub current_platform_count: u64,
-    /// the slot at which a rebase last occured
+    /// the slot at which a rebase last occurred
     pub last_rebase_slot: u64,
     #[cfg_attr(not(target_arch = "bpf"), derivative(Debug = "ignore"))]
     pub buffer: [u8; 1000],
 }
 
 /// within a lending optimizer vault, this struct denotes
-/// configuration informatin for a specific platform the optimizer
+/// configuration information for a specific platform the optimizer
 /// can deposit into.
-#[account] // not zero copy so we dont care about padding
+#[account] // not zero copy so we don't care about padding
 #[cfg_attr(not(target_arch = "bpf"), derive(Derivative))]
 #[cfg_attr(not(target_arch = "bpf"), derivative(Debug))]
 pub struct LendingPlatformV1 {
@@ -82,7 +82,7 @@ pub struct SplLendingConfig {
     pub reserve_account: Pubkey,
     /// address of the reserve's liquidity token account
     /// for usdc optimizer vaults this would be the reserves
-    /// usdc token account aaddress
+    /// usdc token account address
     pub reserve_liquidity_account: Pubkey,
     /// address of the lending market this reserve is a part of
     pub lending_market_account: Pubkey,
@@ -91,7 +91,7 @@ pub struct SplLendingConfig {
     /// the vault's collateral token account
     pub collateral_token_account: Pubkey,
     /// oracle keys required for this spl lending platform
-    /// usually only one is required, but for future compatability
+    /// usually only one is required, but for future compatibility
     /// we allow up to 3
     ///
     /// if the first element in the array is a default public key

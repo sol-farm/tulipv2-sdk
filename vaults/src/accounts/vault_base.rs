@@ -117,7 +117,7 @@ pub struct VaultBaseV1 {
     /// the account that holds tokens from the underlying mint which are being withdrawn
     pub underlying_withdraw_queue: Pubkey,
     /// the account that holds tokens from the underlying mint
-    /// which have been receiving durring share issuance
+    /// which have been receiving during share issuance
     pub underlying_deposit_queue: Pubkey,
     /// the queue account which holds lp tokens acquired during compounding
     pub underlying_compound_queue: Pubkey,
@@ -138,7 +138,7 @@ pub struct VaultBaseV1 {
     /// no longer used
     #[cfg_attr(not(target_arch = "bpf"), derivative(Debug = "ignore"))]
     pub _precision_factor: u64,
-    /// time at which a compound last took palce at
+    /// time at which a compound last took place at
     pub last_compound_time: i64,
     /// the frequency at which compounding operations take place at
     /// compound operations may take place faster than this interval

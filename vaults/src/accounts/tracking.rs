@@ -22,7 +22,7 @@ use type_layout::TypeLayout;
 ///
 /// note when someone takes their deposit our of the tracking account
 /// they are no longer able to track their rewards until depositing back into
-/// the tracking ccount
+/// the tracking account
 ///
 /// each DepositTracking account has a "hold" account which is used
 /// to hold onto tokens while the user isn't actively withdrawing from

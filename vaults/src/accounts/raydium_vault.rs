@@ -1,4 +1,4 @@
-//! provides a tokenized shares vault targetting the Raydium protocol
+//! provides a tokenized shares vault targeting the Raydium protocol
 //! capable of supporting any v4 and onwards Raydium AMM farm
 use super::{vault_base::VaultBaseV1, InitVaultArgsV1};
 use anchor_lang::prelude::*;
@@ -37,7 +37,7 @@ pub struct RaydiumVaultV1 {
     pub raydium_pool_reward_b_token_account: Pubkey,
     /// indicates if this particular raydium vault emits dual rewards
     pub dual_rewards: u8,
-    /// the vault token acount used to
+    /// the vault token account used to
     /// store rewardA tokens, in pairs like
     /// RAY-USDC, this would be the RAY reward account
     /// in pairs like TULIP-USDC this would be RAY account
@@ -54,7 +54,7 @@ pub struct RaydiumVaultV1 {
     /// raydium user stake info account
     pub vault_stake_info_account: Pubkey,
 
-    /// addresss of the new associated stake info account
+    /// address of the new associated stake info account
     pub associated_stake_info_address: Pubkey,
 
     /// address of the coin mint account, for RAY-USDC

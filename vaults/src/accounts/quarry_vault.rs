@@ -1,4 +1,4 @@
-//! provides a vault implementation targetting the Quarry protocol
+//! provides a vault implementation targeting the Quarry protocol
 //! this vault type may or may not need to be wrapped in additional
 //! accounts depending on how Quarry is being used
 use super::vault_base::VaultBaseV1;

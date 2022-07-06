@@ -40,10 +40,10 @@ The `vaults` folder contains a crate `tulipv2-sdk-vaults` which provides all v2 
 
 # Examples
 
-For now the only usage examples are in the `examples` folder which contains a basic program to register a deposit trackign account for the USDC lending optimizer, and for depositing into the USDC lending optimizer, and withdrawing from the lending optimizer.
+For now the only usage examples are in the `examples` folder which contains a basic program to register a deposit tracking account for the USDC lending optimizer, and for depositing into the USDC lending optimizer, and withdrawing from the lending optimizer.
 
 Due to the architecture of Tulip's V2 vaults program, the deposit instructions will fail on localnet as there are some sweeping mechanisms used to sweep funds internally between the various protocols that a single optimizer vault supports.
 
 Additionally the localnet setup clones mainnet state to provide a stable set of accounts, etc.. that are used for testing. For instance at the time the snapshot was taken, the USDC lending optimizer was deposited into Solend only. As such the instructions for tulip/mango deposits fail to execute correctly.
 
-These erros have been caught so that when running `anchor test` all tests pass.
+These errors have been caught so that when running `anchor test` all tests pass.

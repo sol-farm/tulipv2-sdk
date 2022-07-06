@@ -1,4 +1,4 @@
-//! lending plattforms
+//! lending platforms
 
 use anchor_lang::prelude::*;
 
