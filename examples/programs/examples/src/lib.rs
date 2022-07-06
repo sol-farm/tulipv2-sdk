@@ -642,7 +642,32 @@ pub mod examples {
             };
             anchor_lang::solana_program::program::invoke(
                 &ix,
-                &[]
+                &[
+                    ctx.accounts.authority.to_account_info(),
+                    ctx.accounts.user_farm.to_account_info(),
+                    ctx.accounts.leveraged_farm.to_account_info(),
+                    ctx.accounts.liquidity_program_id.to_account_info(),
+                    ctx.accounts.amm_id.to_account_info(),
+                    ctx.accounts.amm_authority.to_account_info(),
+                    ctx.accounts.amm_open_orders.to_account_info(),
+                    ctx.accounts.amm_quantities_or_target_orders.to_account_info(),
+                    ctx.accounts.lp_mint_address.to_account_info(),
+                    ctx.accounts.pool_coin_token_account.to_account_info(),
+                    ctx.accounts.pool_pc_token_account.to_account_info(),
+                    ctx.accounts.serum_market.to_account_info(),
+                    ctx.accounts.token_program.to_account_info(),
+                    ctx.accounts.lev_farm_coin_token_account.to_account_info(),
+                    ctx.accounts.lev_farm_pc_token_account.to_account_info(),
+                    ctx.accounts.user_lp_token_account.to_account_info(),
+                    ctx.accounts.pyth_price_account.to_account_info(),
+                    ctx.accounts.lending_market_account.to_account_info(),
+                    ctx.accounts.user_farm_obligation.to_account_info(),
+                    ctx.accounts.derived_lending_market_authority.to_account_info(),
+                    ctx.accounts.lending_program.to_account_info(),
+                    ctx.accounts.clock.to_account_info(),
+                    ctx.accounts.dex_program.to_account_info(),
+                    ctx.remaining_accounts.get(0).unwrap().clone(),
+                ]
             )?;
         }
         Ok(())
@@ -1380,4 +1405,6 @@ pub struct AddLiquidity<'info> {
     pub clock: Sysvar<'info, Clock>,
     /// CHECK: .
     pub dex_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub tulip_leveraged_farm_program: AccountInfo<'info>,
 }

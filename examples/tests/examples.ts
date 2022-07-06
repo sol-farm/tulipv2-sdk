@@ -914,6 +914,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
           derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
           clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
           dexProgram: serumProgramId,
+          tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId
         },
         remainingAccounts: [
           {
