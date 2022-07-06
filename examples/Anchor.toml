@@ -1421,4 +1421,10 @@ filename = "deps/accounts/9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB.json"
 [[test.validator.account]] # ray usdc pool id
 address = "CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS"
 filename = "deps/accounts/CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS.json"
+[[test.validator.account]] # vault info account
+address = "Gf38RxSF3FguiBVYfsB8AmpPyNkGCrNDE7LNvr6U8n7C"
+filename = "deps/accounts/Gf38RxSF3FguiBVYfsB8AmpPyNkGCrNDE7LNvr6U8n7C.json"
+[[test.validator.account]] # old vault info
+address = "8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA"
+filename = "deps/accounts/8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA.json"
 ###############
