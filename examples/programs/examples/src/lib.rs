@@ -730,11 +730,29 @@ pub mod examples {
     }
     pub fn withdraw_raydium_vault_close<'info>(
         ctx: Context<WithdrawRaydiumLevFarm<'info>>,
+        obligation_index: u8,
+        withdraw_percent: u8,
+        close_method: u8,
+        farm: u64,
     ) -> Result<()> {
         {
             let ix = {
                 let withdraw_farm: Box<tulipv2_sdk_levfarm::instruction::withdraw_raydium_vault_close::WithdrawFarm> = Box::new(ctx.accounts.into());
-            }
+                tulipv2_sdk_levfarm::helpers::new_withdraw_raydium_vault_ix(
+                    withdraw_farm,
+                    ctx.remaining_accounts.get(0).unwrap().key(), // lending market
+                    ctx.remaining_accounts.get(1).unwrap().key(), // user farm obligation
+                    ctx.remaining_accounts.get(2).unwrap().key(), // lending authority
+                    ctx.remaining_accounts.get(4).unwrap().key(), // lending program
+                    ctx.remaining_accounts.get(5).unwrap().key(), // pos info account
+                    ctx.remaining_accounts.get(6).unwrap().key(), // system program
+                    ctx.remaining_accounts.get(7).unwrap().key(), // rent
+                    obligation_index,
+                    withdraw_percent,
+                    close_method,
+                    farm.into()
+                )
+            };
         }
         Ok(())
     }

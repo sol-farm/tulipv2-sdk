@@ -124,7 +124,7 @@ impl<'info> From<&mut AddLiquidity<'info>> for tulipv2_sdk_levfarm::instructions
 }
 
 
-impl<'info> From<&mut WithdrawRaydiumLevFarm<'info>> for tulipv2_sdk_levfarm::instructions::deposit_borrow_dual::DepositBorrowDual {
+impl<'info> From<&mut WithdrawRaydiumLevFarm<'info>> for tulipv2_sdk_levfarm::instructions::withdraw_raydium_vault_close::WithdrawFarm {
     fn from(farm_accounts: &mut WithdrawRaydiumLevFarm<'info>) -> Self {
         Self {
             authority: farm_accounts.authority.key(),
