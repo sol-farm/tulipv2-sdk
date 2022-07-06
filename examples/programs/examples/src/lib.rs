@@ -627,6 +627,25 @@ pub mod examples {
         )?;
         Ok(())
     }
+    pub fn add_liquidity_stats<'info>(
+        ctx: Context<'_, '_, '_, 'info, AddLiquidity<'info>>,
+        obligation_index: u8
+    ) -> Result<()> {
+        {
+            let ix = {
+                add_liq: Box<tulipv2_sdk_levfarm::instructions::add_liquidity_stats::AddLiquidity> = Box::new(ctx.accounts.into());
+                tulipv2_sdk_levfarm::helpers::new_add_liquidity_stats_ix(
+                    add_liq,
+                    ctx.remaining_accounts.get(0).unwrap().key(),
+                    obligation_index
+                )
+            }
+            anchor_lang::solana_program::program::invoke(
+                &ix,
+                &[]
+            )
+        }
+    }
     // you would likely want to provide the nonce values off-chain in a struct
     // to avoid the pubkey derivation costs
     pub fn deposit_raydium_vault<'a, 'b, 'c, 'info>(
@@ -635,7 +654,8 @@ pub mod examples {
     ) -> Result<()> {
         {
             let ix = {
-            let deposit_vault:  Box<tulipv2_sdk_levfarm::instructions::deposit_raydium_vault::DepositFarm> = Box::new(ctx.accounts.into());            tulipv2_sdk_levfarm::helpers::new_deposit_raydium_vault_ix(
+            let deposit_vault:  Box<tulipv2_sdk_levfarm::instructions::deposit_raydium_vault::DepositFarm> = Box::new(ctx.accounts.into());
+            tulipv2_sdk_levfarm::helpers::new_deposit_raydium_vault_ix(
                 deposit_vault,
                 ctx.accounts.lending_market_account.key(),
                 ctx.accounts.user_farm_obligation.key(),
@@ -1298,4 +1318,68 @@ pub struct RaydiumSwap<'info> {
     //#[account(mut)]
     ///// CHECK: .
     //pub position_info_account: AccountInfo<'info>,
+}
+
+
+#[derive(Accounts)]
+pub struct AddLiquidity<'info> {
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    // seems to be false positive
+    //#[soteria(ignore)]
+    pub user_farm: AccountInfo<'info>,
+    // fairly certain false positive
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub leveraged_farm: AccountInfo<'info>,
+    // fairly certain false positive
+    //#[soteria(ignore)]
+    pub liquidity_program_id: AccountInfo<'info>,
+    #[account(mut)]
+    pub amm_id: AccountInfo<'info>,
+    #[account(mut)]
+    pub amm_authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub amm_open_orders: AccountInfo<'info>,
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub amm_quantities_or_target_orders: AccountInfo<'info>,
+    // fairly certain false positive
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub lp_mint_address: Box<Account<'info, Mint>>,
+    // for RAY-USDC this would be the pool's
+    // RAY token account
+    // this seems to be a false positive
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub pool_coin_token_account: Box<Account<'info, TokenAccount>>,
+    // for RAY-USDC this would be the pool's
+    // USDC token account
+    #[account(mut)]
+    pub pool_pc_token_account: Box<Account<'info, TokenAccount>>,
+    // seems to be a false positive
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub serum_market: AccountInfo<'info>,
+    // this seems to be a false positive
+    //#[soteria(ignore)]
+    pub token_program: AccountInfo<'info>,
+    #[account(mut)]
+    // this seems to be a false positive
+    //#[soteria(ignore)]
+    pub lev_farm_coin_token_account: ABox<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub lev_farm_pc_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub user_lp_token_account: Box<Account<'info, TokenAccount>>,
+    pub pyth_price_account: AccountInfo<'info>,
+    pub lending_market_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_farm_obligation: AccountInfo<'info>,
+    pub derived_lending_market_authority: AccountInfo<'info>,
+    pub lending_program: AccountInfo<'info>,
+    pub clock: Sysvar<'info, Clock>,
+    pub dex_program: AccountInfo<'info>,
 }

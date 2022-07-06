@@ -91,3 +91,34 @@ impl<'info> From<&mut RaydiumSwap<'info>> for tulipv2_sdk_levfarm::instructions:
         }
     }
 }
+
+impl<'info> From<&mut AddLiquidity<'info>> for tulipv2_sdk_levfarm::instructions::add_liquidity_stats::AddLiquidity {
+    #[inline(always)]
+    fn from(farm_accounts: &mut AddLiquidity<'info>) -> Self {
+        Self {
+            authority: farm_accounts.authority.key(),
+            user_farm: farm_accounts.user_farm.key(),
+            leveraged_farm: farm_accounts.leveraged_farm.key(),
+            liquidity_program_id: farm_accounts.liquidity_program_id.key(),
+            amm_id: farm_accounts.amm_id.key(),
+            amm_authority: farm_accounts.amm_authority.key(),
+            amm_open_orders: farm_accounts.amm_open_orders.key(),
+            amm_quantities_or_target_orders: farm_accounts.amm_quantities_or_target_orders.key(),
+            lp_mint_address: farm_accounts.lp_mint_address.key(),
+            pool_coin_token_account: farm_accounts.pool_coin_token_account.key(),
+            pool_pc_token_account: farm_accounts.pool_pc_token_account.key(),
+            serum_market: farm_accounts.serum_market.key(),
+            token_program: farm_accounts.token_program.key(),
+            lev_farm_coin_token_account: farm_accounts.lev_farm_coin_token_account.key(),
+            lev_farm_pc_token_account: farm_accounts.lev_farm_pc_token_account.key(),
+            user_lp_token_account: farm_accounts.user_lp_token_account.key(),
+            pyth_price_account: farm_accounts.pyth_price_account.key(),
+            lending_market_account: farm_accounts.lending_market_account.key(),
+            user_farm_obligation: farm_accounts.user_farm_obligation.key(),
+            derived_lending_market_authority: farm_accounts.derived_lending_market_authority.key(),
+            lending_program: farm_accounts.lending_program.key(),
+            clock: farm_accounts.clock.key(),
+            dex_program: farm_accounts.dex_program.key(),
+        }
+    }
+}
