@@ -1,4 +1,4 @@
-use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault, swap_tokens_raydium_stats, add_liquidity_stats, withdraw_raydium_vault_close, orca_add_liquidity_queue}};
+use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault, swap_tokens_raydium_stats, add_liquidity_stats, withdraw_raydium_vault_close, orca_add_liquidity_queue, withdraw_orca_vault}};
 
 use super::*;
 use anchor_lang::prelude::*;
@@ -234,6 +234,57 @@ pub fn new_orca_add_liquidity_queue_ix(
     )
 }
 
+pub fn new_withdraw_orca_vault_ix(
+    accounts: Box<withdraw_orca_vault::WithdrawOrcaFarm>,
+    lending_market: Pubkey,
+    user_farm_obligation: Pubkey,
+    lending_market_authority: Pubkey,
+    lending_program: Pubkey,
+    obligation_index: u8,
+    withdraw_percent: u8,
+    close_method: u8
+) -> Option<Instruction> {
+    withdraw_orca_vault::withdraw_orca_vault(
+        accounts,
+        lending_market,
+        user_farm_obligation,
+        lending_market_authority,
+        lending_program,
+        obligation_index,
+        withdraw_percent,
+        close_method
+    )
+}
+pub fn new_withdraw_orca_vault_close_ix(
+    accounts: Box<withdraw_orca_vault::WithdrawOrcaFarm>,
+    lending_market: Pubkey,
+    user_farm_obligation: Pubkey,
+    lending_market_authority: Pubkey,
+    lending_program: Pubkey,
+    obligation_index: u8,
+    withdraw_percent: u8,
+    close_method: u8
+) -> Option<Instruction> {
+    withdraw_orca_vault::withdraw_orca_vault_close(
+        accounts,
+        lending_market,
+        user_farm_obligation,
+        lending_market_authority,
+        lending_program,
+        obligation_index,
+        withdraw_percent,
+        close_method
+    )
+}
+pub fn new_withdraw_orca_vault_without_shares_ix(
+    accounts: Box<withdraw_orca_vault::WithdrawOrcaFarm>,
+    obligation_index: u8,
+) -> Option<Instruction> {
+    withdraw_orca_vault::withdraw_orca_vault_without_shares(
+        accounts,
+        obligation_index,
+    )
+}
 pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
     match farm {
         Farms::RayUsdcVault => {

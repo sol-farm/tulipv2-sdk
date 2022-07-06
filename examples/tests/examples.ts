@@ -1077,6 +1077,132 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
   })
 })
 
+
+describe("tests leverage farm instructions via orca-usdc non double dip", async () => {
+  let provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+
+  const program = anchor.workspace.Examples as Program<Examples>;
+
+  const programId = program.programId;
+  let userFarmAddress: anchor.web3.PublicKey;
+  let userFarmObligation1VaultAddress: anchor.web3.PublicKey;
+  let userFarmObligation1Address: anchor.web3.PublicKey;
+  let userFarmObligationVault1LpTokenAccount: anchor.web3.PublicKey;
+  it("creates user farm", async () => {
+    let [_userFarm, _userFarmNonce] = await findUserFarmAddress(
+      provider.wallet.publicKey,
+      tulipLeveragedFarmProgramId,
+      new anchor.BN(0),
+      new anchor.BN(17),
+    );
+    userFarmAddress = _userFarm;
+    let [_userFarmObligationVault, _userFarmObligationVaultNonce] = await findUserFArmObligationVaultAddress(
+      userFarmAddress,
+      new anchor.BN(0),
+      tulipLeveragedFarmProgramId,
+    );
+    userFarmObligation1VaultAddress = _userFarmObligationVault;
+    let [_userFarmObligation, _userFarmObligationNonce] = await findUserFarmObligationAddress(
+      provider.wallet.publicKey,
+      userFarmAddress,
+      tulipLeveragedFarmProgramId,
+      new anchor.BN(0),
+    );
+    userFarmObligation1Address = _userFarmObligation;
+    userFarmObligationVault1LpTokenAccount = await createAssociatedTokenAccount(
+      provider,
+      userFarmObligation1VaultAddress,
+      rayUsdcLpTokenMint
+    );
+    const tx = await program.rpc.createUserFarm(new anchor.BN(17), {
+      options: {
+        skipPreflight: true,
+      },
+      accounts: {
+        authority: provider.wallet.publicKey,
+        userFarm: userFarmAddress,
+        userFarmObligation: userFarmObligation1Address,
+        lendingMarket: tulipLendingMarketAccount,
+        global: tulipLevFarmGlobalAccount,
+        leveragedFarm: tulipRayUsdcLevFarmAccount,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        lendingProgram: tulipLendingProgramId,
+        tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        obligationVaultAddress: userFarmObligation1VaultAddress,
+        userFarmLpTokenAccount: await serumAssoToken.getAssociatedTokenAddress(
+          userFarmAddress,
+          rayUsdcLpTokenMint,
+        ),
+        userFarmBaseTokenAccount: await serumAssoToken.getAssociatedTokenAddress(
+          userFarmAddress,
+          rayTokenMint,
+        ),
+        userFarmQuoteTokenAccount: await serumAssoToken.getAssociatedTokenAddress(
+          userFarmAddress,
+          usdcTokenMint,
+        ),
+        lpTokenMint: rayUsdcLpTokenMint,
+        baseTokenMint: rayTokenMint,
+        quoteTokenMint: usdcTokenMint,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId,
+      }
+    })
+    console.log("sent create user farm token account tx ", tx)
+  })
+  let userFarmObligation2VaultAddress: anchor.web3.PublicKey;
+  let userFarmObligation2Address: anchor.web3.PublicKey;
+  let yourUsdcTokenAccount: anchor.web3.PublicKey;
+  let yourRayTokenAccount: anchor.web3.PublicKey;
+  it("create user farm obligation", async () => {
+    yourUsdcTokenAccount =  await getAssociatedTokenAddress(
+      usdcTokenMint,
+      provider.wallet.publicKey,
+    )
+    yourRayTokenAccount = await createAssociatedTokenAccount(
+      provider,
+      provider.wallet.publicKey,
+      rayTokenMint,
+    )
+    let [_userFarmObligationVault, _userFarmObligationVaultNonce] = await findUserFArmObligationVaultAddress(
+      userFarmAddress,
+      new anchor.BN(1),
+      tulipLeveragedFarmProgramId,
+    );
+    userFarmObligation2VaultAddress = _userFarmObligationVault;
+    let [_userFarmObligation, _userFarmObligationNonce] = await findUserFarmObligationAddress(
+      provider.wallet.publicKey,
+      userFarmAddress,
+      tulipLeveragedFarmProgramId,
+      new anchor.BN(1),
+    );
+    userFarmObligation2Address = _userFarmObligation;
+    const tx = await program.rpc.createUserFarmObligation(new anchor.BN(0), new anchor.BN(1), {
+      options: {
+        skipPreflight: true,
+      },
+      accounts: {
+        authority: provider.wallet.publicKey,
+        userFarm: userFarmAddress,
+        userFarmObligation: userFarmObligation2Address,
+        lendingMarket: tulipLendingMarketAccount,
+        leveragedFarm: tulipRayUsdcLevFarmAccount,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        lendingProgram: tulipLendingProgramId,
+        tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        obligationVaultAddress: userFarmObligation2VaultAddress,
+        tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId,
+      }
+    })
+    console.log("sent create user farm token account tx ", tx)
+  })
+})
+
 const timer = ms => new Promise( res => setTimeout(res, ms));
 
 function freeze(time) {
