@@ -246,6 +246,15 @@ let raydiumStakeProgramId: anchor.web3.PublicKey = new anchor.web3.PublicKey("Eh
 let raydiumStakeProgramIdV5: anchor.web3.PublicKey = new anchor.web3.PublicKey("9KEPoZmtHUrBbhWN1v1KWLMkkvwY6WLtAVUCPRtRjP4z");
 const raydiumLiquidityProgram = new anchor.web3.PublicKey("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8");
 
+const v1RayUsdcVaultPda = new anchor.web3.PublicKey("38dsJ6n4y6ffCDSZXhYYiMXQCgfzqHK5XSytL2fApeGc");
+const v1RayUsdcVaultRewardATokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
+const v1RayUsdcVaultRewardBTokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
+const v1RayUsdcVaultLpTokenAccount = new anchor.web3.PublicKey("E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB");
+const v1RayUsdcPoolLpTokenAccount = new anchor.web3.PublicKey("BNnXLFGva3K8ACruAc1gaP49NCbLkyE6xWhGV4G2HLrs");
+const v1RayUsdcPoolRewardATokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
+const v1RayUsdcPoolRewardBTokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
+const v1RayUsdcPoolAuthority = new anchor.web3.PublicKey("5KQFnDd33J5NaMC9hQ64P5XzaaSz8Pt7NBCkZFYn1po");
+const rayUsdcPoolId = new anchor.web3.PublicKey("CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS");
 const rayUsdcAmmAuthority = new anchor.web3.PublicKey("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1");
 const rayUsdcAmmOpenOrders = new anchor.web3.PublicKey("J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW");
 const rayUsdcAmmQuantitiesOrTargetOrders = new anchor.web3.PublicKey("3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT");
@@ -950,15 +959,6 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
       userFarmObligation1Address,
       v1RaydiumVaultsProgram,
     );
-    const v1RayUsdcVaultPda = new anchor.web3.PublicKey("38dsJ6n4y6ffCDSZXhYYiMXQCgfzqHK5XSytL2fApeGc");
-    const v1RayUsdcVaultRewardATokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
-    const v1RayUsdcVaultRewardBTokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
-    const v1RayUsdcVaultLpTokenAccount = new anchor.web3.PublicKey("E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB");
-    const v1RayUsdcPoolLpTokenAccount = new anchor.web3.PublicKey("BNnXLFGva3K8ACruAc1gaP49NCbLkyE6xWhGV4G2HLrs");
-    const v1RayUsdcPoolRewardATokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
-    const v1RayUsdcPoolRewardBTokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
-    const v1RayUsdcPoolAuthority = new anchor.web3.PublicKey("5KQFnDd33J5NaMC9hQ64P5XzaaSz8Pt7NBCkZFYn1po");
-    const rayUsdcPoolId = new anchor.web3.PublicKey("CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS");
     const tx = await program.rpc.depositRaydiumVault(
       new anchor.BN(0),
       new anchor.BN(0),
@@ -997,6 +997,81 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
           lendingProgram: tulipLendingProgramId,
           tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId
         },
+      }
+    )
+  })
+  it("withdraws raydium vault", async () => {
+    const tx = await program.rpc.withdrawRaydiumVaultClose(
+      new anchor.BN(0),
+      new anchor.BN(50),
+      new anchor.BN(0),
+      new anchor.BN(0),
+      {
+        options: {
+          skipPreflight: true,
+        },
+        accounts: {
+          authority: provider.wallet.publicKey,
+          userFarm: userFarmAddress,
+          obligationVaultAddress: userFarmObligation1VaultAddress,
+          leveragedFarm: tulipRayUsdcLevFarmAccount,
+          vaultProgram: v1RaydiumVaultsProgram,
+          authorityTokenAccount: userFarmObligationVault1LpTokenAccount,
+          vaultPdaAccount: v1RayUsdcVaultPda,
+          vault: v1RayUsdcVaultAccount,
+          userBalanceAccount: vaultBalanceAccount,
+          stakeProgramId: raydiumStakeProgramId,
+          poolId: rayUsdcPoolId,
+          poolAuthority: v1RayUsdcPoolAuthority,
+          poolLpTokenAccount: v1RayUsdcPoolLpTokenAccount,
+          userRewardATokenAccount: v1RayUsdcVaultRewardATokenAccount,
+          poolRewardATokenAccount: v1RayUsdcPoolRewardATokenAccount,
+          userRewardBTokenAccount: v1RayUsdcVaultRewardBTokenAccount,
+          poolRewardBTokenAccount: v1RayUsdcPoolRewardBTokenAccount,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          tokenProgramId: splToken.TOKEN_PROGRAM_ID,
+          tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId,
+          userInfoAccount: v1RayUsdcVaultInfoAccount,
+          userBalanceMeta: vaultBalanceMetadataAccount,
+          userLpTokenAccount: userFarmObligationVault1LpTokenAccount,
+        },
+        remainingAccounts: [
+          {
+            pubkey: tulipLendingMarketAccount,
+            isWritable: false,
+            isSigner: false,
+          },
+          {
+            pubkey: userFarmObligation1Address,
+            isWritable: true,
+            isSigner: false,
+          },
+          {
+            pubkey: tulipDerivedLendingMarketAuthority,
+            isWritable: false,
+            isSigner: false,
+          },
+          {
+            pubkey: tulipLendingProgramId,
+            isWritable: false,
+            isSigner: false,
+          },
+          {
+            pubkey: positionInfoAccount,
+            isWritable: false,
+            isSigner: false,
+          },
+          {
+            pubkey: anchor.web3.SystemProgram.programId,
+            isWritable: false,
+            isSigner: false,
+          },
+          {
+            pubkey: anchor.web3.SYSVAR_RENT_PUBKEY,
+            isWritable: false,
+            isSigner: false,
+          }
+        ]
       }
     )
   })

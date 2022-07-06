@@ -33,7 +33,7 @@ pub fn withdraw_raydium_vault_close(
     user_farm_obligation: Pubkey,
     lending_market_authority: Pubkey,
     lending_program: Pubkey,
-    position_info_account: &Pubkey,
+    position_info_account: Pubkey,
     system_program: Pubkey,
     rent: Pubkey,
     meta_nonce: u8,

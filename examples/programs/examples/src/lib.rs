@@ -729,7 +729,7 @@ pub mod examples {
         Ok(())
     }
     pub fn withdraw_raydium_vault_close<'info>(
-        ctx: Context<WithdrawRaydiumLevFarm<'info>>,
+        ctx: Context<'_, '_, '_, 'info, WithdrawRaydiumLevFarm<'info>>,
         obligation_index: u8,
         withdraw_percent: u8,
         close_method: u8,
@@ -737,22 +737,56 @@ pub mod examples {
     ) -> Result<()> {
         {
             let ix = {
-                let withdraw_farm: Box<tulipv2_sdk_levfarm::instruction::withdraw_raydium_vault_close::WithdrawFarm> = Box::new(ctx.accounts.into());
+                let withdraw_farm: Box<tulipv2_sdk_levfarm::instructions::withdraw_raydium_vault_close::WithdrawFarm> = Box::new(ctx.accounts.into());
                 tulipv2_sdk_levfarm::helpers::new_withdraw_raydium_vault_ix(
                     withdraw_farm,
                     ctx.remaining_accounts.get(0).unwrap().key(), // lending market
                     ctx.remaining_accounts.get(1).unwrap().key(), // user farm obligation
                     ctx.remaining_accounts.get(2).unwrap().key(), // lending authority
-                    ctx.remaining_accounts.get(4).unwrap().key(), // lending program
-                    ctx.remaining_accounts.get(5).unwrap().key(), // pos info account
-                    ctx.remaining_accounts.get(6).unwrap().key(), // system program
-                    ctx.remaining_accounts.get(7).unwrap().key(), // rent
+                    ctx.remaining_accounts.get(3).unwrap().key(), // lending program
+                    ctx.remaining_accounts.get(4).unwrap().key(), // pos info account
+                    ctx.remaining_accounts.get(5).unwrap().key(), // system program
+                    ctx.remaining_accounts.get(6).unwrap().key(), // rent
                     obligation_index,
                     withdraw_percent,
                     close_method,
                     farm.into()
-                )
+                ).unwrap()
             };
+            anchor_lang::solana_program::program::invoke(
+                &ix,
+                &[
+                    ctx.accounts.authority.to_account_info(),
+                    ctx.accounts.user_farm.to_account_info(),
+                    ctx.accounts.obligation_vault_address.to_account_info(),
+                    ctx.accounts.leveraged_farm.to_account_info(),
+                    ctx.accounts.authority_token_account.to_account_info(),
+                    ctx.accounts.vault.to_account_info(),
+                    ctx.accounts.vault_program.to_account_info(),
+                    ctx.accounts.user_balance_account.to_account_info(),
+                    ctx.accounts.user_info_account.to_account_info(),
+                    ctx.accounts.user_lp_token_account.to_account_info(),
+                    ctx.accounts.user_reward_a_token_account.to_account_info(),
+                    ctx.accounts.pool_reward_a_token_account.to_account_info(),
+                    ctx.accounts.user_reward_b_token_account.to_account_info(),
+                    ctx.accounts.pool_reward_b_token_account.to_account_info(),
+                    ctx.accounts.token_program_id.to_account_info(),
+                    ctx.accounts.clock.to_account_info(),
+                    ctx.accounts.vault_pda_account.to_account_info(),
+                    ctx.accounts.pool_lp_token_account.to_account_info(),
+                    ctx.accounts.pool_authority.to_account_info(),
+                    ctx.accounts.pool_id.to_account_info(),
+                    ctx.accounts.stake_program_id.to_account_info(),
+                    ctx.accounts.user_balance_meta.to_account_info(),
+                    ctx.remaining_accounts.get(0).unwrap().clone(), // lending market
+                    ctx.remaining_accounts.get(1).unwrap().clone(), // user farm obligation
+                    ctx.remaining_accounts.get(2).unwrap().clone(), // lending authority
+                    ctx.remaining_accounts.get(3).unwrap().clone(), // lending program
+                    ctx.remaining_accounts.get(4).unwrap().clone(), // pos info account
+                    ctx.remaining_accounts.get(5).unwrap().clone(), // system program
+                    ctx.remaining_accounts.get(6).unwrap().clone(), // rent
+                ]
+            )?;
         }
         Ok(())
     }
@@ -1443,45 +1477,65 @@ pub struct AddLiquidity<'info> {
 #[derive(Accounts)]
 pub struct WithdrawRaydiumLevFarm<'info> {
     #[account(signer)]
+    /// CHECK: .
     pub authority: AccountInfo<'info>,
     #[account(mut)]
+    /// CHECK: .
     pub user_farm: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub obligation_vault_address: AccountInfo<'info>,
+    /// CHECK: .
     pub leveraged_farm: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub authority_token_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub vault: AccountInfo<'info>,
+    /// CHECK: .
     pub vault_program: AccountInfo<'info>,
-
+    /// CHECK: .
     #[account(mut)]
     pub user_balance_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub user_info_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub user_lp_token_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub user_reward_a_token_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub pool_reward_a_token_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub user_reward_b_token_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub pool_reward_b_token_account: AccountInfo<'info>,
+    /// CHECK: .
     pub token_program_id: AccountInfo<'info>,
     pub clock: Sysvar<'info, Clock>,
-    // the account of the vault pda
+    /// CHECK: .
     #[account(mut)]
     pub vault_pda_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    // the token account associated with the lp token that the pool holds
     pub pool_lp_token_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub pool_authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub pool_id: AccountInfo<'info>,
+    /// CHECK: .
     pub stake_program_id: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub user_balance_meta: AccountInfo<'info>,
+    /// CHECK: .
+    pub tulip_leveraged_farm_program: AccountInfo<'info>,
 }
