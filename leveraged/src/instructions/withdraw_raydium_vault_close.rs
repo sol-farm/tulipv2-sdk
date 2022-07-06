@@ -73,7 +73,7 @@ impl ToAccountMetas for WithdrawFarm {
             AccountMeta::new(self.authority, true),
             AccountMeta::new(self.user_farm, false),
             AccountMeta::new(self.obligation_vault_address, false),
-            AccountMeta::new(self.leveraged_farm, false),
+            AccountMeta::new_readonly(self.leveraged_farm, false),
             AccountMeta::new(self.authority_token_account, false),
             AccountMeta::new(self.vault, false),
             AccountMeta::new_readonly(self.vault_program, false),

@@ -1058,7 +1058,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
           },
           {
             pubkey: positionInfoAccount,
-            isWritable: false,
+            isWritable: true,
             isSigner: false,
           },
           {
