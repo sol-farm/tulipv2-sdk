@@ -23,3 +23,9 @@ use static_pubkey::static_pubkey;
 
 /// tulip v2 vaults program id
 pub const ID: Pubkey = static_pubkey!("TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX");
+/// address of raydium liquidity program
+pub const RAYDIUM_LIQUIDITY_V4: Pubkey = static_pubkey!("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8");
+/// address of first raydium staking program
+pub const RAYDIUM_STAKE: Pubkey = static_pubkey!("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q");
+/// address of the latest raydium staking program
+pub const RAYDIUM_STAKE_V5: Pubkey = static_pubkey!("9KEPoZmtHUrBbhWN1v1KWLMkkvwY6WLtAVUCPRtRjP4z");

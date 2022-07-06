@@ -105,7 +105,12 @@ const pcSourceReserveLiquidityTokenAccount = new anchor.web3.PublicKey("64QJd6MY
 const coinReserveLiquidityFeeReceiver = new anchor.web3.PublicKey("4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj");
 const pcReserveLiquidityFeeReceiver = new anchor.web3.PublicKey("GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU");
 const v1RayUsdcVaultAccount = new anchor.web3.PublicKey("HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG");
-const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+const v1RayUsdcOldVaultInfoAccount = new anchor.web3.PublicKey("8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA");
+const rayUsdcAmmId = new anchor.web3.PublicKey("6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg");
+const v1RaydiumVaultsProgram = new anchor.web3.PublicKey("7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4");
+let raydiumStakeProgramId = new anchor.web3.PublicKey("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q");
+let raydiumStakeProgramIdV5 = new anchor.web3.PublicKey("9KEPoZmtHUrBbhWN1v1KWLMkkvwY6WLtAVUCPRtRjP4z");
+//const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 const one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 describe("examples", () => {
     let provider = anchor.AnchorProvider.env();
@@ -118,7 +123,6 @@ describe("examples", () => {
     let depositTrackingHoldAccount;
     let yourUnderlyingTokenAccount;
     let yourSharesTokenAccount;
-    let nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
     it("registers deposit tracking account", () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("progrmaId ", programId);
         console.log("usdcv1 vault ", usdcv1Vault);
@@ -161,7 +165,7 @@ describe("examples", () => {
     it("issues shares", () => __awaiter(void 0, void 0, void 0, function* () {
         yourUnderlyingTokenAccount = yield serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, usdcTokenMint);
         yourSharesTokenAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, provider.wallet.publicKey, usdcv1SharesMint);
-        let tx = yield program.rpc.issueShares(nine, [new anchor.BN(1), new anchor.BN(65537)], {
+        let tx = yield program.rpc.issueShares(one.mul(new anchor.BN(4)), [new anchor.BN(1), new anchor.BN(65537)], {
             options: {
                 skipPreflight: false,
             },
@@ -188,7 +192,7 @@ describe("examples", () => {
         console.log("in production this would fail, as 15 minutes need to pass before lockup is expired");
         let tx = yield program.rpc.withdrawDepositTracking(
         // fixed amount we get for 10 USDC based on the program state which has been dumped to disk
-        new anchor.BN(8972072), [new anchor.BN(1), new anchor.BN(65537)], {
+        new anchor.BN(3987587), [new anchor.BN(1), new anchor.BN(65537)], {
             options: { skipPreflight: true },
             accounts: {
                 authority: provider.wallet.publicKey,
@@ -206,7 +210,7 @@ describe("examples", () => {
         console.log("sent withdraw deposit tracking tx");
     }));
     it("withdraws multi deposit vault through tulip", () => __awaiter(void 0, void 0, void 0, function* () {
-        let tx = yield program.rpc.withdrawMultiDepositVaultThroughTulip(new anchor.BN(8972072), {
+        let tx = yield program.rpc.withdrawMultiDepositVaultThroughTulip(new anchor.BN(3987587), {
             options: { skipPreflight: true },
             accounts: {
                 commonData: {
@@ -275,7 +279,7 @@ describe("examples", () => {
         });
     }));
     it("withdraws multi deposit vault through mango", () => __awaiter(void 0, void 0, void 0, function* () {
-        program.rpc.withdrawMultiDepositVaultThroughMango(new anchor.BN(8972072), {
+        program.rpc.withdrawMultiDepositVaultThroughMango(new anchor.BN(3987587), {
             options: { skipPreflight: true },
             accounts: {
                 commonData: {
@@ -315,7 +319,7 @@ describe("examples", () => {
         });
     }));
     it("withdraws multi deposit vault through solend", () => __awaiter(void 0, void 0, void 0, function* () {
-        program.rpc.withdrawMultiDepositVaultThroughSolend(new anchor.BN(8972072), {
+        program.rpc.withdrawMultiDepositVaultThroughSolend(new anchor.BN(3987587), {
             options: { skipPreflight: true },
             accounts: {
                 commonData: {
@@ -448,6 +452,7 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
     let userFarmAddress;
     let userFarmObligation1VaultAddress;
     let userFarmObligation1Address;
+    let userFarmObligationVault1LpTokenAccount;
     it("creates user farm", () => __awaiter(void 0, void 0, void 0, function* () {
         let [_userFarm, _userFarmNonce] = yield (0, utils_1.findUserFarmAddress)(provider.wallet.publicKey, tulipLeveragedFarmProgramId, new anchor.BN(0), new anchor.BN(0));
         userFarmAddress = _userFarm;
@@ -455,6 +460,7 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
         userFarmObligation1VaultAddress = _userFarmObligationVault;
         let [_userFarmObligation, _userFarmObligationNonce] = yield (0, utils_1.findUserFarmObligationAddress)(provider.wallet.publicKey, userFarmAddress, tulipLeveragedFarmProgramId, new anchor.BN(0));
         userFarmObligation1Address = _userFarmObligation;
+        userFarmObligationVault1LpTokenAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, userFarmObligation1VaultAddress, rayUsdcLpTokenMint);
         const tx = yield program.rpc.createUserFarm(new anchor.BN(0), {
             options: {
                 skipPreflight: true,
@@ -517,10 +523,10 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
         console.log("sent create user farm token account tx ", tx);
     }));
     let positionInfoAccount;
-    it("deposits coin, borrow coin", () => __awaiter(void 0, void 0, void 0, function* () {
+    it("invokes deposit borrow dual pc, borrow pc", () => __awaiter(void 0, void 0, void 0, function* () {
         let [_posInfo, _posNonce] = yield (0, utils_1.findUserPositionInfoAddress)(userFarmAddress, tulipLeveragedFarmProgramId, new anchor.BN(0));
         positionInfoAccount = _posInfo;
-        const tx = yield program.rpc.depositBorrowDual(one, new anchor.BN(0), one.div(new anchor.BN(2)), new anchor.BN(0), new anchor.BN(0), {
+        const tx = yield program.rpc.depositBorrowDual(new anchor.BN(0), one.mul(new anchor.BN(4)), one, new anchor.BN(0), new anchor.BN(0), {
             options: {
                 skipPreflight: true,
             },
@@ -529,9 +535,9 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
                 userFarm: userFarmAddress,
                 leveragedFarm: tulipRayUsdcLevFarmAccount,
                 userFarmObligation: userFarmObligation1Address,
-                coinSourceTokenAccount: yourUsdcTokenAccount,
+                coinSourceTokenAccount: yourRayTokenAccount,
                 coinDestinationTokenAccount: rayUsdcLevFarmBaseTokenAccount,
-                pcSourceTokenAccount: yourRayTokenAccount,
+                pcSourceTokenAccount: yourUsdcTokenAccount,
                 pcDestinationTokenAccount: rayUsdcLevFarmQuoteTokenAccount,
                 coinDepositReserveAccount,
                 pcDepositReserveAccount,
@@ -541,7 +547,7 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
                 derivedLendingMarketAuthority: tulipDerivedLendingMarketAuthority,
                 tokenProgram: splToken.TOKEN_PROGRAM_ID,
                 lendingProgram: tulipLendingProgramId,
-                coinSourceReserveLiquidityTokenAccount: tulipReserveLiquiditySupply,
+                coinSourceReserveLiquidityTokenAccount,
                 pcSourceReserveLiquidityTokenAccount,
                 coinReserveLiquidityFeeReceiver,
                 pcReserveLiquidityFeeReceiver,
@@ -552,6 +558,57 @@ describe("tests leverage farm instructions via ray-usdc", () => __awaiter(void 0
                 positionInfoAccount,
                 systemProgram: anchor.web3.SystemProgram.programId,
                 tulipLeveragedFarmProgram: tulipLeveragedFarmProgramId
+            }
+        });
+        console.log("sent deposit_dual_borrw tx ", tx);
+    }));
+    let vaultBalanceAccount;
+    let vaultBalanceMetadataAccount;
+    let vaultRewardAccount;
+    it("deposits vault", () => __awaiter(void 0, void 0, void 0, function* () {
+        let a;
+        let b;
+        let c;
+        [vaultBalanceAccount, a] = yield (0, utils_1.findVaultBalanceAccount)(v1RayUsdcOldVaultInfoAccount, userFarmObligation1VaultAddress, v1RaydiumVaultsProgram);
+        [vaultBalanceMetadataAccount, b] = yield (0, utils_1.findVaultBalanceMetadataAccount)(vaultBalanceAccount, userFarmObligation1VaultAddress, v1RaydiumVaultsProgram);
+        [vaultRewardAccount, c] = yield (0, utils_1.findVaultRewardAccount)(vaultBalanceAccount, userFarmObligation1Address, v1RaydiumVaultsProgram);
+        const v1RayUsdcVaultPda = new anchor.web3.PublicKey("38dsJ6n4y6ffCDSZXhYYiMXQCgfzqHK5XSytL2fApeGc");
+        const v1RayUsdcVaultRewardATokenAccount = new anchor.web3.PublicKey("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
+        const v1RayUsdcVaultRewardBTokenAccount = new anchor.web3.PublicKey("4fTYCyFfSsPX58LAfj2AWWBjzqi3D3jYh6EEUAaSHrAK");
+        const v1RayUsdcVaultLpTokenAccount = new anchor.web3.PublicKey("E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB");
+        const v1RayUsdcPoolRewardATokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
+        const v1RayUsdcPoolRewardBTokenAccount = new anchor.web3.PublicKey("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
+        const v1RayUsdcPoolAuthority = new anchor.web3.PublicKey("5KQFnDd33J5NaMC9hQ64P5XzaaSz8Pt7NBCkZFYn1po");
+        const tx = yield program.rpc.depositRaydiumVault(new anchor.BN(0), {
+            accounts: {
+                authority: provider.wallet.publicKey,
+                userFarm: userFarmAddress,
+                obligationVaultAddress: userFarmObligation1VaultAddress,
+                leveragedFarm: tulipRayUsdcLevFarmAccount,
+                vaultProgram: v1RaydiumVaultsProgram,
+                authorityTokenAccount: userFarmObligationVault1LpTokenAccount,
+                vaultPdaAccount: v1RayUsdcVaultPda,
+                vault: v1RayUsdcVaultAccount,
+                lpTokenAccount: v1RayUsdcVaultLpTokenAccount,
+                userBalanceAccount: vaultBalanceAccount,
+                systemProgram: anchor.web3.SystemProgram.programId,
+                stakeProgramId: raydiumStakeProgramId,
+                poolId: rayUsdcAmmId,
+                poolAuthority: v1RayUsdcPoolAuthority,
+                vaultInfoAccount: v1RayUsdcOldVaultInfoAccount,
+                poolLpTokenAccount: v1RayUsdcVaultLpTokenAccount,
+                userRewardATokenAccount: v1RayUsdcVaultRewardATokenAccount,
+                poolRewardATokenAccount: v1RayUsdcPoolRewardATokenAccount,
+                userRewardBTokenAccount: v1RayUsdcVaultRewardBTokenAccount,
+                poolRewardBTokenAccount: v1RayUsdcPoolRewardBTokenAccount,
+                clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+                rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+                tokenProgramId: splToken.TOKEN_PROGRAM_ID,
+                userBalanceMetadata: vaultBalanceMetadataAccount,
+                lendingMarketAccount: tulipLendingMarketAccount,
+                userFarmObligation: userFarmObligation1Address,
+                lendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+                lendingProgram: tulipLendingProgramId,
             }
         });
     }));

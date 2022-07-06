@@ -421,3 +421,39 @@ export async function findUserPositionInfoAddress(
   ]
   return anchor.web3.PublicKey.findProgramAddress(seeds, programId)
 }
+
+export async function findVaultBalanceAccount(
+  vaultInfoAccount: anchor.web3.PublicKey,
+  obligationVaultAccount: anchor.web3.PublicKey,
+  programId: anchor.web3.PublicKey,
+): Promise<[anchor.web3.PublicKey, number]> {
+  let seeds = [
+    vaultInfoAccount.toBuffer(),
+    obligationVaultAccount.toBuffer(),
+  ]
+  return anchor.web3.PublicKey.findProgramAddress(seeds, programId)
+}
+
+export async function findVaultBalanceMetadataAccount(
+  vaultBalanceAccount: anchor.web3.PublicKey,
+  obligationVaultAccount: anchor.web3.PublicKey,
+  programId: anchor.web3.PublicKey,
+): Promise<[anchor.web3.PublicKey, number]> {
+  let seeds = [
+    vaultBalanceAccount.toBuffer(),
+    obligationVaultAccount.toBuffer(),
+  ]
+  return anchor.web3.PublicKey.findProgramAddress(seeds, programId)
+}
+
+export async function findVaultRewardAccount(
+  vaultBalanceMetadataAccount: anchor.web3.PublicKey,
+  obligationVaultAccount: anchor.web3.PublicKey,
+  programId: anchor.web3.PublicKey,
+): Promise<[anchor.web3.PublicKey, number]> {
+  let seeds = [
+    vaultBalanceMetadataAccount.toBuffer(),
+    obligationVaultAccount.toBuffer(),
+  ]
+  return anchor.web3.PublicKey.findProgramAddress(seeds, programId)
+}

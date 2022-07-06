@@ -17,7 +17,7 @@ pub struct DepositFarm {
     pub stake_program_id: Pubkey,
     pub pool_id: Pubkey,
     pub pool_authority: Pubkey,
-    pub user_info_account: Pubkey,
+    pub vault_info_account: Pubkey,
     pub pool_lp_token_account: Pubkey,
     pub user_reward_a_token_account: Pubkey,
     pub pool_reward_a_token_account: Pubkey,
@@ -30,8 +30,9 @@ pub struct DepositFarm {
 }
 
 
+#[inline(always)]
 pub fn deposit_vault(
-    accounts: DepositFarm,
+    accounts: Box<DepositFarm>,
     lending_market_account: Pubkey,
     user_farm_obligation: Pubkey,
     lending_market_authority: Pubkey,
@@ -56,7 +57,7 @@ pub fn deposit_vault(
 
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts,
+        accounts,
         data: ix_data,
     })
 }

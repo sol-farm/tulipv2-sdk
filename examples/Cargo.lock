@@ -527,6 +527,7 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "spl-associated-token-account",
+ "spl-token",
  "tulipv2-sdk-common",
  "tulipv2-sdk-farms",
  "tulipv2-sdk-lending",

@@ -13,6 +13,25 @@ pub mod farm_config {
     pub const QUOTE_TOKEN_ACCOUNT: Pubkey = static_pubkey!("2nHaWRW4PkutKbpDGvVwJ2JkcW1dKA6gMgLv4rPAmqLk");
 }
 
+pub mod vault_config {
+    use crate::DEFAULT_KEY;
+
+    use super::*;
+    pub const ACCOUNT: Pubkey = static_pubkey!("HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG");
+    pub const PDA: Pubkey = static_pubkey!("38dsJ6n4y6ffCDSZXhYYiMXQCgfzqHK5XSytL2fApeGc");
+    pub const REWARD_A_TOKEN_ACCOUNT: Pubkey = static_pubkey!("9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB");
+    pub const POOL_REWARD_A_TOKEN_ACCOUNT: Pubkey = static_pubkey!("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
+    pub const POOL_REWARD_B_TOKEN_ACCOUNT: Pubkey = static_pubkey!("DpRueBHHhrQNvrjZX7CwGitJDJ8eZc3AHcyFMG4LqCQR");
+    pub const REWARD_B_TOKEN_ACCOUNT: Pubkey = static_pubkey!("4fTYCyFfSsPX58LAfj2AWWBjzqi3D3jYh6EEUAaSHrAK");
+    pub const POOL_AUTHORITY: Pubkey = static_pubkey!("5KQFnDd33J5NaMC9hQ64P5XzaaSz8Pt7NBCkZFYn1po");
+    pub const LP_TOKEN_ACCOUNT: Pubkey = static_pubkey!("E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB");
+    // set to this if not used
+    // pub const OLD_VAULT_INFO: Pubkey = DEFAULT_KEY;
+    pub const OLD_VAULT_INFO_ACCOUNT: Pubkey = static_pubkey!("8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA");
+    pub const VAULT_INFO_ACCOUNT: Pubkey = static_pubkey!("Gf38RxSF3FguiBVYfsB8AmpPyNkGCrNDE7LNvr6U8n7C");
+}
+
+
 pub mod market_config {
     use super::*;
     pub const SERUM_MARKET: Pubkey = static_pubkey!("2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep");
@@ -24,6 +43,7 @@ pub mod market_config {
     pub const SERUM_PC_VAULT: Pubkey = static_pubkey!("GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa");
     pub const SERUM_FEE_RECEIVER: Pubkey = static_pubkey!("PgjTxGVTmFGQjGX8DrETmT68hRt6Jyps4SFTnxJcf3S");
     pub const SERUM_OPEN_ORDERS: Pubkey = static_pubkey!("CAjCs8wTVXg28ViAxsECxAa7WiwZU53rnWLiNikBeXG3");
+    pub const SERUM_VAULT_SIGNER: Pubkey = static_pubkey!("FmhXe9uG6zun49p222xt3nG1rBAkWvzVz7dxERQ6ouGw");
     pub const LP_MINT: Pubkey = static_pubkey!("FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m");
     pub const COIN_TOKEN_MINT: Pubkey = static_pubkey!("4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R");
     pub const PC_TOKEN_MINT: Pubkey = static_pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
@@ -34,6 +54,7 @@ pub mod market_config {
     pub const AMM_PC_ACCOUNT: Pubkey = static_pubkey!("Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk");
     pub const AMM_TEMP_ACCOUNT: Pubkey = static_pubkey!("D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB");
     pub const AMM_WITHDRAW_QUEUE: Pubkey = static_pubkey!("ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr");
+    pub const AMM_AUTHORITY: Pubkey = static_pubkey!("5Q544fKrFoe6tsEbD7S8EmxGTJYAKtTVhAW5Q5pge4j1");
 }
 
 pub mod reserve_config {

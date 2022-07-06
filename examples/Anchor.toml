@@ -1410,4 +1410,10 @@ filename = "deps/accounts/GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU.json"
 [[test.validator.account]] # base reserve liq supply
 address = "9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y"
 filename = "deps/accounts/9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y.json"
+[[test.validator.account]] # ray usdc v1 vault lp token account
+address = "E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB"
+filename = "deps/accounts/E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB.json"
+[[test.validator.account]] # ray usdc v1 vault rewarda token account"
+address = "9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB"
+filename = "deps/accounts/9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB.json"
 ###############

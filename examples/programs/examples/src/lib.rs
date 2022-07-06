@@ -578,10 +578,64 @@ pub mod examples {
         )?;
         Ok(())
     }
-    pub fn deposit_raydium_vault<'info>(
-        ctx: Context<DepositFarm>,
-
-    )
+    pub fn swap_tokens_raydium_stats<'info>(
+        ctx: Context<RaydiumSwap<'info>>,
+        obligation_index: u64,
+    ) -> Result<()> {
+        Ok(())
+    }
+    // you would likely want to provide the nonce values off-chain in a struct
+    // to avoid the pubkey derivation costs
+    pub fn deposit_raydium_vault<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, DepositLevFarm<'info>>,
+        obligation_index: u64,
+    ) -> Result<()> {
+        {
+            let ix = {
+            let deposit_vault:  Box<tulipv2_sdk_levfarm::instructions::deposit_raydium_vault::DepositFarm> = Box::new(ctx.accounts.into());            tulipv2_sdk_levfarm::helpers::new_deposit_raydium_vault_ix(
+                deposit_vault,
+                ctx.accounts.lending_market_account.key(),
+                ctx.accounts.user_farm_obligation.key(),
+                ctx.accounts.lending_market_authority.key(),
+                ctx.accounts.lending_program.key(),
+                obligation_index
+            ).unwrap()
+            };
+            anchor_lang::solana_program::program::invoke(
+                &ix,
+                &[
+                    ctx.accounts.authority.clone(),
+                    ctx.accounts.user_farm.clone(),
+                    ctx.accounts.obligation_vault_address.clone(),
+                    ctx.accounts.leveraged_farm.clone(),
+                    ctx.accounts.vault_program.clone(),
+                    ctx.accounts.authority_token_account.to_account_info(),
+                    ctx.accounts.vault_pda_account.clone(),
+                    ctx.accounts.vault.clone(),
+                    ctx.accounts.lp_token_account.to_account_info(),
+                    ctx.accounts.user_balance_account.clone(),
+                    ctx.accounts.system_program.clone(),
+                    ctx.accounts.stake_program_id.clone(),
+                    ctx.accounts.pool_id.clone(),
+                    ctx.accounts.pool_authority.clone(),
+                    ctx.accounts.pool_lp_token_account.to_account_info(),
+                    ctx.accounts.user_reward_a_token_account.to_account_info(),
+                    ctx.accounts.pool_reward_a_token_account.to_account_info(),
+                    ctx.accounts.user_reward_b_token_account.to_account_info(),
+                    ctx.accounts.pool_reward_b_token_account.to_account_info(),
+                    ctx.accounts.clock.clone(),
+                    ctx.accounts.rent.clone(),
+                    ctx.accounts.token_program_id.clone(),
+                    ctx.accounts.user_balance_metadata.clone(),
+                    ctx.accounts.lending_market_account.clone(),
+                    ctx.accounts.user_farm_obligation.clone(),
+                    ctx.accounts.lending_market_authority.clone(),
+                    ctx.accounts.lending_program.clone(),
+                ]
+            )?;
+        };
+        Ok(())
+    }
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -1043,63 +1097,154 @@ pub struct DepositBorrowDual<'info> {
 
 
 #[derive(Accounts)]
-pub struct DepositFarm<'info> {
+pub struct DepositLevFarm<'info> {
+    /// CHECK: .
     #[account(signer)]
     pub authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub user_farm: Loader<'info, UserFarm>,
+    pub user_farm: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub obligation_vault_address: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub leveraged_farm: Loader<'info, LeveragedFarm>,
+    pub leveraged_farm: AccountInfo<'info>,
+    /// CHECK: .
     pub vault_program: AccountInfo<'info>,
-
+    /// CHECK: .
     #[account(mut)]
-    // the lp token account owned by authority
-    pub authority_token_account: CpiAccount<'info, TokenAccount>,
+    pub authority_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    // the account of the vault pda
-    vpub ault_pda_account: AccountInfo<'info>,
+    pub vault_pda_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub vault: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    // lp token account owned by vault pda which holds the lp tokens
-    pub lp_token_account: AccountInfo<'info>,
-
+    pub lp_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
     pub user_balance_account: AccountInfo<'info>,
-
+    /// CHECK: .
     pub system_program: AccountInfo<'info>,
-
+    /// CHECK: .
     pub stake_program_id: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub pool_id: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub pool_authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub user_info_account: AccountInfo<'info>,
+    pub vault_info_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub pool_lp_token_account: AccountInfo<'info>,
-
+    pub pool_lp_token_account:Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    pub user_reward_a_token_account: AccountInfo<'info>,
+    pub user_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    pub pool_reward_a_token_account: AccountInfo<'info>,
+    pub pool_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    pub user_reward_b_token_account: AccountInfo<'info>,
+    pub user_reward_b_token_account:Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    pub pool_reward_b_token_account: AccountInfo<'info>,
-
+    pub pool_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     pub clock: AccountInfo<'info>,
+    /// CHECK: .
     pub rent: AccountInfo<'info>,
+    /// CHECK: .
     pub token_program_id: AccountInfo<'info>,
-
+    /// CHECK: .
     #[account(mut)]
     pub user_balance_metadata: AccountInfo<'info>,
-
+    /// CHECK: .
     pub lending_market_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub user_farm_obligation: AccountInfo<'info>,
-    pub lending_market_authority: AccountInfo<'info>,,
+    /// CHECK: .
+    pub lending_market_authority: AccountInfo<'info>,
+    /// CHECK: .
     pub lending_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub tulip_leveraged_farm_program: AccountInfo<'info>,
+}
+
+#[derive(Accounts)]
+pub struct RaydiumSwap<'info> {
+    /// CHECK: .
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub leveraged_farm: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm_obligation: AccountInfo<'info>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub vault_signer: AccountInfo<'info>,
+    /// CHECK: .
+    pub swap_or_liquidity_program_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub amm_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub amm_authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub amm_open_orders: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub amm_quantities_or_target_orders: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_coin_tokenaccount: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_pc_tokenaccount: AccountInfo<'info>,
+    /// CHECK: .
+    pub serum_program_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub serum_market: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub serum_bids: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub serum_asks: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub serum_event_queue: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub serum_coin_vault_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub serum_pc_vault_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub serum_vault_signer: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub coin_wallet: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pc_wallet: AccountInfo<'info>,
+    #[account(mut)]
+    /// CHECK: .
+    pub position_info_account: AccountInfo<'info>,
 }

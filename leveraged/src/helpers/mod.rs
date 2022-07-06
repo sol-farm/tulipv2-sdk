@@ -106,14 +106,39 @@ pub fn new_deposit_borrow_dual_ix(
     )
 }
 
-
+#[inline(always)]
 pub fn new_deposit_raydium_vault_ix(
-    accounts: deposit_raydium_vault::DepositFarm,
-    nonce: u8,
-    meta_nonce: u8,
+    accounts: Box<deposit_raydium_vault::DepositFarm>,
+    lending_market: Pubkey,
+    user_farm_obligation: Pubkey,
+    lending_market_authority: Pubkey,
+    lending_program: Pubkey,
     obligation_index: u64,
 ) -> Option<Instruction> {
-None
+    let (user_balance_account, balance_account_nonce) = Pubkey::find_program_address(
+        &[
+            accounts.vault_info_account.as_ref(),
+            accounts.obligation_vault_address.as_ref(),
+        ],
+        &accounts.vault_program
+    );
+    let (_, balanace_metadata_nonce) = Pubkey::find_program_address(
+        &[
+            user_balance_account.as_ref(),
+            accounts.obligation_vault_address.as_ref(),
+        ],
+        &accounts.vault_program,
+    );
+    deposit_raydium_vault::deposit_vault(
+        accounts,
+        lending_market,
+        user_farm_obligation,
+        lending_market_authority,
+        lending_program,
+        balance_account_nonce,
+        balanace_metadata_nonce,
+        obligation_index
+    )
 }
 
 pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
