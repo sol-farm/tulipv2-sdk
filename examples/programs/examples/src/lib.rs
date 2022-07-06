@@ -677,6 +677,7 @@ pub mod examples {
     pub fn deposit_raydium_vault<'a, 'b, 'c, 'info>(
         ctx: Context<'a, 'b, 'c, 'info, DepositLevFarm<'info>>,
         obligation_index: u64,
+        farm: u64,
     ) -> Result<()> {
         {
             let ix = {
@@ -687,7 +688,8 @@ pub mod examples {
                 ctx.accounts.user_farm_obligation.key(),
                 ctx.accounts.lending_market_authority.key(),
                 ctx.accounts.lending_program.key(),
-                obligation_index
+                obligation_index,
+                farm.into()
             ).unwrap()
             };
             anchor_lang::solana_program::program::invoke(

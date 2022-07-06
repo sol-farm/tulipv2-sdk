@@ -961,6 +961,7 @@ describe("tests leverage farm instructions via ray-usdc", async () => {
     const rayUsdcPoolId = new anchor.web3.PublicKey("CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS");
     const tx = await program.rpc.depositRaydiumVault(
       new anchor.BN(0),
+      new anchor.BN(0),
       {
         options: {
           skipPreflight: true

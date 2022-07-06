@@ -3,7 +3,7 @@ use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_use
 use super::*;
 use anchor_lang::prelude::*;
 use solana_program::{instruction::Instruction, sysvar, system_program};
-use tulipv2_sdk_common::config::levfarm::{LevFarmConfig, LENDING_PROGRAM};
+use tulipv2_sdk_common::{config::levfarm::{LevFarmConfig, LENDING_PROGRAM}, DEFAULT_KEY};
 use crate::instructions::{create_user_farm, create_user_farm_obligation};
 
 /// returns an instruction that can be used to create a user farm account, and initialize
@@ -143,10 +143,11 @@ pub fn new_deposit_raydium_vault_ix(
     lending_market_authority: Pubkey,
     lending_program: Pubkey,
     obligation_index: u64,
+    farm: Farms,
 ) -> Option<Instruction> {
     let (user_balance_account, balance_account_nonce) = Pubkey::find_program_address(
         &[
-            accounts.vault_info_account.as_ref(),
+            vault_info_account(farm).unwrap().as_ref(),
             accounts.obligation_vault_address.as_ref(),
         ],
         &accounts.vault_program
@@ -177,6 +178,22 @@ pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
             unimplemented!("requires rayusdc-levfarm feature to be activated");
             #[cfg(feature = "rayusdc-levfarm")]
             return Some(tulipv2_sdk_common::config::levfarm::ray_usdc::get_lev_farm_config())
+        }
+        _ => None
+    }
+}
+
+pub fn vault_info_account(farm: Farms) -> Option<Pubkey> {
+    match farm {
+        Farms::RayUsdcVault => {
+            #[cfg(not(feature = "rayusdc-levfarm"))]
+            unimplemented!("requires rayusdc-levfarm feature to be activated");
+            #[cfg(feature = "rayusdc-levfarm")]
+            if tulipv2_sdk_common::config::levfarm::ray_usdc::vault_config::OLD_VAULT_INFO_ACCOUNT.eq(&DEFAULT_KEY) {
+                Some(tulipv2_sdk_common::config::levfarm::ray_usdc::vault_config::VAULT_INFO_ACCOUNT)
+            } else {
+                Some(tulipv2_sdk_common::config::levfarm::ray_usdc::vault_config::OLD_VAULT_INFO_ACCOUNT)
+            }
         }
         _ => None
     }
