@@ -96,3 +96,15 @@ pub fn derive_user_farm_obligation_address(
         &program_id,
     )
 }
+
+
+pub fn derive_orca_vault_user_address(
+    program_id: &Pubkey,
+    vault: &Pubkey,
+    authority: &Pubkey,
+) -> (Pubkey, u8) {
+    Pubkey::find_program_address(&[
+        vault.as_ref(),
+        authority.as_ref(),
+    ], program_id)
+}

@@ -790,6 +790,52 @@ pub mod examples {
         }
         Ok(())
     }
+    pub fn orca_add_liquidity_queue<'info>(
+        ctx: Context<OrcaAddLiquidityQueue<'info>>,
+        obligation_index: u8,
+    ) -> Result<()> {
+        {
+            let ix = {
+                let add_liq: Box<tulipv2_sdk_levfarm::instructions::orca_add_liquidity_queue::OrcaAddLiquidityQueue> = Box::new(ctx.accounts.into());
+                tulipv2_sdk_levfarm::helpers::new_orca_add_liquidity_queue_ix(
+                    add_liq,
+                    ctx.remaining_accounts.get(0).unwrap(),
+                    obligation_index
+                ).unwrap()
+            };
+            anchor_lang::solana_program::program::invoke(
+                &ix,
+                &[
+                    ctx.accounts.authority.to_account_info(),
+                    ctx.accounts.user_farm.to_account_info(),
+                    ctx.accounts.leveraged_farm.to_account_info(),
+                    ctx.accounts.vault_account.to_account_info(),
+                    ctx.accounts.vault_user_account.to_account_info(),
+                    ctx.accounts.token_program.to_account_info(),
+                    ctx.accounts.rent.to_account_info(),
+                    ctx.accounts.vault_pda.to_account_info(),
+                    ctx.accounts.system_program.to_account_info(),
+                    ctx.accounts.lev_farm_coin_token_account.to_account_info(),
+                    ctx.accounts.lev_farm_pc_token_account.to_account_info(),
+                    ctx.accounts.pool_coin_token_account.to_account_info(),
+                    ctx.accounts.pool_pc_token_account.to_account_info(),
+                    ctx.accounts.liquidity_program_id.to_account_info(),
+                    ctx.accounts.amm_id.to_account_info(),
+                    ctx.accounts.amm_authority.to_account_info(),
+                    ctx.accounts.vault_deposit_queue.to_account_info(),
+                    ctx.accounts.lp_mint_address.to_account_info(),
+                    ctx.accounts.lending_market_account.to_account_info(),
+                    ctx.accounts.user_farm_obligation.to_account_info(),
+                    ctx.accounts.derived_lending_market_authority.to_account_info(),
+                    ctx.accounts.lending_program.to_account_info(),
+                    ctx.accounts.dex_program.to_account_info(),
+                    ctx.accounts.solfarm_vault_program.to_account_info(),
+                    ctx.accounts.obligation_vault_address.to_account_info(),
+                ]
+            )?;
+        }
+        Ok(())
+    }
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -1538,4 +1584,63 @@ pub struct WithdrawRaydiumLevFarm<'info> {
     pub user_balance_meta: AccountInfo<'info>,
     /// CHECK: .
     pub tulip_leveraged_farm_program: AccountInfo<'info>,
+}
+
+#[derive(Accounts)]
+pub struct OrcaAddLiquidityQueue<'info> {
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    // seems to be false positive
+    //#[soteria(ignore)]
+    pub user_farm: AccountInfo<'info>,
+    // fairly certain false positive
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub leveraged_farm: AccountInfo<'info>,
+    #[account(mut)]
+    pub vault_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub vault_user_account: AccountInfo<'info>,
+    pub token_program: AccountInfo<'info>,
+    pub rent: Sysvar<'info, Rent>,
+    #[account(mut)]
+    pub vault_pda: AccountInfo<'info>,
+    pub system_program: AccountInfo<'info>,
+    // this seems to be a false positive
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub lev_farm_coin_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub lev_farm_pc_token_account: AccountInfo<'info>,
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub pool_coin_token_account: AccountInfo<'info>,
+    // for RAY-USDC this would be the pool's
+    // USDC token account
+    #[account(mut)]
+    pub pool_pc_token_account: AccountInfo<'info>,
+    //#[soteria(ignore)]
+    pub liquidity_program_id: AccountInfo<'info>,
+    #[account(mut)]
+    pub amm_id: AccountInfo<'info>,
+    #[account(mut)]
+    pub amm_authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub vault_deposit_queue: AccountInfo<'info>,
+    #[account(mut)]
+    //#[soteria(ignore)]
+    pub lp_mint_address: AccountInfo<'info>,
+    #[account(mut)]
+    pub lending_market_account: AccountInfo<'info>,
+    #[account(mut)]
+    pub user_farm_obligation: AccountInfo<'info>,
+    #[account(mut)]
+    pub derived_lending_market_authority: AccountInfo<'info>,
+    pub lending_program: AccountInfo<'info>,
+    pub dex_program: AccountInfo<'info>,
+    // protocol-orca
+    pub solfarm_vault_program: AccountInfo<'info>,
+    #[account(mut)]
+    pub obligation_vault_address: AccountInfo<'info>,
 }

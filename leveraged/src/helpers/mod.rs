@@ -1,4 +1,4 @@
-use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault, swap_tokens_raydium_stats, add_liquidity_stats, withdraw_raydium_vault_close}};
+use crate::{accounts::{Farms, derivations::{derive_user_farm_address, derive_user_farm_obligation_vault_address, derive_user_farm_obligation_address}}, instructions::{deposit_borrow_dual, deposit_raydium_vault, swap_tokens_raydium_stats, add_liquidity_stats, withdraw_raydium_vault_close, orca_add_liquidity_queue}};
 
 use super::*;
 use anchor_lang::prelude::*;
@@ -214,6 +214,24 @@ pub fn new_withdraw_raydium_vault_ix(
         withdraw_percent,
         close_method,
     )   
+}
+
+pub fn new_orca_add_liquidity_queue_ix(
+    accounts: Box<orca_add_liquidity_queue::OrcaAddLiquidityQueue>,
+    position_info_account: Pubkey,
+    obligation_index: u8,
+) -> Option<Instruction> {
+    let orca_user_nonce = crate::accounts::derivations::derive_orca_vault_user_address(
+        &accounts.solfarm_vault_program,
+        &accounts.vault_account,
+        &accounts.authority,
+    ).1;
+    orca_add_liquidity_queue::orca_add_liquidity_queue(
+        accounts,
+        position_info_account,
+        orca_user_nonce,
+        obligation_index,
+    )
 }
 
 pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {

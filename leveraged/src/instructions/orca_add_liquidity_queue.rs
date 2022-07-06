@@ -2,68 +2,37 @@ use anchor_lang::prelude::*;
 use sighashdb::GlobalSighashDB;
 use solana_program::instruction::Instruction;
 
-#[derive(Accounts)]
-pub struct OrcaAddLiquidityQueue<'info> {
-    #[account(signer)]
-    pub authority: AccountInfo<'info>,
-    #[account(mut)]
-    // seems to be false positive
-    //#[soteria(ignore)]
-    pub user_farm: AccountInfo<'info>,
-    // fairly certain false positive
-    #[account(mut)]
-    //#[soteria(ignore)]
-    pub leveraged_farm: AccountInfo<'info>,
-    #[account(mut)]
-    pub vault_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub vault_user_account: AccountInfo<'info>,
-    pub token_program: AccountInfo<'info>,
-    pub rent: Sysvar<'info, Rent>,
-    #[account(mut)]
-    pub vault_pda: AccountInfo<'info>,
-    pub system_program: AccountInfo<'info>,
-    // this seems to be a false positive
-    #[account(mut)]
-    //#[soteria(ignore)]
-    pub lev_farm_coin_token_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub lev_farm_pc_token_account: AccountInfo<'info>,
-    #[account(mut)]
-    //#[soteria(ignore)]
-    pub pool_coin_token_account: AccountInfo<'info>,
-    // for RAY-USDC this would be the pool's
-    // USDC token account
-    #[account(mut)]
-    pub pool_pc_token_account: AccountInfo<'info>,
-    //#[soteria(ignore)]
-    pub liquidity_program_id: AccountInfo<'info>,
-    #[account(mut)]
-    pub amm_id: AccountInfo<'info>,
-    #[account(mut)]
-    pub amm_authority: AccountInfo<'info>,
-    #[account(mut)]
-    pub vault_deposit_queue: AccountInfo<'info>,
-    #[account(mut)]
-    //#[soteria(ignore)]
-    pub lp_mint_address: AccountInfo<'info>,
-    #[account(mut)]
-    pub lending_market_account: AccountInfo<'info>,
-    #[account(mut)]
-    pub user_farm_obligation: AccountInfo<'info>,
-    #[account(mut)]
-    pub derived_lending_market_authority: AccountInfo<'info>,
-    pub lending_program: AccountInfo<'info>,
-    pub dex_program: AccountInfo<'info>,
-    // protocol-orca
-    pub solfarm_vault_program: AccountInfo<'info>,
-    #[account(mut)]
-    pub obligation_vault_address: AccountInfo<'info>,
+pub struct OrcaAddLiquidityQueue {
+    pub authority: Pubkey,
+    pub user_farm: Pubkey,
+    pub leveraged_farm: Pubkey,
+    pub vault_account: Pubkey,
+    pub vault_user_account: Pubkey,
+    pub token_program: Pubkey,
+    pub rent: Pubkey,
+    pub vault_pda: Pubkey,
+    pub system_program: Pubkey,
+    pub lev_farm_coin_token_account: Pubkey,
+    pub lev_farm_pc_token_account: Pubkey,
+    pub pool_coin_token_account: Pubkey,
+    pub pool_pc_token_account: Pubkey,
+    pub liquidity_program_id: Pubkey,
+    pub amm_id: Pubkey,
+    pub amm_authority: Pubkey,
+    pub vault_deposit_queue: Pubkey,
+    pub lp_mint_address: Pubkey,
+    pub lending_market_account: Pubkey,
+    pub user_farm_obligation: Pubkey,
+    pub derived_lending_market_authority: Pubkey,
+    pub lending_program: Pubkey,
+    pub dex_program: Pubkey,
+    pub solfarm_vault_program: Pubkey,
+    pub obligation_vault_address: Pubkey,
 }
 
-pub fn orca_add_liquidity_queue<'info>(
-    accounts: OrcaAddLiquidityQueue<'info>,
-    position_info_account: &AccountInfo<'info>,
+pub fn orca_add_liquidity_queue(
+    accounts: Box<OrcaAddLiquidityQueue>,
+    position_info_account: Pubkey,
     account_nonce: u8,
     obligation_index: u8
 ) -> Option<Instruction> {
@@ -82,4 +51,37 @@ pub fn orca_add_liquidity_queue<'info>(
         accounts: accounts,
         data: ix_data,
     })
+}
+
+
+impl ToAccountMetas for OrcaAddLiquidityQueue {
+    fn to_account_metas(&self, _is_signer: Option<bool>) -> Vec<AccountMeta> {
+        vec![
+            AccountMeta::new(self.authority, true),
+            AccountMeta::new(self.user_farm, false),
+            AccountMeta::new(self.leveraged_farm, false),
+            AccountMeta::new(self.vault_account, false),
+            AccountMeta::new(self.vault_user_account, false),
+            AccountMeta::new_readonly(self.token_program, false),
+            AccountMeta::new_readonly(self.rent, false),
+            AccountMeta::new(self.vault_pda, false),
+            AccountMeta::new_readonly(self.system_program, false),
+            AccountMeta::new(self.lev_farm_coin_token_account, false),
+            AccountMeta::new(self.lev_farm_pc_token_account, false),
+            AccountMeta::new(self.pool_coin_token_account, false),
+            AccountMeta::new(self.pool_pc_token_account, false),
+            AccountMeta::new_readonly(self.liquidity_program_id, false),
+            AccountMeta::new(self.amm_id, false),
+            AccountMeta::new(self.amm_authority, false),
+            AccountMeta::new(self.vault_deposit_queue, false),
+            AccountMeta::new(self.lp_mint_address, false),
+            AccountMeta::new(self.lending_market_account, false),
+            AccountMeta::new(self.user_farm_obligation, false),
+            AccountMeta::new(self.derived_lending_market_authority, false),
+            AccountMeta::new_readonly(self.lending_program, false),
+            AccountMeta::new_readonly(self.dex_program, false),
+            AccountMeta::new_readonly(self.solfarm_vault_program, false),
+            AccountMeta::new(self.obligation_vault_address, false),
+        ]
+    }
 }
