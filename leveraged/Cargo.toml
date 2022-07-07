@@ -9,8 +9,9 @@ license = "MIT/Apache-2.0"
 documentation = "https://docs.rs/tulipv2-sdk-vaults"
 readme = "../README.md"
 [features]
-default = ["rayusdc-levfarm"]
+default = ["rayusdc-levfarm", "orcausdc-levfarm"]
 rayusdc-levfarm = []
+orcausdc-levfarm = []
 [dependencies]
 solana-program = "1.9.13"
 spl-token = "3.2.0"

@@ -233,28 +233,6 @@ pub fn new_orca_add_liquidity_queue_ix(
         obligation_index,
     )
 }
-
-pub fn new_withdraw_orca_vault_ix<'info>(
-    accounts: Box<withdraw_orca_vault::WithdrawOrcaFarm>,
-    lending_market: Pubkey,
-    user_farm_obligation: Pubkey,
-    lending_market_authority: Pubkey,
-    lending_program: Pubkey,
-    obligation_index: u8,
-    withdraw_percent: u8,
-    close_method: u8
-) -> Option<Instruction> {
-    withdraw_orca_vault::withdraw_orca_vault(
-        accounts,
-        lending_market,
-        user_farm_obligation,
-        lending_market_authority,
-        lending_program,
-        obligation_index,
-        withdraw_percent,
-        close_method
-    )
-}
 pub fn new_withdraw_orca_vault_close_ix<'info>(
     accounts: Box<withdraw_orca_vault::WithdrawOrcaFarm>,
     lending_market: Pubkey,
@@ -292,6 +270,12 @@ pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
             unimplemented!("requires rayusdc-levfarm feature to be activated");
             #[cfg(feature = "rayusdc-levfarm")]
             return Some(tulipv2_sdk_common::config::levfarm::ray_usdc::get_lev_farm_config())
+        }
+        Farms::OrcaUsdcVault => {
+            #[cfg(not(feature = "orcausdc-levfarm"))]
+            unimplemented!("requires orcausdc-levfarm feature to be activated");
+            #[cfg(feature = "orcausdc-levfarm")]
+            return Some(tulipv2_sdk_common::config::levfarm::orca_usdc::get_lev_farm_config())
         }
         _ => None
     }
