@@ -3469,6 +3469,7 @@ dependencies = [
  "itertools",
  "proptest",
  "ring",
+ "sighashdb",
  "solana-client",
  "spl-associated-token-account",
  "spl-token",

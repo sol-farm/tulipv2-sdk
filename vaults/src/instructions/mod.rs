@@ -6,6 +6,8 @@ use anchor_lang::{
     solana_program::{instruction::Instruction, system_program, sysvar},
 };
 use tulipv2_sdk_farms::Farm;
+pub mod raydium;
+pub mod orca;
 
 /// sighash used by the `register_deposit_tracking_account` instruction
 pub const REGISTER_DEPOSIT_TRACKING_ACCOUNT_SIGHASH: [u8; 8] =
