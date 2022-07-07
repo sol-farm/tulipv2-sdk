@@ -1,9 +1,9 @@
 use anchor_lang::{prelude::Pubkey, solana_program};
 use static_pubkey::static_pubkey;
 
-#[cfg(feature = "rayusdc-levfarm")]
+#[cfg(feature = "ray-rayusdc-levfarm")]
 pub mod ray_usdc;
-#[cfg(feature = "orcausdc-levfarm")]
+#[cfg(feature = "orca-orcausdc-levfarm")]
 pub mod orca_usdc;
 
 pub const GLOBAL: Pubkey = static_pubkey!("HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8VdJKqjF");
