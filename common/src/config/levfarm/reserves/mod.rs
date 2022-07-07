@@ -9,3 +9,4 @@ pub mod orca;
 pub mod like;
 pub mod atlas;
 pub mod polis;
+pub mod msol;
