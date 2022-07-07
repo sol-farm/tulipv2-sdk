@@ -271,6 +271,18 @@ pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
             #[cfg(feature = "ray-rayusdc-levfarm")]
             return Some(tulipv2_sdk_common::config::levfarm::ray_rayusdc::get_lev_farm_config())
         }
+        Farms::RaySrmVault => {
+            #[cfg(not(feature = "ray-raysrm-levfarm"))]
+            unimplemented!("requires raysrm-levfarm feature to be activated");
+            #[cfg(feature = "ray-raysrm-levfarm")]
+            return Some(tulipv2_sdk_common::config::levfarm::ray_rayusdc::get_lev_farm_config())
+        }
+        Farms::RayUsdtVault => {
+            #[cfg(not(feature = "ray-rayusdt-levfarm"))]
+            unimplemented!("requires rayusdt-levfarm feature to be activated");
+            #[cfg(feature = "ray-rayusdt-levfarm")]
+            return Some(tulipv2_sdk_common::config::levfarm::ray_rayusdt::get_lev_farm_config())
+        }
         Farms::OrcaUsdcVault => {
             #[cfg(not(feature = "orca-orcausdc-levfarm"))]
             unimplemented!("requires orcausdc-levfarm feature to be activated");
@@ -284,13 +296,33 @@ pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
 pub fn vault_info_account(farm: Farms) -> Option<Pubkey> {
     match farm {
         Farms::RayUsdcVault => {
-            #[cfg(not(feature = "rayusdc-levfarm"))]
+            #[cfg(not(feature = "ray-rayusdc-levfarm"))]
             unimplemented!("requires rayusdc-levfarm feature to be activated");
-            #[cfg(feature = "rayusdc-levfarm")]
-            if tulipv2_sdk_common::config::levfarm::ray_usdc::vault_config::OLD_VAULT_INFO_ACCOUNT.eq(&DEFAULT_KEY) {
-                Some(tulipv2_sdk_common::config::levfarm::ray_usdc::vault_config::VAULT_INFO_ACCOUNT)
+            #[cfg(feature = "ray-rayusdc-levfarm")]
+            if tulipv2_sdk_common::config::levfarm::ray_rayusdc::vault_config::OLD_VAULT_INFO_ACCOUNT.eq(&DEFAULT_KEY) {
+                Some(tulipv2_sdk_common::config::levfarm::ray_rayusdc::vault_config::VAULT_INFO_ACCOUNT)
             } else {
-                Some(tulipv2_sdk_common::config::levfarm::ray_usdc::vault_config::OLD_VAULT_INFO_ACCOUNT)
+                Some(tulipv2_sdk_common::config::levfarm::ray_rayusdc::vault_config::OLD_VAULT_INFO_ACCOUNT)
+            }
+        }
+        Farms::RaySrmVault => {
+            #[cfg(not(feature = "ray-raysrm-levfarm"))]
+            unimplemented!("requires raysrm-levfarm feature to be activated");
+            #[cfg(feature = "ray-raysrm-levfarm")]
+            if tulipv2_sdk_common::config::levfarm::ray_raysrm::vault_config::OLD_VAULT_INFO_ACCOUNT.eq(&DEFAULT_KEY) {
+                Some(tulipv2_sdk_common::config::levfarm::ray_raysrm::vault_config::VAULT_INFO_ACCOUNT)
+            } else {
+                Some(tulipv2_sdk_common::config::levfarm::ray_raysrm::vault_config::OLD_VAULT_INFO_ACCOUNT)
+            }
+        }
+        Farms::RayUsdtVault => {
+            #[cfg(not(feature = "ray-rayusdt-levfarm"))]
+            unimplemented!("requires rayusdt-levfarm feature to be activated");
+            #[cfg(feature = "ray-rayusdt-levfarm")]
+            if tulipv2_sdk_common::config::levfarm::ray_rayusdt::vault_config::OLD_VAULT_INFO_ACCOUNT.eq(&DEFAULT_KEY) {
+                Some(tulipv2_sdk_common::config::levfarm::ray_rayusdt::vault_config::VAULT_INFO_ACCOUNT)
+            } else {
+                Some(tulipv2_sdk_common::config::levfarm::ray_rayusdt::vault_config::OLD_VAULT_INFO_ACCOUNT)
             }
         }
         _ => None

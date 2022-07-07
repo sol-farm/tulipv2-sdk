@@ -53,6 +53,7 @@ default = [
     "ray-msolusdt-levfarm",
     "ray-starsusdc-levfarm",
     "ray-prismusdc-levfarm",
+    "ray-raysrm-levfarm"
 ]
 orca-orcausdc-levfarm = []
 orca-solusdc-levfarm = []
@@ -79,7 +80,7 @@ ray-walephusdc-levfarm = []
 ray-dflusdc-levfarm = []
 ray-samoray-levfarm = []
 ray-whethsol-levfarm = []
-ray-raysrm-levafrm = []
+ray-raysrm-levfarm = []
 ray-raywheth-levfarm = []
 ray-rayusdt-levfarm = []
 ray-stsolusdc-levfarm = []

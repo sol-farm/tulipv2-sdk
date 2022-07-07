@@ -61,17 +61,17 @@ pub mod reserve_config {
     use super::*;
     pub const LENDING_MARKET: Pubkey = static_pubkey!("D1cqtVThyebK9KXKGXrCEuiqaNf5L4UfM1vHgCqiJxym");
     pub const LENDING_MARKET_AUTHORITY: Pubkey = static_pubkey!("8gEGZbUfVE1poBq71VHKX9LU7ca4x8wTUyZgcbyQe51s");
-    pub const PYTH_LP_PRICE_ACCOUNT: Pubkey = static_pubkey!("");
+    pub const PYTH_LP_PRICE_ACCOUNT: Pubkey = static_pubkey!("EksgiG3ZB1JaCeWuYmAueZHLKnxaAfYgsJzJvUy8g3aM");
     pub const PYTH_COIN_PRICE_ACCOUNT: Pubkey = static_pubkey!("83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF");
-    pub const PYTH_PC_PRICE_ACCOUNT: Pubkey = static_pubkey!("");
+    pub const PYTH_PC_PRICE_ACCOUNT: Pubkey = static_pubkey!("9wrKnvGNaSB3ppbpEYcvWfvtTZq7AAW5J4HYfEEciUVT");
     pub const COIN_RESERVE_FEE_RECEIVER: Pubkey = static_pubkey!("4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj");
-    pub const PC_RESERVE_FEE_RECEIVER: Pubkey = static_pubkey!("");
+    pub const PC_RESERVE_FEE_RECEIVER: Pubkey = static_pubkey!("EMwowECdn8hdGf89RuyGL8cbygwa14BN9tLbYDXgMckr");
     pub const BASE_RESERVE: Pubkey = static_pubkey!("9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF");
-    pub const QUOTE_RESERVE: Pubkey = static_pubkey!("");
+    pub const QUOTE_RESERVE: Pubkey = static_pubkey!("9AiGVt7Qtap2ijvim4JSudDYgTrSWhwaZmKv8BWGFms9");
     pub const BASE_RESERVE_LIQUIDITY_SUPPLY: Pubkey = static_pubkey!("9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y");
-    pub const QUOTE_RESERVE_LIQUIDITY_SUPPLY: Pubkey = static_pubkey!("");
+    pub const QUOTE_RESERVE_LIQUIDITY_SUPPLY: Pubkey = static_pubkey!("93JKmnXMYHQ9KPkKRRJ5Mb7bqSv4newhDFvz9QE2suRG");
     pub const BASE_RESERVE_COLLATERAL_MINT: Pubkey = static_pubkey!("8Lg7TowFuMQoGiTsLE6qV9x3czRgDmVy8f8Vv8KS4uW");
-    pub const QUOTE_RESERVE_COLLATERAL_MINT: Pubkey = static_pubkey!("");
+    pub const QUOTE_RESERVE_COLLATERAL_MINT: Pubkey = static_pubkey!("4QSK13NTKxTBExbMjHFsj3QfHBn4Hfp3DGLSba8GvFvh");
 }
 
 
