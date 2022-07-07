@@ -271,7 +271,7 @@ const rayUsdcSerumPcVault = new anchor.web3.PublicKey("GGcdamvNDYFhAXr93DWyJ8Qmw
 
 
 const orcaUsdcLevFarmAccount = new anchor.web3.PublicKey("5o3EsLS1NTciKHXVsGNYqQQ8iBBK3dBfSPwCH7wsdtRT");
-const orcaUsdcLpTokenMint = new anchor.web3.PublicKey("2p7nYbtPBgtmY69NsE8DAW6szpRJn7tQvDnqvoEWQvjY")
+const orcaUsdcLpTokenMint = new anchor.web3.PublicKey("n8Mpu28RjeYD7oUX3LG1tPxzhRZh3YYLRSHcHRdS3Zx")
 const orcaTokenMint = new anchor.web3.PublicKey("orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE")
 
 //const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
@@ -1122,16 +1122,7 @@ describe("tests leverage farm instructions via orca-usdc non double dip", async 
       userFarmObligation1VaultAddress,
       orcaUsdcLpTokenMint
     );
-    await createAssociatedTokenAccount(
-      provider,
-      userFarmAddress,
-      orcaTokenMint
-    );
-    await createAssociatedTokenAccount(
-      provider,
-      userFarmAddress,
-      usdcTokenMint,
-    );
+    console.log("sending user farm create tx")
     const tx = await program.rpc.createUserFarm(new anchor.BN(17), {
       options: {
         skipPreflight: true,
@@ -1174,8 +1165,7 @@ describe("tests leverage farm instructions via orca-usdc non double dip", async 
   let userFarmObligation2Address: anchor.web3.PublicKey;
   let yourOrcaTokenAccount: anchor.web3.PublicKey;
   it("create user farm obligation", async () => {
-    yourOrcaTokenAccount = await createAssociatedTokenAccount(
-      provider,
+    yourOrcaTokenAccount = await getAssociatedTokenAddress(
       provider.wallet.publicKey,
       orcaTokenMint,
     )

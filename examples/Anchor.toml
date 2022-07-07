@@ -112,9 +112,9 @@ program = "./deps/atrix/pool.so"
 [[test.genesis]]
 address = "BLDDrex4ZSWBgPYaaH6CQCzkJXWfzCiiur9cSFJT8t3x"
 program = "./deps/atrix/farm.so"
-[[test.genesis]]
-address = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-program = "./deps/misc/associated_token.so"
+#[[test.genesis]]
+#address = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+#program = "./deps/misc/associated_token.so"
 [[test.genesis]]
 address = "Bt2WPMmbwHPk36i4CRucNDyLcmoGdC7xEdrVuxgJaNE6"
 program = "./deps/tulip/lev_farm.so"
@@ -124,6 +124,9 @@ program = "./deps/tulip/rayv1.so"
 [[test.genesis]]
 address = "FoNqK2xudK7TfKjPFxpzAcTaU2Wwyt81znT4RjJBLFQp"
 program = "./deps/tulip/orcav1.so"
+[[test.genesis]]
+address = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+program = "./deps/misc/token.so"
 ##############
 # token mints
 ##############

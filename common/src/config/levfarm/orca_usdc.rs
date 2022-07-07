@@ -2,7 +2,7 @@ use anchor_lang::solana_program;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use static_pubkey::static_pubkey;
 
-use super::{LevFarmConfig, GLOBAL, LENDING_PROGRAM, RAYDIUM_VAULT_PROGRAM};
+use super::{LevFarmConfig, GLOBAL, LENDING_PROGRAM, ORCA_VAULT_PROGRAM};
 
 /// configuration variables for the leverage farm program
 pub mod farm_config {
@@ -115,7 +115,7 @@ pub fn get_lev_farm_config() -> LevFarmConfig {
         pc_reserve_fee_receiver: PC_RESERVE_FEE_RECEIVER, 
         base_reserve: BASE_RESERVE, 
         quote_reserve: QUOTE_RESERVE,
-        solfarm_vault_program: RAYDIUM_VAULT_PROGRAM,
+        solfarm_vault_program: ORCA_VAULT_PROGRAM,
         base_token_mint: COIN_TOKEN_MINT,
         quote_token_mint: PC_TOKEN_MINT,
     }

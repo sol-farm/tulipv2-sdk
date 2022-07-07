@@ -21,7 +21,7 @@ anchor-spl = "0.24.2"
 tulipv2-sdk-common = {path = "../../../common", version = "0.9.17"}
 tulipv2-sdk-vaults = {path = "../../../vaults", version = "0.9.17"}
 tulipv2-sdk-farms = {path = "../../../farms", version = "0.9.17"}
-spl-associated-token-account = "1.0.3"
+spl-associated-token-account = {version = "1.0.5", features = ["no-entrypoint"]}
 tulipv2-sdk-lending = {path = "../../../lending"}
 tulipv2-sdk-levfarm = {path = "../../../leveraged"}
 spl-token = "3.0.2"
