@@ -2,7 +2,7 @@
 //! as "pausable", allowing them to enable enabled/disabled.
 //!
 //! If you are familiar with Solidity development, you can consider this the
-//! a rudimentary implemetnation of a solana version of OpenZeppelin's ownable library.
+//! a rudimentary implementation of a solana version of OpenZeppelin's ownable library.
 
 use std::str::FromStr;
 

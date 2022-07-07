@@ -33,7 +33,7 @@ pub mod multi_deposit {
     pub const PDA: Pubkey = static_pubkey!("DkP2YsqzjiAhnURstef1AmB2EDzRpigbJQuLyNtFcH3Y");
     /// address of the shares mint
     pub const SHARES_MINT: Pubkey = static_pubkey!("AHV6CBjuT7M2HMMKDa5gRSEoBcJGWVjURCBhpgMbyESX");
-    /// address of the multi depsoit vaults underlying asset compound queue
+    /// address of the multi deposit vaults underlying asset compound queue
     pub const UNDERLYING_COMPOUND_QUEUE: Pubkey =
         static_pubkey!("E8E1Bdhp67tanf4UonTUnAervkhSmYkYkQo2DkxpdVc9");
     /// address of the multi deposit vaults underlying asset deposit queue

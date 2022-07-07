@@ -69,7 +69,7 @@ pub mod examples {
     /// deposits `amount` of the underlying tokens in exchange for a corresponding
     /// amount of shares. these shares are locked within the deposit tracking account
     /// for 15 minutes, after which they can be removed from the deposit tracking account
-    /// if desired. generaly speaking this should only be done if you want to
+    /// if desired. generally speaking this should only be done if you want to
     /// use the tokenized shares elsewhere (ie friktion volts), otherwise
     /// its best to leave them within the deposit tracking account otherwise
     /// so that you can measure your accrued rewards automatically.
@@ -370,7 +370,9 @@ pub mod examples {
         )?;
         tulipv2_sdk_lending::helpers::deposit_reserve_liquidity(
             &ctx.accounts.lending_program,
-            &ctx.accounts.source_liquidity_token_account.to_account_info(),
+            &ctx.accounts
+                .source_liquidity_token_account
+                .to_account_info(),
             &ctx.accounts.destination_collateral.to_account_info(),
             &ctx.accounts.reserve,
             &ctx.accounts.reserve_liquidity.to_account_info(),
@@ -381,7 +383,7 @@ pub mod examples {
             &ctx.accounts.clock.to_account_info(),
             &ctx.accounts.token_program,
             &[],
-            amount
+            amount,
         )?;
         Ok(())
     }
@@ -408,7 +410,7 @@ pub mod examples {
             &ctx.accounts.clock.to_account_info(),
             &ctx.accounts.token_program,
             &[],
-            amount
+            amount,
         )?;
         Ok(())
     }
@@ -662,7 +664,7 @@ pub struct WithdrawMultiDepositOptimizerVault<'info> {
 #[derive(Accounts)]
 pub struct WithdrawMangoMultiDepositOptimizerVault<'info> {
     /// configuration data common to all multi deposit withdraw instructions
-    /// regardless of the underlying vault htey are withdrawing from
+    /// regardless of the underlying vault they are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
     /// CHECK: .
@@ -689,7 +691,7 @@ pub struct WithdrawMangoMultiDepositOptimizerVault<'info> {
 #[derive(Accounts)]
 pub struct WithdrawSolendMultiDepositOptimizerVault<'info> {
     /// configuration data common to all multi deposit withdraw instructions
-    /// regardless of the underlying vault htey are withdrawing from
+    /// regardless of the underlying vault they are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
 }
@@ -697,7 +699,7 @@ pub struct WithdrawSolendMultiDepositOptimizerVault<'info> {
 #[derive(Accounts)]
 pub struct WithdrawTulipMultiDepositOptimizerVault<'info> {
     /// configuration data common to all multi deposit withdraw instructions
-    /// regardless of the underlying vault htey are withdrawing from
+    /// regardless of the underlying vault they are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
 }
