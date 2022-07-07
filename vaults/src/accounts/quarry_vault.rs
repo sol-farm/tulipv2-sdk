@@ -134,7 +134,7 @@ pub struct SunnyConfigurationDataV1 {
     /// that sunny uses internally, similar to the way we use
     /// deposit tracking accounts
     ///
-    /// this is hte vault account created in stage one
+    /// this is the vault account created in stage one
     pub sunny_tvault: Pubkey,
     /// this is the quarry miner account that sunny creates
     /// within quarry on behalf of our tvault
