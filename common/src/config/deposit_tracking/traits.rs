@@ -27,7 +27,7 @@ pub trait IssueShares {
     fn instruction(&self, farm_type: Farm, amount: u64) -> Option<Instruction>;
     fn ix_data(&self) -> Option<[u8; 8]>;
     /// please note the _is_signer variable is ignored, it's simply here to provide
-    /// compatability
+    /// compatibility
     fn to_account_meta(&self, _is_signer: Option<bool>) -> Vec<AccountMeta>;
 }
 
@@ -62,7 +62,7 @@ pub trait RegisterDepositTracking {
     fn instruction(&self, farm_type: Farm) -> Option<Instruction>;
     fn ix_data(&self) -> Option<[u8; 8]>;
     /// please note the _is_signer variable is ignored, it's simply here to provide
-    /// compatability
+    /// compatibility
     fn to_account_meta(&self, _is_signer: Option<bool>) -> Vec<AccountMeta>;
 }
 
@@ -92,6 +92,6 @@ pub trait WithdrawDepositTracking {
     fn instruction(&self, amount: u64, farm_type: Farm) -> Option<Instruction>;
     fn ix_data(&self) -> Option<[u8; 8]>;
     /// please note the _is_signer variable is ignored, it's simply here to provide
-    /// compatability
+    /// compatibility
     fn to_account_meta(&self, _is_signer: Option<bool>) -> Vec<AccountMeta>;
 }

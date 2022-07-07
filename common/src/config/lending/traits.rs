@@ -120,6 +120,6 @@ pub trait WithdrawMultiOptimizerVault {
     fn instruction(&self, amount: u64) -> Option<Instruction>;
     fn ix_data(&self) -> Option<[u8; 8]>;
     /// please note the _is_signer variable is ignored, it's simply here to provide
-    /// compatability
+    /// compatibility
     fn to_account_meta(&self, _is_signer: Option<bool>) -> Vec<AccountMeta>;
 }
