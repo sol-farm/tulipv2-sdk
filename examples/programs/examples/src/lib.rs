@@ -10,7 +10,7 @@ use tulipv2_sdk_vaults::instructions::{
     new_issue_shares_ix, new_register_deposit_tracking_account_ix,
     new_withdraw_deposit_tracking_ix, new_withdraw_multi_deposit_optimizer_vault_ix,
 };
-
+use crate::implementations::into_withdraw_orca_farm;
 pub mod implementations;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -836,25 +836,93 @@ pub mod examples {
         }
         Ok(())
     }
-    pub fn withdraw_orca_vault<'info>(
-        ctx: Context<WithdrawOrcaFarm<'info>>,
+    pub fn withdraw_orca_vault<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, WithdrawOrcaFarm<'info>>,
+        obligation_index: u8,
+        withdraw_percent: u8,
+        close_method: u8
+    ) -> Result<()> {
+
+        {
+            let ix = {
+                let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(into_withdraw_orca_farm(&ctx));
+                tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_ix(
+                    add_liq,
+                    ctx.remaining_accounts.get(7).unwrap().key(),
+                    ctx.remaining_accounts.get(10).unwrap().key(),
+                    ctx.remaining_accounts.get(9).unwrap().key(),
+                    ctx.remaining_accounts.get(6).unwrap().key(),
+                    obligation_index,
+                    withdraw_percent,
+                    close_method
+                ).unwrap()
+            };
+            let position_info_account = ctx.remaining_accounts.get(0).unwrap();
+            let amm_id = ctx.remaining_accounts.get(1).unwrap();
+            let amm_authority = ctx.remaining_accounts.get(2).unwrap();
+            let solfarm_vault_program = ctx.remaining_accounts.get(3).unwrap();
+            let obligation_vault_address = ctx.remaining_accounts.get(4).unwrap();
+            let dex_program = ctx.remaining_accounts.get(5).unwrap();
+            let lending_program = ctx.remaining_accounts.get(6).unwrap();
+            let lending_market_account = ctx.remaining_accounts.get(7).unwrap();
+            let user_farm_obligation = ctx.remaining_accounts.get(8).unwrap();
+            let lending_market_authority = ctx.remaining_accounts.get(9).unwrap();
+            let user_farm = ctx.remaining_accounts.get(10).unwrap();
+            anchor_lang::solana_program::program::invoke(
+                &ix,
+                &[
+                    ctx.accounts.authority.to_account_info(),
+                    ctx.accounts.vault_account.to_account_info(),
+                    ctx.accounts.vault_user_account.to_account_info(),
+                    ctx.accounts.token_program.to_account_info(),
+                    ctx.accounts.rent.to_account_info(),
+                    ctx.accounts.vault_pda.to_account_info(),
+                    ctx.accounts.system_program.to_account_info(),
+                    ctx.accounts.user_farm_owner.to_account_info(),
+                    ctx.accounts.user_transfer_authority.to_account_info(),
+                    ctx.accounts.user_base_token_account.to_account_info(),
+                    ctx.accounts.user_farm_token_account.to_account_info(),
+                    ctx.accounts.user_reward_token_account.to_account_info(),
+                    ctx.accounts.global_base_token_vault.to_account_info(),
+                    ctx.accounts.farm_token_mint.to_account_info(),
+                    ctx.accounts.global_farm.to_account_info(),
+                    ctx.accounts.orca_user_farm.to_account_info(),
+                    ctx.accounts.global_reward_token_vault.to_account_info(),
+                    ctx.accounts.convert_authority.to_account_info(),
+                    ctx.accounts.aqua_farm_program.to_account_info(),
+                    ctx.accounts.receiving_token_account.to_account_info(),
+                    ctx.accounts.clock.to_account_info(),
+                    ctx.accounts.leveraged_user_farm.to_account_info(),
+                    ctx.accounts.leveraged_farm.to_account_info(),
+                    ctx.remaining_accounts.get(3).unwrap().clone(),
+                    ctx.remaining_accounts.get(4).unwrap().clone(),
+                    ctx.remaining_accounts.get(7).unwrap().clone(),
+                    ctx.remaining_accounts.get(8).unwrap().clone(),
+                    ctx.remaining_accounts.get(9).unwrap().clone(),
+                    ctx.remaining_accounts.get(6).unwrap().clone(),
+                ]
+            )?;
+        }
+        Ok(())
+    }
+    pub fn withdraw_orca_vault_close<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, WithdrawOrcaFarm<'info>>,
         obligation_index: u8,
         withdraw_percent: u8,
         close_method: u8
     ) -> Result<()> {
         {
             let ix = {
-                let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(ctx.accounts.into());
-                tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_ix(
+                let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(into_withdraw_orca_farm(&ctx));
+                tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_close_ix(
                     add_liq,
-                    ctx.accounts.lending_market_account.key(),
-                    ctx.accounts.user_farm_obligation.key(),
-                    ctx.accounts.lending_market_authority.key(),
-                    ctx.accounts.lending_program.key(),
-                    ctx.accounts.position_info_account.key(),
-                    ctx.accounts.system_program.key(),
-                    ctx.accounts.rent.key(),
-                    obligation_index
+                    ctx.remaining_accounts.get(7).unwrap().key(),
+                    ctx.remaining_accounts.get(8).unwrap().key(),
+                    ctx.remaining_accounts.get(9).unwrap().key(),
+                    ctx.remaining_accounts.get(6).unwrap().key(),
+                    obligation_index,
+                    withdraw_percent,
+                    close_method
                 ).unwrap()
             };
             anchor_lang::solana_program::program::invoke(
@@ -883,95 +951,47 @@ pub mod examples {
                     ctx.accounts.clock.to_account_info(),
                     ctx.accounts.leveraged_user_farm.to_account_info(),
                     ctx.accounts.leveraged_farm.to_account_info(),
-                    ctx.accounts.solfarm_vault_program.to_account_info(),
-                    ctx.accounts.obligation_vault_address.to_account_info(),
-                    ctx.remaining_accounts.get(0).unwrap().clone(), // lending market
-                    ctx.remaining_accounts.get(1).unwrap().clone(), // user farm obligation
-                    ctx.remaining_accounts.get(2).unwrap().clone(), // lending market auth
-                    ctx.remaining_accounts.get(3).unwrap().clone(), // lendin progrma
+                    ctx.remaining_accounts.get(3).unwrap().clone(),
+                    ctx.remaining_accounts.get(4).unwrap().clone(),
+                    ctx.remaining_accounts.get(7).unwrap().clone(),
+                    ctx.remaining_accounts.get(8).unwrap().clone(),
+                    ctx.remaining_accounts.get(9).unwrap().clone(),
+                    ctx.remaining_accounts.get(6).unwrap().clone(),
                 ]
             )?;
         }
         Ok(())
     }
-    pub fn withdraw_orca_vault_close<'info>(
-        ctx: Context<WithdrawOrcaFarm<'info>>,
+    pub fn withdraw_orca_vault_without_shares<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, WithdrawOrcaFarm<'info>>,
         obligation_index: u8,
         withdraw_percent: u8,
         close_method: u8
     ) -> Result<()> {
         {
             let ix = {
-                let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(ctx.accounts.into());
-                tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_ix(
+                let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(into_withdraw_orca_farm(&ctx));
+                tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_without_shares_ix(
                     add_liq,
-                    ctx.accounts.lending_market_account.key(),
-                    ctx.accounts.user_farm_obligation.key(),
-                    ctx.accounts.lending_market_authority.key(),
-                    ctx.accounts.lending_program.key(),
-                    ctx.accounts.position_info_account.key(),
-                    ctx.accounts.system_program.key(),
-                    ctx.accounts.rent.key(),
                     obligation_index
                 ).unwrap()
             };
+            let position_info_account = ctx.remaining_accounts.get(0).unwrap();
+            let amm_id = ctx.remaining_accounts.get(1).unwrap();
+            let amm_authority = ctx.remaining_accounts.get(2).unwrap();
+            let solfarm_vault_program = ctx.remaining_accounts.get(3).unwrap();
+            let obligation_vault_address = ctx.remaining_accounts.get(4).unwrap();
+            let dex_program = ctx.remaining_accounts.get(5).unwrap();
+            let lending_program = ctx.remaining_accounts.get(6).unwrap();
+            let lending_market_account = ctx.remaining_accounts.get(7).unwrap();
+            let user_farm_obligation = ctx.remaining_accounts.get(8).unwrap();
+            let lending_market_authority = ctx.remaining_accounts.get(9).unwrap();
+            let user_farm = ctx.remaining_accounts.get(10).unwrap();
             anchor_lang::solana_program::program::invoke(
                 &ix,
                 &[
                     ctx.accounts.authority.to_account_info(),
-                    ctx.accounts.vault_account.to_account_info(),
-                    ctx.accounts.vault_user_account.to_account_info(),
-                    ctx.accounts.token_program.to_account_info(),
-                    ctx.accounts.rent.to_account_info(),
-                    ctx.accounts.vault_pda.to_account_info(),
-                    ctx.accounts.system_program.to_account_info(),
-                    ctx.accounts.user_farm_owner.to_account_info(),
-                    ctx.accounts.user_transfer_authority.to_account_info(),
-                    ctx.accounts.user_base_token_account.to_account_info(),
-                    ctx.accounts.user_farm_token_account.to_account_info(),
-                    ctx.accounts.user_reward_token_account.to_account_info(),
-                    ctx.accounts.global_base_token_vault.to_account_info(),
-                    ctx.accounts.farm_token_mint.to_account_info(),
-                    ctx.accounts.global_farm.to_account_info(),
-                    ctx.accounts.orca_user_farm.to_account_info(),
-                    ctx.accounts.global_reward_token_vault.to_account_info(),
-                    ctx.accounts.convert_authority.to_account_info(),
-                    ctx.accounts.aqua_farm_program.to_account_info(),
-                    ctx.accounts.receiving_token_account.to_account_info(),
-                    ctx.accounts.clock.to_account_info(),
-                    ctx.accounts.leveraged_user_farm.to_account_info(),
-                    ctx.accounts.leveraged_farm.to_account_info(),
-                    ctx.accounts.solfarm_vault_program.to_account_info(),
-                    ctx.accounts.obligation_vault_address.to_account_info(),
-                    ctx.remaining_accounts.get(0).unwrap().clone(), // lending market
-                    ctx.remaining_accounts.get(1).unwrap().clone(), // user farm obligation
-                    ctx.remaining_accounts.get(2).unwrap().clone(), // lending market auth
-                    ctx.remaining_accounts.get(3).unwrap().clone(), // lendin progrma
-                ]
-            )?;
-        }
-        Ok(())
-    }
-    pub fn withdraw_orca_vault_without_shares<'info>(
-        ctx: Context<WithdrawOrcaFarm<'info>>,
-        obligation_index: u8,
-        withdraw_percent: u8,
-        close_method: u8
-    ) -> Result<()> {
-        {
-            let ix = {
-                let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(ctx.accounts.into());
-                tulipv2_sdk_levfarm::helpers::withdraw_orca_vault_without_shares(
-                    add_liq,
-                    ctx.remaining_accounts.get(0).unwrap().key(),
-                    obligation_index
-                ).unwrap()
-            };
-            anchor_lang::solana_program::program::invoke(
-                &ix,
-                &[
-                    ctx.accounts.authority.to_account_info(),
-                    ctx.accounts.user_farm.to_account_info(),
+                    user_farm.clone(),
                     ctx.accounts.leveraged_farm.to_account_info(),
                     ctx.accounts.vault_account.to_account_info(),
                     ctx.accounts.vault_user_account.to_account_info(),
@@ -983,18 +1003,7 @@ pub mod examples {
                     ctx.accounts.lev_farm_pc_token_account.to_account_info(),
                     ctx.accounts.pool_coin_token_account.to_account_info(),
                     ctx.accounts.pool_pc_token_account.to_account_info(),
-                    ctx.accounts.liquidity_program_id.to_account_info(),
-                    ctx.accounts.amm_id.to_account_info(),
-                    ctx.accounts.amm_authority.to_account_info(),
-                    ctx.accounts.vault_deposit_queue.to_account_info(),
-                    ctx.accounts.lp_mint_address.to_account_info(),
-                    ctx.accounts.lending_market_account.to_account_info(),
-                    ctx.accounts.user_farm_obligation.to_account_info(),
-                    ctx.accounts.lending_market_authority.to_account_info(),
-                    ctx.accounts.lending_program.to_account_info(),
-                    ctx.accounts.dex_program.to_account_info(),
-                    ctx.accounts.solfarm_vault_program.to_account_info(),
-                    ctx.accounts.obligation_vault_address.to_account_info(),
+                    amm_id.clone(),
                 ]
             )?;
         }
@@ -1778,16 +1787,16 @@ pub struct OrcaAddLiquidityQueue<'info> {
     pub system_program: AccountInfo<'info>,
     /// CHECK: .
     #[account(mut)]
-    pub lev_farm_coin_token_account: AccountInfo<'info>,
+    pub lev_farm_coin_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub lev_farm_pc_token_account: AccountInfo<'info>,
+    pub lev_farm_pc_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub pool_coin_token_account: AccountInfo<'info>,
+    pub pool_coin_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub pool_pc_token_account: AccountInfo<'info>,
+    pub pool_pc_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     pub liquidity_program_id: AccountInfo<'info>,
     /// CHECK: .
@@ -1798,10 +1807,10 @@ pub struct OrcaAddLiquidityQueue<'info> {
     pub amm_authority: AccountInfo<'info>,
     /// CHECK: .
     #[account(mut)]
-    pub vault_deposit_queue: AccountInfo<'info>,
+    pub vault_deposit_queue: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub lp_mint_address: AccountInfo<'info>,
+    pub lp_mint_address: Box<Account<'info, Mint>>,
     /// CHECK: .
     #[account(mut)]
     pub lending_market_account: AccountInfo<'info>,
@@ -1830,66 +1839,106 @@ pub struct OrcaAddLiquidityQueue<'info> {
 
 #[derive(Accounts)]
 pub struct WithdrawOrcaFarm<'info> {
+    /// CHECK: .
     #[account(mut, signer)]
     pub authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub vault_account: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub vault_user_account: AccountInfo<'info>,
+    /// CHECK: .
     pub token_program: AccountInfo<'info>,
+    /// CHECK: .
     pub rent: Sysvar<'info, Rent>,
+    /// CHECK: .
     #[account(mut)]
     pub vault_pda: AccountInfo<'info>,
+    /// CHECK: .
     pub system_program: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub user_farm_owner: AccountInfo<'info>,
+    /// CHECK: .
     pub user_transfer_authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    // this is the address of the vault's pool/lp token account
-    pub user_base_token_account: AccountInfo<'info>,
+    pub user_base_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    // this is the address of the vault's "converted" pool/lp token account
-    pub user_farm_token_account: AccountInfo<'info>,
+    pub user_farm_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    // this is the address of the vault's reward token account
-    pub user_reward_token_account: AccountInfo<'info>,
+    pub user_reward_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    pub global_base_token_vault: AccountInfo<'info>,
+    pub global_base_token_vault:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     #[account(mut)]
-    pub farm_token_mint: AccountInfo<'info>,
+    pub farm_token_mint:  Box<Account<'info, Mint>>,
+    /// CHECK: .
     #[account(mut)]
     pub global_farm: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub orca_user_farm: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub global_reward_token_vault: AccountInfo<'info>,
+    pub global_reward_token_vault:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     pub convert_authority: AccountInfo<'info>,
+    /// CHECK: .
     pub aqua_farm_program: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub receiving_token_account: AccountInfo<'info>,
+    pub receiving_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
     pub clock: Sysvar<'info, Clock>,
+    /// CHECK: .
     #[account(mut)]
     pub leveraged_user_farm: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub leveraged_farm: AccountInfo<'info>,
-    pub solfarm_vault_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub lev_farm_coin_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    pub lev_farm_pc_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    pub pool_coin_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    pub pool_pc_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    pub vault_deposit_queue:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    pub lp_mint_address:  Box<Account<'info, TokenAccount>>,
+    /*
+    remaining accounts
+    
+    /// CHECK: .
+    pub position_info_account: AccountInfo<'info>, // 0 
+    /// CHECK: .
+    pub amm_id: AccountInfo<'info>, // 1
+    /// CHECK: .
+    pub amm_authority: AccountInfo<'info>, // 2
+    /// CHECK: .
+    pub solfarm_vault_program: AccountInfo<'info>, // 3
+    /// CHECK: .
     #[account(mut)]
-    pub obligation_vault_address: AccountInfo<'info>,
-    pub dex_program: AccountInfo<'info>,
-    pub lending_program: AccountInfo<'info>,
-    pub lending_market_account: AccountInfo<'info>,
-    pub user_farm_obligation: AccountInfo<'info>,
-    pub lending_market_authority: AccountInfo<'info>,
-
-    pub user_farm: AccountInfo<'info>,
-    pub lev_farm_coin_token_account: AccountInfo<'info>,
-    pub lev_farm_pc_token_account: AccountInfo<'info>,
-    pub pool_coin_token_account: AccountInfo<'info>,
-    pub pool_pc_token_account: AccountInfo<'info>,
-    pub amm_id: AccountInfo<'info>,
-    pub amm_authority: AccountInfo<'info>,
-    pub vault_deposit_queue: AccountInfo<'info>,
-    pub lp_mint_address: AccountInfo<'info>,
-    pub position_info_account: AccountInfo<'info>,
+    pub obligation_vault_address: AccountInfo<'info>, // 4
+    /// CHECK: .
+    pub dex_program: AccountInfo<'info>, // 5
+    /// CHECK: .
+    pub lending_program: AccountInfo<'info>, // 6
+    /// CHECK: .
+    pub lending_market_account: AccountInfo<'info>, // 7
+    /// CHECK: .
+    pub user_farm_obligation: AccountInfo<'info>, // 8
+    /// CHECK: .
+    pub lending_market_authority: AccountInfo<'info>, // 9
+    /// CHECK: .
+    pub user_farm: AccountInfo<'info>, // 10
+    */
 
 }

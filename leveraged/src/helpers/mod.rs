@@ -234,7 +234,7 @@ pub fn new_orca_add_liquidity_queue_ix(
     )
 }
 
-pub fn new_withdraw_orca_vault_ix(
+pub fn new_withdraw_orca_vault_ix<'info>(
     accounts: Box<withdraw_orca_vault::WithdrawOrcaFarm>,
     lending_market: Pubkey,
     user_farm_obligation: Pubkey,
@@ -255,7 +255,7 @@ pub fn new_withdraw_orca_vault_ix(
         close_method
     )
 }
-pub fn new_withdraw_orca_vault_close_ix(
+pub fn new_withdraw_orca_vault_close_ix<'info>(
     accounts: Box<withdraw_orca_vault::WithdrawOrcaFarm>,
     lending_market: Pubkey,
     user_farm_obligation: Pubkey,
@@ -276,7 +276,7 @@ pub fn new_withdraw_orca_vault_close_ix(
         close_method
     )
 }
-pub fn new_withdraw_orca_vault_without_shares_ix(
+pub fn new_withdraw_orca_vault_without_shares_ix<'info>(
     accounts: Box<withdraw_orca_vault::WithdrawOrcaFarm>,
     obligation_index: u8,
 ) -> Option<Instruction> {

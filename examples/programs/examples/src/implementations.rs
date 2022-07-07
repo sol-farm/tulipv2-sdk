@@ -185,34 +185,32 @@ impl<'info> From<&mut OrcaAddLiquidityQueue<'info>> for tulipv2_sdk_levfarm::ins
     }
 }
 
-impl<'info> From<&mut WithdrawOrcaFarm<'info>> for tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm {
-    fn from(farm_accounts: &mut WithdrawOrcaFarm<'info>) -> Self {
-        Self {
-            authority: farm_accounts.authority.key(),
-            vault_account: farm_accounts.vault_account.key(),
-            vault_user_account: farm_accounts.vault_user_account.key(),
-            token_program: farm_accounts.token_program.key(),
-            rent: farm_accounts.rent.key(),
-            vault_pda: farm_accounts.vault_pda.key(),
-            system_program: farm_accounts.system_program.key(),
-            user_farm_owner: farm_accounts.user_farm_owner.key(),
-            user_transfer_authority: farm_accounts.user_transfer_authority.key(),
-            user_base_token_account: farm_accounts.user_base_token_account.key(),
-            user_farm_token_account: farm_accounts.user_farm_token_account.key(),
-            user_reward_token_account: farm_accounts.user_reward_token_account.key(),
-            global_base_token_vault: farm_accounts.global_base_token_vault.key(),
-            farm_token_mint: farm_accounts.farm_token_mint.key(),
-            global_farm: farm_accounts.global_farm.key(),
-            orca_user_farm: farm_accounts.orca_user_farm.key(),
-            global_reward_token_vault: farm_accounts.global_reward_token_vault.key(),
-            convert_authority: farm_accounts.convert_authority.key(),
-            aqua_farm_program: farm_accounts.aqua_farm_program.key(),
-            receiving_token_account: farm_accounts.receiving_token_account.key(),
-            clock: farm_accounts.clock.key(),
-            leveraged_user_farm: farm_accounts.leveraged_user_farm.key(),
-            leveraged_farm: farm_accounts.leveraged_farm.key(),
-            solfarm_vault_program: farm_accounts.solfarm_vault_program.key(),
-            obligation_vault_address: farm_accounts.obligation_vault_address.key(),
+pub fn into_withdraw_orca_farm<'a, 'b, 'c, 'info>(ctx: &Context<'a, 'b, 'c, 'info, WithdrawOrcaFarm<'info>>) -> tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm {
+    tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm {
+            authority: ctx.accounts.authority.key(),
+            vault_account: ctx.accounts.vault_account.key(),
+            vault_user_account: ctx.accounts.vault_user_account.key(),
+            token_program: ctx.accounts.token_program.key(),
+            rent: ctx.accounts.rent.key(),
+            vault_pda: ctx.accounts.vault_pda.key(),
+            system_program: ctx.accounts.system_program.key(),
+            user_farm_owner: ctx.accounts.user_farm_owner.key(),
+            user_transfer_authority: ctx.accounts.user_transfer_authority.key(),
+            user_base_token_account: ctx.accounts.user_base_token_account.key(),
+            user_farm_token_account: ctx.accounts.user_farm_token_account.key(),
+            user_reward_token_account: ctx.accounts.user_reward_token_account.key(),
+            global_base_token_vault: ctx.accounts.global_base_token_vault.key(),
+            farm_token_mint: ctx.accounts.farm_token_mint.key(),
+            global_farm: ctx.accounts.global_farm.key(),
+            orca_user_farm: ctx.accounts.orca_user_farm.key(),
+            global_reward_token_vault: ctx.accounts.global_reward_token_vault.key(),
+            convert_authority: ctx.accounts.convert_authority.key(),
+            aqua_farm_program: ctx.accounts.aqua_farm_program.key(),
+            receiving_token_account: ctx.accounts.receiving_token_account.key(),
+            clock: ctx.accounts.clock.key(),
+            leveraged_user_farm: ctx.accounts.leveraged_user_farm.key(),
+            leveraged_farm: ctx.accounts.leveraged_farm.key(),
+            solfarm_vault_program: ctx.remaining_accounts.get(3).unwrap().key(),
+            obligation_vault_address: ctx.remaining_accounts.get(4).unwrap().key(),
         }
-    }
 }
