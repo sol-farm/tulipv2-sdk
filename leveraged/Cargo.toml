@@ -9,9 +9,95 @@ license = "MIT/Apache-2.0"
 documentation = "https://docs.rs/tulipv2-sdk-vaults"
 readme = "../README.md"
 [features]
-default = ["rayusdc-levfarm", "orcausdc-levfarm"]
-rayusdc-levfarm = []
-orcausdc-levfarm = []
+default = [
+    "orca-orcausdc-levfarm",
+    "orca-solusdc-levfarm",
+    "orca-gmtusdc-levfarm",
+    "orca-solusdt-levfarm",
+    "orca-shdwusdc-levfarm",
+    "orca-atlasusdc-levfarm",
+    "orca-orcasol-levfarm",
+    "orca-polisusdc-levfarm",
+    "orca-samousdc-levfarm",
+    "orca-basisusdc-levfarm",
+    "orca-whethusdc-levfarm",
+    "orca-stsolusdc-levfarm",
+    "orca-whethsol-levfarm",
+    "orca-gstusdc-levfarm",
+    "orca-shdwsol-levfarm",
+    "ray-rayusdc-levfarm",
+    "ray-solusdcray-levfarm",
+    "ray-solusdt-levfarm",
+    "ray-geneusdc-levfarm",
+    "ray-raysol-levfarm",
+    "ray-generay-levfarm",
+    "ray-walephusdc-levfarm",
+    "ray-dflusdc-levfarm",
+    "ray-samoray-levfarm",
+    "ray-whethsol-levfarm",
+    "ray-raywheth-levfarm",
+    "ray-rayusdt-levfarm",
+    "ray-stsolusdc-levfarm",
+    "ray-msolusdc-levfarm",
+    "ray-atlasray-levfarm",
+    "ray-stsolusdt-levfarm",
+    "ray-whethusdc-levfarm",
+    "ray-rayeth-levfarm",
+    "ray-polisray-levfarm",
+    "ray-likeusdc-levfarm",
+    "ray-realusdc-levfarm",
+    "ray-mbsusdc-levfarm",
+    "ray-ethstsol-levfarm",
+    "ray-slclusdc-levfarm",
+    "ray-btcstsol-levfarm",
+    "ray-msolusdt-levfarm",
+    "ray-starsusdc-levfarm",
+    "ray-prismusdc-levfarm",
+]
+orca-orcausdc-levfarm = []
+orca-solusdc-levfarm = []
+orca-gmtusdc-levfarm = []
+orca-solusdt-levfarm = []
+orca-shdwusdc-levfarm = []
+orca-atlasusdc-levfarm = []
+orca-orcasol-levfarm = []
+orca-polisusdc-levfarm = []
+orca-samousdc-levfarm = []
+orca-basisusdc-levfarm = []
+orca-whethusdc-levfarm = []
+orca-stsolusdc-levfarm = []
+orca-whethsol-levfarm = []
+orca-gstusdc-levfarm = []
+orca-shdwsol-levfarm = []
+ray-rayusdc-levfarm = []
+ray-solusdcray-levfarm = []
+ray-solusdt-levfarm = []
+ray-geneusdc-levfarm = []
+ray-raysol-levfarm = []
+ray-generay-levfarm = []
+ray-walephusdc-levfarm = []
+ray-dflusdc-levfarm = []
+ray-samoray-levfarm = []
+ray-whethsol-levfarm = []
+ray-raysrm-levafrm = []
+ray-raywheth-levfarm = []
+ray-rayusdt-levfarm = []
+ray-stsolusdc-levfarm = []
+ray-msolusdc-levfarm = []
+ray-atlasray-levfarm = []
+ray-stsolusdt-levfarm = []
+ray-whethusdc-levfarm = []
+ray-rayeth-levfarm = []
+ray-polisray-levfarm = []
+ray-likeusdc-levfarm = []
+ray-realusdc-levfarm = []
+ray-mbsusdc-levfarm = []
+ray-ethstsol-levfarm = []
+ray-slclusdc-levfarm = []
+ray-btcstsol-levfarm = []
+ray-msolusdt-levfarm = []
+ray-starsusdc-levfarm = []
+ray-prismusdc-levfarm = []
 [dependencies]
 solana-program = "1.9.13"
 spl-token = "3.2.0"

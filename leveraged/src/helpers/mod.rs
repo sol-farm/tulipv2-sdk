@@ -266,16 +266,16 @@ pub fn new_withdraw_orca_vault_without_shares_ix<'info>(
 pub fn lev_farm_config(farm: Farms) -> Option<LevFarmConfig> {
     match farm {
         Farms::RayUsdcVault => {
-            #[cfg(not(feature = "rayusdc-levfarm"))]
+            #[cfg(not(feature = "ray-rayusdc-levfarm"))]
             unimplemented!("requires rayusdc-levfarm feature to be activated");
-            #[cfg(feature = "rayusdc-levfarm")]
-            return Some(tulipv2_sdk_common::config::levfarm::ray_usdc::get_lev_farm_config())
+            #[cfg(feature = "ray-rayusdc-levfarm")]
+            return Some(tulipv2_sdk_common::config::levfarm::ray_rayusdc::get_lev_farm_config())
         }
         Farms::OrcaUsdcVault => {
-            #[cfg(not(feature = "orcausdc-levfarm"))]
+            #[cfg(not(feature = "orca-orcausdc-levfarm"))]
             unimplemented!("requires orcausdc-levfarm feature to be activated");
-            #[cfg(feature = "orcausdc-levfarm")]
-            return Some(tulipv2_sdk_common::config::levfarm::orca_usdc::get_lev_farm_config())
+            #[cfg(feature = "orca-orcausdc-levfarm")]
+            return Some(tulipv2_sdk_common::config::levfarm::orca_orcausdc::get_lev_farm_config())
         }
         _ => None
     }

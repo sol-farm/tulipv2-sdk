@@ -124,9 +124,6 @@ program = "./deps/tulip/rayv1.so"
 [[test.genesis]]
 address = "FoNqK2xudK7TfKjPFxpzAcTaU2Wwyt81znT4RjJBLFQp"
 program = "./deps/tulip/orcav1.so"
-[[test.genesis]]
-address = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-program = "./deps/misc/token.so"
 ##############
 # token mints
 ##############

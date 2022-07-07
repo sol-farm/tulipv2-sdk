@@ -61,7 +61,6 @@ default = [
     "ray-dflusdc-levfarm",
     "ray-samoray-levfarm",
     "ray-whethsol-levfarm",
-    "ray-raysrm-levafarm",
     "ray-raywheth-levfarm",
     "ray-rayusdt-levfarm",
     "ray-stsolusdc-levfarm",
@@ -102,8 +101,6 @@ orca-stsolusdc-levfarm = []
 orca-whethsol-levfarm = []
 orca-gstusdc-levfarm = []
 orca-shdwsol-levfarm = []
-
-
 ray-rayusdc-levfarm = []
 ray-solusdcray-levfarm = []
 ray-solusdt-levfarm = []
