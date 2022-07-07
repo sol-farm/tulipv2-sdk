@@ -1,19 +1,34 @@
-use arrayref::{array_ref, array_refs};
 use solana_program::{instruction::{AccountMeta, Instruction}, pubkey::Pubkey};
 use std::str::FromStr;
-use math::uint::{U192, U256};
-use math::decimal::{Decimal};
+use anchor_lang::solana_program;
+use static_pubkey::static_pubkey;
+use anchor_lang::prelude::*;
 
-#[derive(Debug, Clone, Copy)]
-#[cfg_attr(
-    feature = "anchor-serializaion",
-    derive(AnchorSerialize, AnchorDeserialize)
-)]
+#[derive(Debug, Clone, Copy, AnchorSerialize, AnchorDeserialize)]
 pub enum AquaFarms {
     SOLUSDC = 0,
     ORCAUSDC = 1,
     USDCUSDT = 2,
     ORCASOL = 3,
+    ETHUSDC = 4,
+    SOLUSDT = 5,
+    ETHSOL = 6,
+    mSOLSOL = 7,
+    ATLASUSDC = 8,
+    POLISUSDC = 9,
+    SOCNSOL = 10,
+    SOCNUSDC = 11,
+    whETHUSDC = 12,
+    whETHSOL = 13,
+    SAMOUSDC = 15,
+    SHDWSOL = 16,
+    SHDWUSDC = 17,
+    BASISUSDC = 18,
+    stSOLUSDC = 19,
+    stSOLwUST = 20,
+    GSTUSDC = 24,
+    sRLYSOL = 25,
+    GMTUSDC = 26,
 }
 impl From<u8> for AquaFarms {
     fn from(val: u8) -> AquaFarms {
@@ -22,6 +37,25 @@ impl From<u8> for AquaFarms {
             1 => AquaFarms::ORCAUSDC,
             2 => AquaFarms::USDCUSDT,
             3 => AquaFarms::ORCASOL,
+            4 => AquaFarms::ETHUSDC,
+            5 => AquaFarms::SOLUSDT,
+            6 => AquaFarms::ETHSOL,
+            7 => AquaFarms::mSOLSOL,
+            8 => AquaFarms::ATLASUSDC,
+            9 => AquaFarms::POLISUSDC,
+            10 => AquaFarms::SOCNSOL,
+            11 => AquaFarms::SOCNUSDC,
+            12 => AquaFarms::whETHUSDC,
+            13 => AquaFarms::whETHSOL,
+            15 => AquaFarms::SAMOUSDC,
+            16 => AquaFarms::SHDWSOL,
+            17 => AquaFarms::SHDWUSDC,
+            18 => AquaFarms::BASISUSDC,
+            19  => AquaFarms::stSOLUSDC,
+            24 => AquaFarms::GSTUSDC,
+            20 => AquaFarms::stSOLwUST,
+            25 => AquaFarms::sRLYSOL,
+            26 => AquaFarms::GMTUSDC,
             _ => panic!(":ruhroh:"),
         }
     }

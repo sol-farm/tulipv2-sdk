@@ -847,41 +847,44 @@ pub mod examples {
                 let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(ctx.accounts.into());
                 tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_ix(
                     add_liq,
-                    ctx.remaining_accounts.get(0).unwrap().key(), // lending market
-                    ctx.remaining_accounts.get(1).unwrap().key(), // user farm obligation
-                    ctx.remaining_accounts.get(2).unwrap().key(), // lending market auth
-                    ctx.remaining_accounts.get(3).unwrap().key(), // lendin progrma
+                    ctx.accounts.lending_market_account.key(),
+                    ctx.accounts.user_farm_obligation.key(),
+                    ctx.accounts.lending_market_authority.key(),
+                    ctx.accounts.lending_program.key(),
+                    ctx.accounts.position_info_account.key(),
+                    ctx.accounts.system_program.key(),
+                    ctx.accounts.rent.key(),
                     obligation_index
                 ).unwrap()
             };
             anchor_lang::solana_program::program::invoke(
                 &ix,
                 &[
-                    authority: ctx.accounts.authority.to_account_info(),
-                    vault_account: ctx.accounts.vault_account.to_account_info(),
-                    vault_user_account: ctx.accounts.vault_user_account.to_account_info(),
-                    token_program: ctx.accounts.token_program.to_account_info(),
-                    rent: ctx.accounts.rent.to_account_info(),
-                    vault_pda: ctx.accounts.vault_pda.to_account_info(),
-                    system_program: ctx.accounts.system_program.to_account_info(),
-                    user_farm_owner: ctx.accounts.user_farm_owner.to_account_info(),
-                    user_transfer_authority: ctx.accounts.user_transfer_authority.to_account_info(),
-                    user_base_token_account: ctx.accounts.user_base_token_account.to_account_info(),
-                    user_farm_token_account: ctx.accounts.user_farm_token_account.to_account_info(),
-                    user_reward_token_account: ctx.accounts.user_reward_token_account.to_account_info(),
-                    global_base_token_vault: ctx.accounts.global_base_token_vault.to_account_info(),
-                    farm_token_mint: ctx.accounts.farm_token_mint.to_account_info(),
-                    global_farm: ctx.accounts.global_farm.to_account_info(),
-                    orca_user_farm: ctx.accounts.orca_user_farm.to_account_info(),
-                    global_reward_token_vault: ctx.accounts.global_reward_token_vault.to_account_info(),
-                    convert_authority: ctx.accounts.convert_authority.to_account_info(),
-                    aqua_farm_program: ctx.accounts.aqua_farm_program.to_account_info(),
-                    receiving_token_account: ctx.accounts.receiving_token_account.to_account_info(),
-                    clock: ctx.accounts.clock.to_account_info(),
-                    leveraged_user_farm: ctx.accounts.leveraged_user_farm.to_account_info(),
-                    leveraged_farm: ctx.accounts.leveraged_farm.to_account_info(),
-                    solfarm_vault_program: ctx.accounts.solfarm_vault_program.to_account_info(),
-                    obligation_vault_address: ctx.accounts.obligation_vault_address.to_account_info(),
+                    ctx.accounts.authority.to_account_info(),
+                    ctx.accounts.vault_account.to_account_info(),
+                    ctx.accounts.vault_user_account.to_account_info(),
+                    ctx.accounts.token_program.to_account_info(),
+                    ctx.accounts.rent.to_account_info(),
+                    ctx.accounts.vault_pda.to_account_info(),
+                    ctx.accounts.system_program.to_account_info(),
+                    ctx.accounts.user_farm_owner.to_account_info(),
+                    ctx.accounts.user_transfer_authority.to_account_info(),
+                    ctx.accounts.user_base_token_account.to_account_info(),
+                    ctx.accounts.user_farm_token_account.to_account_info(),
+                    ctx.accounts.user_reward_token_account.to_account_info(),
+                    ctx.accounts.global_base_token_vault.to_account_info(),
+                    ctx.accounts.farm_token_mint.to_account_info(),
+                    ctx.accounts.global_farm.to_account_info(),
+                    ctx.accounts.orca_user_farm.to_account_info(),
+                    ctx.accounts.global_reward_token_vault.to_account_info(),
+                    ctx.accounts.convert_authority.to_account_info(),
+                    ctx.accounts.aqua_farm_program.to_account_info(),
+                    ctx.accounts.receiving_token_account.to_account_info(),
+                    ctx.accounts.clock.to_account_info(),
+                    ctx.accounts.leveraged_user_farm.to_account_info(),
+                    ctx.accounts.leveraged_farm.to_account_info(),
+                    ctx.accounts.solfarm_vault_program.to_account_info(),
+                    ctx.accounts.obligation_vault_address.to_account_info(),
                     ctx.remaining_accounts.get(0).unwrap().clone(), // lending market
                     ctx.remaining_accounts.get(1).unwrap().clone(), // user farm obligation
                     ctx.remaining_accounts.get(2).unwrap().clone(), // lending market auth
@@ -902,41 +905,44 @@ pub mod examples {
                 let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(ctx.accounts.into());
                 tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_ix(
                     add_liq,
-                    ctx.remaining_accounts.get(0).unwrap().key(), // lending market
-                    ctx.remaining_accounts.get(1).unwrap().key(), // user farm obligation
-                    ctx.remaining_accounts.get(2).unwrap().key(), // lending market auth
-                    ctx.remaining_accounts.get(3).unwrap().key(), // lendin progrma
+                    ctx.accounts.lending_market_account.key(),
+                    ctx.accounts.user_farm_obligation.key(),
+                    ctx.accounts.lending_market_authority.key(),
+                    ctx.accounts.lending_program.key(),
+                    ctx.accounts.position_info_account.key(),
+                    ctx.accounts.system_program.key(),
+                    ctx.accounts.rent.key(),
                     obligation_index
                 ).unwrap()
             };
             anchor_lang::solana_program::program::invoke(
                 &ix,
                 &[
-                    authority: ctx.accounts.authority.to_account_info(),
-                    vault_account: ctx.accounts.vault_account.to_account_info(),
-                    vault_user_account: ctx.accounts.vault_user_account.to_account_info(),
-                    token_program: ctx.accounts.token_program.to_account_info(),
-                    rent: ctx.accounts.rent.to_account_info(),
-                    vault_pda: ctx.accounts.vault_pda.to_account_info(),
-                    system_program: ctx.accounts.system_program.to_account_info(),
-                    user_farm_owner: ctx.accounts.user_farm_owner.to_account_info(),
-                    user_transfer_authority: ctx.accounts.user_transfer_authority.to_account_info(),
-                    user_base_token_account: ctx.accounts.user_base_token_account.to_account_info(),
-                    user_farm_token_account: ctx.accounts.user_farm_token_account.to_account_info(),
-                    user_reward_token_account: ctx.accounts.user_reward_token_account.to_account_info(),
-                    global_base_token_vault: ctx.accounts.global_base_token_vault.to_account_info(),
-                    farm_token_mint: ctx.accounts.farm_token_mint.to_account_info(),
-                    global_farm: ctx.accounts.global_farm.to_account_info(),
-                    orca_user_farm: ctx.accounts.orca_user_farm.to_account_info(),
-                    global_reward_token_vault: ctx.accounts.global_reward_token_vault.to_account_info(),
-                    convert_authority: ctx.accounts.convert_authority.to_account_info(),
-                    aqua_farm_program: ctx.accounts.aqua_farm_program.to_account_info(),
-                    receiving_token_account: ctx.accounts.receiving_token_account.to_account_info(),
-                    clock: ctx.accounts.clock.to_account_info(),
-                    leveraged_user_farm: ctx.accounts.leveraged_user_farm.to_account_info(),
-                    leveraged_farm: ctx.accounts.leveraged_farm.to_account_info(),
-                    solfarm_vault_program: ctx.accounts.solfarm_vault_program.to_account_info(),
-                    obligation_vault_address: ctx.accounts.obligation_vault_address.to_account_info(),
+                    ctx.accounts.authority.to_account_info(),
+                    ctx.accounts.vault_account.to_account_info(),
+                    ctx.accounts.vault_user_account.to_account_info(),
+                    ctx.accounts.token_program.to_account_info(),
+                    ctx.accounts.rent.to_account_info(),
+                    ctx.accounts.vault_pda.to_account_info(),
+                    ctx.accounts.system_program.to_account_info(),
+                    ctx.accounts.user_farm_owner.to_account_info(),
+                    ctx.accounts.user_transfer_authority.to_account_info(),
+                    ctx.accounts.user_base_token_account.to_account_info(),
+                    ctx.accounts.user_farm_token_account.to_account_info(),
+                    ctx.accounts.user_reward_token_account.to_account_info(),
+                    ctx.accounts.global_base_token_vault.to_account_info(),
+                    ctx.accounts.farm_token_mint.to_account_info(),
+                    ctx.accounts.global_farm.to_account_info(),
+                    ctx.accounts.orca_user_farm.to_account_info(),
+                    ctx.accounts.global_reward_token_vault.to_account_info(),
+                    ctx.accounts.convert_authority.to_account_info(),
+                    ctx.accounts.aqua_farm_program.to_account_info(),
+                    ctx.accounts.receiving_token_account.to_account_info(),
+                    ctx.accounts.clock.to_account_info(),
+                    ctx.accounts.leveraged_user_farm.to_account_info(),
+                    ctx.accounts.leveraged_farm.to_account_info(),
+                    ctx.accounts.solfarm_vault_program.to_account_info(),
+                    ctx.accounts.obligation_vault_address.to_account_info(),
                     ctx.remaining_accounts.get(0).unwrap().clone(), // lending market
                     ctx.remaining_accounts.get(1).unwrap().clone(), // user farm obligation
                     ctx.remaining_accounts.get(2).unwrap().clone(), // lending market auth
@@ -984,7 +990,7 @@ pub mod examples {
                     ctx.accounts.lp_mint_address.to_account_info(),
                     ctx.accounts.lending_market_account.to_account_info(),
                     ctx.accounts.user_farm_obligation.to_account_info(),
-                    ctx.accounts.derived_lending_market_authority.to_account_info(),
+                    ctx.accounts.lending_market_authority.to_account_info(),
                     ctx.accounts.lending_program.to_account_info(),
                     ctx.accounts.dex_program.to_account_info(),
                     ctx.accounts.solfarm_vault_program.to_account_info(),
@@ -1869,4 +1875,21 @@ pub struct WithdrawOrcaFarm<'info> {
     pub solfarm_vault_program: AccountInfo<'info>,
     #[account(mut)]
     pub obligation_vault_address: AccountInfo<'info>,
+    pub dex_program: AccountInfo<'info>,
+    pub lending_program: AccountInfo<'info>,
+    pub lending_market_account: AccountInfo<'info>,
+    pub user_farm_obligation: AccountInfo<'info>,
+    pub lending_market_authority: AccountInfo<'info>,
+
+    pub user_farm: AccountInfo<'info>,
+    pub lev_farm_coin_token_account: AccountInfo<'info>,
+    pub lev_farm_pc_token_account: AccountInfo<'info>,
+    pub pool_coin_token_account: AccountInfo<'info>,
+    pub pool_pc_token_account: AccountInfo<'info>,
+    pub amm_id: AccountInfo<'info>,
+    pub amm_authority: AccountInfo<'info>,
+    pub vault_deposit_queue: AccountInfo<'info>,
+    pub lp_mint_address: AccountInfo<'info>,
+    pub position_info_account: AccountInfo<'info>,
+
 }
