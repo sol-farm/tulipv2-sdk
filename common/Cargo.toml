@@ -37,6 +37,7 @@ default = [
     "ray-optimizer", 
     "levfarm", 
     "rayusdc-levfarm",
+    "orcausdc-levfarm",
 ]
 usdc-optimizer = []
 usdt-optimizer = []
@@ -45,3 +46,4 @@ ray-optimizer = []
 logs = []
 levfarm = []
 rayusdc-levfarm = []
+orcausdc-levfarm = []

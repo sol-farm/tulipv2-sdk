@@ -1427,4 +1427,55 @@ filename = "deps/accounts/Gf38RxSF3FguiBVYfsB8AmpPyNkGCrNDE7LNvr6U8n7C.json"
 [[test.validator.account]] # old vault info
 address = "8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA"
 filename = "deps/accounts/8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA.json"
+
+
+# orca accounts
+[[test.validator.account]]
+address = "5o3EsLS1NTciKHXVsGNYqQQ8iBBK3dBfSPwCH7wsdtRT"
+filename = "deps/accounts/5o3EsLS1NTciKHXVsGNYqQQ8iBBK3dBfSPwCH7wsdtRT.json"
+[[test.validator.account]]
+address = "2Dts63SfTz2yivx57izMcVfDMAdpxuBgqM99ChWeJXun"
+filename = "deps/accounts/2Dts63SfTz2yivx57izMcVfDMAdpxuBgqM99ChWeJXun.json"
+[[test.validator.account]]
+address = "HGkRMx91bZzzcbvJVyzWgDAswHA7Rhn11tuox9GYTB5c"
+filename = "deps/accounts/HGkRMx91bZzzcbvJVyzWgDAswHA7Rhn11tuox9GYTB5c.json"
+[[test.validator.account]]
+address = "E68tCFxPPFZa6VWb6d6Txe7ugzF977TZvoVF59W951gv"
+filename = "deps/accounts/E68tCFxPPFZa6VWb6d6Txe7ugzF977TZvoVF59W951gv.json"
+[[test.validator.account]]
+address = "45BAAQCZYd2kP3Z3WvRwdtfUhvuW4FvpqVK4m8qrR5x1"
+filename = "deps/accounts/45BAAQCZYd2kP3Z3WvRwdtfUhvuW4FvpqVK4m8qrR5x1.json"
+[[test.validator.account]]
+address = "DEiqe2Ta9TRMRtWdBqiFV13dhVrqCeG8MMmVwywvXvJo"
+filename = "deps/accounts/DEiqe2Ta9TRMRtWdBqiFV13dhVrqCeG8MMmVwywvXvJo.json"
+[[test.validator.account]]
+address = "Gc7W5U66iuHQcC1cQyeX9hxkPF2QUVJPTf1NWbW8fNrt"
+filename = "deps/accounts/Gc7W5U66iuHQcC1cQyeX9hxkPF2QUVJPTf1NWbW8fNrt.json"
+[[test.validator.account]]
+address = "82EjQKzz74AndA144SA1RC57puyjsDHggwmPs9VXbH5s"
+filename = "deps/accounts/82EjQKzz74AndA144SA1RC57puyjsDHggwmPs9VXbH5s.json"
+[[test.validator.account]]
+address = "JCGNW8e3V4ADCiCWU42BTF3FHJLidfgcxHYo2m7kDYvN"
+filename = "deps/accounts/JCGNW8e3V4ADCiCWU42BTF3FHJLidfgcxHYo2m7kDYvN.json"
+[[test.validator.account]]
+address = "8cNdAEu4y6KRWZwekBavQRpQbYBYNAmNCB8xTJgWibz1"
+filename = "deps/accounts/8cNdAEu4y6KRWZwekBavQRpQbYBYNAmNCB8xTJgWibz1.json"
+[[test.validator.account]]
+address = "GEogPAbFyMyUuxjjgMDBh1of9qaz5BGEtTyYX9LVDfSA"
+filename = "deps/accounts/GEogPAbFyMyUuxjjgMDBh1of9qaz5BGEtTyYX9LVDfSA.json"
+[[test.validator.account]]
+address = "ELHiqZR2cYkN2MerbfMSWGy3nwdPuHYiXbiKsQG7Uy9p"
+filename = "deps/accounts/ELHiqZR2cYkN2MerbfMSWGy3nwdPuHYiXbiKsQG7Uy9p.json"
+[[test.validator.account]]
+address = "ADz1SJ28TH2TnLzA9FG7DqiW41CKeLfRvbvDckK1dvFv"
+filename = "deps/accounts/ADz1SJ28TH2TnLzA9FG7DqiW41CKeLfRvbvDckK1dvFv.json"
+[[test.validator.account]]
+address = "6sJg8f3zcAjrd38QhSA3C34n8MzLq1XVTiQr4msozAuv"
+filename = "deps/accounts/6sJg8f3zcAjrd38QhSA3C34n8MzLq1XVTiQr4msozAuv.json"
+[[test.validator.account]]
+address = "4LqykQes5scGz4bZLNaNm1bmgMutCCGqQZVni4VJjWhZ"
+filename = "deps/accounts/4LqykQes5scGz4bZLNaNm1bmgMutCCGqQZVni4VJjWhZ.json"
+[[test.validator.account]]
+address = "HRYfSMc1gYEvxo9zsh14jYHKxAcfJfoVakKtRtJEomb8"
+filename = "deps/accounts/HRYfSMc1gYEvxo9zsh14jYHKxAcfJfoVakKtRtJEomb8.json"
 ###############

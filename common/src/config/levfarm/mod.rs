@@ -3,6 +3,8 @@ use static_pubkey::static_pubkey;
 
 #[cfg(feature = "rayusdc-levfarm")]
 pub mod ray_usdc;
+#[cfg(feature = "orcausdc-levfarm")]
+pub mod orca_usdc;
 
 pub const GLOBAL: Pubkey = static_pubkey!("HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8VdJKqjF");
 pub const LENDING_PROGRAM: Pubkey = static_pubkey!("4bcFeLv4nydFrsZqV5CgwCVrPhkQKsXtzfy2KyMz7ozM");

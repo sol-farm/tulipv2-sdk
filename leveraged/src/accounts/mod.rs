@@ -2,6 +2,7 @@ pub mod user_farm;
 pub mod leveraged_farm;
 pub mod derivations;
 pub mod position_info;
+pub mod aqua_farms;
 
 use anchor_lang::prelude::*;
 
