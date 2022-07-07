@@ -121,6 +121,9 @@ program = "./deps/tulip/lev_farm.so"
 [[test.genesis]]
 address = "7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4"
 program = "./deps/tulip/rayv1.so"
+[[test.genesis]]
+address = "FoNqK2xudK7TfKjPFxpzAcTaU2Wwyt81znT4RjJBLFQp"
+program = "./deps/tulip/orcav1.so"
 ##############
 # token mints
 ##############
