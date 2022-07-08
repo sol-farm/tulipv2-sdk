@@ -2432,6 +2432,33 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2dd574626839106c320a323308629dcb1acfc96e32a8cba364ddc61ac23ee83"
 
 [[package]]
+name = "so-defi-accounts"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bf471432806f66734ed18c4d9ac657f0df3c0f5b683fa255d8434c071072d134"
+dependencies = [
+ "borsh",
+ "borsh-derive",
+ "solana-program",
+ "static-pubkey",
+]
+
+[[package]]
+name = "so-defi-atrix"
+version = "0.1.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6fff5c8e3d2d6ef9f49c6322c9a88f9aed214abbf5cfc249e0e5efb840ea475"
+dependencies = [
+ "borsh",
+ "borsh-derive",
+ "sighashdb",
+ "so-defi-accounts",
+ "solana-program",
+ "spl-token",
+ "static-pubkey",
+]
+
+[[package]]
 name = "so-defi-utils"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3470,6 +3497,7 @@ dependencies = [
  "proptest",
  "ring",
  "sighashdb",
+ "so-defi-atrix",
  "solana-client",
  "spl-associated-token-account",
  "spl-token",

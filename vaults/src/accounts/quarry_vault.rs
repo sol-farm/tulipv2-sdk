@@ -6,6 +6,7 @@ use super::InitVaultArgsV1;
 use anchor_lang::prelude::*;
 #[cfg(not(target_arch = "bpf"))]
 use tulip_derivative::*;
+use tulipv2_sdk_common::config::SUNNY_QUARRY_PROGRAM;
 use tulipv2_sdk_common::msg_panic;
 
 use tulipv2_sdk_common::traits::vault::TokenizedShares;
@@ -218,4 +219,26 @@ impl std::fmt::Display for QuarryVariant {
             QuarryVariant::UNKNOWN => f.write_str("QuarryVariant::UNKNOWN"),
         }
     }
+}
+
+/// derives the address of the quarry miner account,
+/// which is essentially the deposit tracking account but for quarry
+pub fn derive_miner_address(
+    quarry: &Pubkey,
+    // usually the vault pda
+    authority: &Pubkey,
+    program_id: &Pubkey,
+) -> (Pubkey, u8) {
+    Pubkey::find_program_address(
+        &[b"Miner".as_ref(), quarry.as_ref(), authority.as_ref()],
+        program_id,
+    )
+}
+
+/// used to derive the address of the sunny vault
+pub fn derive_sunny_vault_address(pool: &Pubkey, owner: &Pubkey) -> (Pubkey, u8) {
+    Pubkey::find_program_address(
+        &[b"SunnyQuarryVault", pool.as_ref(), owner.as_ref()],
+        &SUNNY_QUARRY_PROGRAM,
+    )
 }

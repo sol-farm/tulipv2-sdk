@@ -28,6 +28,7 @@ tulip-derivative = "2.2.1"
 itertools = "0.10.3"
 tulipv2-sdk-farms = {path = "../farms", version = "0.9.17"}
 sighashdb = "0.1.33"
+so-defi-atrix = "0.1.16"
 [dev-dependencies]
 proptest = "1.0.0"
 solana-client = "1.9.13"
