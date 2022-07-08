@@ -62,7 +62,7 @@ impl RaydiumVaultConfig {
             ),
         }
     }
-    pub fn to_ix(
+    pub fn instruction(
         &self,
         authority: Pubkey,
         pool_id: Pubkey,

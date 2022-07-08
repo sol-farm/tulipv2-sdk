@@ -1324,3 +1324,34 @@ address = "GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd"
 filename = "deps/accounts/GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd.json"
 
 ###############
+
+# v2 ray-usdc auto vault
+
+
+[[test.validator.account]]  # ray usdc v2 vault
+address = "6tkFEgE6zry2gGC4yqLrTghdqtqadyT5H3H2AJd4w5rz"
+filename = "deps/accounts/6tkFEgE6zry2gGC4yqLrTghdqtqadyT5H3H2AJd4w5rz.json"
+[[test.validator.account]] # associated stake info
+address = "HyXpbhK7aubL257mZYDbCzGbcLMjAFWiQp9XnrvrcnE8" 
+filename = "deps/accounts/HyXpbhK7aubL257mZYDbCzGbcLMjAFWiQp9XnrvrcnE8.json"
+[[test.validatr.account]]  # shares mint
+address = "9qLZgUPVe7r7YetwCWxBkY1uQAs8UNKuqQbGs3cdHYU8"
+filename = "deps/accounts/9qLZgUPVe7r7YetwCWxBkY1uQAs8UNKuqQbGs3cdHYU8.json"
+[[test.validator.account]] # underlying compound queue
+address = "GNgMgCtnYS26XSjpbu8GtS5CDjEfMcHHM3zrH6ieuvLB" 
+filename = "deps/accounts/GNgMgCtnYS26XSjpbu8GtS5CDjEfMcHHM3zrH6ieuvLB.json"
+[[test.validator.account]] # underlying deposit queue
+address = "6iQTNqWi9EPs2ST8FqmbE1QZFy6tPLnNrnt7Z5zsrty8" 
+filename = "deps/accounts/6iQTNqWi9EPs2ST8FqmbE1QZFy6tPLnNrnt7Z5zsrty8.json"
+[[test.validator.account]] # underlying withdraw queue
+address = "4vvCisFXys52FatAVd9aT8UafCd5zEBpkL5DTnNTVA5u" 
+filename = "deps/accounts/4vvCisFXys52FatAVd9aT8UafCd5zEBpkL5DTnNTVA5u.json"
+[[test.validator.account]] # vault reward a/b token account
+address = "7DcoC6MGB6T4U5Tqwaq1qefv6JgrHuPmzeiACxyYjcYn"
+filename = "deps/accounts/7DcoC6MGB6T4U5Tqwaq1qefv6JgrHuPmzeiACxyYjcYn.json"
+[[test.validator.account]] # vault stake info account
+address = "8nUUtLjoRg1HZmLSB48keMX5Dc36HL2jJNrJ5xDxtv9g" 
+filename = "deps/accounts/8nUUtLjoRg1HZmLSB48keMX5Dc36HL2jJNrJ5xDxtv9g.json"
+
+
+###############

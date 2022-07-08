@@ -476,12 +476,55 @@ pub mod examples {
             ctx.accounts.pool_reward_a_token_account.mint,
             ctx.accounts.pool_reward_b_token_account.mint,
         );
-        raydium_vault_config.instruction(
+        let ix = raydium_vault_config.instruction(
             ctx.accounts.authority.key(),
             ctx.accounts.pool_id.key(),
             ctx.accounts.pool_authority.key(),
             ctx.accounts.pool_lp_token_account.key(),
-        )
+            ctx.accounts.burning_shares_token_account.key(),
+            ctx.accounts.receiving_underlying_token_account.key(),
+            ctx.accounts.pool_reward_a_token_account.key(),
+            ctx.accounts.pool_reward_b_token_account.key(),
+            ctx.accounts.fee_collector_reward_a_token_account.key(),
+            if let Some(fee_b) = ctx.remaining_accounts.get(0) {
+                Some(fee_b.key())
+            } else {
+                None
+            },
+            ctx.accounts.raydium_stake_program.key(),
+            amount,
+        ).unwrap();
+        let mut accounts = vec![
+            ctx.accounts.authority.to_account_info(),
+            ctx.accounts.vault.to_account_info(),
+            ctx.accounts.vault_pda.to_account_info(),
+            ctx.accounts.vault_stake_info_account.to_account_info(),
+            ctx.accounts.pool_id.to_account_info(),
+            ctx.accounts.pool_authority.to_account_info(),
+            ctx.accounts.pool_authority.to_account_info(),
+            ctx.accounts.underlying_withdraw_queue.to_account_info(),
+            ctx.accounts.pool_lp_token_account.to_account_info(),
+            ctx.accounts.vault_reward_a_token_account.to_account_info(),
+            ctx.accounts.pool_reward_a_token_account.to_account_info(),
+            ctx.accounts.vault_reward_b_token_account.to_account_info(),
+            ctx.accounts.pool_reward_b_token_account.to_account_info(),
+            ctx.accounts.burning_shares_token_account.to_account_info(),
+            ctx.accounts.receiving_underlying_token_account.to_account_info(),
+            ctx.accounts.shares_mint.to_account_info(),
+            ctx.accounts.clock.to_account_info(),
+            ctx.accounts.token_program.clone(),
+            ctx.accounts.raydium_stake_program.clone(),
+        ];
+        let reward_accounts = if let Some(fee_b) = ctx.remaining_accounts.get(0) {
+            vec![ctx.accounts.fee_collector_reward_a_token_account.to_account_info(), fee_b.clone()]
+        } else {
+            vec![ctx.accounts.fee_collector_reward_a_token_account.to_account_info(),]
+        };
+        accounts.extend_from_slice(&reward_accounts[..]);
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &accounts,
+        )?;
         Ok(())
     }
 }
@@ -778,21 +821,22 @@ pub struct WithdrawTulipMultiDepositOptimizerVault<'info> {
 
 #[derive(Accounts)]
 pub struct WithdrawRaydiumVault<'info> {
-    /// .
+    /// CHECK: .
     #[account(signer)]
     pub authority: AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
-    pub vault: AccountLoader<'info, RaydiumVaultV1>,
-    /// .
+    pub vault:  AccountInfo<'info>,
+    /// CHECK: .
     #[account(mut)]
     pub vault_pda: AccountInfo<'info>,
-    /// .
+    /// CHECK: .
     #[account(mut)]
     pub vault_stake_info_account: AccountInfo<'info>,
-    /// .
+    /// CHECK: .
     #[account(mut)]
     pub pool_id: AccountInfo<'info>,
-    /// .
+    /// CHECK: .
     #[account(mut)]
     pub pool_authority: AccountInfo<'info>,
     #[account(mut)]
@@ -820,6 +864,8 @@ pub struct WithdrawRaydiumVault<'info> {
     pub token_program: AccountInfo<'info>,
     /// CHECK: .
     pub raydium_stake_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub fee_collector_reward_a_token_account: AccountInfo<'info>,
 }
 
 #[derive(Accounts)]
