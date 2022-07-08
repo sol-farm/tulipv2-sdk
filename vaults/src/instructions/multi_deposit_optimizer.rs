@@ -1,6 +1,5 @@
 use super::*;
 
-
 /// returns a new instruction to withdraw funds from the multi deposit optimizer vault.
 /// the `standalone_vault_accounts` argument are ProgramType specific accounts, which are
 /// expected to be in the following order depending on the ProgramType.

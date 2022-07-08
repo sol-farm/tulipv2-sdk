@@ -35,7 +35,6 @@ pub fn new_register_deposit_tracking_account_ix(
     })
 }
 
-
 pub fn new_withdraw_deposit_tracking_ix(
     authority: Pubkey,
     deposit_tracking_account: Pubkey,

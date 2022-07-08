@@ -20,3 +20,5 @@ use static_pubkey::static_pubkey;
 
 /// tulip v2 vaults program id
 pub const ID: Pubkey = static_pubkey!("TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX");
+pub const SUNNY_QUARRY_PROGRAM: Pubkey =
+    static_pubkey!("SPQR4kT3q2oUKEJes2L6NNSBCiPW9SfuhkuqC9bp6Sx");

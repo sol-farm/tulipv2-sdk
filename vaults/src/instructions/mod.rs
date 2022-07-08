@@ -7,13 +7,12 @@ use anchor_lang::{
 };
 use sighashdb::GlobalSighashDB;
 use tulipv2_sdk_farms::Farm;
-pub mod raydium;
-pub mod orca;
 pub mod atrix;
-pub mod quarry;
 pub mod deposit_tracking;
 pub mod multi_deposit_optimizer;
-
+pub mod orca;
+pub mod quarry;
+pub mod raydium;
 
 /// returns an instruction that takes underlying assets from the caller
 /// deposits into a vault in exchange for tokenized vault shares, and

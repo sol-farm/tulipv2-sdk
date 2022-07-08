@@ -105,7 +105,7 @@ pub fn new_withdraw_orca_vault_dd_stage_one_ix(
 
     Some(Instruction {
         program_id: crate::ID,
-        accounts:  vec![
+        accounts: vec![
             AccountMeta::new(authority, true),
             AccountMeta::new(vault, false),
             AccountMeta::new(vault_pda, false),
@@ -173,7 +173,7 @@ pub fn new_withdraw_orca_vault_dd_stage_two_ix(
 
     Some(Instruction {
         program_id: crate::ID,
-        accounts:  vec![
+        accounts: vec![
             AccountMeta::new(authority, true),
             AccountMeta::new(vault, false),
             AccountMeta::new(vault_pda, false),
@@ -229,24 +229,24 @@ pub fn new_withdraw_orca_vault_remove_liq_ix(
     ix_data.extend_from_slice(&ix_sighash[..]);
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&double_dip).ok()?[..]);
     Some(Instruction {
-        program_id:  crate::ID,
+        program_id: crate::ID,
         accounts: vec![
-        AccountMeta::new(authority, true),
-        AccountMeta::new(vault, false),
-        AccountMeta::new_readonly(vault_pda, false),
-        AccountMeta::new(burning_underlying_token_account, false),
-        AccountMeta::new(funding_token_a_account, false),
-        AccountMeta::new(funding_token_b_account, false),
-        AccountMeta::new(pool_token_a, false),
-        AccountMeta::new(pool_token_b, false),
-        AccountMeta::new_readonly(swap_program, false),
-        AccountMeta::new(swap_account, false),
-        AccountMeta::new_readonly(swap_authority, false),
-        AccountMeta::new(swap_pool_token_mint, false),
-        AccountMeta::new(swap_fee_account, false),
-        AccountMeta::new_readonly(spl_token::id(), false),
-        AccountMeta::new(ephemeral_tracking_account, false),
-        AccountMeta::new_readonly(shares_mint, false),
+            AccountMeta::new(authority, true),
+            AccountMeta::new(vault, false),
+            AccountMeta::new_readonly(vault_pda, false),
+            AccountMeta::new(burning_underlying_token_account, false),
+            AccountMeta::new(funding_token_a_account, false),
+            AccountMeta::new(funding_token_b_account, false),
+            AccountMeta::new(pool_token_a, false),
+            AccountMeta::new(pool_token_b, false),
+            AccountMeta::new_readonly(swap_program, false),
+            AccountMeta::new(swap_account, false),
+            AccountMeta::new_readonly(swap_authority, false),
+            AccountMeta::new(swap_pool_token_mint, false),
+            AccountMeta::new(swap_fee_account, false),
+            AccountMeta::new_readonly(spl_token::id(), false),
+            AccountMeta::new(ephemeral_tracking_account, false),
+            AccountMeta::new_readonly(shares_mint, false),
         ],
         data: ix_data,
     })
