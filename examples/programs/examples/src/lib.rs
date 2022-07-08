@@ -7,12 +7,11 @@ use tulipv2_sdk_common::config::lending::traits::WithdrawMultiOptimizerVault;
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_vaults::instructions::{
-    new_issue_shares_ix, 
     deposit_tracking::{
-        new_register_deposit_tracking_account_ix, 
-        new_withdraw_deposit_tracking_ix
+        new_register_deposit_tracking_account_ix, new_withdraw_deposit_tracking_ix,
     },
-    multi_deposit_optimizer::{new_withdraw_multi_deposit_optimizer_vault_ix},
+    multi_deposit_optimizer::new_withdraw_multi_deposit_optimizer_vault_ix,
+    new_issue_shares_ix,
 };
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -463,6 +462,28 @@ pub mod examples {
         )?;
         Ok(())
     }
+    pub fn withdraw_raydium_vault<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, WithdrawRaydiumVault<'info>>,
+        amount: u64,
+    ) -> Result<()> {
+        /// although this is not really needed since the configuration information
+        /// is provided through the context, it's done to showcase how to use the sdk
+        let raydium_vault_config = tulipv2_sdk_vaults::config::raydium::RaydiumVaultConfig::new(
+            ctx.accounts.vault.key(),
+            ctx.accounts.underlying_withdraw_queue.mint,
+            ctx.accounts.pool_id.key(),
+            ctx.accounts.raydium_stake_program.key(),
+            ctx.accounts.pool_reward_a_token_account.mint,
+            ctx.accounts.pool_reward_b_token_account.mint,
+        );
+        raydium_vault_config.instruction(
+            ctx.accounts.authority.key(),
+            ctx.accounts.pool_id.key(),
+            ctx.accounts.pool_authority.key(),
+            ctx.accounts.pool_lp_token_account.key(),
+        )
+        Ok(())
+    }
 }
 #[derive(Accounts)]
 pub struct RedeemReserveLiquidity<'info> {
@@ -751,6 +772,54 @@ pub struct WithdrawTulipMultiDepositOptimizerVault<'info> {
     /// regardless of the underlying vault they are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
+}
+
+
+
+#[derive(Accounts)]
+pub struct WithdrawRaydiumVault<'info> {
+    /// .
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub vault: AccountLoader<'info, RaydiumVaultV1>,
+    /// .
+    #[account(mut)]
+    pub vault_pda: AccountInfo<'info>,
+    /// .
+    #[account(mut)]
+    pub vault_stake_info_account: AccountInfo<'info>,
+    /// .
+    #[account(mut)]
+    pub pool_id: AccountInfo<'info>,
+    /// .
+    #[account(mut)]
+    pub pool_authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub underlying_withdraw_queue: Account<'info, TokenAccount>,
+    #[account(mut)]
+    pub pool_lp_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub vault_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub vault_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    /// the account from which shares will be burned in exchange for
+    /// a corresponding amount of lp tokens
+    #[account(mut)]
+    pub burning_shares_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub receiving_underlying_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub shares_mint: Box<Account<'info, Mint>>,
+    pub clock: Sysvar<'info, Clock>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub raydium_stake_program: AccountInfo<'info>,
 }
 
 #[derive(Accounts)]

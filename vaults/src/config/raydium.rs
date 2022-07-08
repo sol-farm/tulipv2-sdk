@@ -4,6 +4,7 @@ use crate::accounts::{
     derive_withdraw_queue_address, raydium_vault::derive_user_stake_info_address,
 };
 
+use anchor_lang::solana_program::instruction::Instruction;
 use anchor_lang::solana_program::pubkey::Pubkey;
 
 use super::VaultBaseConfig;
@@ -18,6 +19,8 @@ pub struct RaydiumVaultConfig {
     pub shares_mint: Pubkey,
     pub user_stake_info: Pubkey,
     pub associated_stake_info: Pubkey,
+    pub vault_reward_a_token_account: Pubkey,
+    pub vault_reward_b_token_account: Pubkey,
 }
 
 impl RaydiumVaultConfig {
@@ -26,6 +29,8 @@ impl RaydiumVaultConfig {
         underlying_mint: Pubkey,
         raydium_pool_id: Pubkey,
         raydium_stake_program: Pubkey,
+        reward_a_token_mint: Pubkey,
+        reward_b_token_mint: Pubkey,
     ) -> Self {
         let pda = derive_pda_address(&vault).0;
         let shares_mint = derive_shares_mint_address(&vault, &underlying_mint).0;
@@ -47,7 +52,52 @@ impl RaydiumVaultConfig {
             ),
             user_stake_info,
             associated_stake_info,
+            vault_reward_a_token_account: spl_associated_token_account::get_associated_token_address(
+                &pda,
+                &reward_a_token_mint,
+            ),
+            vault_reward_b_token_account: spl_associated_token_account::get_associated_token_address(
+                &pda,
+                &reward_b_token_mint,
+            ),
         }
+    }
+    pub fn to_ix(
+        &self,
+        authority: Pubkey,
+        pool_id: Pubkey,
+        pool_authority: Pubkey,
+        pool_lp_token_account: Pubkey,
+        burning_shares_token_account: Pubkey,
+        receiving_shares_token_account: Pubkey,
+        pool_reward_a_token_account: Pubkey,
+        pool_reward_b_token_account: Pubkey,
+        fee_collector_reward_a_token_account: Pubkey,
+        fee_collector_reward_b_token_account: Option<Pubkey>,
+        raydium_stake_program: Pubkey,
+        amount: u64,
+    ) -> Option<Instruction> {
+        crate::instructions::raydium::new_withdraw_raydium_vault_ix(
+            authority,
+            self.vault,
+            self.pda,
+            self.associated_stake_info,
+            pool_id,
+            pool_authority,
+            self.withdraw_queue,
+            pool_lp_token_account,
+            self.vault_reward_a_token_account,
+            pool_reward_a_token_account,
+            self.vault_reward_b_token_account,
+            pool_reward_b_token_account,
+            burning_shares_token_account,
+            receiving_shares_token_account,
+            self.shares_mint,
+            raydium_stake_program,
+            fee_collector_reward_a_token_account,
+            fee_collector_reward_b_token_account,
+            amount
+        )
     }
 }
 
