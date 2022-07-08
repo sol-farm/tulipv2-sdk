@@ -1077,9 +1077,9 @@ dependencies = [
 
 [[package]]
 name = "sighashdb"
-version = "0.1.28"
+version = "0.1.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1c3ce1a89ed083f8bc44bda4db0f185cdc6c891196a679a486f1d90d6b974d8"
+checksum = "c8b345efdec5a45d458249a03a155769037b61cc86521233ad2da85c40c6a235"
 
 [[package]]
 name = "smallvec"
@@ -1361,6 +1361,7 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "itertools",
+ "sighashdb",
  "spl-associated-token-account",
  "spl-token",
  "static-pubkey",

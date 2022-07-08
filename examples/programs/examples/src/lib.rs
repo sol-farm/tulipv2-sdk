@@ -7,8 +7,12 @@ use tulipv2_sdk_common::config::lending::traits::WithdrawMultiOptimizerVault;
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_vaults::instructions::{
-    new_issue_shares_ix, new_register_deposit_tracking_account_ix,
-    new_withdraw_deposit_tracking_ix, new_withdraw_multi_deposit_optimizer_vault_ix,
+    new_issue_shares_ix, 
+    deposit_tracking::{
+        new_register_deposit_tracking_account_ix, 
+        new_withdraw_deposit_tracking_ix
+    },
+    multi_deposit_optimizer::{new_withdraw_multi_deposit_optimizer_vault_ix},
 };
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
