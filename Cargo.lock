@@ -3492,6 +3492,7 @@ version = "0.9.17"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "bytemuck",
  "data-encoding",
  "itertools",
  "proptest",

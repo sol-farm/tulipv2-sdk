@@ -34,7 +34,6 @@ pub fn new_withdraw_raydium_vault_ix(
         AccountMeta::new(vault_stake_info_account, false),
         AccountMeta::new(pool_id, false),
         AccountMeta::new(pool_authority, false),
-        AccountMeta::new(pool_authority, false),
         AccountMeta::new(underlying_withdraw_queue, false),
         AccountMeta::new(pool_lp_token_account, false),
         AccountMeta::new(vault_reward_a_token_account, false),

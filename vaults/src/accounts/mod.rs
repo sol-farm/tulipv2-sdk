@@ -200,6 +200,19 @@ pub fn parse_formatted_name(formatted_name: &str) -> (String, String) {
     (farm_name, tag)
 }
 
+use bytemuck::{cast_slice, from_bytes, try_cast_slice, Pod};
+pub fn load<T: Pod>(data: &[u8]) ->Result<&T> {
+    let size = std::mem::size_of::<T>();
+    let sliced_data = if let Ok(sliced_data) = try_cast_slice(
+        &data[0..size],
+    ) {
+        sliced_data
+    } else {
+        return Err(anchor_lang::solana_program::program_error::ProgramError::InvalidAccountData.into())
+    };
+    Ok(from_bytes(cast_slice::<u8, u8>(sliced_data)))
+}
+
 #[cfg(test)]
 mod test {
     use std::str::FromStr;

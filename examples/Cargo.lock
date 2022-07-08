@@ -1387,6 +1387,7 @@ version = "0.9.17"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "bytemuck",
  "itertools",
  "sighashdb",
  "so-defi-atrix",

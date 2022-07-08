@@ -32,6 +32,8 @@ const anchor = __importStar(require("@project-serum/anchor"));
 const serumAssoToken = __importStar(require("@project-serum/associated-token"));
 const splToken = __importStar(require("@solana/spl-token"));
 const utils_1 = require("./utils");
+const v2VaultsProgramId = new anchor.web3.PublicKey("TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX");
+const rayUsdcLpTokenMint = new anchor.web3.PublicKey("FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m");
 describe("examples", () => {
     let provider = anchor.AnchorProvider.env();
     anchor.setProvider(provider);
@@ -47,7 +49,6 @@ describe("examples", () => {
     const usdcv1WithdrawQueue = new anchor.web3.PublicKey("HLVcpKPkBJJJGTHTSaZcAixDppy4R65x1is3k8Q7qZpj");
     const usdcTokenMint = new anchor.web3.PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
     const associatedTokenProgramId = new anchor.web3.PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
-    const v2VaultsProgramId = new anchor.web3.PublicKey("TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX");
     const mangoVault = new anchor.web3.PublicKey("ZH9GWNBtwxcWeU9kHk77DSciwQnoJcSm8VVvYfmHXfe");
     const mangoVaultPda = new anchor.web3.PublicKey("Dhry4TVd862yzcAuxFZgiuh6juS4R6FesfRZkWG3pCe7");
     const mangoVaultSharesMint = new anchor.web3.PublicKey("5u6jxB7En2LF5aroeq8U5JUbnHa5WSYB5JTemh3gYaMj");
@@ -97,7 +98,8 @@ describe("examples", () => {
     let depositTrackingHoldAccount;
     let yourUnderlyingTokenAccount;
     let yourSharesTokenAccount;
-    let ten = new anchor.BN(10).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+    let nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+    let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
     it("registers deposit tracking account", () => __awaiter(void 0, void 0, void 0, function* () {
         console.log("progrmaId ", programId);
         console.log("usdcv1 vault ", usdcv1Vault);
@@ -140,7 +142,7 @@ describe("examples", () => {
     it("issues shares", () => __awaiter(void 0, void 0, void 0, function* () {
         yourUnderlyingTokenAccount = yield serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, usdcTokenMint);
         yourSharesTokenAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, provider.wallet.publicKey, usdcv1SharesMint);
-        let tx = yield program.rpc.issueShares(ten, [new anchor.BN(1), new anchor.BN(65537)], {
+        let tx = yield program.rpc.issueShares(nine, [new anchor.BN(1), new anchor.BN(65537)], {
             options: {
                 skipPreflight: false,
             },
@@ -167,7 +169,7 @@ describe("examples", () => {
         console.log("in production this would fail, as 15 minutes need to pass before lockup is expired");
         let tx = yield program.rpc.withdrawDepositTracking(
         // fixed amount we get for 10 USDC based on the program state which has been dumped to disk
-        new anchor.BN(9968969), [new anchor.BN(1), new anchor.BN(65537)], {
+        new anchor.BN(8972072), [new anchor.BN(1), new anchor.BN(65537)], {
             options: { skipPreflight: true },
             accounts: {
                 authority: provider.wallet.publicKey,
@@ -185,7 +187,7 @@ describe("examples", () => {
         console.log("sent withdraw deposit tracking tx");
     }));
     it("withdraws multi deposit vault through tulip", () => __awaiter(void 0, void 0, void 0, function* () {
-        let tx = yield program.rpc.withdrawMultiDepositVaultThroughTulip(new anchor.BN(9968969), {
+        let tx = yield program.rpc.withdrawMultiDepositVaultThroughTulip(new anchor.BN(8972072), {
             options: { skipPreflight: true },
             accounts: {
                 commonData: {
@@ -254,7 +256,7 @@ describe("examples", () => {
         });
     }));
     it("withdraws multi deposit vault through mango", () => __awaiter(void 0, void 0, void 0, function* () {
-        program.rpc.withdrawMultiDepositVaultThroughMango(new anchor.BN(9968969), {
+        program.rpc.withdrawMultiDepositVaultThroughMango(new anchor.BN(8972072), {
             options: { skipPreflight: true },
             accounts: {
                 commonData: {
@@ -294,7 +296,7 @@ describe("examples", () => {
         });
     }));
     it("withdraws multi deposit vault through solend", () => __awaiter(void 0, void 0, void 0, function* () {
-        program.rpc.withdrawMultiDepositVaultThroughSolend(new anchor.BN(9968969), {
+        program.rpc.withdrawMultiDepositVaultThroughSolend(new anchor.BN(8972072), {
             options: { skipPreflight: true },
             accounts: {
                 commonData: {
@@ -368,7 +370,7 @@ describe("examples", () => {
     let yourCollateralTokenAccount;
     it("deposits reserve liquidity", () => __awaiter(void 0, void 0, void 0, function* () {
         yourCollateralTokenAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, provider.wallet.publicKey, tulipReserveCollateralMint);
-        const tx = yield program.rpc.depositReserveLiquidity(ten, {
+        const tx = yield program.rpc.depositReserveLiquidity(one, {
             options: {
                 skipPreflight: true,
             },
@@ -389,7 +391,84 @@ describe("examples", () => {
         });
         console.log("sent deposit reserve liquidity tx ", tx);
     }));
+    it("redeems reserve collateral", () => __awaiter(void 0, void 0, void 0, function* () {
+        const bal = yield provider.connection.getTokenAccountBalance(yourCollateralTokenAccount);
+        const tx = yield program.rpc.redeemReserveCollateral(new anchor.BN(bal.value.amount), {
+            accounts: {
+                authority: provider.wallet.publicKey,
+                destinationLiquidity: yourUnderlyingTokenAccount,
+                sourceCollateral: yourCollateralTokenAccount,
+                reserve: tulipReserveAccount,
+                reserveLiquidity: tulipReserveLiquiditySupply,
+                reserveCollateralMint: tulipReserveCollateralMint,
+                lendingMarket: tulipLendingMarketAccount,
+                lendingMarketAuthority: tulipDerivedLendingMarketAuthority,
+                clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+                lendingProgram: tulipProgramId,
+                tokenProgram: splToken.TOKEN_PROGRAM_ID,
+                pythPriceAccount: tulipReservePythPriceAccount,
+            }
+        });
+    }));
 });
+describe("tests ray-usdc auto vaults", () => __awaiter(void 0, void 0, void 0, function* () {
+    let provider = anchor.AnchorProvider.env();
+    anchor.setProvider(provider);
+    const program = anchor.workspace.Examples;
+    const programId = program.programId;
+    const rayUsdcV2Vault = new anchor.web3.PublicKey("6tkFEgE6zry2gGC4yqLrTghdqtqadyT5H3H2AJd4w5rz");
+    const rayUsdcV2VaultAssociatedStakeInfo = new anchor.web3.PublicKey("HyXpbhK7aubL257mZYDbCzGbcLMjAFWiQp9XnrvrcnE8");
+    const rayUsdcV2VaultSharesMint = new anchor.web3.PublicKey("9qLZgUPVe7r7YetwCWxBkY1uQAs8UNKuqQbGs3cdHYU8");
+    const rayUsdcV2VaultCompoundQueue = new anchor.web3.PublicKey("GNgMgCtnYS26XSjpbu8GtS5CDjEfMcHHM3zrH6ieuvLB");
+    const rayUsdcV2VaultDepositQueue = new anchor.web3.PublicKey("6iQTNqWi9EPs2ST8FqmbE1QZFy6tPLnNrnt7Z5zsrty8");
+    const rayUsdcV2VaultWithdrawQueue = new anchor.web3.PublicKey("4vvCisFXys52FatAVd9aT8UafCd5zEBpkL5DTnNTVA5u");
+    const rayUsdcV2VaultRewardATokenAccount = new anchor.web3.PublicKey("7DcoC6MGB6T4U5Tqwaq1qefv6JgrHuPmzeiACxyYjcYn");
+    const rayUsdcV2VaultStakeInfo = new anchor.web3.PublicKey("8nUUtLjoRg1HZmLSB48keMX5Dc36HL2jJNrJ5xDxtv9g");
+    let depositTrackingAccount;
+    let depositTrackingPda;
+    let depositTrackingQueueAccount;
+    let depositTrackingHoldAccount;
+    let yourUnderlyingTokenAccount;
+    let yourSharesTokenAccount;
+    it("registers deposit tracking account", () => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("progrmaId ", programId);
+        console.log("usdcv1 vault ", rayUsdcV2Vault);
+        console.log("provider", provider.wallet.publicKey);
+        let [_depositTrackingAccount, _trackingNonce] = yield (0, utils_1.deriveTrackingAddress)(v2VaultsProgramId, rayUsdcV2Vault, provider.wallet.publicKey);
+        depositTrackingAccount = _depositTrackingAccount;
+        let [_depositTrackingPda, _depositTrackingPdaNonce] = yield (0, utils_1.deriveTrackingPdaAddress)(v2VaultsProgramId, depositTrackingAccount);
+        depositTrackingPda = _depositTrackingPda;
+        let [_depositTrackingQueueAccount, _queueNonce] = yield (0, utils_1.deriveTrackingQueueAddress)(v2VaultsProgramId, depositTrackingPda);
+        depositTrackingQueueAccount = _depositTrackingQueueAccount;
+        depositTrackingHoldAccount = yield serumAssoToken.getAssociatedTokenAddress(depositTrackingPda, rayUsdcV2VaultSharesMint);
+        console.log("deposit tracking queue", depositTrackingQueueAccount.toString());
+        console.log("deposit tracking hold", depositTrackingHoldAccount.toString());
+        console.log("deposit tracking pda", depositTrackingPda.toString());
+        console.log("deposit tracking", depositTrackingAccount.toString());
+        console.log("sending register deposit tracking account tx");
+        let tx = yield program.rpc.registerDepositTrackingAccount([new anchor.BN(0), new anchor.BN(9)], {
+            options: {
+                skipPreflight: false,
+            },
+            accounts: {
+                authority: provider.wallet.publicKey,
+                vault: rayUsdcV2Vault,
+                depositTrackingAccount,
+                depositTrackingQueueAccount,
+                depositTrackingHoldAccount,
+                sharesMint: rayUsdcV2VaultSharesMint,
+                underlyingMint: rayUsdcLpTokenMint,
+                depositTrackingPda,
+                tokenProgram: splToken.TOKEN_PROGRAM_ID,
+                associatedTokenProgram: splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
+                rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+                systemProgram: anchor.web3.SystemProgram.programId,
+                vaultProgram: v2VaultsProgramId,
+            },
+        });
+        console.log("sent register deposit tracking account tx ", tx);
+    }));
+}));
 const timer = ms => new Promise(res => setTimeout(res, ms));
 function freeze(time) {
     const stop = new Date().getTime() + time;

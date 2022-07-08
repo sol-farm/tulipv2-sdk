@@ -6,6 +6,10 @@ use crate::accounts::{
 
 use anchor_lang::solana_program::instruction::Instruction;
 use anchor_lang::solana_program::pubkey::Pubkey;
+use tulipv2_sdk_common::config::deposit_tracking::issue_shares::DepositAddresses;
+use tulipv2_sdk_common::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
+use tulipv2_sdk_common::config::deposit_tracking::traits::{RegisterDepositTracking, IssueShares, WithdrawDepositTracking};
+use tulipv2_sdk_common::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 
 use super::VaultBaseConfig;
 
@@ -18,27 +22,31 @@ pub struct RaydiumVaultConfig {
     pub underlying_mint: Pubkey,
     pub shares_mint: Pubkey,
     pub user_stake_info: Pubkey,
-    pub associated_stake_info: Pubkey,
-    pub vault_reward_a_token_account: Pubkey,
-    pub vault_reward_b_token_account: Pubkey,
+    pub associated_stake_info: Option<Pubkey>,
+    pub vault_reward_a_token_account: Option<Pubkey>,
+    pub vault_reward_b_token_account: Option<Pubkey>,
 }
 
 impl RaydiumVaultConfig {
     pub fn new(
         vault: Pubkey,
         underlying_mint: Pubkey,
-        raydium_pool_id: Pubkey,
-        raydium_stake_program: Pubkey,
-        reward_a_token_mint: Pubkey,
-        reward_b_token_mint: Pubkey,
+        raydium_pool_id: Option<Pubkey>,
+        raydium_stake_program: Option<Pubkey>,
+        reward_a_token_mint: Option<Pubkey>,
+        reward_b_token_mint: Option<Pubkey>,
     ) -> Self {
         let pda = derive_pda_address(&vault).0;
         let shares_mint = derive_shares_mint_address(&vault, &underlying_mint).0;
         let withdraw_queue = derive_withdraw_queue_address(&vault, &underlying_mint).0;
         let compound_queue = derive_compound_queue_address(&vault, &underlying_mint).0;
         let user_stake_info = derive_user_stake_info_address(&pda).0;
-        let associated_stake_info =
-            derive_associated_stake_info_address(&raydium_pool_id, &pda, &raydium_stake_program).0;
+        let associated_stake_info = if let (Some(pool_id), Some(stake_program)) = (raydium_pool_id, raydium_stake_program) {
+            Some(derive_associated_stake_info_address(&pool_id, &pda, &stake_program).0)
+        } else {
+            None
+        };
+           
         Self {
             vault,
             pda,
@@ -52,17 +60,47 @@ impl RaydiumVaultConfig {
             ),
             user_stake_info,
             associated_stake_info,
-            vault_reward_a_token_account: spl_associated_token_account::get_associated_token_address(
+            vault_reward_a_token_account: if let Some(reward_a) = reward_a_token_mint {
+                Some(spl_associated_token_account::get_associated_token_address(
                 &pda,
-                &reward_a_token_mint,
-            ),
-            vault_reward_b_token_account: spl_associated_token_account::get_associated_token_address(
-                &pda,
-                &reward_b_token_mint,
-            ),
+                &reward_a,
+                ))
+            } else {
+                None
+            },
+            vault_reward_b_token_account: if let Some(reward_b) = reward_b_token_mint {
+                Some(spl_associated_token_account::get_associated_token_address(
+                    &pda,
+                    &reward_b,
+                ))
+            } else {
+                None
+            },
         }
     }
-    pub fn instruction(
+    pub fn register_deposit_tracking(
+        &self,
+        authority: Pubkey,
+    ) -> impl RegisterDepositTracking {
+        RegisterDepositTrackingAddresses::new(authority, self.vault, self.shares_mint, self.underlying_mint)
+    }
+    pub fn issue_shares(
+        &self,
+        authority: Pubkey,
+    ) -> impl IssueShares {
+        DepositAddresses::new(authority, self.vault, self.pda, self.shares_mint, self.underlying_mint)
+    }
+    pub fn withdraw_deposit_tracking(
+        &self,
+        authority: Pubkey,
+    ) -> impl WithdrawDepositTracking {
+        WithdrawDepositTrackingAddresses::new(
+            authority,
+            self.vault,
+            self.shares_mint
+        )
+    }
+    pub fn withdraw_vault(
         &self,
         authority: Pubkey,
         pool_id: Pubkey,
@@ -81,14 +119,14 @@ impl RaydiumVaultConfig {
             authority,
             self.vault,
             self.pda,
-            self.associated_stake_info,
+            self.associated_stake_info?,
             pool_id,
             pool_authority,
             self.withdraw_queue,
             pool_lp_token_account,
-            self.vault_reward_a_token_account,
+            self.vault_reward_a_token_account?,
             pool_reward_a_token_account,
-            self.vault_reward_b_token_account,
+            self.vault_reward_b_token_account?,
             pool_reward_b_token_account,
             burning_shares_token_account,
             receiving_shares_token_account,
