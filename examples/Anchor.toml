@@ -1356,3 +1356,57 @@ filename = "deps/accounts/8nUUtLjoRg1HZmLSB48keMX5Dc36HL2jJNrJ5xDxtv9g.json"
 
 
 ###############
+
+# v2 orca-usdc auto vault
+
+
+[[test.validator.account]] # vault account
+address = "7nbcWTUnvELLmLjJtMRrbg9qH9zabZ9VowJSfwB2j8y7"
+filename = "deps/accounts/7nbcWTUnvELLmLjJtMRrbg9qH9zabZ9VowJSfwB2j8y7.json"
+[[test.validator.account]] # shares mint
+address = "5Dzz5aB1x4DMkRYHuEA1tmzxm6jfpWGzn4ScNBUACGbd"
+filename = "deps/accounts/5Dzz5aB1x4DMkRYHuEA1tmzxm6jfpWGzn4ScNBUACGbd.json"
+[[test.validator.account]] # compound queue
+address = "Dzpjfr3uEwpn7Vo538rEy9XV4pAjUDvxDPD3cePzH48G"
+filename = "deps/accounts/Dzpjfr3uEwpn7Vo538rEy9XV4pAjUDvxDPD3cePzH48G.json"
+[[test.validator.account]] # deposit queue
+address = "DwZSxDX447QXLfzHUi5f2t59MhyGgfr6dBqwXsHhxwd"
+filename = "deps/accounts/DwZSxDX447QXLfzHUi5f2t59MhyGgfr6dBqwXsHhxwd.json"
+[[test.validator.account]] # underlying withdraw queue
+address = "Bdv8bRJSNGhb285P2ZRXCxc6RieFz1vd8wcypMp3NvEB"
+filename = "deps/accounts/Bdv8bRJSNGhb285P2ZRXCxc6RieFz1vd8wcypMp3NvEB.json"
+[[test.validator.account]] # user farm
+address = "ESrNUembvxmTGqD8HCd1MV7pNMb4TVEsb93NE55q4HjT"
+filename = "deps/accounts/ESrNUembvxmTGqD8HCd1MV7pNMb4TVEsb93NE55q4HjT.json"
+[[test.validator.account]] # vault swap token a
+address = "DLRjCwBgUyukHHTBaPVzcmgnTdFzfZnJSbo3iaJcwqyL"
+filename = "deps/accounts/DLRjCwBgUyukHHTBaPVzcmgnTdFzfZnJSbo3iaJcwqyL.json"
+[[test.validator.account]] # vault swap token b
+address = "9S2og3VY7hCFhw54SAayngtXukggXbxjkUQvvRQGbpVk"
+filename = "deps/accounts/9S2og3VY7hCFhw54SAayngtXukggXbxjkUQvvRQGbpVk.json"
+[[test.validator.account]] # vault reward token
+address = "DLRjCwBgUyukHHTBaPVzcmgnTdFzfZnJSbo3iaJcwqyL"
+filename = "deps/accounts/DLRjCwBgUyukHHTBaPVzcmgnTdFzfZnJSbo3iaJcwqyL.json"
+[[test.validator.account]] # vault farm token
+address = "c1g3WpMyAXaJhwEj8wSgH4v8iqbbhChJi9mDSnf5gpj"
+filename = "deps/accounts/c1g3WpMyAXaJhwEj8wSgH4v8iqbbhChJi9mDSnf5gpj.json"
+[[test.validator.account]] # vault swap token
+address = "DwZSxDX447QXLfzHUi5f2t59MhyGgfr6dBqwXsHhxwd"
+filename = "deps/accounts/DwZSxDX447QXLfzHUi5f2t59MhyGgfr6dBqwXsHhxwd.json"
+[[test.validator.account]] # global base token vault
+address = "45BAAQCZYd2kP3Z3WvRwdtfUhvuW4FvpqVK4m8qrR5x1"
+filename = "deps/accounts/45BAAQCZYd2kP3Z3WvRwdtfUhvuW4FvpqVK4m8qrR5x1.json"
+[[test.validator.account]] # global reward token vault
+address = "DEiqe2Ta9TRMRtWdBqiFV13dhVrqCeG8MMmVwywvXvJo"
+filename = "deps/accounts/DEiqe2Ta9TRMRtWdBqiFV13dhVrqCeG8MMmVwywvXvJo.json"
+[[test.validator.account]] # global farm
+address = "9S1BsxbDNQXQccjFamVEGgxiYQHTeudvhEYwFr4oWeaf"
+filename = "deps/accounts/9S1BsxbDNQXQccjFamVEGgxiYQHTeudvhEYwFr4oWeaf.json"
+[[test.validator.account]] # farm token mint
+address = "Gc7W5U66iuHQcC1cQyeX9hxkPF2QUVJPTf1NWbW8fNrt"
+filename = "deps/accounts/Gc7W5U66iuHQcC1cQyeX9hxkPF2QUVJPTf1NWbW8fNrt.json"
+[[test.validator.account]] # fee collector
+address = "4ZDfFTKU4CaAUidHP6vRnb7EYrTJvzAe2aJwZ4ZTqrkG"
+filename = "deps/accounts/4ZDfFTKU4CaAUidHP6vRnb7EYrTJvzAe2aJwZ4ZTqrkG.json"
+
+###############

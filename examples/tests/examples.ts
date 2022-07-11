@@ -768,6 +768,144 @@ describe("tests ray-usdc auto vaults", async () => {
     })
   })
 })
+describe("tests orca-usdc auto vaults", async () => {
+  let provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+
+  const program = anchor.workspace.Examples as Program<Examples>;
+
+  const programId = program.programId;
+  const orcaUsdcV2Vault = new anchor.web3.PublicKey("7nbcWTUnvELLmLjJtMRrbg9qH9zabZ9VowJSfwB2j8y7");
+  const orcaUsdcV2VaultPda = new anchor.web3.PublicKey("Hum9fSBpV26PRBpCj53nYyBy6KSyRfKLsZcFTfLMUamf");
+  const orcaUsdcV2VaultSharesMint = new anchor.web3.PublicKey("5Dzz5aB1x4DMkRYHuEA1tmzxm6jfpWGzn4ScNBUACGbd");
+  const orcaUsdcV2VaultCompoundQueue = new anchor.web3.PublicKey("Dzpjfr3uEwpn7Vo538rEy9XV4pAjUDvxDPD3cePzH48G");
+  const orcaUsdcV2VaultDepositQueue = new anchor.web3.PublicKey("DwZSxDX447QXLfzHUi5f2t59MhyGgfr6dBqwXsHhxwd");
+  const orcaUsdcV2VaultWithdrawQueue = new anchor.web3.PublicKey("Bdv8bRJSNGhb285P2ZRXCxc6RieFz1vd8wcypMp3NvEB");
+  const orcaUsdcLpTokenMint = new anchor.web3.PublicKey("n8Mpu28RjeYD7oUX3LG1tPxzhRZh3YYLRSHcHRdS3Zx");
+  let depositTrackingAccount: anchor.web3.PublicKey;
+  let depositTrackingPda: anchor.web3.PublicKey;
+  let depositTrackingQueueAccount: anchor.web3.PublicKey;
+  let depositTrackingHoldAccount: anchor.web3.PublicKey;
+
+  let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
+  let yourSharesTokenAccount: anchor.web3.PublicKey;
+  it("registers deposit tracking account", async () => {
+    console.log("progrmaId ", programId);
+    console.log("usdcv1 vault ", orcaUsdcV2Vault);
+    console.log("provider", provider.wallet.publicKey);
+    let [_depositTrackingAccount, _trackingNonce] = await deriveTrackingAddress(
+      v2VaultsProgramId,
+      orcaUsdcV2Vault,
+      provider.wallet.publicKey
+    );
+    depositTrackingAccount = _depositTrackingAccount;
+    let [_depositTrackingPda, _depositTrackingPdaNonce] =
+      await deriveTrackingPdaAddress(v2VaultsProgramId, depositTrackingAccount);
+    depositTrackingPda = _depositTrackingPda;
+    let [_depositTrackingQueueAccount, _queueNonce] =
+      await deriveTrackingQueueAddress(v2VaultsProgramId, depositTrackingPda);
+    depositTrackingQueueAccount = _depositTrackingQueueAccount;
+    depositTrackingHoldAccount = await serumAssoToken.getAssociatedTokenAddress(
+      depositTrackingPda,
+      orcaUsdcV2VaultSharesMint
+    );
+    console.log(
+      "deposit tracking queue",
+      depositTrackingQueueAccount.toString()
+    );
+    console.log("deposit tracking hold", depositTrackingHoldAccount.toString());
+    console.log("deposit tracking pda", depositTrackingPda.toString());
+    console.log("deposit tracking", depositTrackingAccount.toString());
+    console.log("sending register deposit tracking account tx");
+    let tx = await program.rpc.registerDepositTrackingAccount(
+      [new anchor.BN(2), new anchor.BN(4)],
+      {
+        options: {
+          skipPreflight: false,
+        },
+        accounts: {
+          authority: provider.wallet.publicKey,
+          vault: orcaUsdcV2Vault,
+          depositTrackingAccount,
+          depositTrackingQueueAccount,
+          depositTrackingHoldAccount,
+          sharesMint: orcaUsdcV2VaultSharesMint,
+          underlyingMint: orcaUsdcLpTokenMint,
+          depositTrackingPda,
+          tokenProgram: splToken.TOKEN_PROGRAM_ID,
+          associatedTokenProgram: splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          vaultProgram: v2VaultsProgramId,
+        },
+      }
+    );
+    console.log("sent register deposit tracking account tx ", tx);
+  });
+  let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+  it("issues shares", async () => {
+    yourUnderlyingTokenAccount = await serumAssoToken.getAssociatedTokenAddress(
+      provider.wallet.publicKey,
+      orcaUsdcLpTokenMint
+    );
+    console.log("your orca usdc lp token mint ", yourUnderlyingTokenAccount.toString())
+    yourSharesTokenAccount = await createAssociatedTokenAccount(
+      provider,
+      provider.wallet.publicKey,
+      orcaUsdcV2VaultSharesMint
+    );
+    let tx = await program.rpc.issueShares(
+      one,
+      [new anchor.BN(2), new anchor.BN(4)],
+      {
+        options: {
+          skipPreflight: true,
+        },
+        accounts: {
+          authority: provider.wallet.publicKey,
+          vault: orcaUsdcV2Vault,
+          depositTrackingAccount,
+          depositTrackingPda,
+          vaultPda: orcaUsdcV2VaultPda,
+          sharesMint: orcaUsdcV2VaultSharesMint,
+          receivingSharesAccount: depositTrackingHoldAccount,
+          depositingUnderlyingAccount: yourUnderlyingTokenAccount,
+          vaultUnderlyingAccount: orcaUsdcV2VaultDepositQueue,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          vaultProgram: v2VaultsProgramId,
+          tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        },
+      }
+    );
+    console.log("sent issue shares tx")
+  });
+  it("withdraws from deposit tracking account", async () => {
+    console.log("wait 3 seconds")
+    freeze(3000);
+    console.log("in production this would fail, as 15 minutes need to pass before lockup is expired")
+    let tx = await program.rpc.withdrawDepositTracking(
+      new anchor.BN(877610),
+      [new anchor.BN(2), new anchor.BN(4)],
+      {
+        options: {skipPreflight: true},
+        accounts: {
+          authority: provider.wallet.publicKey,
+          depositTrackingAccount,
+          depositTrackingPda,
+          depositTrackingHoldAccount,
+          receivingSharesAccount: yourSharesTokenAccount,
+          sharesMint: orcaUsdcV2VaultSharesMint,
+          vault: orcaUsdcV2Vault,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          vaultProgram: v2VaultsProgramId,
+          tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        },
+      }
+    );
+    console.log("sent withdraw deposit tracking tx ", tx);
+  });
+
+})
 const timer = ms => new Promise( res => setTimeout(res, ms));
 
 function freeze(time) {

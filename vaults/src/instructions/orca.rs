@@ -149,7 +149,7 @@ pub fn new_withdraw_orca_vault_dd_stage_two_ix(
     receiving_underlying_token_account: Pubkey,
     vault_farm_token_account: Pubkey,
     vault_reward_token_account: Pubkey,
-    vault_swap_token_account: Pubkey,
+    vault_swap_token_account: Pubkey, 
     global_reward_token_vault: Pubkey,
     pool_token_a: Pubkey,
     pool_token_b: Pubkey,
@@ -247,6 +247,62 @@ pub fn new_withdraw_orca_vault_remove_liq_ix(
             AccountMeta::new_readonly(spl_token::id(), false),
             AccountMeta::new(ephemeral_tracking_account, false),
             AccountMeta::new_readonly(shares_mint, false),
+        ],
+        data: ix_data,
+    })
+}
+
+pub fn new_orca_add_liq_issue_shares_ix(
+    authority: Pubkey,
+    vault: Pubkey,
+    deposit_tracking_account: Pubkey,
+    deposit_tracking_pda: Pubkey,
+    vault_pda: Pubkey,
+    shares_mint: Pubkey,
+    receiving_shares_account: Pubkey,
+    depositing_underlying_account: Pubkey,
+    vault_underlying_account: Pubkey,
+    aqua_farm_program: Pubkey,
+    funding_token_a_account: Pubkey,
+    funding_token_b_account: Pubkey,
+    pool_token_a: Pubkey,
+    pool_token_b: Pubkey,
+    swap_program: Pubkey,
+    swap_account: Pubkey,
+    swap_authority: Pubkey,
+    swap_pool_token_mint: Pubkey,
+    token_amount_a: u64,
+    token_amount_b: u64,
+    farm_type: [u64; 2],   
+) -> Option<Instruction> {
+    let ix_sighash = GlobalSighashDB.get("orca_add_liq_issue_shares")?;
+    let mut ix_data = Vec::with_capacity(8 * 5);
+    ix_data.extend_from_slice(&ix_sighash[..]);
+    ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&token_amount_a).ok()?);
+    ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&token_amount_b).ok()?);
+    ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&farm_type).ok()?);
+    Some(Instruction{
+        program_id: crate::ID,
+        accounts: vec![
+        AccountMeta::new(authority, true),
+        AccountMeta::new(vault, false),
+        AccountMeta::new(deposit_tracking_account, false),
+        AccountMeta::new(deposit_tracking_pda, false),
+        AccountMeta::new_readonly(vault_pda, false),
+        AccountMeta::new(vault_underlying_account, false),
+        AccountMeta::new(shares_mint, false),
+        AccountMeta::new(receiving_shares_account, false),
+        AccountMeta::new(depositing_underlying_account, false),
+        AccountMeta::new_readonly(spl_token::id(), false),
+        AccountMeta::new_readonly(aqua_farm_program, false),
+        AccountMeta::new(funding_token_a_account, false),
+        AccountMeta::new(funding_token_b_account, false),
+        AccountMeta::new(pool_token_a, false),
+        AccountMeta::new(pool_token_b, false),
+        AccountMeta::new_readonly(swap_program, false),
+        AccountMeta::new(swap_account, false),
+        AccountMeta::new_readonly(swap_authority, false),
+        AccountMeta::new(swap_pool_token_mint, false),
         ],
         data: ix_data,
     })

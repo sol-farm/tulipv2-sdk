@@ -6,7 +6,11 @@ use crate::accounts::{
     derive_compound_queue_address, derive_pda_address, derive_shares_mint_address,
     derive_withdraw_queue_address, raydium_vault::derive_user_stake_info_address,
 };
-
+use anchor_lang::solana_program::instruction::Instruction;
+use tulipv2_sdk_common::config::deposit_tracking::issue_shares::DepositAddresses;
+use tulipv2_sdk_common::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
+use tulipv2_sdk_common::config::deposit_tracking::traits::{RegisterDepositTracking, IssueShares, WithdrawDepositTracking};
+use tulipv2_sdk_common::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 use anchor_lang::solana_program::pubkey::Pubkey;
 
 use super::VaultBaseConfig;
@@ -16,7 +20,7 @@ pub struct OrcaVaultConfig {
     pub pda: Pubkey,
     pub withdraw_queue: Pubkey,
     pub compound_queue: Pubkey,
-    pub deposit_queue: Pubkey,
+    pub deposit_queue: Pubkey, 
     pub underlying_mint: Pubkey,
     pub shares_mint: Pubkey,
     pub user_farm: Pubkey,
@@ -80,6 +84,71 @@ impl OrcaVaultConfig {
             dd_user_farm,
             dd_withdraw_queue,
         }
+    }
+    pub fn register_deposit_tracking(
+        &self,
+        authority: Pubkey,
+    ) -> impl RegisterDepositTracking {
+        RegisterDepositTrackingAddresses::new(authority, self.vault, self.shares_mint, self.underlying_mint)
+    }
+    pub fn issue_shares(
+        &self,
+        authority: Pubkey,
+    ) -> impl IssueShares {
+        DepositAddresses::new(authority, self.vault, self.pda, self.shares_mint, self.underlying_mint)
+    }
+    pub fn withdraw_deposit_tracking(
+        &self,
+        authority: Pubkey,
+    ) -> impl WithdrawDepositTracking {
+        WithdrawDepositTrackingAddresses::new(
+            authority,
+            self.vault,
+            self.shares_mint
+        )
+    }
+    pub fn add_liq_issue_shares(
+        &self,
+        authority: Pubkey,
+        deposit_tracking_account: Pubkey,
+        deposit_tracking_pda: Pubkey,
+        receiving_shares_account: Pubkey,
+        depositing_underlying_account: Pubkey,
+        aqua_farm_program: Pubkey,
+        funding_token_a_account: Pubkey,
+        funding_token_b_account: Pubkey,
+        pool_token_a: Pubkey,
+        pool_token_b: Pubkey,
+        swap_program: Pubkey,
+        swap_account: Pubkey,
+        swap_authority: Pubkey,
+        token_amount_a: u64,
+        token_amount_b: u64,
+        farm_type: [u64; 2],
+    ) -> Option<Instruction> {
+        crate::instructions::orca::new_orca_add_liq_issue_shares_ix(
+            authority,
+            self.vault,
+            deposit_tracking_account,
+            deposit_tracking_pda,
+            self.pda,
+            self.shares_mint,
+            receiving_shares_account,
+            depositing_underlying_account,
+            self.deposit_queue,
+            aqua_farm_program,
+            funding_token_a_account,
+            funding_token_b_account,
+            pool_token_a,
+            pool_token_b,
+            swap_program,
+            swap_account,
+            swap_authority,
+            self.underlying_mint,
+            token_amount_a,
+            token_amount_b,
+            farm_type
+        )
     }
 }
 
