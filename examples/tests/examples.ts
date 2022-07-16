@@ -42,6 +42,12 @@ const v2VaultsProgramId = new anchor.web3.PublicKey(
   "TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX"
 );
 const rayUsdcLpTokenMint = new anchor.web3.PublicKey("FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m")
+const orcaTokenMint = new anchor.web3.PublicKey("orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE");
+const orcaAquaFarmProgram = new anchor.web3.PublicKey(
+  "82yxjeMsvaURa4MbZZ7WZZHfobirZYkH1zF8fmeGtyaQ"
+)
+let yourUsdcTokenAccount: anchor.web3.PublicKey;
+let yourOrcaTokenAccount: anchor.web3.PublicKey;
 describe("examples", () => {
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
@@ -614,6 +620,7 @@ describe("tests ray-usdc auto vaults", async () => {
   let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
   let yourSharesTokenAccount: anchor.web3.PublicKey;
   it("registers deposit tracking account", async () => {
+    createAssociatedTokenAccount(provider, provider.wallet.publicKey, orcaTokenMint)
     console.log("progrmaId ", programId);
     console.log("usdcv1 vault ", rayUsdcV2Vault);
     console.log("provider", provider.wallet.publicKey);
@@ -782,13 +789,36 @@ describe("tests orca-usdc auto vaults", async () => {
   const orcaUsdcV2VaultDepositQueue = new anchor.web3.PublicKey("DwZSxDX447QXLfzHUi5f2t59MhyGgfr6dBqwXsHhxwd");
   const orcaUsdcV2VaultWithdrawQueue = new anchor.web3.PublicKey("Bdv8bRJSNGhb285P2ZRXCxc6RieFz1vd8wcypMp3NvEB");
   const orcaUsdcLpTokenMint = new anchor.web3.PublicKey("n8Mpu28RjeYD7oUX3LG1tPxzhRZh3YYLRSHcHRdS3Zx");
+  const orcaUsdcPoolTokenA = new anchor.web3.PublicKey("9vYWHBPz817wJdQpE8u3h8UoY3sZ16ZXdCcvLB7jY4Dj");
+  const orcaUsdcPoolTokenB = new anchor.web3.PublicKey("6UczejMUv1tzdvUzKpULKHxrK9sqLm8edR1v9jinVWm9")
+  const orcaUsdcPoolFeeAaccount = new anchor.web3.PublicKey('7CXZED4jfRp3qdHB9Py3up6v1C4UhHofFvfT6RXbJLRN');
+  const orcaUsdcPoolSwapAccount = new anchor.web3.PublicKey("2p7nYbtPBgtmY69NsE8DAW6szpRJn7tQvDnqvoEWQvjY")
+  const orcaSwapProgram = new anchor.web3.PublicKey("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP");
   let depositTrackingAccount: anchor.web3.PublicKey;
   let depositTrackingPda: anchor.web3.PublicKey;
   let depositTrackingQueueAccount: anchor.web3.PublicKey;
   let depositTrackingHoldAccount: anchor.web3.PublicKey;
-
+  const usdcTokenMint = new anchor.web3.PublicKey(
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  );
   let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
   let yourSharesTokenAccount: anchor.web3.PublicKey;
+  let yourOrcaUsdcLpTokenAccount: anchor.web3.PublicKey;
+  it("prepares test data", async () => {
+    createAssociatedTokenAccount(
+      provider,
+      provider.wallet.publicKey,
+      orcaTokenMint
+    ).catch(async () => {
+      // orca token account already exists
+      yourOrcaTokenAccount = await serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, orcaTokenMint);
+      
+    }).then(async (key) => {
+      yourOrcaTokenAccount = await serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, orcaTokenMint);
+    })
+    yourUsdcTokenAccount = await serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, usdcTokenMint)
+    yourOrcaUsdcLpTokenAccount = await createAssociatedTokenAccount(provider, provider.wallet.publicKey, orcaUsdcLpTokenMint)
+  })
   it("registers deposit tracking account", async () => {
     console.log("progrmaId ", programId);
     console.log("usdcv1 vault ", orcaUsdcV2Vault);
@@ -843,41 +873,42 @@ describe("tests orca-usdc auto vaults", async () => {
     console.log("sent register deposit tracking account tx ", tx);
   });
   let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
-  it("issues shares", async () => {
-    yourUnderlyingTokenAccount = await serumAssoToken.getAssociatedTokenAddress(
-      provider.wallet.publicKey,
-      orcaUsdcLpTokenMint
-    );
-    console.log("your orca usdc lp token mint ", yourUnderlyingTokenAccount.toString())
-    yourSharesTokenAccount = await createAssociatedTokenAccount(
-      provider,
-      provider.wallet.publicKey,
-      orcaUsdcV2VaultSharesMint
-    );
-    let tx = await program.rpc.issueShares(
-      one,
+  it("adds liquidity and issues shares", async () => {
+    const tsx = await program.rpc.orcaAddLiqIssueShares(
       [new anchor.BN(2), new anchor.BN(4)],
       {
         options: {
-          skipPreflight: true,
+          skipPreflight: true
         },
         accounts: {
-          authority: provider.wallet.publicKey,
-          vault: orcaUsdcV2Vault,
-          depositTrackingAccount,
-          depositTrackingPda,
-          vaultPda: orcaUsdcV2VaultPda,
-          sharesMint: orcaUsdcV2VaultSharesMint,
-          receivingSharesAccount: depositTrackingHoldAccount,
-          depositingUnderlyingAccount: yourUnderlyingTokenAccount,
-          vaultUnderlyingAccount: orcaUsdcV2VaultDepositQueue,
-          systemProgram: anchor.web3.SystemProgram.programId,
-          vaultProgram: v2VaultsProgramId,
-          tokenProgram: splToken.TOKEN_PROGRAM_ID,
-        },
+          issueShares: {
+            authority: provider.wallet.publicKey,
+            vault: orcaUsdcV2Vault,
+            depositTrackingAccount,
+            depositTrackingPda,
+            vaultPda: orcaUsdcV2VaultPda,
+            sharesMint: orcaUsdcV2VaultSharesMint,
+            receivingSharesAccount: depositTrackingHoldAccount,
+            depositingUnderlyingAccount: yourOrcaUsdcLpTokenAccount,
+            vaultUnderlyingAccount: orcaUsdcV2VaultDepositQueue,
+            systemProgram: anchor.web3.SystemProgram.programId,
+            vaultProgram: v2VaultsProgramId,
+            tokenProgram: splToken.TOKEN_PROGRAM_ID,
+          },
+          aquaFarmProgram: orcaAquaFarmProgram,
+          addLiq: {
+            fundingTokenAccountA: yourOrcaTokenAccount,
+            fundingTokenAccountB: yourUsdcTokenAccount,
+            poolTokenA: orcaUsdcPoolTokenA,
+            poolTokenB: orcaUsdcPoolTokenB,
+            swapProgram: orcaSwapProgram,
+            swapAccount: orcaUsdcPoolSwapAccount,
+            swapAuthority: orcaUsdcPoolSwapAccount,
+            swapPoolTokenMint: orcaUsdcLpTokenMint,
+          }
+        }
       }
-    );
-    console.log("sent issue shares tx")
+    )
   });
   it("withdraws from deposit tracking account", async () => {
     console.log("wait 3 seconds")

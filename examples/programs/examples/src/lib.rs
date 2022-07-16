@@ -805,7 +805,7 @@ pub mod examples {
                 name,
             } => {
                 let orca_config = if name.is_double_dip() {
-                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.issue_shares.vault)?;
+                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.issue_shares.vault_program.key, &ctx.accounts.issue_shares.vault)?;
                     let orca_config = {
                         let vault = loader.load()?;
                         tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
@@ -819,7 +819,7 @@ pub mod examples {
                     };
                     orca_config
                 } else {
-                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.issue_shares.vault)?;
+                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.issue_shares.vault_program.key, &ctx.accounts.issue_shares.vault)?;
                     let orca_config = {
                         let vault = loader.load()?;
                         tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
@@ -879,6 +879,11 @@ pub mod examples {
         }
         Ok(())
     }
+}
+
+#[account]
+pub struct Poop {
+    pub authority: Pubkey,
 }
 #[derive(Accounts)]
 pub struct RedeemReserveLiquidity<'info> {
@@ -1232,8 +1237,6 @@ pub struct OrcaAddLiqIssueShares<'info> {
     /// CHECK: not needed
     pub aqua_farm_program: AccountInfo<'info>,
     pub add_liq: OrcaAddLiquidityAccounts<'info>,
-    /// CHECK: not needed
-    pub vault_program: AccountInfo<'info>,
 }
 
 #[derive(Accounts)]
