@@ -3,11 +3,11 @@
   "account": {
     "lamports": 1461600,
     "data": [
-      "AQAAACeq2jKb5hGp1mfqpfVsOskBXOerfmqFPebavv6c5VPiJUCUrFMRAAAGAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+      "AQAAACeq2jKb5hGp1mfqpfVsOskBXOerfmqFPebavv6c5VPiC9lvGpcEAAAGAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
       "base64"
     ],
     "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
     "executable": false,
-    "rentEpoch": 275
+    "rentEpoch": 328
   }
 }

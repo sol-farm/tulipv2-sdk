@@ -793,6 +793,7 @@ describe("tests orca-usdc auto vaults", async () => {
   const orcaUsdcPoolTokenB = new anchor.web3.PublicKey("6UczejMUv1tzdvUzKpULKHxrK9sqLm8edR1v9jinVWm9")
   const orcaUsdcPoolFeeAaccount = new anchor.web3.PublicKey('7CXZED4jfRp3qdHB9Py3up6v1C4UhHofFvfT6RXbJLRN');
   const orcaUsdcPoolSwapAccount = new anchor.web3.PublicKey("2p7nYbtPBgtmY69NsE8DAW6szpRJn7tQvDnqvoEWQvjY")
+  const orcaUsdcPoolSwapAuthority = new anchor.web3.PublicKey("3fr1AhdiAmWLeNrS24CMoAu9pPgbzVhwLtJ6QUPmw2ob");
   const orcaSwapProgram = new anchor.web3.PublicKey("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP");
   let depositTrackingAccount: anchor.web3.PublicKey;
   let depositTrackingPda: anchor.web3.PublicKey;
@@ -843,6 +844,11 @@ describe("tests orca-usdc auto vaults", async () => {
       "deposit tracking queue",
       depositTrackingQueueAccount.toString()
     );
+    yourSharesTokenAccount = await createAssociatedTokenAccount(
+      provider,
+      provider.wallet.publicKey,
+      orcaUsdcV2VaultSharesMint,
+    )
     console.log("deposit tracking hold", depositTrackingHoldAccount.toString());
     console.log("deposit tracking pda", depositTrackingPda.toString());
     console.log("deposit tracking", depositTrackingAccount.toString());
@@ -874,7 +880,8 @@ describe("tests orca-usdc auto vaults", async () => {
   });
   let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
   it("adds liquidity and issues shares", async () => {
-    const tsx = await program.rpc.orcaAddLiqIssueShares(
+    const tx = await program.rpc.orcaAddLiqIssueShares(
+      one, one,
       [new anchor.BN(2), new anchor.BN(4)],
       {
         options: {
@@ -903,12 +910,13 @@ describe("tests orca-usdc auto vaults", async () => {
             poolTokenB: orcaUsdcPoolTokenB,
             swapProgram: orcaSwapProgram,
             swapAccount: orcaUsdcPoolSwapAccount,
-            swapAuthority: orcaUsdcPoolSwapAccount,
+            swapAuthority: orcaUsdcPoolSwapAuthority,
             swapPoolTokenMint: orcaUsdcLpTokenMint,
           }
         }
       }
     )
+    console.log("sent orca add liq issue shares tx ", tx);
   });
   it("withdraws from deposit tracking account", async () => {
     console.log("wait 3 seconds")

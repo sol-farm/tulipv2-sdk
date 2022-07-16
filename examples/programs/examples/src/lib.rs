@@ -797,6 +797,8 @@ pub mod examples {
     /// takes coin/pc tokens, adds liq and deposits into the aquafarm
     pub fn orca_add_liq_issue_shares<'a, 'b, 'c, 'info>(
         ctx: Context<'a, 'b, 'c, 'info, OrcaAddLiqIssueShares<'info>>,
+        amount_a: u64,
+        amount_b: u64,
         farm: [u64; 2]
     ) -> Result<()> {
         let farm: tulipv2_sdk_farms::Farm = farm.into();
@@ -848,8 +850,8 @@ pub mod examples {
                         ctx.accounts.add_liq.swap_program.key(),
                         ctx.accounts.add_liq.swap_account.key(),
                         ctx.accounts.add_liq.swap_authority.key(),
-                        ctx.accounts.add_liq.funding_token_account_a.amount,
-                        ctx.accounts.add_liq.funding_token_account_b.amount,
+                        amount_a,
+                        amount_b,
                         farm.into(),
                     ).unwrap(),
                     &[
