@@ -1475,26 +1475,4 @@ filename = "deps/accounts/ExoP259z6wmE1vPEfggpJ5LMDsSmnH5jS5gAEgHuSafu.json"
 [[test.validator.account]] # vault reward token
 address = "5SRYmLN3Dyoox7n7sm8zfR5JpUfGMyvoZ82Z59Qoa4cj"
 filename = "deps/accounts/5SRYmLN3Dyoox7n7sm8zfR5JpUfGMyvoZ82Z59Qoa4cj.json"
-[[test.validator.account]] # vault farm token
-address = ""
-filename = "deps/accounts/.json"
-[[test.validator.account]] # vault swap token
-address = ""
-filename = "deps/accounts/.json"
-[[test.validator.account]] # global base token vault
-address = ""
-filename = "deps/accounts/.json"
-[[test.validator.account]] # global reward token vault
-address = ""
-filename = "deps/accounts/.json"
-[[test.validator.account]] # global farm
-address = ""
-filename = "deps/accounts/.json"
-[[test.validator.account]] # farm token mint
-address = ""
-filename = "deps/accounts/.json"
-[[test.validator.account]] # fee collector
-address = ""
-filename = "deps/accounts/.json"
-
 ###############
