@@ -69,7 +69,7 @@ pub mod examples {
         farm_type: [u64; 2],
     ) -> Result<()> {
         // create the associated
-        {
+        if ctx.accounts.deposit_tracking_hold_account.data_is_empty() {
             let ix = spl_associated_token_account::create_associated_token_account(
                 ctx.accounts.authority.key,
                 ctx.accounts.deposit_tracking_pda.key,
@@ -92,7 +92,7 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Orca {
                 name,
             } => {
-                let registration_trait = if name.is_double_dip() {
+                let ix = if name.is_double_dip() {
                     let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
                     let orca_config = {
                         let vault = loader.load()?;
@@ -101,11 +101,20 @@ pub mod examples {
                             ctx.accounts.underlying_mint.key(),
                             vault.farm_data.global_farm,
                             tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
-                            None,
-                            None,
+                            Some(vault.dd_farm_data.global_farm),
+                            Some(vault.farm_data.farm_token_mint),
                         )
                     };
-                    orca_config.register_deposit_tracking(ctx.accounts.authority.key())
+                    let reg_trait = orca_config.register_deposit_tracking(ctx.accounts.authority.key());
+                    let mut ix = reg_trait.instruction(farm).unwrap();
+                    ctx.remaining_accounts.iter().for_each(|account| {
+                        if account.is_writable {
+                            ix.accounts.push(AccountMeta::new(*account.key, account.is_signer));
+                        } else {
+                            ix.accounts.push(AccountMeta::new_readonly(*account.key, account.is_signer))
+                        }
+                    });
+                    ix
                 } else {
                     let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
                     let orca_config = {
@@ -119,23 +128,25 @@ pub mod examples {
                             None,
                         )
                     };
-                    orca_config.register_deposit_tracking(ctx.accounts.authority.key())
+                    orca_config.register_deposit_tracking(ctx.accounts.authority.key()).instruction(farm).unwrap()
                 };
+                let mut accounts = vec![
+                    ctx.accounts.authority.clone(),
+                    ctx.accounts.vault.clone(),
+                    ctx.accounts.deposit_tracking_account.clone(),
+                    ctx.accounts.deposit_tracking_queue_account.clone(),
+                    ctx.accounts.deposit_tracking_hold_account.clone(),
+                    ctx.accounts.shares_mint.to_account_info(),
+                    ctx.accounts.deposit_tracking_pda.clone(),
+                    ctx.accounts.rent.to_account_info(),
+                    ctx.accounts.token_program.clone(),
+                    ctx.accounts.rent.to_account_info(),
+                    ctx.accounts.system_program.to_account_info(),
+                ];
+                accounts.extend_from_slice(&ctx.remaining_accounts[..]);
                 anchor_lang::solana_program::program::invoke(
-                    &registration_trait.instruction(farm).unwrap(),
-                    &[
-                        ctx.accounts.authority.clone(),
-                        ctx.accounts.vault.clone(),
-                        ctx.accounts.deposit_tracking_account.clone(),
-                        ctx.accounts.deposit_tracking_queue_account.clone(),
-                        ctx.accounts.deposit_tracking_hold_account.clone(),
-                        ctx.accounts.shares_mint.to_account_info(),
-                        ctx.accounts.deposit_tracking_pda.clone(),
-                        ctx.accounts.rent.to_account_info(),
-                        ctx.accounts.token_program.clone(),
-                        ctx.accounts.rent.to_account_info(),
-                        ctx.accounts.system_program.to_account_info(),
-                    ]
+                    &ix,
+                    &accounts,
                 )?;
             }
             tulipv2_sdk_farms::Farm::Raydium{

@@ -1422,7 +1422,7 @@ address = "3r3whdyR2kGaWHV4h52gmSgmpUoMJZwva85x9TY11EmG"
 filename = "deps/accounts/3r3whdyR2kGaWHV4h52gmSgmpUoMJZwva85x9TY11EmG.json"
 [[test.validator.account]] # compound queue
 address = "8ALTUG1vc1JwPP92EoR1jt3gZNjG4d5Q67AF9woU1SXC"
-filename = "deps/accounts/.json"
+filename = "deps/accounts/8ALTUG1vc1JwPP92EoR1jt3gZNjG4d5Q67AF9woU1SXC.json"
 [[test.validator.account]] # deposit queue
 address = "o74d2CniNsA4qN1wa1SHvtth3NTps4FLETAoC8h6UdK"
 filename = "deps/accounts/o74d2CniNsA4qN1wa1SHvtth3NTps4FLETAoC8h6UdK.json"
@@ -1458,7 +1458,7 @@ address = "H6xDcxgbV4W9FhiR2VQECSxavSzJHnRnmPzoDWtTc2Qt"
 filename = "deps/accounts/H6xDcxgbV4W9FhiR2VQECSxavSzJHnRnmPzoDWtTc2Qt.json"
 [[test.validator.account]] # dd global farm
 address = "DTP1xr4EzFf1YDu4CeWTtWVsCBzFPk4HDEsL3AzoR3kB"
-filename = "deps/accounts/.json"
+filename = "deps/accounts/DTP1xr4EzFf1YDu4CeWTtWVsCBzFPk4HDEsL3AzoR3kB.json"
 [[test.validator.account]] # fee collector
 address = "GqKREVrUsm3agec8axTyuQJTF93LEWi224j3KY4aoA4Z"
 filename = "deps/accounts/GqKREVrUsm3agec8axTyuQJTF93LEWi224j3KY4aoA4Z.json"

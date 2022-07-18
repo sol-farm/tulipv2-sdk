@@ -15,6 +15,7 @@ use anchor_lang::solana_program::pubkey::Pubkey;
 
 use super::VaultBaseConfig;
 
+#[derive(Debug)]
 pub struct OrcaVaultConfig {
     pub vault: Pubkey,
     pub pda: Pubkey,

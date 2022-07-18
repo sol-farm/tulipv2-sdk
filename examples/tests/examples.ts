@@ -5,7 +5,7 @@ import * as BufferLayout from "buffer-layout";
 import * as serumAssoToken from "@project-serum/associated-token";
 import * as splToken from "@solana/spl-token";
 import * as assert from "assert";
-
+import * as web3js from "@solana/web3.js";
 import {
   createAssociatedTokenAccount,
   deriveMultiDepositStateTransitionAddress,
@@ -46,6 +46,7 @@ const orcaTokenMint = new anchor.web3.PublicKey("orcaEKTdK7LKz57vaAYr9QeNsVEPfiu
 const orcaAquaFarmProgram = new anchor.web3.PublicKey(
   "82yxjeMsvaURa4MbZZ7WZZHfobirZYkH1zF8fmeGtyaQ"
 )
+const atlasTokenMint = new anchor.web3.PublicKey("ATLASXmbPQxBUYbxPsV97usA3fPQYEqzQBUHgiFCUsXx");
 let yourUsdcTokenAccount: anchor.web3.PublicKey;
 let yourOrcaTokenAccount: anchor.web3.PublicKey;
 describe("examples", () => {
@@ -857,7 +858,7 @@ describe("tests orca-usdc auto vaults", async () => {
       [new anchor.BN(2), new anchor.BN(4)],
       {
         options: {
-          skipPreflight: false,
+          skipPreflight: true,
         },
         accounts: {
           authority: provider.wallet.publicKey,
@@ -944,6 +945,125 @@ describe("tests orca-usdc auto vaults", async () => {
     console.log("sent withdraw deposit tracking tx ", tx);
   });
 
+})
+describe("tests orca atlas-usdc double dip auto vaults", async() => {
+  let provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+
+  const program = anchor.workspace.Examples as Program<Examples>;
+
+  const programId = program.programId;
+  const orcaAtlasUsdcV2Vault = new anchor.web3.PublicKey("CjwvvwuacJAJm8w54VcNDgpbnyde6k65mvdRpEFK2Dqm");
+  const orcaAtlasUsdcV2VaultPda = new anchor.web3.PublicKey("ESeMrWPgGsj6ZFpHkCDVfbcVan9hGjG2eNG9JnvCVWFi");
+  const orcaAtlasUsdcV2VaultSharesMint = new anchor.web3.PublicKey("3r3whdyR2kGaWHV4h52gmSgmpUoMJZwva85x9TY11EmG");
+  const orcaAtlasUsdcV2VaultCompoundQueue = new anchor.web3.PublicKey("8ALTUG1vc1JwPP92EoR1jt3gZNjG4d5Q67AF9woU1SXC");
+  const orcaAtlasUsdcV2VaultDepositQueue = new anchor.web3.PublicKey("o74d2CniNsA4qN1wa1SHvtth3NTps4FLETAoC8h6UdK");
+  const orcaAtlasUsdcV2VaultWithdrawQueue = new anchor.web3.PublicKey("2a4Y4S1yWotDa6pnuaWtftiz2yauHhjc3sNZd33L1Q7M");
+  
+  const orcaAtlasUsdcV2VaultDdUserFarm = new anchor.web3.PublicKey("BYzXWdynXxwGd42ki792ppHYXGeG6pTMJmLfQSqWoQhx");
+  const orcaAtlasUsdcV2VaultDdGlobalBaseTokenVault = new anchor.web3.PublicKey("Bu3epZQvoSmUJtzAJWH8v91HFwbc9bRN6B9hrjGojFUW");
+  const orcaAtlasUSdcV2VaultDdGlobalRewardTokenVault = new anchor.web3.PublicKey("H6xDcxgbV4W9FhiR2VQECSxavSzJHnRnmPzoDWtTc2Qt");
+  
+  const orcaAtlasUsdcLpTokenMint = new anchor.web3.PublicKey("FZ8x1LCRSPDeHBDoAc3Gc6Y7ETCynuHEr5q5YWV7uRCJ");
+  const orcaAtlasUsdcPoolTokenA = new anchor.web3.PublicKey("xotXsNCx4tBhnwhrajGTaVgKq1sfuMkeYHc77ZegCqE");
+  const orcaAtlasUsdcPoolTokenB = new anchor.web3.PublicKey("8YswVYsTi66umBF2Bnkh4LB2VWMKPssDpe54VAgiuJZQ")
+  const orcaAtlasUsdcPoolFeeAaccount = new anchor.web3.PublicKey("CFN4DQ2p3qroX92pPNy3mov3Dw1aCNGLrU5AXHpHxbko");
+  const orcaAtlasUsdcPoolSwapAccount = new anchor.web3.PublicKey("3V5sjXj1mrWjjB1Xt6Xwp554QwHE5fppGSxbk4GzAtEW")
+  const orcaAtlasUsdcPoolSwapAuthority = new anchor.web3.PublicKey("8UYN675AJn5htWydDs724xqintBZ4XzsCWqMozUSDU8m");
+  const orcaAtlasUsdcFarmTokenMint = new anchor.web3.PublicKey("HFmY1ggCsCky1zJ1sfdkNR4zb3u5n38YNRdf4vsGu17t");
+
+  const orcaSwapProgram = new anchor.web3.PublicKey("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP");
+  const usdcTokenMint = new anchor.web3.PublicKey(
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  );
+  let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
+  let yourSharesTokenAccount: anchor.web3.PublicKey;
+  let yourOrcaUsdcLpTokenAccount: anchor.web3.PublicKey;
+  let providerSharesAccount: anchor.web3.PublicKey;
+  let depositTrackingAccount: anchor.web3.PublicKey;
+  let depositTrackingPda: anchor.web3.PublicKey;
+  let depositTrackingQueueAccount: anchor.web3.PublicKey;
+  let depositTrackingHoldAccount: anchor.web3.PublicKey;
+  let depositTrackingOrcaDDQueueAddress: anchor.web3.PublicKey;
+  it("registers deposit tracking account", async () => {
+    providerSharesAccount = await createAssociatedTokenAccount(
+      provider,
+      provider.wallet.publicKey,
+      orcaAtlasUsdcV2VaultSharesMint
+    );
+    console.log("provider shares account ", providerSharesAccount.toString());
+    let [_depositTrackingAccount, _trackingNonce] = await deriveTrackingAddress(
+      v2VaultsProgramId,
+      orcaAtlasUsdcV2Vault,
+      provider.wallet.publicKey
+    );
+    depositTrackingAccount = _depositTrackingAccount;
+    let [_depositTrackingPda, _depositTrackingPdaNonce] =
+      await deriveTrackingPdaAddress(v2VaultsProgramId, depositTrackingAccount);
+    depositTrackingPda = _depositTrackingPda;
+    let [_depositTrackingQueueAccount, _queueNonce] =
+      await deriveTrackingQueueAddress(v2VaultsProgramId, depositTrackingPda);
+    depositTrackingQueueAccount = _depositTrackingQueueAccount;
+    depositTrackingHoldAccount = await createAssociatedTokenAccount(
+      provider,
+      depositTrackingPda,
+      orcaAtlasUsdcV2VaultSharesMint
+    );
+    let [_deriveTrackingOrcaDDQueueAddress, _ddQueueNonce] =
+      await deriveTrackingOrcaDDQueueAddress(
+        v2VaultsProgramId,
+        orcaAtlasUsdcV2Vault,
+        depositTrackingPda
+      );
+    depositTrackingOrcaDDQueueAddress = _deriveTrackingOrcaDDQueueAddress;
+    console.log("deposit tracking dd queue ", depositTrackingOrcaDDQueueAddress.toString())
+    console.log("deposit tracking hold ", depositTrackingHoldAccount.toString())
+    console.log("deposit tracking queue ", depositTrackingQueueAccount.toString())
+    console.log("deposit tracking pda ", depositTrackingPda.toString());
+    console.log("deposit tracking account ", depositTrackingAccount.toString());
+    const tx = await program.rpc.registerDepositTrackingAccount(
+      [new anchor.BN(2), new anchor.BN(0)],
+      {
+        options: {
+          skipPreflight: true,
+        },
+        accounts: {
+          authority: provider.wallet.publicKey,
+          vault: orcaAtlasUsdcV2Vault,
+          depositTrackingAccount,
+          depositTrackingQueueAccount,
+          depositTrackingHoldAccount,
+          depositTrackingPda,
+          underlyingMint: orcaAtlasUsdcLpTokenMint,
+          sharesMint: orcaAtlasUsdcV2VaultSharesMint,
+          tokenProgram: splToken.TOKEN_PROGRAM_ID,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          associatedTokenProgram: splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
+          vaultProgram: v2VaultsProgramId
+        },
+        remainingAccounts: [
+          {
+            pubkey: depositTrackingOrcaDDQueueAddress,
+            isSigner: false,
+            isWritable: true,
+          },
+          {
+            pubkey: orcaAtlasUsdcFarmTokenMint,
+            isSigner: false,
+            isWritable: true,
+          },
+        ],
+
+        preInstructions: [
+          web3js.ComputeBudgetProgram.setComputeUnitLimit({
+            units: 1400000,
+          })
+        ],
+      }
+    );
+    console.log("register deposit tracking tx ", tx);
+  }); 
 })
 const timer = ms => new Promise( res => setTimeout(res, ms));
 
