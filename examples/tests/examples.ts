@@ -977,7 +977,6 @@ describe("tests orca atlas-usdc double dip auto vaults", async() => {
     "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
   );
   let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
-  let yourSharesTokenAccount: anchor.web3.PublicKey;
   let yourOrcaUsdcLpTokenAccount: anchor.web3.PublicKey;
   let providerSharesAccount: anchor.web3.PublicKey;
   let depositTrackingAccount: anchor.web3.PublicKey;
@@ -1113,6 +1112,31 @@ describe("tests orca atlas-usdc double dip auto vaults", async() => {
       }
     )
     console.log("sent orca add liq issue shares tx ", tx);
+  });
+  it("withdraws from deposit tracking account", async () => {
+    console.log("wait 3 seconds")
+    freeze(3000);
+    console.log("in production this would fail, as 15 minutes need to pass before lockup is expired")
+    let tx = await program.rpc.withdrawDepositTracking(
+      new anchor.BN(1392),
+      [new anchor.BN(2), new anchor.BN(0)],
+      {
+        options: {skipPreflight: true},
+        accounts: {
+          authority: provider.wallet.publicKey,
+          depositTrackingAccount,
+          depositTrackingPda,
+          depositTrackingHoldAccount,
+          receivingSharesAccount: providerSharesAccount,
+          sharesMint: orcaAtlasUsdcV2VaultSharesMint,
+          vault: orcaAtlasUsdcV2Vault,
+          clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+          vaultProgram: v2VaultsProgramId,
+          tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        },
+      }
+    );
+    console.log("sent withdraw deposit tracking tx ", tx);
   });
 })
 const timer = ms => new Promise( res => setTimeout(res, ms));

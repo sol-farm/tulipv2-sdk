@@ -350,7 +350,27 @@ pub mod examples {
                 name
             } => {
                 let withdraw_trait = if name.is_double_dip() {
-                    panic!("not supported");
+                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                    let (
+                        underlying_mint,
+                        global_farm,
+                    ) =  {
+                        let orca_vault = loader.load()?;
+                        (orca_vault.base.underlying_mint, orca_vault.farm_data.global_farm)
+                    };
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    let withdraw_trait = orca_config.withdraw_deposit_tracking(ctx.accounts.authority.key());
+                    withdraw_trait
                 } else {
                     let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
                     let (
