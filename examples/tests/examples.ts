@@ -985,6 +985,16 @@ describe("tests orca atlas-usdc double dip auto vaults", async() => {
   let depositTrackingQueueAccount: anchor.web3.PublicKey;
   let depositTrackingHoldAccount: anchor.web3.PublicKey;
   let depositTrackingOrcaDDQueueAddress: anchor.web3.PublicKey;
+  let yourAtlasTokenAccount: anchor.web3.PublicKey;
+  it("prepares test data", async() => {
+    yourOrcaUsdcLpTokenAccount = await createAssociatedTokenAccount(provider, provider.wallet.publicKey, orcaAtlasUsdcLpTokenMint)
+    createAssociatedTokenAccount(provider, provider.wallet.publicKey, atlasTokenMint)
+    .catch(async () => {
+      yourAtlasTokenAccount = await serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, atlasTokenMint);
+    }).then(async () => {
+      yourAtlasTokenAccount = await serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, atlasTokenMint);
+    })
+  })
   it("registers deposit tracking account", async () => {
     providerSharesAccount = await createAssociatedTokenAccount(
       provider,
@@ -1064,6 +1074,46 @@ describe("tests orca atlas-usdc double dip auto vaults", async() => {
     );
     console.log("register deposit tracking tx ", tx);
   }); 
+  let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+  it("adds liquidity and issues shares", async () => {
+    const tx = await program.rpc.orcaAddLiqIssueShares(
+      one, one,
+      [new anchor.BN(2), new anchor.BN(0)],
+      {
+        options: {
+          skipPreflight: true
+        },
+        accounts: {
+          issueShares: {
+            authority: provider.wallet.publicKey,
+            vault: orcaAtlasUsdcV2Vault,
+            depositTrackingAccount,
+            depositTrackingPda,
+            vaultPda: orcaAtlasUsdcV2VaultPda,
+            sharesMint: orcaAtlasUsdcV2VaultSharesMint,
+            receivingSharesAccount: depositTrackingHoldAccount,
+            depositingUnderlyingAccount: yourOrcaUsdcLpTokenAccount,
+            vaultUnderlyingAccount: orcaAtlasUsdcV2VaultDepositQueue,
+            systemProgram: anchor.web3.SystemProgram.programId,
+            vaultProgram: v2VaultsProgramId,
+            tokenProgram: splToken.TOKEN_PROGRAM_ID,
+          },
+          aquaFarmProgram: orcaAquaFarmProgram,
+          addLiq: {
+            fundingTokenAccountA: yourAtlasTokenAccount,
+            fundingTokenAccountB: yourUsdcTokenAccount,
+            poolTokenA: orcaAtlasUsdcPoolTokenA,
+            poolTokenB: orcaAtlasUsdcPoolTokenB,
+            swapProgram: orcaSwapProgram,
+            swapAccount: orcaAtlasUsdcPoolSwapAccount,
+            swapAuthority: orcaAtlasUsdcPoolSwapAuthority,
+            swapPoolTokenMint: orcaAtlasUsdcLpTokenMint,
+          }
+        }
+      }
+    )
+    console.log("sent orca add liq issue shares tx ", tx);
+  });
 })
 const timer = ms => new Promise( res => setTimeout(res, ms));
 
