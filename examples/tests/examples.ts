@@ -1139,6 +1139,9 @@ describe("tests orca atlas-usdc double dip auto vaults", async() => {
     console.log("sent withdraw deposit tracking tx ", tx);
   });
 })
+describe("tests atrix usdr-usdc auto vaults", async () => {
+  
+})
 const timer = ms => new Promise( res => setTimeout(res, ms));
 
 function freeze(time) {

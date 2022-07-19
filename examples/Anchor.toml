@@ -1476,3 +1476,49 @@ filename = "deps/accounts/ExoP259z6wmE1vPEfggpJ5LMDsSmnH5jS5gAEgHuSafu.json"
 address = "5SRYmLN3Dyoox7n7sm8zfR5JpUfGMyvoZ82Z59Qoa4cj"
 filename = "deps/accounts/5SRYmLN3Dyoox7n7sm8zfR5JpUfGMyvoZ82Z59Qoa4cj.json"
 ###############
+
+# atrix usdr-usdc
+
+[[test.validator.account]] # vault
+address = "DpiKJPdADQStkLoYsiS7rXspEUKBNJwXjuiXs4zvwovw"
+filename = "deps/accounts/DpiKJPdADQStkLoYsiS7rXspEUKBNJwXjuiXs4zvwovw.json"
+[[test.validator.account]] #  shares mint
+address = "7ui67CSJFK8PJQRZ5VySK4jAMJmWivyddqJ7h3CoJvty"
+filename = "deps/accounts/7ui67CSJFK8PJQRZ5VySK4jAMJmWivyddqJ7h3CoJvty.json" 
+[[test.validator.account]] #  compound queue
+address = "3hSx6q2v5zjunN7Y5wquZSVtJoVy6KA99Pk7uTsoMab2"
+filename = "deps/accounts/3hSx6q2v5zjunN7Y5wquZSVtJoVy6KA99Pk7uTsoMab2.json"
+[[test.validator.account]] # deposit queue
+address = "GEHQTUXsyCEtC5ur2EPEcLE6wWscmnCSzPsiCz7cbcGC"
+filename = "deps/accounts/GEHQTUXsyCEtC5ur2EPEcLE6wWscmnCSzPsiCz7cbcGC.json"
+[[test.validator.account]] # underlying mint
+address = "HKx72DDVoUa1QPb7oqRs4b361TEYoiENxmJJm91Agq8W"
+filename = "deps/accounts/HKx72DDVoUa1QPb7oqRs4b361TEYoiENxmJJm91Agq8W.json"
+[[test.validator.account]] # withdraw queue
+address = "5FknEi4RuZWYzJnhKRGQGhEj5kXRnu4FtHRVLAVAs7Ah"
+filename = "deps/accounts/5FknEi4RuZWYzJnhKRGQGhEj5kXRnu4FtHRVLAVAs7Ah.json"
+[[test.validator.account]] # vault reard token account
+address = "E6mtrtopGCseNroB1NxZv8EGJjUazxgCbhf1vCx91iXx"
+filename = "deps/accounts/E6mtrtopGCseNroB1NxZv8EGJjUazxgCbhf1vCx91iXx.json"
+[[test.validator.account]] # vault staker account
+address = "AY8oGnqwM9o7taXbSgWieQrEgn7NWDhSWkwqsaU8gdR7"
+filename = "deps/accounts/AY8oGnqwM9o7taXbSgWieQrEgn7NWDhSWkwqsaU8gdR7.json"
+[[test.validator.account]] # vault harvester account
+address = "48HoiUzAEPr5cvwMWxzsYoKfH53ZTkfy9oHzTBawi3gN"
+filename = "deps/accounts/48HoiUzAEPr5cvwMWxzsYoKfH53ZTkfy9oHzTBawi3gN.json"
+[[test.validator.account]] # crop account
+address = "AP9GTHoqi51Ljf95HJW5Cp7rpU3AQMXyCeT3nNJxeVdZ"
+filename = "deps/accounts/AP9GTHoqi51Ljf95HJW5Cp7rpU3AQMXyCeT3nNJxeVdZ.json"
+[[test.validator.account]] # crop reward token account
+address = "Efved2EZwUnWGeUayDDzYrRQ5NJSbF5dAKpJ52sXuA4J"
+filename = "deps/accounts/Efved2EZwUnWGeUayDDzYrRQ5NJSbF5dAKpJ52sXuA4J.json"
+[[test.validator.account]] # farm stake token account
+address = "Djc2QekhrQ8AmhTf57gXc1TTtTXXfrpRjMqb77MHT7rd"
+filename = "deps/accounts/Djc2QekhrQ8AmhTf57gXc1TTtTXXfrpRjMqb77MHT7rd.json"
+[[test.validator.account]] # farm id
+address = "AXiRvQs6fyXFJSumZadrnMK1k5G2f2oEPDG573CrfQR5"
+filename = "deps/accounts/AXiRvQs6fyXFJSumZadrnMK1k5G2f2oEPDG573CrfQR5.json" 
+[[test.validator.account]] # pool id
+address = "7V7igBALu1xyu4ZkXfuS6LnfkZ1aA6DKBx55ouA6Jhbm"
+filename = "deps/accounts/7V7igBALu1xyu4ZkXfuS6LnfkZ1aA6DKBx55ouA6Jhbm.json"
+###############
