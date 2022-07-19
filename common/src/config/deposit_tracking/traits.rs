@@ -50,7 +50,7 @@ pub trait RegisterDepositTracking {
     ///
     /// **YOU MUST CREATE THIS ASSOCIATED TOKEN ACCOUNT YOURSELF**
     /// **THE V2 VAULTS PROGRAM DOES NOT INVOKE THE ATA PROGRAM**
-    /// **PLEASE INCLUDE THE INSTRUCTINO TO CREATE THE ATA BEFORE THE REGISTER INSTRUCTION**
+    /// **PLEASE INCLUDE THE INSTRUCTION TO CREATE THE ATA BEFORE THE REGISTER INSTRUCTION**
     fn deposit_tracking_hold_account(&self) -> Pubkey;
     fn shares_mint(&self) -> Pubkey;
     /// the token mint for the underlying asset backing the tokenized shares
