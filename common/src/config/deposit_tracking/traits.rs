@@ -56,7 +56,7 @@ pub trait RegisterDepositTracking {
     /// the token mint for the underlying asset backing the tokenized shares
     fn underlying_mint(&self) -> Pubkey;
     /// returns the Instruction object which can be used to invoke
-    /// the `register_deposit_tracking` instruction via CPI or off-chain cliemts
+    /// the `register_deposit_tracking` instruction via CPI or off-chain clients
     ///
     /// `farm_type` is the farm key used by a particular vault
     fn instruction(&self, farm_type: Farm) -> Option<Instruction>;
@@ -85,7 +85,7 @@ pub trait WithdrawDepositTracking {
     /// the address which should receive the tokenized shares being removed from the vault
     fn receiving_shares_account(&self) -> Pubkey;
     /// returns the Instruction object which can be used to invoke
-    /// the `withdraw_deposit_tracking` instruction via CPI or off-chain cliemts
+    /// the `withdraw_deposit_tracking` instruction via CPI or off-chain clients
     ///
     /// `amount` is the amount of tokenized shares the caller wishes to withdraw
     /// `farm_type` is the farm key used by a particular vault

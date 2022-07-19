@@ -1,4 +1,4 @@
-//! the `issue_shares` submodule provides helper objects to facilitate issueing `issue_shares` instructions
+//! the `issue_shares` submodule provides helper objects to facilitate issuing `issue_shares` instructions
 //! which are a vault-agnostic method of depositing into the Tulip V2 vaults program
 
 use super::{
@@ -99,7 +99,7 @@ impl IssueShares for DepositAddresses {
     }
     fn instruction(&self, farm_type: Farm, amount: u64) -> Option<Instruction> {
         let ix_sighash = self.ix_data()?;
-        // 8 bytes for the sighash, 8 bytes for thet amount
+        // 8 bytes for the sighash, 8 bytes for the amount
         // 16 bytes for the serialized farm_type
         let mut ix_data = Vec::with_capacity(32);
         ix_data.extend_from_slice(&ix_sighash[..]);

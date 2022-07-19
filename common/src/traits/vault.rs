@@ -88,7 +88,7 @@ pub trait TokenizedShares {
 /// implementation of a holder of tokenized vault shares
 #[cfg(not(tarpaulin_include))]
 pub trait TokenizedSharesHolder {
-    /// returns the amount of shares to given in exchange for depositing the specified amount of underlying otkens
+    /// returns the amount of shares to given in exchange for depositing the specified amount of underlying tokens
     fn shares_to_give(&self, vault: &impl TokenizedShares, amount: u64) -> u64;
     /// returns the amount of underlying to redeem in exchange for burning the amount of shares
     /// returns None if vault is locked for the share holder
