@@ -2,8 +2,8 @@ use super::{vault_base::VaultBaseV1, InitVaultArgsV1};
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 
-use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 use anchor_lang::prelude::*;
+use tulipv2_sdk_common::{traits::vault::TokenizedShares, DEFAULT_KEY};
 
 #[cfg(not(target_arch = "bpf"))]
 use type_layout::TypeLayout;
@@ -48,7 +48,7 @@ impl super::Base for AtrixVaultV1 {
     /// unlike the majority of other vault implementations
     /// the lending optimizer initializes deposits, withdraws
     /// and compoudning to disabled
-    fn init(&mut self, args: &InitVaultArgsV1) {
+    fn init(&mut self, _args: &InitVaultArgsV1) {
         msg_panic!("noop");
     }
     fn farm(&self) -> Farm {

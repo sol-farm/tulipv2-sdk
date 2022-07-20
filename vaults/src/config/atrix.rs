@@ -1,17 +1,15 @@
-use crate::accounts::orca_vault::{
-    derive_dd_compound_queue_address, derive_dd_withdraw_queue_address, derive_user_farm_address,
-};
-use crate::accounts::raydium_vault::derive_associated_stake_info_address;
 use crate::accounts::{
     derive_compound_queue_address, derive_pda_address, derive_shares_mint_address,
-    derive_withdraw_queue_address, raydium_vault::derive_user_stake_info_address,
+    derive_withdraw_queue_address,
 };
 use anchor_lang::solana_program::pubkey::Pubkey;
 use so_defi_atrix::addresses as atrix_addresses;
-use anchor_lang::solana_program::instruction::Instruction;
+
 use tulipv2_sdk_common::config::deposit_tracking::issue_shares::DepositAddresses;
 use tulipv2_sdk_common::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
-use tulipv2_sdk_common::config::deposit_tracking::traits::{RegisterDepositTracking, IssueShares, WithdrawDepositTracking};
+use tulipv2_sdk_common::config::deposit_tracking::traits::{
+    IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
+};
 use tulipv2_sdk_common::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 
 use super::VaultBaseConfig;
@@ -30,26 +28,24 @@ pub struct AtrixVaultConfig {
 
 impl AtrixVaultConfig {
     pub fn new(
-        vault: Pubkey, 
-        underlying_mint: Pubkey, 
-        farm_key: Option<Pubkey>, 
-        crop_key: Option<Pubkey>
+        vault: Pubkey,
+        underlying_mint: Pubkey,
+        farm_key: Option<Pubkey>,
+        crop_key: Option<Pubkey>,
     ) -> Self {
         let pda = derive_pda_address(&vault).0;
         let shares_mint = derive_shares_mint_address(&vault, &underlying_mint).0;
         let withdraw_queue = derive_withdraw_queue_address(&vault, &underlying_mint).0;
         let compound_queue = derive_compound_queue_address(&vault, &underlying_mint).0;
-        let (
-            staker_account,
-            harvester_account
-        ) = if let (Some(farm_key), Some(crop_key)) = (farm_key, crop_key) {
-            let staker_account = atrix_addresses::find_staker_address(farm_key, pda).0;
-            let harvester_account = atrix_addresses::find_harvester_address(crop_key, pda).0;
-            (Some(staker_account), Some(harvester_account))
-        } else {
-            (None, None)
-        };
-     Self {
+        let (staker_account, harvester_account) =
+            if let (Some(farm_key), Some(crop_key)) = (farm_key, crop_key) {
+                let staker_account = atrix_addresses::find_staker_address(farm_key, pda).0;
+                let harvester_account = atrix_addresses::find_harvester_address(crop_key, pda).0;
+                (Some(staker_account), Some(harvester_account))
+            } else {
+                (None, None)
+            };
+        Self {
             vault,
             pda,
             shares_mint,
@@ -64,27 +60,25 @@ impl AtrixVaultConfig {
             staker_account,
         }
     }
-    pub fn register_deposit_tracking(
-        &self,
-        authority: Pubkey,
-    ) -> impl RegisterDepositTracking {
-        RegisterDepositTrackingAddresses::new(authority, self.vault, self.shares_mint, self.underlying_mint)
-    }
-    pub fn issue_shares(
-        &self,
-        authority: Pubkey,
-    ) -> impl IssueShares {
-        DepositAddresses::new(authority, self.vault, self.pda, self.shares_mint, self.underlying_mint)
-    }
-    pub fn withdraw_deposit_tracking(
-        &self,
-        authority: Pubkey,
-    ) -> impl WithdrawDepositTracking {
-        WithdrawDepositTrackingAddresses::new(
+    pub fn register_deposit_tracking(&self, authority: Pubkey) -> impl RegisterDepositTracking {
+        RegisterDepositTrackingAddresses::new(
             authority,
             self.vault,
-            self.shares_mint
+            self.shares_mint,
+            self.underlying_mint,
         )
+    }
+    pub fn issue_shares(&self, authority: Pubkey) -> impl IssueShares {
+        DepositAddresses::new(
+            authority,
+            self.vault,
+            self.pda,
+            self.shares_mint,
+            self.underlying_mint,
+        )
+    }
+    pub fn withdraw_deposit_tracking(&self, authority: Pubkey) -> impl WithdrawDepositTracking {
+        WithdrawDepositTrackingAddresses::new(authority, self.vault, self.shares_mint)
     }
 }
 

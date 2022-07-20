@@ -82,7 +82,7 @@ pub fn new_withdraw_multi_deposit_optimizer_vault_ix(
     amount: u64,
     standalone_vault_accounts: Vec<AccountMeta>,
 ) -> Option<Instruction> {
-    let mut ix_sighash = GlobalSighashDB.get("withdraw_multi_deposit_optimizer_vault")?;
+    let ix_sighash = GlobalSighashDB.get("withdraw_multi_deposit_optimizer_vault")?;
     let mut ix_data = Vec::with_capacity(16);
     ix_data.extend_from_slice(&ix_sighash[..]);
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&amount).ok()?[..]);

@@ -72,7 +72,7 @@ pub fn new_withdraw_sunny_vault_ix(
     sunny_quarry_program: Pubkey,
     amount: u64,
 ) -> Option<Instruction> {
-    let ix_sighash = GlobalSighashDB.get("withdraw_sunny_vault");
+    let _ix_sighash = GlobalSighashDB.get("withdraw_sunny_vault");
     let mut ix_data = Vec::with_capacity(16);
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&amount).ok()?[..]);
     Some(Instruction {

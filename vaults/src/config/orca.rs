@@ -1,17 +1,19 @@
 use crate::accounts::orca_vault::{
     derive_dd_compound_queue_address, derive_dd_withdraw_queue_address, derive_user_farm_address,
 };
-use crate::accounts::raydium_vault::derive_associated_stake_info_address;
+
 use crate::accounts::{
     derive_compound_queue_address, derive_pda_address, derive_shares_mint_address,
-    derive_withdraw_queue_address, raydium_vault::derive_user_stake_info_address,
+    derive_withdraw_queue_address,
 };
 use anchor_lang::solana_program::instruction::Instruction;
+use anchor_lang::solana_program::pubkey::Pubkey;
 use tulipv2_sdk_common::config::deposit_tracking::issue_shares::DepositAddresses;
 use tulipv2_sdk_common::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
-use tulipv2_sdk_common::config::deposit_tracking::traits::{RegisterDepositTracking, IssueShares, WithdrawDepositTracking};
+use tulipv2_sdk_common::config::deposit_tracking::traits::{
+    IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
+};
 use tulipv2_sdk_common::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
-use anchor_lang::solana_program::pubkey::Pubkey;
 
 use super::VaultBaseConfig;
 
@@ -21,7 +23,7 @@ pub struct OrcaVaultConfig {
     pub pda: Pubkey,
     pub withdraw_queue: Pubkey,
     pub compound_queue: Pubkey,
-    pub deposit_queue: Pubkey, 
+    pub deposit_queue: Pubkey,
     pub underlying_mint: Pubkey,
     pub shares_mint: Pubkey,
     pub user_farm: Pubkey,
@@ -86,27 +88,25 @@ impl OrcaVaultConfig {
             dd_withdraw_queue,
         }
     }
-    pub fn register_deposit_tracking(
-        &self,
-        authority: Pubkey,
-    ) -> impl RegisterDepositTracking {
-        RegisterDepositTrackingAddresses::new(authority, self.vault, self.shares_mint, self.underlying_mint)
-    }
-    pub fn issue_shares(
-        &self,
-        authority: Pubkey,
-    ) -> impl IssueShares {
-        DepositAddresses::new(authority, self.vault, self.pda, self.shares_mint, self.underlying_mint)
-    }
-    pub fn withdraw_deposit_tracking(
-        &self,
-        authority: Pubkey,
-    ) -> impl WithdrawDepositTracking {
-        WithdrawDepositTrackingAddresses::new(
+    pub fn register_deposit_tracking(&self, authority: Pubkey) -> impl RegisterDepositTracking {
+        RegisterDepositTrackingAddresses::new(
             authority,
             self.vault,
-            self.shares_mint
+            self.shares_mint,
+            self.underlying_mint,
         )
+    }
+    pub fn issue_shares(&self, authority: Pubkey) -> impl IssueShares {
+        DepositAddresses::new(
+            authority,
+            self.vault,
+            self.pda,
+            self.shares_mint,
+            self.underlying_mint,
+        )
+    }
+    pub fn withdraw_deposit_tracking(&self, authority: Pubkey) -> impl WithdrawDepositTracking {
+        WithdrawDepositTrackingAddresses::new(authority, self.vault, self.shares_mint)
     }
     pub fn add_liq_issue_shares(
         &self,
@@ -148,7 +148,7 @@ impl OrcaVaultConfig {
             self.underlying_mint,
             token_amount_a,
             token_amount_b,
-            farm_type
+            farm_type,
         )
     }
 }

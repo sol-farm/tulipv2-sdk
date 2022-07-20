@@ -22,14 +22,16 @@
 #![allow(non_camel_case_types)]
 #![allow(clippy::too_many_arguments)]
 
+pub mod atrix;
 pub mod lending;
 pub mod orca;
 pub mod quarry;
 pub mod raydium;
-pub mod atrix;
 pub mod unknown;
 
-use crate::{lending::Lending, orca::Orca, quarry::Quarry, raydium::Raydium, unknown::Unknown, atrix::Atrix};
+use crate::{
+    atrix::Atrix, lending::Lending, orca::Orca, quarry::Quarry, raydium::Raydium, unknown::Unknown,
+};
 use anchor_lang::prelude::*;
 use tulip_arrform::{arrform, ArrForm};
 
@@ -209,7 +211,7 @@ impl From<Farm> for [u64; 2] {
             Farm::Lending { name } => [1_u64, name.into()],
             Farm::Orca { name } => [2_u64, name.into()],
             Farm::Quarry { name } => [3_u64, name.into()],
-            Farm::Atrix{ name } => [4_u64, name.into()],
+            Farm::Atrix { name } => [4_u64, name.into()],
             _ => [u64::MAX, u64::MAX],
         }
     }
