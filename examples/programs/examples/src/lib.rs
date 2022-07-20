@@ -16,6 +16,51 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 #[program]
 pub mod examples {
     use super::*;
+    pub fn log_exchange_rate(
+        ctx: Context<LogExchangeRate>,
+        farm_type: [u64; 2]
+    ) -> Result<()> {
+        use tulipv2_sdk_common::traits::vault::TokenizedShares;
+        let farm: Farm = farm_type.into();
+        match farm {
+            tulipv2_sdk_farms::Farm::Orca {
+                name,
+            } => {
+                if name.is_double_dip() {
+                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                    let vault = loader.load()?;
+                    msg!("{}", vault.base.cached_exchange_rate(&ctx.accounts.shares_mint));
+                } else {
+                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                    let vault = loader.load()?;
+                    msg!("{}", vault.base.cached_exchange_rate(&ctx.accounts.shares_mint));
+                };
+            }
+            tulipv2_sdk_farms::Farm::Raydium {
+                ..
+            } => {
+                let loader: AccountLoader<tulipv2_sdk_vaults::accounts::raydium_vault::RaydiumVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                let vault = loader.load()?;
+                msg!("{}", vault.base.cached_exchange_rate(&ctx.accounts.shares_mint));
+            }
+            tulipv2_sdk_farms::Farm::Lending {
+                name
+            } => {
+                if name.eq(&tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT) {
+                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::multi_optimizer::MultiDepositOptimizerV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                    let vault = loader.load()?;
+
+                    msg!("{}", vault.base.cached_exchange_rate(&ctx.accounts.shares_mint));
+                } else {
+                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::lending_optimizer::LendingOptimizerV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                    let vault = loader.load()?;
+                    msg!("{}", vault.base.cached_exchange_rate(&ctx.accounts.shares_mint));
+                }
+            }
+            _ => panic!("unsupported farm"),
+        }
+        Ok(())
+    }
     pub fn register_deposit_tracking_account(
         ctx: Context<RegisterDepositTrackingAccount>,
         farm_type: [u64; 2],
@@ -702,4 +747,11 @@ pub struct WithdrawTulipMultiDepositOptimizerVault<'info> {
     /// regardless of the underlying vault they are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
+}
+
+#[derive(Accounts)]
+pub struct LogExchangeRate<'info> {
+    pub vault: AccountInfo<'info>,
+    pub shares_mint: Box<Account<'info, Mint>>,
+    pub vault_program: AccountInfo<'info>,
 }
