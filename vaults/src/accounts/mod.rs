@@ -15,6 +15,7 @@ use anchor_spl::token::Mint;
 use tulipv2_sdk_common::traits::vault::TokenizedShares;
 use tulipv2_sdk_farms::Farm;
 
+pub mod atrix_vault;
 pub mod lending_optimizer;
 pub mod multi_optimizer;
 pub mod orca_vault;

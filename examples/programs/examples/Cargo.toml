@@ -19,7 +19,7 @@ default = []
 anchor-lang = "0.24.2"
 anchor-spl = "0.24.2"
 tulipv2-sdk-common = {path = "../../../common", version = "0.9.17"}
-tulipv2-sdk-vaults = {path = "../../../vaults", version = "0.9.17"}
-tulipv2-sdk-farms = {path = "../../../farms", version = "0.9.17"}
+tulipv2-sdk-vaults = {path = "../../../vaults", version = "0.9.18"}
+tulipv2-sdk-farms = {path = "../../../farms", version = "0.9.18"}
 spl-associated-token-account = "1.0.3"
 tulipv2-sdk-lending = {path = "../../../lending"}

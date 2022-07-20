@@ -416,7 +416,7 @@ describe("examples", () => {
         });
     }));
 });
-describe("tests ray-usdc auto vaults", () => __awaiter(void 0, void 0, void 0, function* () {
+describe("tests ray-usdc auto vaults", () => {
     let provider = anchor.AnchorProvider.env();
     anchor.setProvider(provider);
     const program = anchor.workspace.Examples;
@@ -562,8 +562,8 @@ describe("tests ray-usdc auto vaults", () => __awaiter(void 0, void 0, void 0, f
             console.log("error is expected to happen in localnet environments");
         });
     }));
-}));
-describe("tests orca-usdc auto vaults", () => __awaiter(void 0, void 0, void 0, function* () {
+});
+describe("tests orca-usdc auto vaults", () => {
     let provider = anchor.AnchorProvider.env();
     anchor.setProvider(provider);
     const program = anchor.workspace.Examples;
@@ -618,7 +618,7 @@ describe("tests orca-usdc auto vaults", () => __awaiter(void 0, void 0, void 0, 
         console.log("sending register deposit tracking account tx");
         let tx = yield program.rpc.registerDepositTrackingAccount([new anchor.BN(2), new anchor.BN(4)], {
             options: {
-                skipPreflight: false,
+                skipPreflight: true,
             },
             accounts: {
                 authority: provider.wallet.publicKey,
@@ -695,8 +695,8 @@ describe("tests orca-usdc auto vaults", () => __awaiter(void 0, void 0, void 0, 
         });
         console.log("sent withdraw deposit tracking tx ", tx);
     }));
-}));
-describe("tests orca atlas-usdc double dip auto vaults", () => __awaiter(void 0, void 0, void 0, function* () {
+});
+describe("tests orca atlas-usdc double dip auto vaults", () => {
     let provider = anchor.AnchorProvider.env();
     anchor.setProvider(provider);
     const program = anchor.workspace.Examples;
@@ -720,7 +720,6 @@ describe("tests orca atlas-usdc double dip auto vaults", () => __awaiter(void 0,
     const orcaSwapProgram = new anchor.web3.PublicKey("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP");
     const usdcTokenMint = new anchor.web3.PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
     let yourUnderlyingTokenAccount;
-    let yourSharesTokenAccount;
     let yourOrcaUsdcLpTokenAccount;
     let providerSharesAccount;
     let depositTrackingAccount;
@@ -728,17 +727,27 @@ describe("tests orca atlas-usdc double dip auto vaults", () => __awaiter(void 0,
     let depositTrackingQueueAccount;
     let depositTrackingHoldAccount;
     let depositTrackingOrcaDDQueueAddress;
+    let yourAtlasTokenAccount;
+    it("prepares test data", () => __awaiter(void 0, void 0, void 0, function* () {
+        yourOrcaUsdcLpTokenAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, provider.wallet.publicKey, orcaAtlasUsdcLpTokenMint);
+        (0, utils_1.createAssociatedTokenAccount)(provider, provider.wallet.publicKey, atlasTokenMint)
+            .catch(() => __awaiter(void 0, void 0, void 0, function* () {
+            yourAtlasTokenAccount = yield serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, atlasTokenMint);
+        })).then(() => __awaiter(void 0, void 0, void 0, function* () {
+            yourAtlasTokenAccount = yield serumAssoToken.getAssociatedTokenAddress(provider.wallet.publicKey, atlasTokenMint);
+        }));
+    }));
     it("registers deposit tracking account", () => __awaiter(void 0, void 0, void 0, function* () {
         providerSharesAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, provider.wallet.publicKey, orcaAtlasUsdcV2VaultSharesMint);
         console.log("provider shares account ", providerSharesAccount.toString());
-        let [_depositTrackingAccount, _trackingNonce] = yield (0, utils_1.deriveTrackingAddress)(programId, orcaAtlasUsdcV2Vault, provider.wallet.publicKey);
+        let [_depositTrackingAccount, _trackingNonce] = yield (0, utils_1.deriveTrackingAddress)(v2VaultsProgramId, orcaAtlasUsdcV2Vault, provider.wallet.publicKey);
         depositTrackingAccount = _depositTrackingAccount;
-        let [_depositTrackingPda, _depositTrackingPdaNonce] = yield (0, utils_1.deriveTrackingPdaAddress)(programId, depositTrackingAccount);
+        let [_depositTrackingPda, _depositTrackingPdaNonce] = yield (0, utils_1.deriveTrackingPdaAddress)(v2VaultsProgramId, depositTrackingAccount);
         depositTrackingPda = _depositTrackingPda;
-        let [_depositTrackingQueueAccount, _queueNonce] = yield (0, utils_1.deriveTrackingQueueAddress)(programId, depositTrackingPda);
+        let [_depositTrackingQueueAccount, _queueNonce] = yield (0, utils_1.deriveTrackingQueueAddress)(v2VaultsProgramId, depositTrackingPda);
         depositTrackingQueueAccount = _depositTrackingQueueAccount;
         depositTrackingHoldAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, depositTrackingPda, orcaAtlasUsdcV2VaultSharesMint);
-        let [_deriveTrackingOrcaDDQueueAddress, _ddQueueNonce] = yield (0, utils_1.deriveTrackingOrcaDDQueueAddress)(programId, orcaAtlasUsdcV2Vault, depositTrackingPda);
+        let [_deriveTrackingOrcaDDQueueAddress, _ddQueueNonce] = yield (0, utils_1.deriveTrackingOrcaDDQueueAddress)(v2VaultsProgramId, orcaAtlasUsdcV2Vault, depositTrackingPda);
         depositTrackingOrcaDDQueueAddress = _deriveTrackingOrcaDDQueueAddress;
         console.log("deposit tracking dd queue ", depositTrackingOrcaDDQueueAddress.toString());
         console.log("deposit tracking hold ", depositTrackingHoldAccount.toString());
@@ -776,10 +785,146 @@ describe("tests orca atlas-usdc double dip auto vaults", () => __awaiter(void 0,
                     isWritable: true,
                 },
             ],
+            preInstructions: [
+                anchor.web3.ComputeBudgetProgram.setComputeUnitLimit({
+                    units: 1400000,
+                })
+            ],
         });
         console.log("register deposit tracking tx ", tx);
     }));
-}));
+    let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+    it("adds liquidity and issues shares", () => __awaiter(void 0, void 0, void 0, function* () {
+        const tx = yield program.rpc.orcaAddLiqIssueShares(one, one, [new anchor.BN(2), new anchor.BN(0)], {
+            options: {
+                skipPreflight: true
+            },
+            accounts: {
+                issueShares: {
+                    authority: provider.wallet.publicKey,
+                    vault: orcaAtlasUsdcV2Vault,
+                    depositTrackingAccount,
+                    depositTrackingPda,
+                    vaultPda: orcaAtlasUsdcV2VaultPda,
+                    sharesMint: orcaAtlasUsdcV2VaultSharesMint,
+                    receivingSharesAccount: depositTrackingHoldAccount,
+                    depositingUnderlyingAccount: yourOrcaUsdcLpTokenAccount,
+                    vaultUnderlyingAccount: orcaAtlasUsdcV2VaultDepositQueue,
+                    systemProgram: anchor.web3.SystemProgram.programId,
+                    vaultProgram: v2VaultsProgramId,
+                    tokenProgram: splToken.TOKEN_PROGRAM_ID,
+                },
+                aquaFarmProgram: orcaAquaFarmProgram,
+                addLiq: {
+                    fundingTokenAccountA: yourAtlasTokenAccount,
+                    fundingTokenAccountB: yourUsdcTokenAccount,
+                    poolTokenA: orcaAtlasUsdcPoolTokenA,
+                    poolTokenB: orcaAtlasUsdcPoolTokenB,
+                    swapProgram: orcaSwapProgram,
+                    swapAccount: orcaAtlasUsdcPoolSwapAccount,
+                    swapAuthority: orcaAtlasUsdcPoolSwapAuthority,
+                    swapPoolTokenMint: orcaAtlasUsdcLpTokenMint,
+                }
+            }
+        });
+        console.log("sent orca add liq issue shares tx ", tx);
+    }));
+    it("withdraws from deposit tracking account", () => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("wait 3 seconds");
+        freeze(3000);
+        console.log("in production this would fail, as 15 minutes need to pass before lockup is expired");
+        let tx = yield program.rpc.withdrawDepositTracking(new anchor.BN(1392), [new anchor.BN(2), new anchor.BN(0)], {
+            options: { skipPreflight: true },
+            accounts: {
+                authority: provider.wallet.publicKey,
+                depositTrackingAccount,
+                depositTrackingPda,
+                depositTrackingHoldAccount,
+                receivingSharesAccount: providerSharesAccount,
+                sharesMint: orcaAtlasUsdcV2VaultSharesMint,
+                vault: orcaAtlasUsdcV2Vault,
+                clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+                vaultProgram: v2VaultsProgramId,
+                tokenProgram: splToken.TOKEN_PROGRAM_ID,
+            },
+        });
+        console.log("sent withdraw deposit tracking tx ", tx);
+    }));
+});
+describe("tests atrix usdr-usdc auto vaults", () => {
+    let provider = anchor.AnchorProvider.env();
+    anchor.setProvider(provider);
+    const program = anchor.workspace.Examples;
+    const programId = program.programId;
+    const atrixUsdrUSdcV2Vault = new anchor.web3.PublicKey("DpiKJPdADQStkLoYsiS7rXspEUKBNJwXjuiXs4zvwovw");
+    const atrixUsdrUSdcV2VaultPda = new anchor.web3.PublicKey("3rvmzbENBgDKFLEscS1CfYssVDBgsCwNoDmcx4dckz84");
+    const atrixUsdrUSdcV2VaultSharesMint = new anchor.web3.PublicKey("7ui67CSJFK8PJQRZ5VySK4jAMJmWivyddqJ7h3CoJvty");
+    const atrixUsdrUSdcV2VaultCompoundQueue = new anchor.web3.PublicKey("3hSx6q2v5zjunN7Y5wquZSVtJoVy6KA99Pk7uTsoMab2");
+    const atrixUsdrUSdcV2VaultDepositQueue = new anchor.web3.PublicKey("GEHQTUXsyCEtC5ur2EPEcLE6wWscmnCSzPsiCz7cbcGC");
+    const atrixUsdrUSdcV2VaultWithdrawQueue = new anchor.web3.PublicKey("5FknEi4RuZWYzJnhKRGQGhEj5kXRnu4FtHRVLAVAs7Ah");
+    const atrixUsdrUSdcV2VaultSingleRewardTokenAccount = new anchor.web3.PublicKey("E6mtrtopGCseNroB1NxZv8EGJjUazxgCbhf1vCx91iXx");
+    const atrixUsdrUsdcV2VaultStakerAccount = new anchor.web3.PublicKey("AY8oGnqwM9o7taXbSgWieQrEgn7NWDhSWkwqsaU8gdR7");
+    const atrixUsdrUsdcV2VaultHarvesterAccount = new anchor.web3.PublicKey("48HoiUzAEPr5cvwMWxzsYoKfH53ZTkfy9oHzTBawi3gN");
+    const atrixUsdrUsdcCropAccount = new anchor.web3.PublicKey("AP9GTHoqi51Ljf95HJW5Cp7rpU3AQMXyCeT3nNJxeVdZ");
+    const atrixUsdrUsdcCropRewardTokenAccount = new anchor.web3.PublicKey("Efved2EZwUnWGeUayDDzYrRQ5NJSbF5dAKpJ52sXuA4J");
+    const atrixUsdrUsdcFarmStakeTokenAccount = new anchor.web3.PublicKey("Djc2QekhrQ8AmhTf57gXc1TTtTXXfrpRjMqb77MHT7rd");
+    const atrixUsdrUsdcFarmId = new anchor.web3.PublicKey("AXiRvQs6fyXFJSumZadrnMK1k5G2f2oEPDG573CrfQR5");
+    const atrixUsdrUsdcPoolId = new anchor.web3.PublicKey("7V7igBALu1xyu4ZkXfuS6LnfkZ1aA6DKBx55ouA6Jhbm");
+    const atrixUsdrUSdcLpTokenMint = new anchor.web3.PublicKey("HKx72DDVoUa1QPb7oqRs4b361TEYoiENxmJJm91Agq8W");
+    const atrixUsdrUSdcPoolCoinTokenAccount = new anchor.web3.PublicKey("G23fX1ejHB68a4B8caYw3pgc5Fe545KPRs7pFM95PgEr");
+    const atrixUsdrUSdcPoolPcTokenAccount = new anchor.web3.PublicKey("F573sZnEJEgXydbq3KBCG5rn5z6P9AnohVbokpHYcpmg");
+    const atrixUsdrUSdcPoolLpTokenAccount = new anchor.web3.PublicKey("FzZPPqtj7T8FmSdsLaw17VHX3GMZa8gTxkzwJKRzc6Re");
+    const atrixUsdrUSdcPoolOpenOrdersAccount = new anchor.web3.PublicKey("9BunfFitaX8B4bAJRRywR2b5Ad7pzKqw4LeBrAuKTDh4");
+    const atrixUsdrUSdcSerumMarket = new anchor.web3.PublicKey("9vRkq3qWXvGiBMqu7J4mfWQrvppBbwQCTh2MfbqKCnZU");
+    const atrixFarmProgramId = new anchor.web3.PublicKey("BLDDrex4ZSWBgPYaaH6CQCzkJXWfzCiiur9cSFJT8t3x");
+    const atrixPoolProgramId = new anchor.web3.PublicKey("HvwYjjzPbXWpykgVZhqvvfeeaSraQVnTiQibofaFw9M7");
+    const atrixProtocolAccount = new anchor.web3.PublicKey("3uTzTX5GBSfbW7eM9R9k95H7Txe32Qw3Z25MtyD2dzwC");
+    let depositTrackingAccount;
+    let depositTrackingPda;
+    let depositTrackingQueueAccount;
+    let depositTrackingHoldAccount;
+    const usdcTokenMint = new anchor.web3.PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+    const usdrTokenMint = new anchor.web3.PublicKey("HNpdP2rL6FR6jM3bDxFX2Zo32D1YG2ZCztf9zzCrKMEX");
+    let yourUnderlyingTokenAccount;
+    let yourSharesTokenAccount;
+    let yourOrcaUsdcLpTokenAccount;
+    it("registers deposit tracking account", () => __awaiter(void 0, void 0, void 0, function* () {
+        let [_depositTrackingAccount, _trackingNonce] = yield (0, utils_1.deriveTrackingAddress)(v2VaultsProgramId, atrixUsdrUSdcV2Vault, provider.wallet.publicKey);
+        depositTrackingAccount = _depositTrackingAccount;
+        let [_depositTrackingPda, _depositTrackingPdaNonce] = yield (0, utils_1.deriveTrackingPdaAddress)(v2VaultsProgramId, depositTrackingAccount);
+        depositTrackingPda = _depositTrackingPda;
+        let [_depositTrackingQueueAccount, _queueNonce] = yield (0, utils_1.deriveTrackingQueueAddress)(v2VaultsProgramId, depositTrackingPda);
+        depositTrackingQueueAccount = _depositTrackingQueueAccount;
+        depositTrackingHoldAccount = yield serumAssoToken.getAssociatedTokenAddress(depositTrackingPda, atrixUsdrUSdcV2VaultSharesMint);
+        console.log("deposit tracking queue", depositTrackingQueueAccount.toString());
+        yourSharesTokenAccount = yield (0, utils_1.createAssociatedTokenAccount)(provider, provider.wallet.publicKey, atrixUsdrUSdcV2VaultSharesMint);
+        console.log("deposit tracking hold", depositTrackingHoldAccount.toString());
+        console.log("deposit tracking pda", depositTrackingPda.toString());
+        console.log("deposit tracking", depositTrackingAccount.toString());
+        console.log("sending register atrix usdr-usdc deposit tracking account tx");
+        let tx = yield program.rpc.registerDepositTrackingAccount([new anchor.BN(4), new anchor.BN(4)], {
+            options: {
+                skipPreflight: true,
+            },
+            accounts: {
+                authority: provider.wallet.publicKey,
+                vault: atrixUsdrUSdcV2Vault,
+                depositTrackingAccount,
+                depositTrackingQueueAccount,
+                depositTrackingHoldAccount,
+                sharesMint: atrixUsdrUSdcV2VaultSharesMint,
+                underlyingMint: atrixUsdrUSdcLpTokenMint,
+                depositTrackingPda,
+                tokenProgram: splToken.TOKEN_PROGRAM_ID,
+                associatedTokenProgram: splToken.ASSOCIATED_TOKEN_PROGRAM_ID,
+                rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+                systemProgram: anchor.web3.SystemProgram.programId,
+                vaultProgram: v2VaultsProgramId,
+            },
+        });
+        console.log("sent register deposit tracking account tx ", tx);
+    }));
+});
 const timer = ms => new Promise(res => setTimeout(res, ms));
 function freeze(time) {
     const stop = new Date().getTime() + time;

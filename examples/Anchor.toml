@@ -1521,4 +1521,10 @@ filename = "deps/accounts/AXiRvQs6fyXFJSumZadrnMK1k5G2f2oEPDG573CrfQR5.json"
 [[test.validator.account]] # pool id
 address = "7V7igBALu1xyu4ZkXfuS6LnfkZ1aA6DKBx55ouA6Jhbm"
 filename = "deps/accounts/7V7igBALu1xyu4ZkXfuS6LnfkZ1aA6DKBx55ouA6Jhbm.json"
+[[test.validator.account]] # usdr token mint
+address = "HNpdP2rL6FR6jM3bDxFX2Zo32D1YG2ZCztf9zzCrKMEX"
+filename = "deps/accounts/HNpdP2rL6FR6jM3bDxFX2Zo32D1YG2ZCztf9zzCrKMEX.json"
+[[test.validator.account]] # atrix protocol account
+address = "3uTzTX5GBSfbW7eM9R9k95H7Txe32Qw3Z25MtyD2dzwC"
+filename = "deps/accounts/3uTzTX5GBSfbW7eM9R9k95H7Txe32Qw3Z25MtyD2dzwC.json"
 ###############

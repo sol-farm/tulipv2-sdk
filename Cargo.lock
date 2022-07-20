@@ -3462,7 +3462,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-farms"
-version = "0.9.17"
+version = "0.9.18"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
@@ -3488,7 +3488,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.17"
+version = "0.9.18"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

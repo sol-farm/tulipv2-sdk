@@ -209,6 +209,42 @@ pub mod examples {
                     )?;
                 }
             }
+            tulipv2_sdk_farms::Farm::Atrix {
+                name
+            } => {
+                let atrix_config = {
+                    let loader: AccountLoader<tulipv2_sdk_vaults::accounts::atrix_vault::AtrixVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                    {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::atrix::AtrixVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            ctx.accounts.underlying_mint.key(),
+                            None, // doesn't need to be provided for registration
+                            None, // doesn't need to be provided for registration
+                        )
+                    }
+
+                };
+                let registration_trait = atrix_config.register_deposit_tracking(ctx.accounts.authority.key());
+                anchor_lang::solana_program::program::invoke(
+                    &registration_trait.instruction(tulipv2_sdk_farms::Farm::Atrix{
+                        name: tulipv2_sdk_farms::atrix::Atrix::USDrUSDC,
+                    }).unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_queue_account.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.clone(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.rent.to_account_info(),
+                        ctx.accounts.token_program.clone(),
+                        ctx.accounts.rent.to_account_info(),
+                        ctx.accounts.system_program.to_account_info(),
+                    ],
+               )?;
+            }
             _ => panic!("not supported")
         }
         Ok(())
@@ -438,6 +474,26 @@ pub mod examples {
                         ctx.accounts.vault.clone(),
                     ],
                )?;
+            }
+            tulipv2_sdk_farms::Farm::Atrix {
+                name
+            } => {
+                let loader: AccountLoader<tulipv2_sdk_vaults::accounts::atrix_vault::AtrixVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                anchor_lang::solana_program::program::invoke(
+                    &withdraw_trait
+                        .instruction(amount, farm_type.into())
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.clock.to_account_info(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.vault.clone(),
+                    ],
+                )?;
             }
             tulipv2_sdk_farms::Farm::Lending{
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT
