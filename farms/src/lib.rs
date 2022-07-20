@@ -26,9 +26,10 @@ pub mod lending;
 pub mod orca;
 pub mod quarry;
 pub mod raydium;
+pub mod atrix;
 pub mod unknown;
 
-use crate::{lending::Lending, orca::Orca, quarry::Quarry, raydium::Raydium, unknown::Unknown};
+use crate::{lending::Lending, orca::Orca, quarry::Quarry, raydium::Raydium, unknown::Unknown, atrix::Atrix};
 use anchor_lang::prelude::*;
 use tulip_arrform::{arrform, ArrForm};
 
@@ -59,6 +60,12 @@ pub enum Farm {
     Quarry {
         /// indicates the name of the given quarry farm
         name: Quarry,
+    },
+    /// 4
+    /// indicates the farm is of type atrix
+    Atrix {
+        /// indicates the name of the given atrix farm
+        name: Atrix,
     },
     /// u64::MAX
     /// an unknown farm type, indicates an error
@@ -99,6 +106,9 @@ impl Farm {
         if let Farm::Quarry { name } = self {
             return Some(name.name());
         }
+        if let Farm::Atrix { name } = self {
+            return Some(name.name());
+        }
         None
     }
     pub fn serialize(&self) -> std::result::Result<Vec<u8>, std::io::Error> {
@@ -117,6 +127,7 @@ impl ToString for Farm {
             Farm::Lending { name } => arrform!(128, "LENDING-{}", name.name()).as_str().to_owned(),
             Farm::Orca { name } => arrform!(128, "ORCA-{}", name.name()).as_str().to_owned(),
             Farm::Quarry { name } => arrform!(128, "QUARRY-{}", name.name()).as_str().to_owned(),
+            Farm::Atrix { name } => arrform!(128, "ATRIX-{}", name.name()).as_str().to_owned(),
             _ => String::from("UNKNOWN"),
         }
     }
@@ -181,6 +192,9 @@ impl From<[u64; 2]> for Farm {
             3 => Farm::Quarry {
                 name: val[1].into(),
             },
+            4 => Farm::Atrix {
+                name: val[1].into(),
+            },
             _ => Farm::Unknown {
                 name: Unknown::Unknown,
             },
@@ -195,6 +209,7 @@ impl From<Farm> for [u64; 2] {
             Farm::Lending { name } => [1_u64, name.into()],
             Farm::Orca { name } => [2_u64, name.into()],
             Farm::Quarry { name } => [3_u64, name.into()],
+            Farm::Atrix{ name } => [4_u64, name.into()],
             _ => [u64::MAX, u64::MAX],
         }
     }
@@ -247,12 +262,17 @@ fn farm_from_str(val: &str) -> Farm {
                 name: Quarry::from(farm_name.as_str()),
             }
         }
+        "ATRIX" => {
+            let farm_name = farm_identifier_stripper(val, &parts);
+            Farm::Atrix {
+                name: Atrix::from(farm_name.as_str()),
+            }
+        }
         _ => Farm::Unknown {
             name: Unknown::Unknown,
         },
     }
 }
-
 #[cfg(test)]
 mod test {
     use super::*;

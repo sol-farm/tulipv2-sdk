@@ -1077,15 +1077,42 @@ dependencies = [
 
 [[package]]
 name = "sighashdb"
-version = "0.1.28"
+version = "0.1.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c1c3ce1a89ed083f8bc44bda4db0f185cdc6c891196a679a486f1d90d6b974d8"
+checksum = "4b58e91b6af83a51250c848b1c676767effd62b6270fa23e1d3341c814ef76f9"
 
 [[package]]
 name = "smallvec"
 version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2dd574626839106c320a323308629dcb1acfc96e32a8cba364ddc61ac23ee83"
+
+[[package]]
+name = "so-defi-accounts"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bf471432806f66734ed18c4d9ac657f0df3c0f5b683fa255d8434c071072d134"
+dependencies = [
+ "borsh",
+ "borsh-derive",
+ "solana-program",
+ "static-pubkey",
+]
+
+[[package]]
+name = "so-defi-atrix"
+version = "0.1.16"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6fff5c8e3d2d6ef9f49c6322c9a88f9aed214abbf5cfc249e0e5efb840ea475"
+dependencies = [
+ "borsh",
+ "borsh-derive",
+ "sighashdb",
+ "so-defi-accounts",
+ "solana-program",
+ "spl-token",
+ "static-pubkey",
+]
 
 [[package]]
 name = "so-defi-utils"
@@ -1335,7 +1362,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-farms"
-version = "0.9.17"
+version = "0.9.18"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
@@ -1356,11 +1383,14 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.17"
+version = "0.9.18"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "bytemuck",
  "itertools",
+ "sighashdb",
+ "so-defi-atrix",
  "spl-associated-token-account",
  "spl-token",
  "static-pubkey",

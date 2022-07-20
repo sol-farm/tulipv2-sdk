@@ -32,7 +32,6 @@ impl RegisterDepositTrackingAddresses {
         underlying_mint: Pubkey,
     ) -> RegisterDepositTrackingAddresses {
         let deposit_tracking_account = derive_tracking_address(&vault, &user, &ID).0;
-
         let deposit_tracking_pda = derive_tracking_pda_address(&deposit_tracking_account, &ID).0;
 
         let deposit_tracking_queue_account =

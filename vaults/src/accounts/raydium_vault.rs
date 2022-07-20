@@ -95,3 +95,19 @@ impl super::Base for RaydiumVaultV1 {
 pub fn derive_user_stake_info_address(vault_pda: &Pubkey) -> (Pubkey, u8) {
     Pubkey::find_program_address(&[b"info", vault_pda.as_ref()], &crate::ID)
 }
+
+/// returns the address of the new stake info account address for raydium v5
+pub fn derive_associated_stake_info_address(
+    pool_id: &Pubkey,
+    wallet_address: &Pubkey,
+    program_id: &Pubkey,
+) -> (Pubkey, u8) {
+    Pubkey::find_program_address(
+        &[
+            pool_id.as_ref(),
+            wallet_address.as_ref(),
+            b"staker_info_v2_associated_seed",
+        ],
+        program_id,
+    )
+}

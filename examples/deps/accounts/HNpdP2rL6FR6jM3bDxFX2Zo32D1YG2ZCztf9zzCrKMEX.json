@@ -1,0 +1,13 @@
+{
+  "pubkey": "HNpdP2rL6FR6jM3bDxFX2Zo32D1YG2ZCztf9zzCrKMEX",
+  "account": {
+    "lamports": 26396956600,
+    "data": [
+      "AQAAAPXjV04QlR+y/dEz38rjjOts93JOr5m4PjkzbNmKCX5F7z39O3hFYwEJAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+      "base64"
+    ],
+    "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+    "executable": false,
+    "rentEpoch": 328
+  }
+}

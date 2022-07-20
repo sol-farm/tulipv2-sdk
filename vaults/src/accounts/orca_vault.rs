@@ -176,3 +176,19 @@ pub fn derive_dd_withdraw_queue_address(vault: &Pubkey, farm_token_mint: &Pubkey
         &crate::ID,
     )
 }
+
+pub fn derive_user_farm_address(
+    global_farm: &Pubkey,
+    owner: &Pubkey,
+    token_program_id: &Pubkey,
+    aqua_farm_program_id: &Pubkey,
+) -> (Pubkey, u8) {
+    Pubkey::find_program_address(
+        &[
+            global_farm.as_ref(),
+            owner.as_ref(),
+            token_program_id.as_ref(),
+        ],
+        aqua_farm_program_id,
+    )
+}
