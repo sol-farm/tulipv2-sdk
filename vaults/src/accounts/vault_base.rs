@@ -293,9 +293,17 @@ impl TokenizedShares for VaultBaseV1 {
                 .unwrap()
                 > self.total_deposited_balance_cap
     }
+    /// syncs vault shares and persists the data, followed by and calculates the exchange rate
     fn exchange_rate(&mut self, mint: &spl_token::state::Mint) -> f64 {
         // sync shares first
         self.sync_shares(mint);
+        let total_deposited_balance =
+            spl_token::amount_to_ui_amount(self.total_deposited_balance, mint.decimals);
+        let total_shares = spl_token::amount_to_ui_amount(self.total_shares, mint.decimals);
+        total_deposited_balance / total_shares
+    }
+    /// returns the cached exchange rate, without syncing the shares/mint ratio
+    fn cached_exchange_rate(&self, mint: &spl_token::state::Mint) -> f64 {
         let total_deposited_balance =
             spl_token::amount_to_ui_amount(self.total_deposited_balance, mint.decimals);
         let total_shares = spl_token::amount_to_ui_amount(self.total_shares, mint.decimals);

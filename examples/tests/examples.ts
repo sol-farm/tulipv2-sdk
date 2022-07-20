@@ -221,6 +221,18 @@ describe("examples", () => {
 
   let nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
   let one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
+  it("logs exchange rate", async () => {
+    await program.rpc.logExchangeRate(
+      [new anchor.BN(1), new anchor.BN(65537)],
+      {
+        accounts: {
+          vault: usdcv1Vault,
+          sharesMint: usdcv1SharesMint,
+          vaultProgram: v2VaultsProgramId,
+        }
+      }
+    )
+  })
   it("registers deposit tracking account", async () => {
     console.log("progrmaId ", programId);
     console.log("usdcv1 vault ", usdcv1Vault);

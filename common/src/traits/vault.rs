@@ -83,6 +83,10 @@ pub trait TokenizedShares {
     fn sync_shares(&mut self, mint: &spl_token::state::Mint);
     /// returns the amount of underlying backing 1 share
     fn exchange_rate(&mut self, mint: &spl_token::state::Mint) -> f64;
+    /// returns the cached exchange rate value without first performing a shares sync
+    /// this is generally only useful for on-chain programs which aren't the owner of the account
+    /// backing this particular trait.
+    fn cached_exchange_rate(&self, mint: &spl_token::state::Mint) -> f64;
 }
 
 /// implementation of a holder of tokenized vault shares
