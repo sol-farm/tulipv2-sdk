@@ -22,5 +22,7 @@ use static_pubkey::static_pubkey;
 pub const ID: Pubkey = static_pubkey!("TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX");
 pub const SUNNY_QUARRY_PROGRAM: Pubkey =
     static_pubkey!("SPQR4kT3q2oUKEJes2L6NNSBCiPW9SfuhkuqC9bp6Sx");
-pub const ORCA_AQUAFARM_PROGRAM: Pubkey = static_pubkey!("82yxjeMsvaURa4MbZZ7WZZHfobirZYkH1zF8fmeGtyaQ");
-pub const ORCA_SWAP_PROGRAM: Pubkey = static_pubkey!("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP");
+pub const ORCA_AQUAFARM_PROGRAM: Pubkey =
+    static_pubkey!("82yxjeMsvaURa4MbZZ7WZZHfobirZYkH1zF8fmeGtyaQ");
+pub const ORCA_SWAP_PROGRAM: Pubkey =
+    static_pubkey!("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP");

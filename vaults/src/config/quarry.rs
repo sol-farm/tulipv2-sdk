@@ -1,12 +1,10 @@
 use crate::accounts::derive_quarry_vault_config_data_address;
-use crate::accounts::orca_vault::{
-    derive_dd_compound_queue_address, derive_dd_withdraw_queue_address, derive_user_farm_address,
-};
+
 use crate::accounts::quarry_vault::{derive_miner_address, derive_sunny_vault_address};
-use crate::accounts::raydium_vault::derive_associated_stake_info_address;
+
 use crate::accounts::{
     derive_compound_queue_address, derive_pda_address, derive_shares_mint_address,
-    derive_withdraw_queue_address, raydium_vault::derive_user_stake_info_address,
+    derive_withdraw_queue_address,
 };
 
 use anchor_lang::solana_program::pubkey::Pubkey;

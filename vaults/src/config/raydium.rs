@@ -8,7 +8,9 @@ use anchor_lang::solana_program::instruction::Instruction;
 use anchor_lang::solana_program::pubkey::Pubkey;
 use tulipv2_sdk_common::config::deposit_tracking::issue_shares::DepositAddresses;
 use tulipv2_sdk_common::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
-use tulipv2_sdk_common::config::deposit_tracking::traits::{RegisterDepositTracking, IssueShares, WithdrawDepositTracking};
+use tulipv2_sdk_common::config::deposit_tracking::traits::{
+    IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
+};
 use tulipv2_sdk_common::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 
 use super::VaultBaseConfig;
@@ -41,12 +43,14 @@ impl RaydiumVaultConfig {
         let withdraw_queue = derive_withdraw_queue_address(&vault, &underlying_mint).0;
         let compound_queue = derive_compound_queue_address(&vault, &underlying_mint).0;
         let user_stake_info = derive_user_stake_info_address(&pda).0;
-        let associated_stake_info = if let (Some(pool_id), Some(stake_program)) = (raydium_pool_id, raydium_stake_program) {
+        let associated_stake_info = if let (Some(pool_id), Some(stake_program)) =
+            (raydium_pool_id, raydium_stake_program)
+        {
             Some(derive_associated_stake_info_address(&pool_id, &pda, &stake_program).0)
         } else {
             None
         };
-           
+
         Self {
             vault,
             pda,
@@ -60,45 +64,33 @@ impl RaydiumVaultConfig {
             ),
             user_stake_info,
             associated_stake_info,
-            vault_reward_a_token_account: if let Some(reward_a) = reward_a_token_mint {
-                Some(spl_associated_token_account::get_associated_token_address(
-                &pda,
-                &reward_a,
-                ))
-            } else {
-                None
-            },
-            vault_reward_b_token_account: if let Some(reward_b) = reward_b_token_mint {
-                Some(spl_associated_token_account::get_associated_token_address(
-                    &pda,
-                    &reward_b,
-                ))
-            } else {
-                None
-            },
+            vault_reward_a_token_account: reward_a_token_mint.map(|reward_a| {
+                spl_associated_token_account::get_associated_token_address(&pda, &reward_a)
+            }),
+            vault_reward_b_token_account: reward_b_token_mint.map(|reward_b| {
+                spl_associated_token_account::get_associated_token_address(&pda, &reward_b)
+            }),
         }
     }
-    pub fn register_deposit_tracking(
-        &self,
-        authority: Pubkey,
-    ) -> impl RegisterDepositTracking {
-        RegisterDepositTrackingAddresses::new(authority, self.vault, self.shares_mint, self.underlying_mint)
-    }
-    pub fn issue_shares(
-        &self,
-        authority: Pubkey,
-    ) -> impl IssueShares {
-        DepositAddresses::new(authority, self.vault, self.pda, self.shares_mint, self.underlying_mint)
-    }
-    pub fn withdraw_deposit_tracking(
-        &self,
-        authority: Pubkey,
-    ) -> impl WithdrawDepositTracking {
-        WithdrawDepositTrackingAddresses::new(
+    pub fn register_deposit_tracking(&self, authority: Pubkey) -> impl RegisterDepositTracking {
+        RegisterDepositTrackingAddresses::new(
             authority,
             self.vault,
-            self.shares_mint
+            self.shares_mint,
+            self.underlying_mint,
         )
+    }
+    pub fn issue_shares(&self, authority: Pubkey) -> impl IssueShares {
+        DepositAddresses::new(
+            authority,
+            self.vault,
+            self.pda,
+            self.shares_mint,
+            self.underlying_mint,
+        )
+    }
+    pub fn withdraw_deposit_tracking(&self, authority: Pubkey) -> impl WithdrawDepositTracking {
+        WithdrawDepositTrackingAddresses::new(authority, self.vault, self.shares_mint)
     }
     pub fn withdraw_vault(
         &self,
@@ -134,7 +126,7 @@ impl RaydiumVaultConfig {
             raydium_stake_program,
             fee_collector_reward_a_token_account,
             fee_collector_reward_b_token_account,
-            amount
+            amount,
         )
     }
 }
