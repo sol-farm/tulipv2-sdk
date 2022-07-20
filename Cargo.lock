@@ -3470,7 +3470,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-lending"
-version = "0.9.17"
+version = "0.9.19"
 dependencies = [
  "data-encoding",
  "itertools",
