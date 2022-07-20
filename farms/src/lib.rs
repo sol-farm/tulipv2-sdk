@@ -192,6 +192,9 @@ impl From<[u64; 2]> for Farm {
             3 => Farm::Quarry {
                 name: val[1].into(),
             },
+            4 => Farm::Atrix {
+                name: val[1].into(),
+            },
             _ => Farm::Unknown {
                 name: Unknown::Unknown,
             },
@@ -206,6 +209,7 @@ impl From<Farm> for [u64; 2] {
             Farm::Lending { name } => [1_u64, name.into()],
             Farm::Orca { name } => [2_u64, name.into()],
             Farm::Quarry { name } => [3_u64, name.into()],
+            Farm::Atrix{ name } => [4_u64, name.into()],
             _ => [u64::MAX, u64::MAX],
         }
     }

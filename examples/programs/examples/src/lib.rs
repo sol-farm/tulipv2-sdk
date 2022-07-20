@@ -64,8 +64,8 @@ pub mod examples {
         }
         Ok(())
     }
-    pub fn register_deposit_tracking_account(
-        ctx: Context<RegisterDepositTrackingAccount>,
+    pub fn register_deposit_tracking_account<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, RegisterDepositTrackingAccount<'info>>,
         farm_type: [u64; 2],
     ) -> Result<()> {
         // create the associated
@@ -479,6 +479,17 @@ pub mod examples {
                 name
             } => {
                 let loader: AccountLoader<tulipv2_sdk_vaults::accounts::atrix_vault::AtrixVaultV1> = AccountLoader::try_from_unchecked(ctx.accounts.vault_program.key, &ctx.accounts.vault)?;
+                let underlying_mint = {
+                    let vault = loader.load()?;
+                    vault.base.underlying_mint
+                };
+                let atrix_config = tulipv2_sdk_vaults::config::atrix::AtrixVaultConfig::new(
+                    ctx.accounts.vault.key(),
+                    underlying_mint,
+                    None, // for tracking withdrawal we dont need to derive these values
+                    None, // for tracking withdrawal we dont need to derive these values
+                );
+                let withdraw_trait = atrix_config.withdraw_deposit_tracking(ctx.accounts.authority.key());
                 anchor_lang::solana_program::program::invoke(
                     &withdraw_trait
                         .instruction(amount, farm_type.into())
@@ -493,7 +504,7 @@ pub mod examples {
                         ctx.accounts.shares_mint.to_account_info(),
                         ctx.accounts.vault.clone(),
                     ],
-                )?;
+               )?;
             }
             tulipv2_sdk_farms::Farm::Lending{
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT
