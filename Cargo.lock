@@ -3488,7 +3488,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.18"
+version = "0.9.19"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
