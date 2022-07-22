@@ -240,6 +240,33 @@ mod test {
         );
     }
     #[test]
+    fn test_usdc_standalone_optimizers() {
+        let vault_address = derive_vault_address(
+            &tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::USDC,
+            },
+            tulipv2_sdk_common::tag::tag("solend").unwrap(),
+        )
+        .0;
+        assert_eq!(vault_address.to_string(), "85JXjDiyianDpvz8y8efkRyFsxpnSJJpmyxrJ7bncKHM".to_string());
+        let vault_address = derive_vault_address(
+            &tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::USDC,
+            },
+            tulipv2_sdk_common::tag::tag("mango").unwrap(),
+        )
+        .0;
+        assert_eq!(vault_address.to_string(), "ZH9GWNBtwxcWeU9kHk77DSciwQnoJcSm8VVvYfmHXfe".to_string());
+        let vault_address = derive_vault_address(
+            &tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::USDC,
+            },
+            tulipv2_sdk_common::tag::tag("tulip").unwrap(),
+        )
+        .0;
+        assert_eq!(vault_address.to_string(), "8KLrrsnUv3DjC9Q89xSQDVdiGLZHUEUuyPedfHrtuVRr".to_string());
+    }
+    #[test]
     fn tracking_addresses() {
         let vault = DEFAULT_KEY;
         let owner = DEFAULT_KEY;
