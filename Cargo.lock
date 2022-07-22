@@ -3439,7 +3439,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-common"
-version = "0.9.19"
+version = "0.9.20"
 dependencies = [
  "anchor-client",
  "anchor-lang",
@@ -3488,7 +3488,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.19"
+version = "0.9.20"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

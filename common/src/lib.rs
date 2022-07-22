@@ -8,6 +8,7 @@ pub mod config;
 pub mod lending;
 pub mod math;
 pub mod pyth;
+pub mod tag;
 pub mod traits;
 pub mod vaults;
 

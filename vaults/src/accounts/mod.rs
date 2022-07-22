@@ -223,6 +223,23 @@ mod test {
 
     use super::*;
     #[test]
+    fn test_derive_usdc_multi_deposit_optimizer() {
+        // derives the address of the usdc multi deposit optimizer vault
+        // this can then be used to derive all corresponding vault values
+        // (pda, shares mint, deposit queue, et.c.)
+        let vault_address = derive_vault_address(
+            &tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+            },
+            tulipv2_sdk_common::tag::tag("usdcv1").unwrap(),
+        )
+        .0;
+        assert_eq!(
+            vault_address.to_string(),
+            "3wPiV9inTGexMZjp6x5Amqwp2sRNtpSheG8Hbv2rgq8W".to_string()
+        );
+    }
+    #[test]
     fn tracking_addresses() {
         let vault = DEFAULT_KEY;
         let owner = DEFAULT_KEY;

@@ -1,6 +1,6 @@
 [package]
 name = "tulipv2-sdk-common"
-version = "0.9.19"
+version = "0.9.20"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "common types, traits, and helper functions used by the v2 sdk"
