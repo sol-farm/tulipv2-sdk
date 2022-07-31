@@ -1342,7 +1342,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-common"
-version = "0.9.18"
+version = "0.9.20"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -1364,7 +1364,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-farms"
-version = "0.9.18"
+version = "0.9.19"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
@@ -1372,7 +1372,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-lending"
-version = "0.9.17"
+version = "0.9.19"
 dependencies = [
  "itertools",
  "num-derive",
@@ -1401,7 +1401,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.18"
+version = "0.9.20"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
