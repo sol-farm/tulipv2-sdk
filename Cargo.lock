@@ -3439,7 +3439,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-common"
-version = "0.9.20"
+version = "0.9.21"
 dependencies = [
  "anchor-client",
  "anchor-lang",
@@ -3462,7 +3462,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-farms"
-version = "0.9.19"
+version = "0.9.21"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
@@ -3470,7 +3470,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-lending"
-version = "0.9.19"
+version = "0.9.21"
 dependencies = [
  "data-encoding",
  "itertools",
@@ -3487,8 +3487,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "tulipv2-sdk-levfarm"
+version = "0.9.21"
+dependencies = [
+ "anchor-lang",
+ "data-encoding",
+ "itertools",
+ "num-derive",
+ "num-traits",
+ "proptest",
+ "ring",
+ "sighashdb",
+ "solana-client",
+ "solana-program",
+ "spl-token",
+ "static-pubkey",
+ "thiserror",
+ "tulipv2-sdk-common",
+ "type-layout",
+]
+
+[[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.20"
+version = "0.9.21"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

@@ -113,11 +113,18 @@ program = "./deps/atrix/pool.so"
 [[test.genesis]]
 address = "BLDDrex4ZSWBgPYaaH6CQCzkJXWfzCiiur9cSFJT8t3x"
 program = "./deps/atrix/farm.so"
+#[[test.genesis]]
+#address = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+#program = "./deps/misc/associated_token.so"
 [[test.genesis]]
-address = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-program = "./deps/misc/associated_token.so"
-
-
+address = "Bt2WPMmbwHPk36i4CRucNDyLcmoGdC7xEdrVuxgJaNE6"
+program = "./deps/tulip/lev_farm.so"
+[[test.genesis]]
+address = "7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4"
+program = "./deps/tulip/rayv1.so"
+[[test.genesis]]
+address = "FoNqK2xudK7TfKjPFxpzAcTaU2Wwyt81znT4RjJBLFQp"
+program = "./deps/tulip/orcav1.so"
 ##############
 # token mints
 ##############
@@ -1324,6 +1331,157 @@ filename = "deps/accounts/3CnAyCjpA9mcxayed12cwJNGue7YbmyuBjpT9KN6meVT.json"
 address = "GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd"
 filename = "deps/accounts/GFnGoQmW8HZzGpUVKPt7gSY8itvmeaTbAXJVYFTpbCTd.json"
 
+
+[[test.validator.account]] # ray-usdc lev farm accounts
+address = "84ayseJgpJavzfeESgRdyfMoDo2bs4J2YUBjMT4iTs66"
+filename = "deps/accounts/84ayseJgpJavzfeESgRdyfMoDo2bs4J2YUBjMT4iTs66.json"
+[[test.validator.account]] # lev farm global account
+address = "HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8VdJKqjF"
+filename = "deps/accounts/HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8VdJKqjF.json"
+[[test.validator.account]] # ray-usdc raydium v1 vault account
+address = "HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG"
+filename = "deps/accounts/HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG.json"
+[[test.validator.account]] # ray-usdc serum market
+address = "2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep"
+filename = "deps/accounts/2xiv8A5xrJ7RnGdxXB42uFEkYHJjszEhaJyKKt4WaLep.json"
+[[test.validator.account]] # ray-usdc req q
+address = "39mE6bYktM1XAKKmB6WN971X3Sa1yGkHxtCTWMkVrwN2"
+filename = "deps/accounts/39mE6bYktM1XAKKmB6WN971X3Sa1yGkHxtCTWMkVrwN2.json"
+[[test.validator.account]] # ray-usdc evt q
+address = "H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz"
+filename = "deps/accounts/H9dZt8kvz1Fe5FyRisb77KcYTaN8LEbuVAfJSnAaEABz.json"
+[[test.validator.account]] # ray-usdc bids
+address = "Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5"
+filename = "deps/accounts/Hf84mYadE1VqSvVWAvCWc9wqLXak4RwXiPb4A91EAUn5.json"
+[[test.validator.account]] # ray-usdc asks
+address = "DC1HsWWRCXVg3wk2NndS5LTbce3axwUwUZH1RgnV4oDN"
+filename = "deps/accounts/DC1HsWWRCXVg3wk2NndS5LTbce3axwUwUZH1RgnV4oDN.json"
+[[test.validator.account]] # ray-usdc serum coin vault
+address = "GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa"
+filename = "deps/accounts/GGcdamvNDYFhAXr93DWyJ8QmwawUHLCyRqWL3KngtLRa.json"
+[[test.validator.account]] # ray-usdc serum pc vault
+address = "22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe"
+filename = "deps/accounts/22jHt5WmosAykp3LPGSAKgY45p7VGh4DFWSwp21SWBVe.json"
+[[test.validator.account]] # lev farm serum fee receiver
+address = "PgjTxGVTmFGQjGX8DrETmT68hRt6Jyps4SFTnxJcf3S"
+filename = "deps/accounts/PgjTxGVTmFGQjGX8DrETmT68hRt6Jyps4SFTnxJcf3S.json"
+[[test.validator.account]] # ray-usdc serum open olders
+address = "CAjCs8wTVXg28ViAxsECxAa7WiwZU53rnWLiNikBeXG3"
+filename = "deps/accounts/CAjCs8wTVXg28ViAxsECxAa7WiwZU53rnWLiNikBeXG3.json"
+[[test.validator.account]] # ray usdc lp mint
+address = "FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m"
+filename = "deps/accounts/FbC6K13MzHvN42bXrtGaWsvZY9fxrackRSZcBGfjPc7m.json"
+[[test.validator.account]] # ray-usdc amm id
+address = "6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg"
+filename = "deps/accounts/6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg.json"
+[[test.validator.account]] # ray usdc amm open orders
+address = "J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW"
+filename = "deps/accounts/J8u8nTHYtvudyqwLrXZboziN95LpaHFHpd97Jm5vtbkW.json"
+[[test.validator.account]] # ray usdc quantities or target order
+address = "3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT"
+filename = "deps/accounts/3cji8XW5uhtsA757vELVFAeJpskyHwbnTSceMFY5GjVT.json"
+[[test.validator.account]] # raydium coin account
+address = "FdmKUE4UMiJYFK5ogCngHzShuVKrFXBamPWcewDr31th"
+filename = "deps/accounts/FdmKUE4UMiJYFK5ogCngHzShuVKrFXBamPWcewDr31th.json"
+[[test.validator.account]] # raydium pc account
+address = "Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk"
+filename = "deps/accounts/Eqrhxd7bDUCH3MepKmdVkgwazXRzY6iHhEoBpY7yAohk.json"
+[[test.validator.account]] # raydium pool temp account
+address = "D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB"
+filename = "deps/accounts/D1V5GMf3N26owUFcbz2qR5N4G81qPKQvS2Vc4SM73XGB.json"
+[[test.validator.account]] # raydium pool withdraw queue
+address = "ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr"
+filename = "deps/accounts/ERiPLHrxvjsoMuaWDWSTLdCMzRkQSo8SkLBLYEmSokyr.json"
+[[test.validator.account]] # ray base reserve
+address = "9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF"
+filename = "deps/accounts/9Bm8d2izGsf9eT6Wr79DTnXBkW2LHYVQa57QzeoTbsAF.json"
+[[test.validator.account]] # lev farm base token account
+address = "9k3gGV5WCWug8BNCemv3McAC12p8Tqhxb6GN5hBkmfDE"
+filename = "deps/accounts/9k3gGV5WCWug8BNCemv3McAC12p8Tqhxb6GN5hBkmfDE.json" 
+[[test.validator.account]] # lev farm quote token account
+address = "2nHaWRW4PkutKbpDGvVwJ2JkcW1dKA6gMgLv4rPAmqLk"
+filename = "deps/accounts/2nHaWRW4PkutKbpDGvVwJ2JkcW1dKA6gMgLv4rPAmqLk.json"
+[[test.validator.account]] # lp token pyth price account
+address = "AV5GeH126btrRE9uq36tZWjdgCuLc1DdzKEatdjmoNex"
+filename = "deps/accounts/AV5GeH126btrRE9uq36tZWjdgCuLc1DdzKEatdjmoNex.json"
+[[test.validator.account]] # coin token pyth price account
+address = "83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF"
+filename = "deps/accounts/83fYH17UZaTCpr6GNcPcS5pZkfxwR1CaEVhYKfkqE8YF.json"
+[[test.validator.account]] # coin reserve fee receiver
+address = "4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj"
+filename = "deps/accounts/4bRQL2hLqfinNJTsiQW6odhYtYjKXH7zsPc2tafadgoj.json"
+[[test.validator.account]] # pc reserve fee receiver
+address = "GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU"
+filename = "deps/accounts/GPf4tD3q71BzPU79YCadYB2NnLciXAVmYuxfgbKKzUdU.json"
+[[test.validator.account]] # base reserve liq supply
+address = "9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y"
+filename = "deps/accounts/9SG6E3jBTTHLNgpV6ueUYypMYMkm4K5zyS9tk9Rsjm8Y.json"
+[[test.validator.account]] # ray usdc v1 vault lp token account
+address = "E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB"
+filename = "deps/accounts/E8gJAEcHDB4be9sCKSytLUyBe3V5SEDHgn4192REJhaB.json"
+[[test.validator.account]] # ray usdc v1 vault rewarda token account"
+address = "9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB"
+filename = "deps/accounts/9VQe52wd4GUFfyib2jwahsWsAAgiiJv7gZQ28HTS5GzB.json"
+[[test.validator.account]] # ray usdc pool id
+address = "CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS"
+filename = "deps/accounts/CHYrUBX2RKX8iBg7gYTkccoGNBzP44LdaazMHCLcdEgS.json"
+[[test.validator.account]] # vault info account
+address = "Gf38RxSF3FguiBVYfsB8AmpPyNkGCrNDE7LNvr6U8n7C"
+filename = "deps/accounts/Gf38RxSF3FguiBVYfsB8AmpPyNkGCrNDE7LNvr6U8n7C.json"
+[[test.validator.account]] # old vault info
+address = "8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA"
+filename = "deps/accounts/8vnMSWpzW2RVdAeMaqXKGbQ3r11ijf6vrCm28Ks1bXRA.json"
+
+
+# orca accounts
+[[test.validator.account]]
+address = "5o3EsLS1NTciKHXVsGNYqQQ8iBBK3dBfSPwCH7wsdtRT"
+filename = "deps/accounts/5o3EsLS1NTciKHXVsGNYqQQ8iBBK3dBfSPwCH7wsdtRT.json"
+[[test.validator.account]]
+address = "2Dts63SfTz2yivx57izMcVfDMAdpxuBgqM99ChWeJXun"
+filename = "deps/accounts/2Dts63SfTz2yivx57izMcVfDMAdpxuBgqM99ChWeJXun.json"
+[[test.validator.account]]
+address = "HGkRMx91bZzzcbvJVyzWgDAswHA7Rhn11tuox9GYTB5c"
+filename = "deps/accounts/HGkRMx91bZzzcbvJVyzWgDAswHA7Rhn11tuox9GYTB5c.json"
+[[test.validator.account]]
+address = "E68tCFxPPFZa6VWb6d6Txe7ugzF977TZvoVF59W951gv"
+filename = "deps/accounts/E68tCFxPPFZa6VWb6d6Txe7ugzF977TZvoVF59W951gv.json"
+[[test.validator.account]]
+address = "45BAAQCZYd2kP3Z3WvRwdtfUhvuW4FvpqVK4m8qrR5x1"
+filename = "deps/accounts/45BAAQCZYd2kP3Z3WvRwdtfUhvuW4FvpqVK4m8qrR5x1.json"
+[[test.validator.account]]
+address = "DEiqe2Ta9TRMRtWdBqiFV13dhVrqCeG8MMmVwywvXvJo"
+filename = "deps/accounts/DEiqe2Ta9TRMRtWdBqiFV13dhVrqCeG8MMmVwywvXvJo.json"
+[[test.validator.account]]
+address = "Gc7W5U66iuHQcC1cQyeX9hxkPF2QUVJPTf1NWbW8fNrt"
+filename = "deps/accounts/Gc7W5U66iuHQcC1cQyeX9hxkPF2QUVJPTf1NWbW8fNrt.json"
+[[test.validator.account]]
+address = "82EjQKzz74AndA144SA1RC57puyjsDHggwmPs9VXbH5s"
+filename = "deps/accounts/82EjQKzz74AndA144SA1RC57puyjsDHggwmPs9VXbH5s.json"
+[[test.validator.account]]
+address = "JCGNW8e3V4ADCiCWU42BTF3FHJLidfgcxHYo2m7kDYvN"
+filename = "deps/accounts/JCGNW8e3V4ADCiCWU42BTF3FHJLidfgcxHYo2m7kDYvN.json"
+[[test.validator.account]]
+address = "8cNdAEu4y6KRWZwekBavQRpQbYBYNAmNCB8xTJgWibz1"
+filename = "deps/accounts/8cNdAEu4y6KRWZwekBavQRpQbYBYNAmNCB8xTJgWibz1.json"
+[[test.validator.account]]
+address = "GEogPAbFyMyUuxjjgMDBh1of9qaz5BGEtTyYX9LVDfSA"
+filename = "deps/accounts/GEogPAbFyMyUuxjjgMDBh1of9qaz5BGEtTyYX9LVDfSA.json"
+[[test.validator.account]]
+address = "ELHiqZR2cYkN2MerbfMSWGy3nwdPuHYiXbiKsQG7Uy9p"
+filename = "deps/accounts/ELHiqZR2cYkN2MerbfMSWGy3nwdPuHYiXbiKsQG7Uy9p.json"
+[[test.validator.account]]
+address = "ADz1SJ28TH2TnLzA9FG7DqiW41CKeLfRvbvDckK1dvFv"
+filename = "deps/accounts/ADz1SJ28TH2TnLzA9FG7DqiW41CKeLfRvbvDckK1dvFv.json"
+[[test.validator.account]]
+address = "6sJg8f3zcAjrd38QhSA3C34n8MzLq1XVTiQr4msozAuv"
+filename = "deps/accounts/6sJg8f3zcAjrd38QhSA3C34n8MzLq1XVTiQr4msozAuv.json"
+[[test.validator.account]]
+address = "4LqykQes5scGz4bZLNaNm1bmgMutCCGqQZVni4VJjWhZ"
+filename = "deps/accounts/4LqykQes5scGz4bZLNaNm1bmgMutCCGqQZVni4VJjWhZ.json"
+[[test.validator.account]]
+address = "HRYfSMc1gYEvxo9zsh14jYHKxAcfJfoVakKtRtJEomb8"
+filename = "deps/accounts/HRYfSMc1gYEvxo9zsh14jYHKxAcfJfoVakKtRtJEomb8.json"
 ###############
 
 # v2 ray-usdc auto vault

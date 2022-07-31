@@ -527,9 +527,11 @@ dependencies = [
  "anchor-lang",
  "anchor-spl",
  "spl-associated-token-account",
+ "spl-token",
  "tulipv2-sdk-common",
  "tulipv2-sdk-farms",
  "tulipv2-sdk-lending",
+ "tulipv2-sdk-levfarm",
  "tulipv2-sdk-vaults",
 ]
 
@@ -1340,7 +1342,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-common"
-version = "0.9.17"
+version = "0.9.20"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -1362,7 +1364,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-farms"
-version = "0.9.18"
+version = "0.9.19"
 dependencies = [
  "anchor-lang",
  "tulip-arrform",
@@ -1370,7 +1372,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-lending"
-version = "0.9.17"
+version = "0.9.19"
 dependencies = [
  "itertools",
  "num-derive",
@@ -1382,8 +1384,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "tulipv2-sdk-levfarm"
+version = "0.9.17"
+dependencies = [
+ "anchor-lang",
+ "itertools",
+ "num-derive",
+ "num-traits",
+ "sighashdb",
+ "solana-program",
+ "spl-token",
+ "static-pubkey",
+ "thiserror",
+ "tulipv2-sdk-common",
+]
+
+[[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.18"
+version = "0.9.20"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

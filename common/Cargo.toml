@@ -1,6 +1,6 @@
 [package]
 name = "tulipv2-sdk-common"
-version = "0.9.20"
+version = "0.9.21"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "common types, traits, and helper functions used by the v2 sdk"
@@ -19,7 +19,7 @@ num-derive = "0.3"
 num-traits = "0.2"
 thiserror = "1.0"
 static-pubkey = "1.0.2"
-tulipv2-sdk-farms = {path = "../farms", version = "0.9.19"}
+tulipv2-sdk-farms = {path = "../farms", version = "0.9.21"}
 arrayref = "0.3.6"
 bytemuck = "1.7.2"
 solana-program = "1.9.13"
@@ -30,9 +30,106 @@ sighashdb = "0.1.33"
 anchor-client = "0.24.2"
 
 [features]
-default = ["usdc-optimizer", "usdt-optimizer", "sol-optimizer", "ray-optimizer"]
+default = [
+    "usdc-optimizer", 
+    "usdt-optimizer", 
+    "sol-optimizer", 
+    "ray-optimizer", 
+    "levfarm", 
+    "orca-orcausdc-levfarm",
+    "orca-solusdc-levfarm",
+    "orca-gmtusdc-levfarm",
+    "orca-solusdt-levfarm",
+    "orca-shdwusdc-levfarm",
+    "orca-atlasusdc-levfarm",
+    "orca-orcasol-levfarm",
+    "orca-polisusdc-levfarm",
+    "orca-samousdc-levfarm",
+    "orca-basisusdc-levfarm",
+    "orca-whethusdc-levfarm",
+    "orca-stsolusdc-levfarm",
+    "orca-whethsol-levfarm",
+    "orca-gstusdc-levfarm",
+    "orca-shdwsol-levfarm",
+    "ray-rayusdc-levfarm",
+    "ray-solusdcray-levfarm",
+    "ray-solusdt-levfarm",
+    "ray-geneusdc-levfarm",
+    "ray-raysol-levfarm",
+    "ray-generay-levfarm",
+    "ray-walephusdc-levfarm",
+    "ray-dflusdc-levfarm",
+    "ray-samoray-levfarm",
+    "ray-whethsol-levfarm",
+    "ray-raywheth-levfarm",
+    "ray-rayusdt-levfarm",
+    "ray-stsolusdc-levfarm",
+    "ray-msolusdc-levfarm",
+    "ray-atlasray-levfarm",
+    "ray-stsolusdt-levfarm",
+    "ray-whethusdc-levfarm",
+    "ray-rayeth-levfarm",
+    "ray-polisray-levfarm",
+    "ray-likeusdc-levfarm",
+    "ray-realusdc-levfarm",
+    "ray-mbsusdc-levfarm",
+    "ray-ethstsol-levfarm",
+    "ray-slclusdc-levfarm",
+    "ray-btcstsol-levfarm",
+    "ray-msolusdt-levfarm",
+    "ray-starsusdc-levfarm",
+    "ray-prismusdc-levfarm",
+    "ray-raysrm-levfarm",
+    "ray-solusdc-levfarm"
+]
 usdc-optimizer = []
 usdt-optimizer = []
 sol-optimizer = []
 ray-optimizer = []
 logs = []
+levfarm = []
+orca-orcausdc-levfarm = []
+orca-solusdc-levfarm = []
+orca-gmtusdc-levfarm = []
+orca-solusdt-levfarm = []
+orca-shdwusdc-levfarm = []
+orca-atlasusdc-levfarm = []
+orca-orcasol-levfarm = []
+orca-polisusdc-levfarm = []
+orca-samousdc-levfarm = []
+orca-basisusdc-levfarm = []
+orca-whethusdc-levfarm = []
+orca-stsolusdc-levfarm = []
+orca-whethsol-levfarm = []
+orca-gstusdc-levfarm = []
+orca-shdwsol-levfarm = []
+ray-rayusdc-levfarm = []
+ray-solusdcray-levfarm = []
+ray-solusdt-levfarm = []
+ray-geneusdc-levfarm = []
+ray-raysol-levfarm = []
+ray-generay-levfarm = []
+ray-walephusdc-levfarm = []
+ray-dflusdc-levfarm = []
+ray-samoray-levfarm = []
+ray-whethsol-levfarm = []
+ray-raysrm-levfarm = []
+ray-raywheth-levfarm = []
+ray-rayusdt-levfarm = []
+ray-stsolusdc-levfarm = []
+ray-msolusdc-levfarm = []
+ray-atlasray-levfarm = []
+ray-stsolusdt-levfarm = []
+ray-whethusdc-levfarm = []
+ray-rayeth-levfarm = []
+ray-polisray-levfarm = []
+ray-likeusdc-levfarm = []
+ray-realusdc-levfarm = []
+ray-mbsusdc-levfarm = []
+ray-ethstsol-levfarm = []
+ray-slclusdc-levfarm = []
+ray-btcstsol-levfarm = []
+ray-msolusdt-levfarm = []
+ray-starsusdc-levfarm = []
+ray-prismusdc-levfarm = []
+ray-solusdc-levfarm = []

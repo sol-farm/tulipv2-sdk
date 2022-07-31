@@ -11,7 +11,7 @@ use anchor_lang::AnchorSerialize;
 use sighashdb::GlobalSighashDB;
 use solana_program::instruction::AccountMeta;
 use solana_program::instruction::Instruction;
-use solana_program::msg;
+
 use tulipv2_sdk_farms::Farm;
 
 /// object used to bundle together information required by the
@@ -105,7 +105,7 @@ impl IssueShares for DepositAddresses {
         ix_data.extend_from_slice(&ix_sighash[..]);
         match farm_type.serialize() {
             Ok(farm_type_data) => ix_data.extend_from_slice(&farm_type_data[..]),
-            Err(err) => {
+            Err(_err) => {
                 #[cfg(feature = "logs")]
                 msg!("failed to serialize farm_type {:#?}", err);
                 return None;
@@ -113,7 +113,7 @@ impl IssueShares for DepositAddresses {
         }
         match AnchorSerialize::try_to_vec(&amount) {
             Ok(amount_data) => ix_data.extend_from_slice(&amount_data[..]),
-            Err(err) => {
+            Err(_err) => {
                 #[cfg(feature = "logs")]
                 msg!("failed to serialize amount {:#?}", err);
                 return None;

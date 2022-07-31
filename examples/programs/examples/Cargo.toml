@@ -23,3 +23,5 @@ tulipv2-sdk-vaults = {path = "../../../vaults", version = "0.9.19"}
 tulipv2-sdk-farms = {path = "../../../farms", version = "0.9.19"}
 spl-associated-token-account = "1.0.3"
 tulipv2-sdk-lending = {path = "../../../lending"}
+tulipv2-sdk-levfarm = {path = "../../../leveraged"}
+spl-token = "3.0.2"

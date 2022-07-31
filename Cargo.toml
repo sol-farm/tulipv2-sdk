@@ -3,7 +3,8 @@ members = [
     "lending",
     "farms",
     "common",
-    "vaults"
+    "vaults",
+    "leveraged"
     #"examples/programs/examples"
 ]
 [profile.release]
