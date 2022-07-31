@@ -5,7 +5,6 @@ import * as BufferLayout from "buffer-layout";
 import * as serumAssoToken from "@project-serum/associated-token";
 import * as splToken from "@solana/spl-token";
 import * as assert from "assert";
-
 import {
   createAssociatedTokenAccount,
   deriveMultiDepositStateTransitionAddress,

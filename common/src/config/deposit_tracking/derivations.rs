@@ -17,7 +17,7 @@ pub fn derive_tracking_pda_address(tracking_account: &Pubkey, program_id: &Pubke
 }
 
 /// derive the address used as the temporary account
-/// for temporarily storing share tokens dudring a withdrawal process
+/// for temporarily storing share tokens during a withdrawal process
 pub fn derive_tracking_queue_address(tracking_pda: &Pubkey, program_id: &Pubkey) -> (Pubkey, u8) {
     Pubkey::find_program_address(&[b"queue", tracking_pda.as_ref()], program_id)
 }

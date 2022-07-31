@@ -282,7 +282,7 @@ impl TryFrom<&[Pubkey]> for SolendStandaloneAddresses {
 impl TryFrom<&[Pubkey]> for MangoStandaloneAddresses {
     type Error = std::io::ErrorKind;
     fn try_from(accounts: &[Pubkey]) -> Result<Self, Self::Error> {
-        // although 8 accounts are required we dont need to provide system program through input
+        // although 8 accounts are required we don't need to provide system program through input
         if accounts.len() != 7 {
             #[cfg(feature = "logs")]
             msg!("insufficient accounts");

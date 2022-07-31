@@ -7,8 +7,11 @@ use tulipv2_sdk_common::config::lending::traits::WithdrawMultiOptimizerVault;
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_vaults::instructions::{
-    new_issue_shares_ix, new_register_deposit_tracking_account_ix,
-    new_withdraw_deposit_tracking_ix, new_withdraw_multi_deposit_optimizer_vault_ix,
+    deposit_tracking::{
+        new_register_deposit_tracking_account_ix, new_withdraw_deposit_tracking_ix,
+    },
+    multi_deposit_optimizer::new_withdraw_multi_deposit_optimizer_vault_ix,
+    new_issue_shares_ix,
 };
 use crate::implementations::into_withdraw_orca_farm;
 pub mod implementations;
@@ -18,12 +21,88 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 #[program]
 pub mod examples {
     use super::*;
-    pub fn register_deposit_tracking_account(
-        ctx: Context<RegisterDepositTrackingAccount>,
+    pub fn log_exchange_rate(ctx: Context<LogExchangeRate>, farm_type: [u64; 2]) -> Result<()> {
+        use tulipv2_sdk_common::traits::vault::TokenizedShares;
+        let farm: Farm = farm_type.into();
+        match farm {
+            tulipv2_sdk_farms::Farm::Orca { name } => {
+                if name.is_double_dip() {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let vault = loader.load()?;
+                    msg!(
+                        "{}",
+                        vault.base.cached_exchange_rate(&ctx.accounts.shares_mint)
+                    );
+                } else {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let vault = loader.load()?;
+                    msg!(
+                        "{}",
+                        vault.base.cached_exchange_rate(&ctx.accounts.shares_mint)
+                    );
+                };
+            }
+            tulipv2_sdk_farms::Farm::Raydium { .. } => {
+                let loader: AccountLoader<
+                    tulipv2_sdk_vaults::accounts::raydium_vault::RaydiumVaultV1,
+                > = AccountLoader::try_from_unchecked(
+                    ctx.accounts.vault_program.key,
+                    &ctx.accounts.vault,
+                )?;
+                let vault = loader.load()?;
+                msg!(
+                    "{}",
+                    vault.base.cached_exchange_rate(&ctx.accounts.shares_mint)
+                );
+            }
+            tulipv2_sdk_farms::Farm::Lending { name } => {
+                if name.eq(&tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT) {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::multi_optimizer::MultiDepositOptimizerV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let vault = loader.load()?;
+
+                    msg!(
+                        "{}",
+                        vault.base.cached_exchange_rate(&ctx.accounts.shares_mint)
+                    );
+                } else {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::lending_optimizer::LendingOptimizerV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let vault = loader.load()?;
+                    msg!(
+                        "{}",
+                        vault.base.cached_exchange_rate(&ctx.accounts.shares_mint)
+                    );
+                }
+            }
+            _ => panic!("unsupported farm"),
+        }
+        Ok(())
+    }
+    pub fn register_deposit_tracking_account<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, RegisterDepositTrackingAccount<'info>>,
         farm_type: [u64; 2],
     ) -> Result<()> {
         // create the associated
-        {
+        if ctx.accounts.deposit_tracking_hold_account.data_is_empty() {
             let ix = spl_associated_token_account::create_associated_token_account(
                 ctx.accounts.authority.key,
                 ctx.accounts.deposit_tracking_pda.key,
@@ -41,17 +120,64 @@ pub mod examples {
                 ],
             )?;
         }
-        {
-            let registration_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::register_deposit_tracking_ix(
-                *ctx.accounts.authority.key,
-            );
-            anchor_lang::solana_program::program::invoke(
-                &registration_trait
-                    .instruction(tulipv2_sdk_farms::Farm::Lending {
-                        name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
-                    })
-                    .unwrap(),
-                &[
+        let farm: tulipv2_sdk_farms::Farm = farm_type.into();
+        match farm {
+            tulipv2_sdk_farms::Farm::Orca { name } => {
+                let ix = if name.is_double_dip() {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            ctx.accounts.underlying_mint.key(),
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            Some(vault.dd_farm_data.global_farm),
+                            Some(vault.farm_data.farm_token_mint),
+                        )
+                    };
+                    let reg_trait =
+                        orca_config.register_deposit_tracking(ctx.accounts.authority.key());
+                    let mut ix = reg_trait.instruction(farm).unwrap();
+                    ctx.remaining_accounts.iter().for_each(|account| {
+                        if account.is_writable {
+                            ix.accounts
+                                .push(AccountMeta::new(*account.key, account.is_signer));
+                        } else {
+                            ix.accounts
+                                .push(AccountMeta::new_readonly(*account.key, account.is_signer))
+                        }
+                    });
+                    ix
+                } else {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            ctx.accounts.underlying_mint.key(),
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config
+                        .register_deposit_tracking(ctx.accounts.authority.key())
+                        .instruction(farm)
+                        .unwrap()
+                };
+                let mut accounts = vec![
                     ctx.accounts.authority.clone(),
                     ctx.accounts.vault.clone(),
                     ctx.accounts.deposit_tracking_account.clone(),
@@ -63,15 +189,118 @@ pub mod examples {
                     ctx.accounts.token_program.clone(),
                     ctx.accounts.rent.to_account_info(),
                     ctx.accounts.system_program.to_account_info(),
-                ],
-            )?;
+                ];
+                accounts.extend_from_slice(&ctx.remaining_accounts[..]);
+                anchor_lang::solana_program::program::invoke(&ix, &accounts)?;
+            }
+            tulipv2_sdk_farms::Farm::Raydium { name } => {
+                let raydium_config = tulipv2_sdk_vaults::config::raydium::RaydiumVaultConfig::new(
+                    ctx.accounts.vault.key(),
+                    ctx.accounts.underlying_mint.key(),
+                    None, // for registration we dont need to derive these values
+                    None, // for registration we dont need to derive these values
+                    None, // for registration we dont need to derive these values
+                    None, // for registration we dont need to derive these values
+                );
+                let registration_trait =
+                    raydium_config.register_deposit_tracking(ctx.accounts.authority.key());
+                anchor_lang::solana_program::program::invoke(
+                    &registration_trait
+                        .instruction(tulipv2_sdk_farms::Farm::Raydium {
+                            name: tulipv2_sdk_farms::raydium::Raydium::RAYUSDC,
+                        })
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_queue_account.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.clone(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.rent.to_account_info(),
+                        ctx.accounts.token_program.clone(),
+                        ctx.accounts.rent.to_account_info(),
+                        ctx.accounts.system_program.to_account_info(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+            } => {
+                let registration_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::register_deposit_tracking_ix(
+                        *ctx.accounts.authority.key,
+                    );
+                anchor_lang::solana_program::program::invoke(
+                    &registration_trait
+                        .instruction(tulipv2_sdk_farms::Farm::Lending {
+                            name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+                        })
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_queue_account.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.clone(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.rent.to_account_info(),
+                        ctx.accounts.token_program.clone(),
+                        ctx.accounts.rent.to_account_info(),
+                        ctx.accounts.system_program.to_account_info(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Atrix { name } => {
+                let atrix_config = {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::atrix_vault::AtrixVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::atrix::AtrixVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            ctx.accounts.underlying_mint.key(),
+                            None, // doesn't need to be provided for registration
+                            None, // doesn't need to be provided for registration
+                        )
+                    }
+                };
+                let registration_trait =
+                    atrix_config.register_deposit_tracking(ctx.accounts.authority.key());
+                anchor_lang::solana_program::program::invoke(
+                    &registration_trait
+                        .instruction(tulipv2_sdk_farms::Farm::Atrix {
+                            name: tulipv2_sdk_farms::atrix::Atrix::USDrUSDC,
+                        })
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_queue_account.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.clone(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.rent.to_account_info(),
+                        ctx.accounts.token_program.clone(),
+                        ctx.accounts.rent.to_account_info(),
+                        ctx.accounts.system_program.to_account_info(),
+                    ],
+                )?;
+            }
+            _ => panic!("not supported"),
         }
         Ok(())
     }
     /// deposits `amount` of the underlying tokens in exchange for a corresponding
     /// amount of shares. these shares are locked within the deposit tracking account
     /// for 15 minutes, after which they can be removed from the deposit tracking account
-    /// if desired. generaly speaking this should only be done if you want to
+    /// if desired. generally speaking this should only be done if you want to
     /// use the tokenized shares elsewhere (ie friktion volts), otherwise
     /// its best to leave them within the deposit tracking account otherwise
     /// so that you can measure your accrued rewards automatically.
@@ -86,25 +315,119 @@ pub mod examples {
             Program log: RUNTIME ERROR: a(X) < b(Y)
             Program log: panicked at 'RUNTIME ERROR: a(0) < b(1)', programs/vaults/src/vault_instructions/deposit_tracking/acl_helpers.rs:198:9
         */
+        let farm: tulipv2_sdk_farms::Farm = farm_type.into();
+        match farm {
+            tulipv2_sdk_farms::Farm::Orca { name } => {
+                let issue_trait = if name.is_double_dip() {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config.issue_shares(ctx.accounts.authority.key())
+                } else {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config.issue_shares(ctx.accounts.authority.key())
+                };
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait.instruction(farm, amount).unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Raydium { name } => {
+                let raydium_config = tulipv2_sdk_vaults::config::raydium::RaydiumVaultConfig::new(
+                    ctx.accounts.vault.key(),
+                    ctx.accounts.vault_underlying_account.mint,
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                );
+                let issue_trait = raydium_config.issue_shares(ctx.accounts.authority.key());
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait
+                        .instruction(
+                            tulipv2_sdk_farms::Farm::Raydium {
+                                name: tulipv2_sdk_farms::raydium::Raydium::RAYUSDC,
+                            },
+                            amount,
+                        )
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+            } => {
+                let issue_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
+                    *ctx.accounts.authority.key,
+                );
 
-        let issue_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
-            *ctx.accounts.authority.key,
-        );
-
-        anchor_lang::solana_program::program::invoke(
-            &issue_trait.instruction(farm_type.into(), amount).unwrap(),
-            &[
-                ctx.accounts.authority.clone(),
-                ctx.accounts.vault.clone(),
-                ctx.accounts.deposit_tracking_account.clone(),
-                ctx.accounts.deposit_tracking_pda.clone(),
-                ctx.accounts.vault_pda.clone(),
-                ctx.accounts.vault_underlying_account.to_account_info(),
-                ctx.accounts.shares_mint.to_account_info(),
-                ctx.accounts.receiving_shares_account.to_account_info(),
-                ctx.accounts.depositing_underlying_account.to_account_info(),
-            ],
-        )?;
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait.instruction(farm_type.into(), amount).unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            _ => panic!("unsupported"),
+        }
         Ok(())
     }
     /// withdraws `amount` of shares from the deposit tracking account into the `receiving_shares_account`.
@@ -115,24 +438,176 @@ pub mod examples {
         amount: u64,
         farm_type: [u64; 2],
     ) -> Result<()> {
-        let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_deposit_tracking_ix(
-            *ctx.accounts.authority.key,
-        );
-        anchor_lang::solana_program::program::invoke(
-            &withdraw_trait
-                .instruction(amount, farm_type.into())
-                .unwrap(),
-            &[
-                ctx.accounts.authority.clone(),
-                ctx.accounts.clock.to_account_info(),
-                ctx.accounts.deposit_tracking_account.clone(),
-                ctx.accounts.deposit_tracking_pda.clone(),
-                ctx.accounts.deposit_tracking_hold_account.to_account_info(),
-                ctx.accounts.receiving_shares_account.to_account_info(),
-                ctx.accounts.shares_mint.to_account_info(),
-                ctx.accounts.vault.clone(),
-            ],
-        )?;
+        let farm: tulipv2_sdk_farms::Farm = farm_type.into();
+        match farm {
+            tulipv2_sdk_farms::Farm::Orca { name } => {
+                let withdraw_trait = if name.is_double_dip() {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let (underlying_mint, global_farm) = {
+                        let orca_vault = loader.load()?;
+                        (
+                            orca_vault.base.underlying_mint,
+                            orca_vault.farm_data.global_farm,
+                        )
+                    };
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    let withdraw_trait =
+                        orca_config.withdraw_deposit_tracking(ctx.accounts.authority.key());
+                    withdraw_trait
+                } else {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let (underlying_mint, global_farm) = {
+                        let orca_vault = loader.load()?;
+                        (
+                            orca_vault.base.underlying_mint,
+                            orca_vault.farm_data.global_farm,
+                        )
+                    };
+                    let orca_config = tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                        ctx.accounts.vault.key(),
+                        underlying_mint,
+                        global_farm,
+                        tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                        None, // for tracking withdrawal we dont need to derive these values
+                        None, // for tracking withdrawal we dont need to derive these values
+                    );
+                    let withdraw_trait =
+                        orca_config.withdraw_deposit_tracking(ctx.accounts.authority.key());
+                    withdraw_trait
+                };
+
+                anchor_lang::solana_program::program::invoke(
+                    &withdraw_trait
+                        .instruction(amount, farm_type.into())
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.clock.to_account_info(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.vault.clone(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Raydium { .. } => {
+                let loader: AccountLoader<
+                    tulipv2_sdk_vaults::accounts::raydium_vault::RaydiumVaultV1,
+                > = AccountLoader::try_from_unchecked(
+                    ctx.accounts.vault_program.key,
+                    &ctx.accounts.vault,
+                )?;
+                let underlying_mint = {
+                    let raydium_vault = loader.load()?;
+                    raydium_vault.base.underlying_mint
+                };
+                let raydium_config = tulipv2_sdk_vaults::config::raydium::RaydiumVaultConfig::new(
+                    ctx.accounts.vault.key(),
+                    underlying_mint,
+                    None, // for tracking withdrawal we dont need to derive these values
+                    None, // for tracking withdrawal we dont need to derive these values
+                    None, // for tracking withdrawal we dont need to derive these values
+                    None, // for tracking withdrawal we dont need to derive these values
+                );
+                let withdraw_trait =
+                    raydium_config.withdraw_deposit_tracking(ctx.accounts.authority.key());
+                anchor_lang::solana_program::program::invoke(
+                    &withdraw_trait
+                        .instruction(amount, farm_type.into())
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.clock.to_account_info(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.vault.clone(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Atrix { name } => {
+                let loader: AccountLoader<tulipv2_sdk_vaults::accounts::atrix_vault::AtrixVaultV1> =
+                    AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                let underlying_mint = {
+                    let vault = loader.load()?;
+                    vault.base.underlying_mint
+                };
+                let atrix_config = tulipv2_sdk_vaults::config::atrix::AtrixVaultConfig::new(
+                    ctx.accounts.vault.key(),
+                    underlying_mint,
+                    None, // for tracking withdrawal we dont need to derive these values
+                    None, // for tracking withdrawal we dont need to derive these values
+                );
+                let withdraw_trait =
+                    atrix_config.withdraw_deposit_tracking(ctx.accounts.authority.key());
+                anchor_lang::solana_program::program::invoke(
+                    &withdraw_trait
+                        .instruction(amount, farm_type.into())
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.clock.to_account_info(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.vault.clone(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+            } => {
+                let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_deposit_tracking_ix(
+                    *ctx.accounts.authority.key,
+                );
+                anchor_lang::solana_program::program::invoke(
+                    &withdraw_trait
+                        .instruction(amount, farm_type.into())
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.clock.to_account_info(),
+                        ctx.accounts.deposit_tracking_account.clone(),
+                        ctx.accounts.deposit_tracking_pda.clone(),
+                        ctx.accounts.deposit_tracking_hold_account.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.vault.clone(),
+                    ],
+                )?;
+            }
+            _ => panic!("unsupported"),
+        }
+
         Ok(())
     }
     /// burns/redeems the `amount` of shares for their corresponding amount
@@ -372,7 +847,9 @@ pub mod examples {
         )?;
         tulipv2_sdk_lending::helpers::deposit_reserve_liquidity(
             &ctx.accounts.lending_program,
-            &ctx.accounts.source_liquidity_token_account.to_account_info(),
+            &ctx.accounts
+                .source_liquidity_token_account
+                .to_account_info(),
             &ctx.accounts.destination_collateral.to_account_info(),
             &ctx.accounts.reserve,
             &ctx.accounts.reserve_liquidity.to_account_info(),
@@ -383,7 +860,7 @@ pub mod examples {
             &ctx.accounts.clock.to_account_info(),
             &ctx.accounts.token_program,
             &[],
-            amount
+            amount,
         )?;
         Ok(())
     }
@@ -410,8 +887,215 @@ pub mod examples {
             &ctx.accounts.clock.to_account_info(),
             &ctx.accounts.token_program,
             &[],
-            amount
+            amount,
         )?;
+        Ok(())
+    }
+    pub fn withdraw_raydium_vault<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, WithdrawRaydiumVault<'info>>,
+        amount: u64,
+    ) -> Result<()> {
+        /*
+
+            in localnet environments this instruction will not succeed, and  an error message
+            in the anchor program logs of the following is expected to happen with localnet environments
+
+                Program EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q invoke [3]
+                Program log: Instruction: WithdrawV2
+                Program log: libstd rust_begin_panic
+                Program log: Panicked at: 'called `Option::unwrap()` on a `None` value', src/processor.rs:756:58
+        */
+
+        /// although this is not really needed since the configuration information
+        /// is provided through the context, it's done to showcase how to use the sdk
+        let raydium_vault_config = tulipv2_sdk_vaults::config::raydium::RaydiumVaultConfig::new(
+            ctx.accounts.vault.key(),
+            ctx.accounts.underlying_withdraw_queue.mint,
+            Some(ctx.accounts.pool_id.key()),
+            Some(ctx.accounts.raydium_stake_program.key()),
+            Some(ctx.accounts.pool_reward_a_token_account.mint),
+            Some(ctx.accounts.pool_reward_b_token_account.mint),
+        );
+        msg!("wq {}", raydium_vault_config.withdraw_queue);
+        let ix = raydium_vault_config
+            .withdraw_vault(
+                ctx.accounts.authority.key(),
+                ctx.accounts.pool_id.key(),
+                ctx.accounts.pool_authority.key(),
+                ctx.accounts.pool_lp_token_account.key(),
+                ctx.accounts.burning_shares_token_account.key(),
+                ctx.accounts.receiving_underlying_token_account.key(),
+                ctx.accounts.pool_reward_a_token_account.key(),
+                ctx.accounts.pool_reward_b_token_account.key(),
+                ctx.accounts.fee_collector_reward_a_token_account.key(),
+                if let Some(fee_b) = ctx.remaining_accounts.get(0) {
+                    Some(fee_b.key())
+                } else {
+                    None
+                },
+                ctx.accounts.raydium_stake_program.key(),
+                amount,
+            )
+            .unwrap();
+        let mut accounts = vec![
+            ctx.accounts.authority.to_account_info(),
+            ctx.accounts.vault.to_account_info(),
+            ctx.accounts.vault_pda.to_account_info(),
+            ctx.accounts.associated_stake_info_account.to_account_info(),
+            ctx.accounts.pool_id.to_account_info(),
+            ctx.accounts.pool_authority.to_account_info(),
+            ctx.accounts.pool_authority.to_account_info(),
+            ctx.accounts.underlying_withdraw_queue.to_account_info(),
+            ctx.accounts.pool_lp_token_account.to_account_info(),
+            ctx.accounts.vault_reward_a_token_account.to_account_info(),
+            ctx.accounts.pool_reward_a_token_account.to_account_info(),
+            ctx.accounts.vault_reward_b_token_account.to_account_info(),
+            ctx.accounts.pool_reward_b_token_account.to_account_info(),
+            ctx.accounts.burning_shares_token_account.to_account_info(),
+            ctx.accounts
+                .receiving_underlying_token_account
+                .to_account_info(),
+            ctx.accounts.shares_mint.to_account_info(),
+            ctx.accounts.clock.to_account_info(),
+            ctx.accounts.token_program.clone(),
+            ctx.accounts.raydium_stake_program.clone(),
+        ];
+        let reward_accounts = if let Some(fee_b) = ctx.remaining_accounts.get(0) {
+            vec![
+                ctx.accounts
+                    .fee_collector_reward_a_token_account
+                    .to_account_info(),
+                fee_b.clone(),
+            ]
+        } else {
+            vec![ctx
+                .accounts
+                .fee_collector_reward_a_token_account
+                .to_account_info()]
+        };
+        accounts.extend_from_slice(&reward_accounts[..]);
+        anchor_lang::solana_program::program::invoke(&ix, &accounts)?;
+        Ok(())
+    }
+    /// takes coin/pc tokens, adds liq and deposits into the aquafarm
+    pub fn orca_add_liq_issue_shares<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, OrcaAddLiqIssueShares<'info>>,
+        amount_a: u64,
+        amount_b: u64,
+        farm: [u64; 2],
+    ) -> Result<()> {
+        let farm: tulipv2_sdk_farms::Farm = farm.into();
+        match farm {
+            tulipv2_sdk_farms::Farm::Orca { name } => {
+                let orca_config = if name.is_double_dip() {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.issue_shares.vault_program.key,
+                        &ctx.accounts.issue_shares.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.issue_shares.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config
+                } else {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.issue_shares.vault_program.key,
+                        &ctx.accounts.issue_shares.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.issue_shares.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config
+                };
+                anchor_lang::solana_program::program::invoke(
+                    &orca_config
+                        .add_liq_issue_shares(
+                            ctx.accounts.issue_shares.authority.key(),
+                            ctx.accounts.issue_shares.deposit_tracking_account.key(),
+                            ctx.accounts.issue_shares.deposit_tracking_pda.key(),
+                            ctx.accounts.issue_shares.receiving_shares_account.key(),
+                            ctx.accounts
+                                .issue_shares
+                                .depositing_underlying_account
+                                .key(),
+                            ctx.accounts.aqua_farm_program.key(),
+                            ctx.accounts.add_liq.funding_token_account_a.key(),
+                            ctx.accounts.add_liq.funding_token_account_b.key(),
+                            ctx.accounts.add_liq.pool_token_a.key(),
+                            ctx.accounts.add_liq.pool_token_b.key(),
+                            ctx.accounts.add_liq.swap_program.key(),
+                            ctx.accounts.add_liq.swap_account.key(),
+                            ctx.accounts.add_liq.swap_authority.key(),
+                            amount_a,
+                            amount_b,
+                            farm.into(),
+                        )
+                        .unwrap(),
+                    &[
+                        ctx.accounts.issue_shares.authority.to_account_info(),
+                        ctx.accounts.issue_shares.vault.to_account_info(),
+                        ctx.accounts
+                            .issue_shares
+                            .deposit_tracking_account
+                            .to_account_info(),
+                        ctx.accounts
+                            .issue_shares
+                            .deposit_tracking_pda
+                            .to_account_info(),
+                        ctx.accounts.issue_shares.vault_pda.to_account_info(),
+                        ctx.accounts
+                            .issue_shares
+                            .vault_underlying_account
+                            .to_account_info(),
+                        ctx.accounts.issue_shares.shares_mint.to_account_info(),
+                        ctx.accounts
+                            .issue_shares
+                            .receiving_shares_account
+                            .to_account_info(),
+                        ctx.accounts
+                            .issue_shares
+                            .depositing_underlying_account
+                            .to_account_info(),
+                        ctx.accounts.issue_shares.token_program.to_account_info(),
+                        ctx.accounts.aqua_farm_program.to_account_info(),
+                        ctx.accounts
+                            .add_liq
+                            .funding_token_account_a
+                            .to_account_info(),
+                        ctx.accounts
+                            .add_liq
+                            .funding_token_account_b
+                            .to_account_info(),
+                        ctx.accounts.add_liq.pool_token_a.to_account_info(),
+                        ctx.accounts.add_liq.pool_token_b.to_account_info(),
+                        ctx.accounts.add_liq.swap_program.to_account_info(),
+                        ctx.accounts.add_liq.swap_account.to_account_info(),
+                        ctx.accounts.add_liq.swap_authority.to_account_info(),
+                        ctx.accounts.add_liq.swap_pool_token_mint.to_account_info(),
+                    ],
+                )?;
+            }
+            _ => panic!("unsupported type"),
+        }
         Ok(())
     }
     pub fn create_user_farm<'info>(
@@ -1200,7 +1884,7 @@ pub struct WithdrawMultiDepositOptimizerVault<'info> {
 #[derive(Accounts)]
 pub struct WithdrawMangoMultiDepositOptimizerVault<'info> {
     /// configuration data common to all multi deposit withdraw instructions
-    /// regardless of the underlying vault htey are withdrawing from
+    /// regardless of the underlying vault they are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
     /// CHECK: .
@@ -1227,7 +1911,7 @@ pub struct WithdrawMangoMultiDepositOptimizerVault<'info> {
 #[derive(Accounts)]
 pub struct WithdrawSolendMultiDepositOptimizerVault<'info> {
     /// configuration data common to all multi deposit withdraw instructions
-    /// regardless of the underlying vault htey are withdrawing from
+    /// regardless of the underlying vault they are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
 }
@@ -1235,9 +1919,104 @@ pub struct WithdrawSolendMultiDepositOptimizerVault<'info> {
 #[derive(Accounts)]
 pub struct WithdrawTulipMultiDepositOptimizerVault<'info> {
     /// configuration data common to all multi deposit withdraw instructions
-    /// regardless of the underlying vault htey are withdrawing from
+    /// regardless of the underlying vault they are withdrawing from
     /// CHECK: .
     pub common_data: WithdrawMultiDepositOptimizerVault<'info>,
+}
+
+#[derive(Accounts)]
+pub struct WithdrawRaydiumVault<'info> {
+    /// CHECK: .
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub vault: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub vault_pda: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub associated_stake_info_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub underlying_withdraw_queue: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_lp_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub vault_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub vault_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    /// the account from which shares will be burned in exchange for
+    /// a corresponding amount of lp tokens
+    #[account(mut)]
+    pub burning_shares_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub receiving_underlying_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub shares_mint: Box<Account<'info, Mint>>,
+    pub clock: Sysvar<'info, Clock>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub raydium_stake_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub vault_program: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub fee_collector_reward_a_token_account: AccountInfo<'info>,
+}
+
+#[derive(Accounts)]
+/// adds liquidity to orca and issues shares
+pub struct OrcaAddLiqIssueShares<'info> {
+    /// CHECK: not needed
+    pub issue_shares: IssueSharesInstruction<'info>,
+    /// CHECK: not needed
+    pub aqua_farm_program: AccountInfo<'info>,
+    pub add_liq: OrcaAddLiquidityAccounts<'info>,
+}
+
+#[derive(Accounts)]
+pub struct OrcaAddLiquidityAccounts<'info> {
+    #[account(mut)]
+    /// CHECK: not needed
+    pub funding_token_account_a: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// CHECK: not needed
+    pub funding_token_account_b: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// CHECK: not needed
+    pub pool_token_a: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// CHECK: not needed
+    pub pool_token_b: Box<Account<'info, TokenAccount>>,
+    /// CHECK: not needed
+    pub swap_program: AccountInfo<'info>,
+    /// CHECK: not needed
+    #[account(mut)]
+    pub swap_account: AccountInfo<'info>,
+    /// CHECK: not needed
+    pub swap_authority: AccountInfo<'info>,
+    #[account(mut)]
+    /// CHECK: not needed
+    pub swap_pool_token_mint: Box<Account<'info, Mint>>,
+}
+
+#[derive(Accounts)]
+pub struct LogExchangeRate<'info> {
+    pub vault: AccountInfo<'info>,
+    pub shares_mint: Box<Account<'info, Mint>>,
+    pub vault_program: AccountInfo<'info>,
 }
 
 #[derive(Accounts)]

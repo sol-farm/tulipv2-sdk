@@ -975,7 +975,7 @@ impl Pack for Reserve {
             liquidity_cumulative_borrow_rate_wads,
             liquidity_market_price,
             liquidity_platform_amount_wads,
-            liquidity_platofrm_fees,
+            liquidity_platform_fees,
             collateral_mint_pubkey,
             collateral_mint_total_supply,
             collateral_supply_pubkey,
@@ -1053,7 +1053,7 @@ impl Pack for Reserve {
                 cumulative_borrow_rate_wads: unpack_decimal(liquidity_cumulative_borrow_rate_wads),
                 market_price: unpack_decimal(liquidity_market_price),
                 platform_amount_wads: unpack_decimal(liquidity_platform_amount_wads),
-                platform_fees: u8::from_le_bytes(*liquidity_platofrm_fees),
+                platform_fees: u8::from_le_bytes(*liquidity_platform_fees),
             },
             collateral: ReserveCollateral {
                 mint_pubkey: Pubkey::new_from_array(*collateral_mint_pubkey),

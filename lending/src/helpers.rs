@@ -43,7 +43,7 @@ pub fn deposit_reserve_liquidity<'info>(
         *lending_market.key,
         *user_transfer_authority.key,
     );
-    if signer_seeds.len() == 0 {
+    if signer_seeds.is_empty() {
         solana_program::program::invoke(
             &ix,
             &[

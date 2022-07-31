@@ -15,6 +15,7 @@ use anchor_spl::token::Mint;
 use tulipv2_sdk_common::traits::vault::TokenizedShares;
 use tulipv2_sdk_farms::Farm;
 
+pub mod atrix_vault;
 pub mod lending_optimizer;
 pub mod multi_optimizer;
 pub mod orca_vault;
@@ -53,7 +54,7 @@ pub struct InitFeeArgsV1;
 /// derive the address of a vault, using the tag as an additional seed. while the
 /// tag can be up any series of `u8`'s up to 32 bytes in length, it is intended to be used
 /// with strings. there is no hard requirements for the format of this tag, however it is
-/// recommended that if the tag is 31 bytes or less, you use a newline delimiater (\n)
+/// recommended that if the tag is 31 bytes or less, you use a newline delimiter (\n)
 /// so that UI, and other clients can render the data correctly
 pub fn derive_vault_address(farm: &tulipv2_sdk_farms::Farm, tag: [u8; 32]) -> (Pubkey, u8) {
     let parts: [u64; 2] = (*farm).into();
@@ -125,7 +126,7 @@ pub fn derive_tracking_pda_address(tracking_account: &Pubkey, program_id: &Pubke
 }
 
 /// derive the address used as the temporary account
-/// for temporarily storing share tokens dudring a withdrawal process
+/// for temporarily storing share tokens during a withdrawal process
 pub fn derive_tracking_queue_address(tracking_pda: &Pubkey, program_id: &Pubkey) -> (Pubkey, u8) {
     Pubkey::find_program_address(&[b"queue", tracking_pda.as_ref()], program_id)
 }
@@ -200,6 +201,19 @@ pub fn parse_formatted_name(formatted_name: &str) -> (String, String) {
     (farm_name, tag)
 }
 
+use bytemuck::{cast_slice, from_bytes, try_cast_slice, Pod};
+pub fn load<T: Pod>(data: &[u8]) -> Result<&T> {
+    let size = std::mem::size_of::<T>();
+    let sliced_data = if let Ok(sliced_data) = try_cast_slice(&data[0..size]) {
+        sliced_data
+    } else {
+        return Err(
+            anchor_lang::solana_program::program_error::ProgramError::InvalidAccountData.into(),
+        );
+    };
+    Ok(from_bytes(cast_slice::<u8, u8>(sliced_data)))
+}
+
 #[cfg(test)]
 mod test {
     use std::str::FromStr;
@@ -208,6 +222,50 @@ mod test {
     use tulipv2_sdk_farms::Farm;
 
     use super::*;
+    #[test]
+    fn test_derive_usdc_multi_deposit_optimizer() {
+        // derives the address of the usdc multi deposit optimizer vault
+        // this can then be used to derive all corresponding vault values
+        // (pda, shares mint, deposit queue, et.c.)
+        let vault_address = derive_vault_address(
+            &tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+            },
+            tulipv2_sdk_common::tag::tag("usdcv1").unwrap(),
+        )
+        .0;
+        assert_eq!(
+            vault_address.to_string(),
+            "3wPiV9inTGexMZjp6x5Amqwp2sRNtpSheG8Hbv2rgq8W".to_string()
+        );
+    }
+    #[test]
+    fn test_usdc_standalone_optimizers() {
+        let vault_address = derive_vault_address(
+            &tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::USDC,
+            },
+            tulipv2_sdk_common::tag::tag("solend").unwrap(),
+        )
+        .0;
+        assert_eq!(vault_address.to_string(), "85JXjDiyianDpvz8y8efkRyFsxpnSJJpmyxrJ7bncKHM".to_string());
+        let vault_address = derive_vault_address(
+            &tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::USDC,
+            },
+            tulipv2_sdk_common::tag::tag("mango").unwrap(),
+        )
+        .0;
+        assert_eq!(vault_address.to_string(), "ZH9GWNBtwxcWeU9kHk77DSciwQnoJcSm8VVvYfmHXfe".to_string());
+        let vault_address = derive_vault_address(
+            &tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::USDC,
+            },
+            tulipv2_sdk_common::tag::tag("tulip").unwrap(),
+        )
+        .0;
+        assert_eq!(vault_address.to_string(), "8KLrrsnUv3DjC9Q89xSQDVdiGLZHUEUuyPedfHrtuVRr".to_string());
+    }
     #[test]
     fn tracking_addresses() {
         let vault = DEFAULT_KEY;
@@ -287,7 +345,7 @@ mod test {
         assert_eq!(queue_nonce, 253);
 
         let (c_queue, c_queue_nonce) = derive_compound_queue_address(&vault, &DEFAULT_KEY);
-        println!("c queue {}, c queue noce {}", c_queue, c_queue_nonce);
+        println!("c queue {}, c queue nonce {}", c_queue, c_queue_nonce);
         assert_eq!(
             c_queue.to_string(),
             "4x6xMfuuBzvHTFz18N3oB7TviwJQ1JRhQEewnsuUWqrF".to_string()
