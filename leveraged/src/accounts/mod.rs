@@ -11,7 +11,7 @@ pub const USER_FARM_ACCOUNT_SIZE: usize = 247;
 pub const LEVERAGED_FARM_ACCOUNT_SIZE: usize = 1616;
 
 /// Position is the current state of the obligation
-#[derive(PartialEq, PartialOrd, Debug, Clone, Copy, AnchorSerialize, AnchorDeserialize)]
+#[derive(PartialEq, Eq, PartialOrd, Debug, Clone, Copy, AnchorSerialize, AnchorDeserialize)]
 pub enum Position {
     /// Opening is before lp tokens have been obtained and added to vault
     /// In this step collateral is deposited, liq is borrowed
@@ -143,7 +143,7 @@ impl From<u64> for Position {
 /// denotes available farms which can be used
 /// additionally these serve as "seed words"
 /// for generating pdas
-#[derive(Debug, Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq)]
+#[derive(Debug, Clone, Copy, AnchorSerialize, AnchorDeserialize, PartialEq, Eq)]
 pub enum Farms {
     RayUsdcVault = 0,
     RaySolVault = 1,

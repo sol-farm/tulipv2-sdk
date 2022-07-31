@@ -54,7 +54,7 @@ pub fn top_up_position_stats<'info>(
 
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts,
+        accounts,
         data: ix_data,
     })
 }

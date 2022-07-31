@@ -8,9 +8,7 @@ use crate::config::deposit_tracking::derivations::{
 use crate::config::ID;
 use anchor_lang::prelude::Pubkey;
 use sighashdb::GlobalSighashDB;
-use solana_program::{
-    instruction::AccountMeta, instruction::Instruction, msg, system_program, sysvar,
-};
+use solana_program::{instruction::AccountMeta, instruction::Instruction, system_program, sysvar};
 
 #[derive(Clone, Debug, Default)]
 pub struct RegisterDepositTrackingAddresses {
@@ -88,7 +86,7 @@ impl RegisterDepositTracking for RegisterDepositTrackingAddresses {
         ix_data.extend_from_slice(&ix_sighash[..]);
         match farm_type.serialize() {
             Ok(farm_type_data) => ix_data.extend_from_slice(&farm_type_data[..]),
-            Err(err) => {
+            Err(_err) => {
                 #[cfg(feature = "logs")]
                 msg!("failed to serialize farm_type {:#?}", err);
                 return None;

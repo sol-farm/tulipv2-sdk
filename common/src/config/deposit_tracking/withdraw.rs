@@ -9,7 +9,7 @@ use crate::config::ID;
 use anchor_lang::prelude::Pubkey;
 use anchor_lang::AnchorSerialize;
 use sighashdb::GlobalSighashDB;
-use solana_program::{instruction::AccountMeta, instruction::Instruction, msg, sysvar};
+use solana_program::{instruction::AccountMeta, instruction::Instruction, sysvar};
 
 #[derive(Clone, Debug, Default)]
 pub struct WithdrawDepositTrackingAddresses {
@@ -82,7 +82,7 @@ impl WithdrawDepositTracking for WithdrawDepositTrackingAddresses {
         ix_data.extend_from_slice(&ix_sighash[..]);
         match AnchorSerialize::try_to_vec(&amount) {
             Ok(amount_data) => ix_data.extend_from_slice(&amount_data[..]),
-            Err(err) => {
+            Err(_err) => {
                 #[cfg(feature = "logs")]
                 msg!("failed to serialize amount {:#?}", err);
                 return None;
@@ -90,7 +90,7 @@ impl WithdrawDepositTracking for WithdrawDepositTrackingAddresses {
         }
         match farm_type.serialize() {
             Ok(farm_type_data) => ix_data.extend_from_slice(&farm_type_data[..]),
-            Err(err) => {
+            Err(_err) => {
                 #[cfg(feature = "logs")]
                 msg!("failed to serialize farm_type {:#?}", err);
                 return None;

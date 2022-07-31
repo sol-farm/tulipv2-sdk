@@ -17,7 +17,6 @@ pub mod farm_config {
 }
 
 pub mod vault_config {
-    use crate::DEFAULT_KEY;
 
     use super::*;
     pub const ACCOUNT: Pubkey = static_pubkey!("HvNpbHuQUqGG748ZzgzcH5216wdQdTc283CEyFMc3RdG");

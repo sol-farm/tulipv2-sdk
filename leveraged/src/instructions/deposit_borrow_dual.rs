@@ -54,7 +54,7 @@ pub fn deposit_borrow_dual(
 
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts,
+        accounts,
         data: ix_data,
     })
 }

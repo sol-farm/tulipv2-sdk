@@ -81,7 +81,7 @@ pub fn withdraw_orca_vault_dd_close<'info>(
 
     Some(Instruction {
         program_id: crate::ID,
-        accounts: accounts,
+        accounts,
         data: ix_data,
     })
 }

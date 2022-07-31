@@ -7,8 +7,8 @@ use anchor_lang::{
 };
 use sighashdb::GlobalSighashDB;
 use solana_program::instruction::AccountMeta;
+use solana_program::instruction::Instruction;
 use solana_program::sysvar;
-use solana_program::{instruction::Instruction, msg};
 
 #[derive(Clone, Copy)]
 pub struct WithdrawAddresses {
@@ -177,13 +177,9 @@ impl WithdrawMultiOptimizerVault for WithdrawAddresses {
             Some(mango_accounts.to_account_metas(None))
         } else if let Some(solend_accounts) = self.solend_standalone_addresses {
             Some(solend_accounts.to_account_metas(None))
-        } else if let Some(tulip_accounts) = self.tulip_standalone_addresses {
-            Some(tulip_accounts.to_account_metas(None))
         } else {
-            #[cfg(feature = "logs")]
-            msg!("mango, solend, and tulip accounts are None");
-
-            None
+            self.tulip_standalone_addresses
+                .map(|tulip_accounts| tulip_accounts.to_account_metas(None))
         }
     }
     fn instruction(&self, amount: u64) -> Option<solana_program::instruction::Instruction> {
@@ -193,7 +189,7 @@ impl WithdrawMultiOptimizerVault for WithdrawAddresses {
         ix_data.extend_from_slice(&ix_sighash[..]);
         match AnchorSerialize::try_to_vec(&amount) {
             Ok(amount_data) => ix_data.extend_from_slice(&amount_data[..]),
-            Err(err) => {
+            Err(_err) => {
                 #[cfg(feature = "logs")]
                 msg!("failed to serialize amount {:#?}", err);
                 return None;

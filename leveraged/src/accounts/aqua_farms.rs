@@ -1,9 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
-use solana_program::{
-    instruction::{AccountMeta, Instruction},
-    pubkey::Pubkey,
-};
+use solana_program::pubkey::Pubkey;
 use static_pubkey::static_pubkey;
 use std::str::FromStr;
 
