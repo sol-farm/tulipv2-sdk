@@ -1,7 +1,7 @@
 //! Provides configuration information for all vaults, leveraged yield farms,
 //! lending reserves, etc.. This module is broken down into a few different folders
 //! levfarm - configuration leveraged yield farms (also includes lending reserves)
-//! strategy- configuration strategy vaults 
+//! strategy- configuration strategy vaults
 //! deposit_tracking - configuration
 
 pub mod deposit_tracking;
@@ -24,7 +24,8 @@ pub const ORCA_SWAP_PROGRAM: Pubkey =
     static_pubkey!("9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP");
 
 /// address of raydium liquidity program
-pub const RAYDIUM_LIQUIDITY_V4: Pubkey = static_pubkey!("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8");
+pub const RAYDIUM_LIQUIDITY_V4: Pubkey =
+    static_pubkey!("675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8");
 /// address of first raydium staking program
 pub const RAYDIUM_STAKE: Pubkey = static_pubkey!("EhhTKczWMGQt46ynNeRX1WfeagwwJd7ufHvCDjRxjo5Q");
 /// address of the latest raydium staking program

@@ -1,3 +1,4 @@
+use crate::implementations::into_withdraw_orca_farm;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, TokenAccount};
 use tulipv2_sdk_common::config::deposit_tracking::traits::IssueShares;
@@ -13,7 +14,6 @@ use tulipv2_sdk_vaults::instructions::{
     multi_deposit_optimizer::new_withdraw_multi_deposit_optimizer_vault_ix,
     new_issue_shares_ix,
 };
-use crate::implementations::into_withdraw_orca_farm;
 pub mod implementations;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -1098,10 +1098,7 @@ pub mod examples {
         }
         Ok(())
     }
-    pub fn create_user_farm<'info>(
-        ctx: Context<CreateUserFarm>,
-        farm: u64,
-    ) -> Result<()> {
+    pub fn create_user_farm<'info>(ctx: Context<CreateUserFarm>, farm: u64) -> Result<()> {
         {
             let ix = spl_associated_token_account::create_associated_token_account(
                 ctx.accounts.authority.key,
@@ -1117,7 +1114,7 @@ pub mod examples {
                     ctx.accounts.token_program.clone(),
                     ctx.accounts.user_farm_lp_token_account.clone(),
                     ctx.accounts.rent.clone(),
-                ]
+                ],
             )?
         }
         {
@@ -1135,7 +1132,7 @@ pub mod examples {
                     ctx.accounts.token_program.clone(),
                     ctx.accounts.user_farm_base_token_account.clone(),
                     ctx.accounts.rent.clone(),
-                ]
+                ],
             )?
         }
         {
@@ -1153,14 +1150,15 @@ pub mod examples {
                     ctx.accounts.token_program.clone(),
                     ctx.accounts.user_farm_quote_token_account.clone(),
                     ctx.accounts.rent.clone(),
-                ]
+                ],
             )?
         }
         let farm = tulipv2_sdk_levfarm::accounts::Farms::from(farm);
         let ix = tulipv2_sdk_levfarm::helpers::new_create_user_farm_ix(
             ctx.accounts.authority.key(),
             farm,
-        ).unwrap();
+        )
+        .unwrap();
         anchor_lang::solana_program::program::invoke(
             &ix,
             &[
@@ -1176,7 +1174,7 @@ pub mod examples {
                 ctx.accounts.lending_program.clone(),
                 ctx.accounts.token_program.clone(),
                 ctx.accounts.obligation_vault_address.clone(),
-            ]
+            ],
         )?;
         Ok(())
     }
@@ -1191,7 +1189,8 @@ pub mod examples {
             ctx.accounts.user_farm.key(),
             farm,
             obligation_index,
-        ).unwrap();
+        )
+        .unwrap();
         anchor_lang::solana_program::program::invoke(
             &ix,
             &[
@@ -1206,7 +1205,7 @@ pub mod examples {
                 ctx.accounts.lending_program.clone(),
                 ctx.accounts.token_program.clone(),
                 ctx.accounts.system_program.clone(),
-            ]
+            ],
         )?;
         Ok(())
     }
@@ -1228,7 +1227,8 @@ pub mod examples {
             coin_borrow,
             pc_borrow,
             obligation_index,
-        ).unwrap();
+        )
+        .unwrap();
         anchor_lang::solana_program::program::invoke(
             &ix,
             &[
@@ -1248,8 +1248,12 @@ pub mod examples {
                 ctx.accounts.derived_lending_market_authority.clone(),
                 ctx.accounts.token_program.clone(),
                 ctx.accounts.lending_program.clone(),
-                ctx.accounts.coin_source_reserve_liquidity_token_account.clone(),
-                ctx.accounts.pc_source_reserve_liquidity_token_account.clone(),
+                ctx.accounts
+                    .coin_source_reserve_liquidity_token_account
+                    .clone(),
+                ctx.accounts
+                    .pc_source_reserve_liquidity_token_account
+                    .clone(),
                 ctx.accounts.coin_reserve_liquidity_fee_receiver.clone(),
                 ctx.accounts.pc_reserve_liquidity_fee_receiver.clone(),
                 ctx.accounts.borrow_authorizer.clone(),
@@ -1258,7 +1262,7 @@ pub mod examples {
                 ctx.accounts.rent.clone(),
                 ctx.accounts.position_info_account.clone(),
                 ctx.accounts.system_program.clone(),
-            ]
+            ],
         )?;
         Ok(())
     }
@@ -1267,7 +1271,9 @@ pub mod examples {
         obligation_index: u64,
     ) -> Result<()> {
         let ix = {
-            let swap_tokens: Box<tulipv2_sdk_levfarm::instructions::swap_tokens_raydium_stats::RaydiumSwap> = Box::new(ctx.accounts.into());
+            let swap_tokens: Box<
+                tulipv2_sdk_levfarm::instructions::swap_tokens_raydium_stats::RaydiumSwap,
+            > = Box::new(ctx.accounts.into());
             tulipv2_sdk_levfarm::helpers::new_swap_tokens_raydium_stats_ix(
                 swap_tokens,
                 ctx.remaining_accounts.get(0).unwrap().key(),
@@ -1275,7 +1281,8 @@ pub mod examples {
                 ctx.remaining_accounts.get(2).unwrap().key(),
                 ctx.remaining_accounts.get(3).unwrap().key(),
                 obligation_index as u8,
-            ).unwrap()
+            )
+            .unwrap()
         };
         anchor_lang::solana_program::program::invoke(
             &ix,
@@ -1313,16 +1320,19 @@ pub mod examples {
     }
     pub fn add_liquidity_stats<'info>(
         ctx: Context<'_, '_, '_, 'info, AddLiquidity<'info>>,
-        obligation_index: u64
+        obligation_index: u64,
     ) -> Result<()> {
         {
             let ix = {
-                let add_liq: Box<tulipv2_sdk_levfarm::instructions::add_liquidity_stats::AddLiquidity> = Box::new(ctx.accounts.into());
+                let add_liq: Box<
+                    tulipv2_sdk_levfarm::instructions::add_liquidity_stats::AddLiquidity,
+                > = Box::new(ctx.accounts.into());
                 tulipv2_sdk_levfarm::helpers::new_add_liquidity_stats_ix(
                     add_liq,
                     ctx.remaining_accounts.get(0).unwrap().key(),
-                    obligation_index as u8
-                ).unwrap()
+                    obligation_index as u8,
+                )
+                .unwrap()
             };
             anchor_lang::solana_program::program::invoke(
                 &ix,
@@ -1334,7 +1344,9 @@ pub mod examples {
                     ctx.accounts.amm_id.to_account_info(),
                     ctx.accounts.amm_authority.to_account_info(),
                     ctx.accounts.amm_open_orders.to_account_info(),
-                    ctx.accounts.amm_quantities_or_target_orders.to_account_info(),
+                    ctx.accounts
+                        .amm_quantities_or_target_orders
+                        .to_account_info(),
                     ctx.accounts.lp_mint_address.to_account_info(),
                     ctx.accounts.pool_coin_token_account.to_account_info(),
                     ctx.accounts.pool_pc_token_account.to_account_info(),
@@ -1346,12 +1358,14 @@ pub mod examples {
                     ctx.accounts.pyth_price_account.to_account_info(),
                     ctx.accounts.lending_market_account.to_account_info(),
                     ctx.accounts.user_farm_obligation.to_account_info(),
-                    ctx.accounts.derived_lending_market_authority.to_account_info(),
+                    ctx.accounts
+                        .derived_lending_market_authority
+                        .to_account_info(),
                     ctx.accounts.lending_program.to_account_info(),
                     ctx.accounts.clock.to_account_info(),
                     ctx.accounts.dex_program.to_account_info(),
                     ctx.remaining_accounts.get(0).unwrap().clone(),
-                ]
+                ],
             )?;
         }
         Ok(())
@@ -1365,16 +1379,19 @@ pub mod examples {
     ) -> Result<()> {
         {
             let ix = {
-            let deposit_vault:  Box<tulipv2_sdk_levfarm::instructions::deposit_raydium_vault::DepositFarm> = Box::new(ctx.accounts.into());
-            tulipv2_sdk_levfarm::helpers::new_deposit_raydium_vault_ix(
-                deposit_vault,
-                ctx.accounts.lending_market_account.key(),
-                ctx.accounts.user_farm_obligation.key(),
-                ctx.accounts.lending_market_authority.key(),
-                ctx.accounts.lending_program.key(),
-                obligation_index,
-                farm.into()
-            ).unwrap()
+                let deposit_vault: Box<
+                    tulipv2_sdk_levfarm::instructions::deposit_raydium_vault::DepositFarm,
+                > = Box::new(ctx.accounts.into());
+                tulipv2_sdk_levfarm::helpers::new_deposit_raydium_vault_ix(
+                    deposit_vault,
+                    ctx.accounts.lending_market_account.key(),
+                    ctx.accounts.user_farm_obligation.key(),
+                    ctx.accounts.lending_market_authority.key(),
+                    ctx.accounts.lending_program.key(),
+                    obligation_index,
+                    farm.into(),
+                )
+                .unwrap()
             };
             anchor_lang::solana_program::program::invoke(
                 &ix,
@@ -1407,7 +1424,7 @@ pub mod examples {
                     ctx.accounts.user_farm_obligation.clone(),
                     ctx.accounts.lending_market_authority.clone(),
                     ctx.accounts.lending_program.clone(),
-                ]
+                ],
             )?;
         };
         Ok(())
@@ -1421,7 +1438,9 @@ pub mod examples {
     ) -> Result<()> {
         {
             let ix = {
-                let withdraw_farm: Box<tulipv2_sdk_levfarm::instructions::withdraw_raydium_vault_close::WithdrawFarm> = Box::new(ctx.accounts.into());
+                let withdraw_farm: Box<
+                    tulipv2_sdk_levfarm::instructions::withdraw_raydium_vault_close::WithdrawFarm,
+                > = Box::new(ctx.accounts.into());
                 tulipv2_sdk_levfarm::helpers::new_withdraw_raydium_vault_ix(
                     withdraw_farm,
                     ctx.remaining_accounts.get(0).unwrap().key(), // lending market
@@ -1434,8 +1453,9 @@ pub mod examples {
                     obligation_index,
                     withdraw_percent,
                     close_method,
-                    farm.into()
-                ).unwrap()
+                    farm.into(),
+                )
+                .unwrap()
             };
             anchor_lang::solana_program::program::invoke(
                 &ix,
@@ -1469,7 +1489,7 @@ pub mod examples {
                     ctx.remaining_accounts.get(4).unwrap().clone(), // pos info account
                     ctx.remaining_accounts.get(5).unwrap().clone(), // system program
                     ctx.remaining_accounts.get(6).unwrap().clone(), // rent
-                ]
+                ],
             )?;
         }
         Ok(())
@@ -1484,8 +1504,9 @@ pub mod examples {
                 tulipv2_sdk_levfarm::helpers::new_orca_add_liquidity_queue_ix(
                     add_liq,
                     ctx.remaining_accounts.get(0).unwrap().key(),
-                    obligation_index
-                ).unwrap()
+                    obligation_index,
+                )
+                .unwrap()
             };
             anchor_lang::solana_program::program::invoke(
                 &ix,
@@ -1510,12 +1531,14 @@ pub mod examples {
                     ctx.accounts.lp_mint_address.to_account_info(),
                     ctx.accounts.lending_market_account.to_account_info(),
                     ctx.accounts.user_farm_obligation.to_account_info(),
-                    ctx.accounts.derived_lending_market_authority.to_account_info(),
+                    ctx.accounts
+                        .derived_lending_market_authority
+                        .to_account_info(),
                     ctx.accounts.lending_program.to_account_info(),
                     ctx.accounts.dex_program.to_account_info(),
                     ctx.accounts.solfarm_vault_program.to_account_info(),
                     ctx.accounts.obligation_vault_address.to_account_info(),
-                ]
+                ],
             )?;
         }
         Ok(())
@@ -1524,11 +1547,13 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawOrcaFarm<'info>>,
         obligation_index: u8,
         withdraw_percent: u8,
-        close_method: u8
+        close_method: u8,
     ) -> Result<()> {
         {
             let ix = {
-                let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(into_withdraw_orca_farm(&ctx));
+                let add_liq: Box<
+                    tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm,
+                > = Box::new(into_withdraw_orca_farm(&ctx));
                 tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_close_ix(
                     add_liq,
                     ctx.remaining_accounts.get(7).unwrap().key(),
@@ -1537,8 +1562,9 @@ pub mod examples {
                     ctx.remaining_accounts.get(6).unwrap().key(),
                     obligation_index,
                     withdraw_percent,
-                    close_method
-                ).unwrap()
+                    close_method,
+                )
+                .unwrap()
             };
             anchor_lang::solana_program::program::invoke(
                 &ix,
@@ -1572,7 +1598,7 @@ pub mod examples {
                     ctx.remaining_accounts.get(8).unwrap().clone(),
                     ctx.remaining_accounts.get(9).unwrap().clone(),
                     ctx.remaining_accounts.get(6).unwrap().clone(),
-                ]
+                ],
             )?;
         }
         Ok(())
@@ -1581,15 +1607,18 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawOrcaFarm<'info>>,
         obligation_index: u8,
         withdraw_percent: u8,
-        close_method: u8
+        close_method: u8,
     ) -> Result<()> {
         {
             let ix = {
-                let add_liq: Box<tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm> = Box::new(into_withdraw_orca_farm(&ctx));
+                let add_liq: Box<
+                    tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm,
+                > = Box::new(into_withdraw_orca_farm(&ctx));
                 tulipv2_sdk_levfarm::helpers::new_withdraw_orca_vault_without_shares_ix(
                     add_liq,
-                    obligation_index
-                ).unwrap()
+                    obligation_index,
+                )
+                .unwrap()
             };
             let position_info_account = ctx.remaining_accounts.get(0).unwrap();
             let amm_id = ctx.remaining_accounts.get(1).unwrap();
@@ -1619,7 +1648,7 @@ pub mod examples {
                     ctx.accounts.pool_coin_token_account.to_account_info(),
                     ctx.accounts.pool_pc_token_account.to_account_info(),
                     amm_id.clone(),
-                ]
+                ],
             )?;
         }
         Ok(())
@@ -2178,7 +2207,6 @@ pub struct DepositBorrowDual<'info> {
     pub tulip_leveraged_farm_program: AccountInfo<'info>,
 }
 
-
 #[derive(Accounts)]
 pub struct DepositLevFarm<'info> {
     /// CHECK: .
@@ -2225,7 +2253,7 @@ pub struct DepositLevFarm<'info> {
     pub vault_info_account: AccountInfo<'info>,
     /// CHECK: .
     #[account(mut)]
-    pub pool_lp_token_account:Box<Account<'info, TokenAccount>>,
+    pub pool_lp_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
     pub user_reward_a_token_account: Box<Account<'info, TokenAccount>>,
@@ -2234,7 +2262,7 @@ pub struct DepositLevFarm<'info> {
     pub pool_reward_a_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub user_reward_b_token_account:Box<Account<'info, TokenAccount>>,
+    pub user_reward_b_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
     pub pool_reward_b_token_account: Box<Account<'info, TokenAccount>>,
@@ -2339,7 +2367,6 @@ pub struct RaydiumSwap<'info> {
     ///// CHECK: .
     //pub position_info_account: AccountInfo<'info>,
 }
-
 
 #[derive(Accounts)]
 pub struct AddLiquidity<'info> {
@@ -2546,7 +2573,6 @@ pub struct OrcaAddLiquidityQueue<'info> {
     pub tulip_leveraged_farm_program: AccountInfo<'info>,
 }
 
-
 #[derive(Accounts)]
 pub struct WithdrawOrcaFarm<'info> {
     /// CHECK: .
@@ -2577,16 +2603,16 @@ pub struct WithdrawOrcaFarm<'info> {
     pub user_base_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub user_farm_token_account:  Box<Account<'info, TokenAccount>>,
+    pub user_farm_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub user_reward_token_account:  Box<Account<'info, TokenAccount>>,
+    pub user_reward_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub global_base_token_vault:  Box<Account<'info, TokenAccount>>,
+    pub global_base_token_vault: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     #[account(mut)]
-    pub farm_token_mint:  Box<Account<'info, Mint>>,
+    pub farm_token_mint: Box<Account<'info, Mint>>,
     /// CHECK: .
     #[account(mut)]
     pub global_farm: AccountInfo<'info>,
@@ -2595,14 +2621,14 @@ pub struct WithdrawOrcaFarm<'info> {
     pub orca_user_farm: AccountInfo<'info>,
     /// CHECK: .
     #[account(mut)]
-    pub global_reward_token_vault:  Box<Account<'info, TokenAccount>>,
+    pub global_reward_token_vault: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     pub convert_authority: AccountInfo<'info>,
     /// CHECK: .
     pub aqua_farm_program: AccountInfo<'info>,
     /// CHECK: .
     #[account(mut)]
-    pub receiving_token_account:  Box<Account<'info, TokenAccount>>,
+    pub receiving_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
     pub clock: Sysvar<'info, Clock>,
     /// CHECK: .
@@ -2612,22 +2638,22 @@ pub struct WithdrawOrcaFarm<'info> {
     #[account(mut)]
     pub leveraged_farm: AccountInfo<'info>,
     /// CHECK: .
-    pub lev_farm_coin_token_account:  Box<Account<'info, TokenAccount>>,
+    pub lev_farm_coin_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
-    pub lev_farm_pc_token_account:  Box<Account<'info, TokenAccount>>,
+    pub lev_farm_pc_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
-    pub pool_coin_token_account:  Box<Account<'info, TokenAccount>>,
+    pub pool_coin_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
-    pub pool_pc_token_account:  Box<Account<'info, TokenAccount>>,
+    pub pool_pc_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
-    pub vault_deposit_queue:  Box<Account<'info, TokenAccount>>,
+    pub vault_deposit_queue: Box<Account<'info, TokenAccount>>,
     /// CHECK: .
-    pub lp_mint_address:  Box<Account<'info, TokenAccount>>,
+    pub lp_mint_address: Box<Account<'info, TokenAccount>>,
     /*
     remaining accounts
-    
+
     /// CHECK: .
-    pub position_info_account: AccountInfo<'info>, // 0 
+    pub position_info_account: AccountInfo<'info>, // 0
     /// CHECK: .
     pub amm_id: AccountInfo<'info>, // 1
     /// CHECK: .
@@ -2650,5 +2676,4 @@ pub struct WithdrawOrcaFarm<'info> {
     /// CHECK: .
     pub user_farm: AccountInfo<'info>, // 10
     */
-
 }

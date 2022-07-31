@@ -1,5 +1,7 @@
 use super::*;
-impl<'info> From<&mut DepositBorrowDual<'info>> for tulipv2_sdk_levfarm::instructions::deposit_borrow_dual::DepositBorrowDual {
+impl<'info> From<&mut DepositBorrowDual<'info>>
+    for tulipv2_sdk_levfarm::instructions::deposit_borrow_dual::DepositBorrowDual
+{
     fn from(farm_accounts: &mut DepositBorrowDual<'info>) -> Self {
         Self {
             authority: farm_accounts.authority.key(),
@@ -18,50 +20,62 @@ impl<'info> From<&mut DepositBorrowDual<'info>> for tulipv2_sdk_levfarm::instruc
             derived_lending_market_authority: farm_accounts.derived_lending_market_authority.key(),
             token_program: farm_accounts.token_program.key(),
             lending_program: farm_accounts.lending_program.key(),
-            coin_source_reserve_liquidity_token_account: farm_accounts.coin_source_reserve_liquidity_token_account.key(),
-            pc_source_reserve_liquidity_token_account: farm_accounts.pc_source_reserve_liquidity_token_account.key(),
-            coin_reserve_liquidity_fee_receiver: farm_accounts.coin_reserve_liquidity_fee_receiver.key(),
-            pc_reserve_liquidity_fee_receiver: farm_accounts.pc_reserve_liquidity_fee_receiver.key(),
+            coin_source_reserve_liquidity_token_account: farm_accounts
+                .coin_source_reserve_liquidity_token_account
+                .key(),
+            pc_source_reserve_liquidity_token_account: farm_accounts
+                .pc_source_reserve_liquidity_token_account
+                .key(),
+            coin_reserve_liquidity_fee_receiver: farm_accounts
+                .coin_reserve_liquidity_fee_receiver
+                .key(),
+            pc_reserve_liquidity_fee_receiver: farm_accounts
+                .pc_reserve_liquidity_fee_receiver
+                .key(),
             borrow_authorizer: farm_accounts.borrow_authorizer.key(),
             lp_pyth_price_account: farm_accounts.lp_pyth_price_account.key(),
             vault_account: farm_accounts.vault_account.key(),
-            rent:             farm_accounts.rent.key(),
+            rent: farm_accounts.rent.key(),
         }
     }
 }
 
-impl<'info> From<&mut DepositLevFarm<'info>> for tulipv2_sdk_levfarm::instructions::deposit_raydium_vault::DepositFarm {
+impl<'info> From<&mut DepositLevFarm<'info>>
+    for tulipv2_sdk_levfarm::instructions::deposit_raydium_vault::DepositFarm
+{
     #[inline(always)]
     fn from(farm_accounts: &mut DepositLevFarm<'info>) -> Self {
         Self {
-            authority: farm_accounts.authority.key(), 
+            authority: farm_accounts.authority.key(),
             user_farm: farm_accounts.user_farm.key(),
-            obligation_vault_address: farm_accounts.obligation_vault_address.key(), 
-            leveraged_farm: farm_accounts.leveraged_farm.key(),  
-            vault_program: farm_accounts.vault_program.key(), 
-            authority_token_account: farm_accounts.authority_token_account.key(), 
-            vault_pda_account: farm_accounts.vault_pda_account.key(), 
-            vault: farm_accounts.vault.key(), 
-            lp_token_account: farm_accounts.lp_token_account.key(), 
-            user_balance_account: farm_accounts.user_balance_account.key(), 
-            system_program: anchor_lang::solana_program::system_program::id(), 
-            stake_program_id: farm_accounts.stake_program_id.key(), 
-            pool_id: farm_accounts.pool_id.key(), 
-            pool_authority: farm_accounts.pool_authority.key(), 
-            vault_info_account: farm_accounts.vault_info_account.key(), 
-            pool_lp_token_account: farm_accounts.pool_lp_token_account.key(), 
-            user_reward_a_token_account: farm_accounts.user_reward_a_token_account.key(), 
-            pool_reward_a_token_account: farm_accounts.pool_reward_a_token_account.key(), 
-            user_reward_b_token_account: farm_accounts.user_reward_b_token_account.key(), 
-            pool_reward_b_token_account: farm_accounts.pool_reward_b_token_account.key(), 
-            clock: anchor_lang::solana_program::sysvar::clock::id(), 
-            rent: anchor_lang::solana_program::sysvar::rent::id(), 
-            token_program_id: spl_token::id(), 
-            user_balance_metadata: farm_accounts.user_balance_metadata.key(), 
+            obligation_vault_address: farm_accounts.obligation_vault_address.key(),
+            leveraged_farm: farm_accounts.leveraged_farm.key(),
+            vault_program: farm_accounts.vault_program.key(),
+            authority_token_account: farm_accounts.authority_token_account.key(),
+            vault_pda_account: farm_accounts.vault_pda_account.key(),
+            vault: farm_accounts.vault.key(),
+            lp_token_account: farm_accounts.lp_token_account.key(),
+            user_balance_account: farm_accounts.user_balance_account.key(),
+            system_program: anchor_lang::solana_program::system_program::id(),
+            stake_program_id: farm_accounts.stake_program_id.key(),
+            pool_id: farm_accounts.pool_id.key(),
+            pool_authority: farm_accounts.pool_authority.key(),
+            vault_info_account: farm_accounts.vault_info_account.key(),
+            pool_lp_token_account: farm_accounts.pool_lp_token_account.key(),
+            user_reward_a_token_account: farm_accounts.user_reward_a_token_account.key(),
+            pool_reward_a_token_account: farm_accounts.pool_reward_a_token_account.key(),
+            user_reward_b_token_account: farm_accounts.user_reward_b_token_account.key(),
+            pool_reward_b_token_account: farm_accounts.pool_reward_b_token_account.key(),
+            clock: anchor_lang::solana_program::sysvar::clock::id(),
+            rent: anchor_lang::solana_program::sysvar::rent::id(),
+            token_program_id: spl_token::id(),
+            user_balance_metadata: farm_accounts.user_balance_metadata.key(),
         }
     }
 }
-impl<'info> From<&mut RaydiumSwap<'info>> for tulipv2_sdk_levfarm::instructions::swap_tokens_raydium_stats::RaydiumSwap {
+impl<'info> From<&mut RaydiumSwap<'info>>
+    for tulipv2_sdk_levfarm::instructions::swap_tokens_raydium_stats::RaydiumSwap
+{
     #[inline(always)]
     fn from(farm_accounts: &mut RaydiumSwap<'info>) -> Self {
         Self {
@@ -92,7 +106,9 @@ impl<'info> From<&mut RaydiumSwap<'info>> for tulipv2_sdk_levfarm::instructions:
     }
 }
 
-impl<'info> From<&mut AddLiquidity<'info>> for tulipv2_sdk_levfarm::instructions::add_liquidity_stats::AddLiquidity {
+impl<'info> From<&mut AddLiquidity<'info>>
+    for tulipv2_sdk_levfarm::instructions::add_liquidity_stats::AddLiquidity
+{
     #[inline(always)]
     fn from(farm_accounts: &mut AddLiquidity<'info>) -> Self {
         Self {
@@ -123,8 +139,9 @@ impl<'info> From<&mut AddLiquidity<'info>> for tulipv2_sdk_levfarm::instructions
     }
 }
 
-
-impl<'info> From<&mut WithdrawRaydiumLevFarm<'info>> for tulipv2_sdk_levfarm::instructions::withdraw_raydium_vault_close::WithdrawFarm {
+impl<'info> From<&mut WithdrawRaydiumLevFarm<'info>>
+    for tulipv2_sdk_levfarm::instructions::withdraw_raydium_vault_close::WithdrawFarm
+{
     fn from(farm_accounts: &mut WithdrawRaydiumLevFarm<'info>) -> Self {
         Self {
             authority: farm_accounts.authority.key(),
@@ -153,7 +170,9 @@ impl<'info> From<&mut WithdrawRaydiumLevFarm<'info>> for tulipv2_sdk_levfarm::in
     }
 }
 
-impl<'info> From<&mut OrcaAddLiquidityQueue<'info>> for tulipv2_sdk_levfarm::instructions::orca_add_liquidity_queue::OrcaAddLiquidityQueue {
+impl<'info> From<&mut OrcaAddLiquidityQueue<'info>>
+    for tulipv2_sdk_levfarm::instructions::orca_add_liquidity_queue::OrcaAddLiquidityQueue
+{
     fn from(farm_accounts: &mut OrcaAddLiquidityQueue<'info>) -> Self {
         Self {
             authority: farm_accounts.authority.key(),
@@ -185,32 +204,34 @@ impl<'info> From<&mut OrcaAddLiquidityQueue<'info>> for tulipv2_sdk_levfarm::ins
     }
 }
 
-pub fn into_withdraw_orca_farm<'a, 'b, 'c, 'info>(ctx: &Context<'a, 'b, 'c, 'info, WithdrawOrcaFarm<'info>>) -> tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm {
+pub fn into_withdraw_orca_farm<'a, 'b, 'c, 'info>(
+    ctx: &Context<'a, 'b, 'c, 'info, WithdrawOrcaFarm<'info>>,
+) -> tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm {
     tulipv2_sdk_levfarm::instructions::withdraw_orca_vault::WithdrawOrcaFarm {
-            authority: ctx.accounts.authority.key(),
-            vault_account: ctx.accounts.vault_account.key(),
-            vault_user_account: ctx.accounts.vault_user_account.key(),
-            token_program: ctx.accounts.token_program.key(),
-            rent: ctx.accounts.rent.key(),
-            vault_pda: ctx.accounts.vault_pda.key(),
-            system_program: ctx.accounts.system_program.key(),
-            user_farm_owner: ctx.accounts.user_farm_owner.key(),
-            user_transfer_authority: ctx.accounts.user_transfer_authority.key(),
-            user_base_token_account: ctx.accounts.user_base_token_account.key(),
-            user_farm_token_account: ctx.accounts.user_farm_token_account.key(),
-            user_reward_token_account: ctx.accounts.user_reward_token_account.key(),
-            global_base_token_vault: ctx.accounts.global_base_token_vault.key(),
-            farm_token_mint: ctx.accounts.farm_token_mint.key(),
-            global_farm: ctx.accounts.global_farm.key(),
-            orca_user_farm: ctx.accounts.orca_user_farm.key(),
-            global_reward_token_vault: ctx.accounts.global_reward_token_vault.key(),
-            convert_authority: ctx.accounts.convert_authority.key(),
-            aqua_farm_program: ctx.accounts.aqua_farm_program.key(),
-            receiving_token_account: ctx.accounts.receiving_token_account.key(),
-            clock: ctx.accounts.clock.key(),
-            leveraged_user_farm: ctx.accounts.leveraged_user_farm.key(),
-            leveraged_farm: ctx.accounts.leveraged_farm.key(),
-            solfarm_vault_program: ctx.remaining_accounts.get(3).unwrap().key(),
-            obligation_vault_address: ctx.remaining_accounts.get(4).unwrap().key(),
-        }
+        authority: ctx.accounts.authority.key(),
+        vault_account: ctx.accounts.vault_account.key(),
+        vault_user_account: ctx.accounts.vault_user_account.key(),
+        token_program: ctx.accounts.token_program.key(),
+        rent: ctx.accounts.rent.key(),
+        vault_pda: ctx.accounts.vault_pda.key(),
+        system_program: ctx.accounts.system_program.key(),
+        user_farm_owner: ctx.accounts.user_farm_owner.key(),
+        user_transfer_authority: ctx.accounts.user_transfer_authority.key(),
+        user_base_token_account: ctx.accounts.user_base_token_account.key(),
+        user_farm_token_account: ctx.accounts.user_farm_token_account.key(),
+        user_reward_token_account: ctx.accounts.user_reward_token_account.key(),
+        global_base_token_vault: ctx.accounts.global_base_token_vault.key(),
+        farm_token_mint: ctx.accounts.farm_token_mint.key(),
+        global_farm: ctx.accounts.global_farm.key(),
+        orca_user_farm: ctx.accounts.orca_user_farm.key(),
+        global_reward_token_vault: ctx.accounts.global_reward_token_vault.key(),
+        convert_authority: ctx.accounts.convert_authority.key(),
+        aqua_farm_program: ctx.accounts.aqua_farm_program.key(),
+        receiving_token_account: ctx.accounts.receiving_token_account.key(),
+        clock: ctx.accounts.clock.key(),
+        leveraged_user_farm: ctx.accounts.leveraged_user_farm.key(),
+        leveraged_farm: ctx.accounts.leveraged_farm.key(),
+        solfarm_vault_program: ctx.remaining_accounts.get(3).unwrap().key(),
+        obligation_vault_address: ctx.remaining_accounts.get(4).unwrap().key(),
+    }
 }

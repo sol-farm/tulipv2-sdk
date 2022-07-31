@@ -8,7 +8,7 @@ pub struct DepositObligationCollateral<'info> {
     pub authority: AccountInfo<'info>,
     #[account(mut)]
     pub user_farm: AccountInfo<'info>,
-    pub leveraged_farm:AccountInfo<'info>,
+    pub leveraged_farm: AccountInfo<'info>,
     // this is the obligation account
     #[account(mut)]
     pub user_farm_obligation: AccountInfo<'info>,
@@ -48,7 +48,6 @@ pub fn top_up_position_stats<'info>(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&coin_amount).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&pc_amount).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
-
 
     let mut accounts = accounts.to_account_metas(None);
     accounts.push(AccountMeta::new(position_info_account.key(), false));

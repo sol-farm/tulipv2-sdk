@@ -1,5 +1,5 @@
-use anchor_lang::prelude::*;
 use super::Position;
+use anchor_lang::prelude::*;
 
 /// represents a collection of olibgations managed by this particular UserFarm account
 #[account(zero_copy)]
@@ -25,7 +25,6 @@ pub struct UserFarm {
     /// where a given Obligation represents an individual position
     pub obligations: [Obligation; 3],
 }
-
 
 /// represents a single obligation account
 /// to derive the obligation account we use the following seeds

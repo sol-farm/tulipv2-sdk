@@ -2,7 +2,6 @@ use anchor_lang::prelude::*;
 use sighashdb::GlobalSighashDB;
 use solana_program::instruction::Instruction;
 
-
 pub struct DepositBorrowDual {
     pub authority: Pubkey,
     pub user_farm: Pubkey,
@@ -48,7 +47,6 @@ pub fn deposit_borrow_dual(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&coin_borrow_amount).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&pc_borrow_amount).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
-
 
     let mut accounts = accounts.to_account_metas(None);
     accounts.push(AccountMeta::new(position_info_account.key(), false));

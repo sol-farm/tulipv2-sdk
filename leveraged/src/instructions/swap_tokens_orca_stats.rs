@@ -2,7 +2,6 @@ use anchor_lang::prelude::*;
 use sighashdb::GlobalSighashDB;
 use solana_program::instruction::Instruction;
 
-
 #[derive(Accounts)]
 pub struct NewSerumSwap<'info> {
     #[account(signer)]
@@ -79,11 +78,16 @@ pub fn swap_tokens_orca_stats<'info>(
     ix_data.extend_from_slice(&ix_sighash[..]);
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
 
-
     let mut accounts = accounts.to_account_metas(None);
     accounts.push(AccountMeta::new(serum_fee_recipient.key(), false));
-    accounts.push(AccountMeta::new_readonly(lending_market_account.key(), false));
-    accounts.push(AccountMeta::new_readonly(lending_market_authority.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_account.key(),
+        false,
+    ));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_authority.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new_readonly(lending_program.key(), false));
     accounts.push(AccountMeta::new(lp_mint.key(), false));
     accounts.push(AccountMeta::new(position_info_account.key(), false));

@@ -34,14 +34,13 @@ pub fn orca_add_liquidity_queue(
     accounts: Box<OrcaAddLiquidityQueue>,
     position_info_account: Pubkey,
     account_nonce: u8,
-    obligation_index: u8
+    obligation_index: u8,
 ) -> Option<Instruction> {
     let ix_sighash = GlobalSighashDB.get_deprecated("orca_add_liquidity_queue")?;
     let mut ix_data = Vec::with_capacity(10);
     ix_data.extend_from_slice(&ix_sighash[..]);
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&account_nonce).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
-
 
     let mut accounts = accounts.to_account_metas(None);
     accounts.push(AccountMeta::new(position_info_account.key(), false));
@@ -52,7 +51,6 @@ pub fn orca_add_liquidity_queue(
         data: ix_data,
     })
 }
-
 
 impl ToAccountMetas for OrcaAddLiquidityQueue {
     fn to_account_metas(&self, _is_signer: Option<bool>) -> Vec<AccountMeta> {

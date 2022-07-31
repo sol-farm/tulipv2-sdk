@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 use sighashdb::GlobalSighashDB;
 use solana_program::instruction::Instruction;
 
-pub struct WithdrawFarm{
+pub struct WithdrawFarm {
     pub authority: Pubkey,
     pub user_farm: Pubkey,
     pub obligation_vault_address: Pubkey,
@@ -52,9 +52,15 @@ pub fn withdraw_raydium_vault_close(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&close_method).unwrap());
 
     let mut accounts = accounts.to_account_metas(None);
-    accounts.push(AccountMeta::new_readonly(lending_market_account.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_account.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new(user_farm_obligation.key(), false));
-    accounts.push(AccountMeta::new_readonly(lending_market_authority.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_authority.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new_readonly(lending_program.key(), false));
     accounts.push(AccountMeta::new(position_info_account.key(), false));
     accounts.push(AccountMeta::new_readonly(system_program.key(), false));
@@ -92,6 +98,6 @@ impl ToAccountMetas for WithdrawFarm {
             AccountMeta::new(self.pool_id, false),
             AccountMeta::new_readonly(self.stake_program_id, false),
             AccountMeta::new(self.user_balance_meta, false),
-        ]   
+        ]
     }
 }

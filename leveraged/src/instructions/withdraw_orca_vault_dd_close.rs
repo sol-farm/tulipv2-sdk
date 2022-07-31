@@ -20,7 +20,7 @@ pub struct WithdrawOrcaVaultDoubleDip<'info> {
     // pub user_transfer_authority: AccountInfo<'info>,
     #[account(mut)]
     // this is the address of the vault's "converted" pool/lp token account
-    pub user_farm_token_account:  AccountInfo<'info>,
+    pub user_farm_token_account: AccountInfo<'info>,
     // this is the address of vault's "double converted" pool/lp token account
     #[account(mut)]
     pub user_farm_dd_token_account: AccountInfo<'info>,
@@ -66,11 +66,16 @@ pub fn withdraw_orca_vault_dd_close<'info>(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&withdraw_percent).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&close_method).unwrap());
 
-
     let mut accounts = accounts.to_account_metas(None);
-    accounts.push(AccountMeta::new_readonly(lending_market_account.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_account.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new(user_farm_obligation.key(), false));
-    accounts.push(AccountMeta::new_readonly(lending_market_authority.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_authority.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new_readonly(lending_program.key(), false));
     accounts.push(AccountMeta::new(position_info_account.key(), false));
 

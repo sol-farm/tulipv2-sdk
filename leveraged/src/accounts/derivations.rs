@@ -17,7 +17,6 @@ pub fn derive_user_farm_address(
     )
 }
 
-
 pub fn derive_leveraged_farm_address(
     solfarm_vault_program: Pubkey,
     // for non-serum based farms such as Orca
@@ -37,7 +36,7 @@ pub fn derive_leveraged_farm_address(
                 &(farm as u64).to_le_bytes()[..],
             ],
             &program_id,
-        )
+        );
     }
     Pubkey::find_program_address(
         &[
@@ -47,7 +46,7 @@ pub fn derive_leveraged_farm_address(
             &(farm as u64).to_le_bytes()[..],
         ],
         &program_id,
-    )    
+    )
 }
 
 /// used to derive the address that is used by a user farm account
@@ -97,14 +96,10 @@ pub fn derive_user_farm_obligation_address(
     )
 }
 
-
 pub fn derive_orca_vault_user_address(
     program_id: &Pubkey,
     vault: &Pubkey,
     authority: &Pubkey,
 ) -> (Pubkey, u8) {
-    Pubkey::find_program_address(&[
-        vault.as_ref(),
-        authority.as_ref(),
-    ], program_id)
+    Pubkey::find_program_address(&[vault.as_ref(), authority.as_ref()], program_id)
 }

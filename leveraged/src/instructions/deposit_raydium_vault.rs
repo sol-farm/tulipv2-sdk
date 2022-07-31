@@ -29,7 +29,6 @@ pub struct DepositFarm {
     pub user_balance_metadata: Pubkey,
 }
 
-
 #[inline(always)]
 pub fn deposit_vault(
     accounts: Box<DepositFarm>,
@@ -48,11 +47,16 @@ pub fn deposit_vault(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&meta_nonce).unwrap());
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&obligation_index).unwrap());
 
-
     let mut accounts = accounts.to_account_metas(None);
-    accounts.push(AccountMeta::new_readonly(lending_market_account.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_account.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new(user_farm_obligation.key(), false));
-    accounts.push(AccountMeta::new_readonly(lending_market_authority.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_authority.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new_readonly(lending_program.key(), false));
 
     Some(Instruction {

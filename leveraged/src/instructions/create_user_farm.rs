@@ -22,7 +22,6 @@ pub struct CreateUserFarm {
     pub obligation_vault_address: Pubkey,
 }
 
-
 pub fn create_user_farm(
     accounts: CreateUserFarm,
     solfarm_vault_program: Pubkey,
@@ -53,6 +52,6 @@ impl ToAccountMetas for CreateUserFarm {
             AccountMeta::new_readonly(self.lending_program, false),
             AccountMeta::new_readonly(self.token_program, false),
             AccountMeta::new(self.obligation_vault_address, false),
-        ]   
+        ]
     }
 }

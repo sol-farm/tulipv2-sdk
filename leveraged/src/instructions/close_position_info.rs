@@ -10,7 +10,6 @@ pub struct ClosePositionInfoAccount<'info> {
     pub position_info_account: AccountInfo<'info>,
 }
 
-
 pub fn close_position_info_account<'info>(
     accounts: ClosePositionInfoAccount<'info>,
 ) -> Option<Instruction> {

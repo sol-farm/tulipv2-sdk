@@ -1,11 +1,10 @@
-pub mod user_farm;
-pub mod leveraged_farm;
-pub mod derivations;
-pub mod position_info;
 pub mod aqua_farms;
+pub mod derivations;
+pub mod leveraged_farm;
+pub mod position_info;
+pub mod user_farm;
 
 use anchor_lang::prelude::*;
-
 
 pub const POSITION_INFO_ACCOUNT_SIZE: usize = 300;
 pub const USER_FARM_ACCOUNT_SIZE: usize = 247;
@@ -72,7 +71,7 @@ pub enum Position {
     /// LPPulledForLiquidation
     LPPulledForLiquidation,
     /// RemovedLiquidityForLiquidation
-    RemovedLiquidityForLiquidation
+    RemovedLiquidityForLiquidation,
 }
 
 impl From<u8> for Position {
@@ -140,7 +139,6 @@ impl From<u64> for Position {
         }
     }
 }
-
 
 /// denotes available farms which can be used
 /// additionally these serve as "seed words"
@@ -346,7 +344,7 @@ impl From<&str> for Farms {
             "whETH-SOL-ORCA" => Farms::whEthSolOrcaVault,
             "mSOL-USDC-RAY" => Farms::mSolUsdcRayVault,
             "mSOL-USDT-RAY" => Farms::mSolUsdtRayVault,
-            "ETH-mSOL-RAY"  => Farms::EthMSolRayVault,
+            "ETH-mSOL-RAY" => Farms::EthMSolRayVault,
             "BTC-mSOL-RAY" => Farms::BtcMSolRayVault,
             "mSOL-RAY-RAY" => Farms::mSolRayRayVault,
             "SAMO-RAY-RAY" => Farms::SamoRayRayVault,

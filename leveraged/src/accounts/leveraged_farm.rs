@@ -1,5 +1,5 @@
-use anchor_lang::prelude::*;
 use super::Farms;
+use anchor_lang::prelude::*;
 
 #[account(zero_copy)]
 pub struct LeveragedFarm {
@@ -46,34 +46,34 @@ pub struct LeveragedFarm {
     // the token lending program id
     pub lending_program: Pubkey,
     // for spl token swap and other
-    // similar style markets 
-    // base / coin == token_a 
+    // similar style markets
+    // base / coin == token_a
     // quote / pc == token_b
     pub base_mint: Pubkey,
     // for spl token swap and other
-    // similar style markets 
-    // base / coin == token_a 
+    // similar style markets
+    // base / coin == token_a
     // quote / pc == token_b
     pub quote_mint: Pubkey,
     // for spl token swap and other
-    // similar style markets 
-    // base / coin == token_a 
+    // similar style markets
+    // base / coin == token_a
     // quote / pc == token_b
     pub base_reserve: Pubkey,
     // for spl token swap and other
-    // similar style markets 
-    // base / coin == token_a 
+    // similar style markets
+    // base / coin == token_a
     // quote / pc == token_b
     pub quote_reserve: Pubkey,
     // for spl token swap and other
-    // similar style markets 
-    // base / coin == token_a 
+    // similar style markets
+    // base / coin == token_a
     // quote / pc == token_b
     // token account to hold base tokens
     pub base_token_account: Pubkey,
     // for spl token swap and other
-    // similar style markets 
-    // base / coin == token_a 
+    // similar style markets
+    // base / coin == token_a
     // quote / pc == token_b
     // token account to hold quotce tokens
     pub quote_token_account: Pubkey,

@@ -3,10 +3,6 @@ use static_pubkey::static_pubkey;
 
 pub mod reserves;
 
-#[cfg(feature = "ray-rayusdc-levfarm")]
-pub mod ray_rayusdc;
-#[cfg(feature = "orca-orcausdc-levfarm")]
-pub mod orca_orcausdc;
 #[cfg(feature = "orca-atlasusdc-levfarm")]
 pub mod orca_atlasusdc;
 #[cfg(feature = "orca-basisusdc-levfarm")]
@@ -17,6 +13,8 @@ pub mod orca_gmtusdc;
 pub mod orca_gstusdc;
 #[cfg(feature = "orca-orcasol-levfarm")]
 pub mod orca_orcasol;
+#[cfg(feature = "orca-orcausdc-levfarm")]
+pub mod orca_orcausdc;
 #[cfg(feature = "orca-polisusdc-levfarm")]
 pub mod orca_polisusdc;
 #[cfg(feature = "orca-samousdc-levfarm")]
@@ -35,7 +33,8 @@ pub mod orca_stsolusdc;
 pub mod orca_whethsol;
 #[cfg(feature = "orca-whethusdc-levfarm")]
 pub mod orca_whethusdc;
-
+#[cfg(feature = "ray-rayusdc-levfarm")]
+pub mod ray_rayusdc;
 
 #[cfg(feature = "ray-atlasray-levfarm")]
 pub mod ray_atlasray;
@@ -77,10 +76,10 @@ pub mod ray_realusdc;
 pub mod ray_samoray;
 #[cfg(feature = "ray-slclusdc-levfarm")]
 pub mod ray_slclusdc;
-#[cfg(feature = "ray-solusdcray-levfarm")]
-pub mod ray_solusdcray;
 #[cfg(feature = "ray-solusdc-levfarm")]
 pub mod ray_solusdc;
+#[cfg(feature = "ray-solusdcray-levfarm")]
+pub mod ray_solusdcray;
 #[cfg(feature = "ray-solusdt-levfarm")]
 pub mod ray_solusdt;
 #[cfg(feature = "ray-starsusdc-levfarm")]
@@ -96,12 +95,14 @@ pub mod ray_whethsol;
 #[cfg(feature = "ray-whethusdc-levfarm")]
 pub mod ray_whethusdc;
 
-
 pub const GLOBAL: Pubkey = static_pubkey!("HLuVf6p3SqgEKy8poYA6g26CDGuQddcbETmf8VdJKqjF");
 pub const LENDING_PROGRAM: Pubkey = static_pubkey!("4bcFeLv4nydFrsZqV5CgwCVrPhkQKsXtzfy2KyMz7ozM");
-pub const ORCA_VAULT_PROGRAM: Pubkey = static_pubkey!("FoNqK2xudK7TfKjPFxpzAcTaU2Wwyt81znT4RjJBLFQp");
-pub const RAYDIUM_VAULT_PROGRAM: Pubkey = static_pubkey!("7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4");
-pub const BORROW_AUTHORIZER: Pubkey = static_pubkey!("Gp1oj71gwapSBjSQoPkWxEyjXxDxrtBVe1ijsVThknXT");
+pub const ORCA_VAULT_PROGRAM: Pubkey =
+    static_pubkey!("FoNqK2xudK7TfKjPFxpzAcTaU2Wwyt81znT4RjJBLFQp");
+pub const RAYDIUM_VAULT_PROGRAM: Pubkey =
+    static_pubkey!("7vxeyaXGLqcp66fFShqUdHxdacp4k4kwUpRSSeoZLCZ4");
+pub const BORROW_AUTHORIZER: Pubkey =
+    static_pubkey!("Gp1oj71gwapSBjSQoPkWxEyjXxDxrtBVe1ijsVThknXT");
 
 pub struct LevFarmConfig {
     pub lending_program: Pubkey,

@@ -48,9 +48,15 @@ pub fn withdraw_orca_vault_close(
     ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&close_method).unwrap());
 
     let mut accounts = accounts.to_account_metas(None);
-    accounts.push(AccountMeta::new_readonly(lending_market_account.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_account.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new(user_farm_obligation.key(), false));
-    accounts.push(AccountMeta::new_readonly(lending_market_authority.key(), false));
+    accounts.push(AccountMeta::new_readonly(
+        lending_market_authority.key(),
+        false,
+    ));
     accounts.push(AccountMeta::new(lending_program.key(), false));
 
     Some(Instruction {
@@ -62,7 +68,7 @@ pub fn withdraw_orca_vault_close(
 
 pub fn withdraw_orca_vault_without_shares(
     accounts: Box<WithdrawOrcaFarm>,
-    obligation_index: u8
+    obligation_index: u8,
 ) -> Option<Instruction> {
     let ix_sighash = GlobalSighashDB.get_deprecated("withdraw_orca_vault_without_shares")?;
     let mut ix_data = Vec::with_capacity(9);

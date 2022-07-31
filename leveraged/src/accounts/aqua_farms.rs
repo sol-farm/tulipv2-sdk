@@ -1,8 +1,11 @@
-use solana_program::{instruction::{AccountMeta, Instruction}, pubkey::Pubkey};
-use std::str::FromStr;
-use anchor_lang::solana_program;
-use static_pubkey::static_pubkey;
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program;
+use solana_program::{
+    instruction::{AccountMeta, Instruction},
+    pubkey::Pubkey,
+};
+use static_pubkey::static_pubkey;
+use std::str::FromStr;
 
 #[derive(Debug, Clone, Copy, AnchorSerialize, AnchorDeserialize)]
 pub enum AquaFarms {
@@ -51,7 +54,7 @@ impl From<u8> for AquaFarms {
             16 => AquaFarms::SHDWSOL,
             17 => AquaFarms::SHDWUSDC,
             18 => AquaFarms::BASISUSDC,
-            19  => AquaFarms::stSOLUSDC,
+            19 => AquaFarms::stSOLUSDC,
             24 => AquaFarms::GSTUSDC,
             20 => AquaFarms::stSOLwUST,
             25 => AquaFarms::sRLYSOL,
@@ -150,7 +153,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("9F3J6RY7PTkDb3SUUpg725uXyCceBGCpZrtmYGJwgMwF"),
             AquaFarms::sRLYSOL => static_pubkey!("Df7DkQRXEpPM5basbYHi45268hmR8m7YrtraPdGgj6R6"),
             AquaFarms::GMTUSDC => static_pubkey!("46GcZFgznxUf6TpoCqJqzMpgMbbJPCAwNn8GThSt9qjC"),
-
         }
     }
     pub fn swap_authority(&self) -> Pubkey {
@@ -198,7 +200,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("wJydc21tAMxYDif8uvy5rWNGWDFNZnPPmqCvegyZRod"),
             AquaFarms::sRLYSOL => static_pubkey!("9DaRQeoEx3EjXYxhpZrcJ6no3bcAkfm9toWbngcAqSCB"),
             AquaFarms::GMTUSDC => static_pubkey!("3HGGVGTXbqT49PG3L8JQYH4jCeP5CNBG6CpJniZ434an"),
-
         }
     }
     pub fn swap_token_a(&self) -> Pubkey {
@@ -246,7 +247,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("GFso9SAGakm8ZFa3rmuonuerbcQ8ZbACNZN7idkKR5nw"),
             AquaFarms::sRLYSOL => static_pubkey!("AJzDsY4wnv8nWSWoBimY6hWJpWC54oEgmfbV7YGXsLww"),
             AquaFarms::GMTUSDC => static_pubkey!("BTpvbpTArnekGgbXRqjfSvp7gENtHXvZCAwuUKQNYMeN"),
-
         }
     }
     pub fn swap_token_b(&self) -> Pubkey {
@@ -294,8 +294,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("EZ7pJskN2a4pDknrdkLzGDHpzjbfgdBj3Tt594K9HZbL"),
             AquaFarms::sRLYSOL => static_pubkey!("qytd7KfK3pFVWog53xUVE8dqD1sBxa1H13VnF6ADGSd"),
             AquaFarms::GMTUSDC => static_pubkey!("DdBTJuiAXQQ7gLVXBXNPbVEG8g1avRxiJXhH5LhBytYW"),
-
-
         }
     }
     pub fn swap_pool_mint(&self) -> Pubkey {
@@ -346,7 +344,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("HTZd53fYwYQRyAjiaPsZy9Gf41gobFdqkF4oKe3XLi95"),
             AquaFarms::sRLYSOL => static_pubkey!("3dXdXg5HPyZ73GFC9LkSn3thdJUGeXWB8iSTHs5UcqiH"),
             AquaFarms::GMTUSDC => static_pubkey!("CFxQF5kNAtbbDj298Xr47Sf4mkSyuzWpRH97hrdQ6kxi"),
-
         }
     }
     // this seems to not either be used, or ends up being the swap_token_a :think:
@@ -436,24 +433,26 @@ impl AquaFarms {
                 static_pubkey!("7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs")
             }
             AquaFarms::SAMOUSDC => static_pubkey!("7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"),
-            AquaFarms::SHDWUSDC | AquaFarms::SHDWSOL => static_pubkey!("SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y"),
+            AquaFarms::SHDWUSDC | AquaFarms::SHDWSOL => {
+                static_pubkey!("SHDWyBxihqiCj6YekG2GUr7wqKLeLAMK1gHZck9pL6y")
+            }
             AquaFarms::BASISUSDC => static_pubkey!("Basis9oJw9j8cw53oMV7iqsgo6ihi9ALw4QR31rcjUJa"),
             AquaFarms::stSOLUSDC => static_pubkey!("7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj"),
             AquaFarms::GSTUSDC => static_pubkey!("AFbX8oGjGpmVFywbVouvhQSRmiW2aR1mohfahi4Y2AdB"),
-            AquaFarms::stSOLUSDC | AquaFarms::stSOLwUST => static_pubkey!("7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj"),
+            AquaFarms::stSOLUSDC | AquaFarms::stSOLwUST => {
+                static_pubkey!("7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj")
+            }
             AquaFarms::sRLYSOL => static_pubkey!("RLYv2ubRMDLcGG2UyvPmnPmkfuQTsMbg4Jtygc7dmnq"),
             AquaFarms::GMTUSDC => static_pubkey!("7i5KKsX2weiTkry7jA4ZwSuXGhs5eJBEjY8vVxR4pfRx"),
-
-
         }
     }
     pub fn quote_token_mint(&self) -> Pubkey {
         match self {
             AquaFarms::ORCAUSDC
-            | AquaFarms::SOLUSDC 
-            | AquaFarms::ATLASUSDC 
-            | AquaFarms::POLISUSDC 
-            | AquaFarms::SOCNUSDC 
+            | AquaFarms::SOLUSDC
+            | AquaFarms::ATLASUSDC
+            | AquaFarms::POLISUSDC
+            | AquaFarms::SOCNUSDC
             | AquaFarms::whETHUSDC
             | AquaFarms::SAMOUSDC
             | AquaFarms::SHDWUSDC
@@ -470,7 +469,7 @@ impl AquaFarms {
             | AquaFarms::SOCNSOL
             | AquaFarms::whETHSOL
             | AquaFarms::SHDWSOL
-            | AquaFarms::sRLYSOL  => Pubkey::new_from_array([
+            | AquaFarms::sRLYSOL => Pubkey::new_from_array([
                 6, 155, 136, 87, 254, 171, 129, 132, 251, 104, 127, 99, 70, 24, 192, 53, 218, 196,
                 57, 220, 26, 235, 59, 85, 152, 160, 240, 0, 0, 0, 0, 1,
             ]),
@@ -534,7 +533,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("EQBy5YqWkLxr1xx1CZh2dDdX57XR9Ata4jNJebtuR61h"),
             AquaFarms::sRLYSOL => static_pubkey!("8phz73Nyk4XKk7btjEJbEVyvFkcXQUvVEsYcjvoxwrBf"),
             AquaFarms::GMTUSDC => static_pubkey!("FPi9U6fLhVBggWdTwsPgByjEps6w8DiMyU5LqjLtvXnd"),
-
         }
     }
     pub fn reward_token_vault(&self) -> Pubkey {
@@ -586,7 +584,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("FFjuVr4FYdRGkPwaQREVQWHsBFGwQ1LH6VkmVSJL5Vva"),
             AquaFarms::sRLYSOL => static_pubkey!("9WQhuAMn99aCkZTrREjSzogrceuPrrtfXxmjKymgqNzt"),
             AquaFarms::GMTUSDC => static_pubkey!("9rc6Cyw21Kx8ofamntNVWa9v8vza7U4hGwxne764qL25"),
-
         }
     }
     pub fn global_farm(&self) -> Pubkey {
@@ -638,8 +635,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("GxhewC22S6wsXT156yC9SARvDnijoc3YEYyLVcQFDUCx"),
             AquaFarms::sRLYSOL => static_pubkey!("9SV2NL59i1PfD72AUHDXa2KT1xWnFD3VyMgfzCRDARW1"),
             AquaFarms::GMTUSDC => static_pubkey!("DbJT9UTTt8U8xAk7BtRWC3nQHxJnNmZdZydUAhJj14TZ"),
-
-
         }
     }
     pub fn global_farm_dd(&self) -> Pubkey {
@@ -707,7 +702,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("EQBy5YqWkLxr1xx1CZh2dDdX57XR9Ata4jNJebtuR61h"),
             AquaFarms::sRLYSOL => static_pubkey!("8phz73Nyk4XKk7btjEJbEVyvFkcXQUvVEsYcjvoxwrBf"),
             AquaFarms::GMTUSDC => static_pubkey!("FPi9U6fLhVBggWdTwsPgByjEps6w8DiMyU5LqjLtvXnd"),
-
         }
     }
     pub fn global_base_token_vault_dd(&self) -> Pubkey {
@@ -774,7 +768,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("3Q44iV4URXdbS4Tk1PGs5VdWQoCxHB7zdcdMnemo8jfH"),
             AquaFarms::sRLYSOL => static_pubkey!("6gkZ7QUmxmwPLS2NK3Dr6YHtTPZs6GQrkA595WSx5iLe"),
             AquaFarms::GMTUSDC => static_pubkey!("8EnEoVX1aXkzbTzhrqDQ2aVGybbPpeWZDCYEGjjw1dyG"),
-
         }
     }
 
@@ -843,7 +836,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("FFjuVr4FYdRGkPwaQREVQWHsBFGwQ1LH6VkmVSJL5Vva"),
             AquaFarms::sRLYSOL => static_pubkey!("9WQhuAMn99aCkZTrREjSzogrceuPrrtfXxmjKymgqNzt"),
             AquaFarms::GMTUSDC => static_pubkey!("9rc6Cyw21Kx8ofamntNVWa9v8vza7U4hGwxne764qL25"),
-
         }
     }
 
@@ -911,7 +903,6 @@ impl AquaFarms {
             AquaFarms::stSOLwUST => static_pubkey!("8za7LwVuYbP2PivS3KbeohpUkSmRqLdTDxhrVzsHyFZf"),
             AquaFarms::sRLYSOL => static_pubkey!("9aHRFSsmRUuy1SZcjxBswAV4pcXrror35e8JK4WL2ny8"),
             AquaFarms::GMTUSDC => static_pubkey!("48T3au6xpUCz2Eeg6xgc3XJmCUTTH4qwmq1BytihxQMJ"),
-
         }
     }
 
@@ -969,14 +960,13 @@ impl AquaFarms {
             AquaFarms::whETHSOL => static_pubkey!("FcEro2uFpHcb7Z785CBs6q12KMJqUJKa8VTXPi4TTBMf"),
             AquaFarms::SAMOUSDC => static_pubkey!("Epvp7qMYAF21VVjacdB3VfKn6nnXQSF4rGYu8sD6Bkow"),
             AquaFarms::SHDWUSDC => static_pubkey!("25bQ6UzZpgFgnU7MqZdqM9Axi6oJunytRL2LgXruDWZB"),
-            AquaFarms::SHDWSOL => static_pubkey!("E3fxkJGNNAWf5xXDfMdq5qofBVkQtLKxkP7gG6Up21Ts"),    
+            AquaFarms::SHDWSOL => static_pubkey!("E3fxkJGNNAWf5xXDfMdq5qofBVkQtLKxkP7gG6Up21Ts"),
             AquaFarms::BASISUSDC => static_pubkey!("EWXsQ5XMMn1tesDhtuMhgH5e5wg7hWgsQPZxGhaZdBaL"),
             AquaFarms::stSOLUSDC => static_pubkey!("EfK84vYEKT1PoTJr6fBVKFbyA7ZoftfPo2LQPAJG1exL"),
             AquaFarms::GSTUSDC => static_pubkey!("87E4KtN7F4LivKhjqXaoQAvS3a8HnM4DnMUrbMrkVvXY"),
             AquaFarms::stSOLwUST => static_pubkey!("9F3J6RY7PTkDb3SUUpg725uXyCceBGCpZrtmYGJwgMwF"),
             AquaFarms::sRLYSOL => static_pubkey!("Df7DkQRXEpPM5basbYHi45268hmR8m7YrtraPdGgj6R6"),
             AquaFarms::GMTUSDC => static_pubkey!("46GcZFgznxUf6TpoCqJqzMpgMbbJPCAwNn8GThSt9qjC"),
-
         }
     }
     pub fn pool_fee_account(&self) -> Pubkey {
@@ -1009,14 +999,13 @@ impl AquaFarms {
             AquaFarms::whETHUSDC => static_pubkey!("AVw52spXtzFh4bb5ghhpJaDbLx3XWuY85eQNDEo3X1yN"),
             AquaFarms::SAMOUSDC => static_pubkey!("9U8UF7d8kBvsS25XoZnjmVQ9vGkP4BUnHJgfc615BvG1"),
             AquaFarms::SHDWUSDC => static_pubkey!("9wmHbXURZ4zTPSj1KqoRSCdBRGUF7jrURzf7BB39cxM4"),
-            AquaFarms::SHDWSOL => static_pubkey!("G9HR4sFJufdUovMGn4qc97r7fhgJCkTDnn4BT2wPWYar"),    
+            AquaFarms::SHDWSOL => static_pubkey!("G9HR4sFJufdUovMGn4qc97r7fhgJCkTDnn4BT2wPWYar"),
             AquaFarms::BASISUSDC => static_pubkey!("4FjEd37W9FExXq85nLeuNWuhUaTwkFdnqewt3E3qoYAh"),
             AquaFarms::stSOLUSDC => static_pubkey!("CJhL3UGesECFt6fvLB3csrGMuHf3M3G78pUzTopUiV8T"),
             AquaFarms::GSTUSDC => static_pubkey!("BynpQprCNjcY2KHeffDKzquyKWvJxikty3donrMT4ZPU"),
             AquaFarms::stSOLwUST => static_pubkey!("5rCbmppxMBHwBjCkLUP6fireQ12cL8LRa26QRUimoxN6"),
             AquaFarms::sRLYSOL => static_pubkey!("B3Ao2fEX2isX8UQ99EuPz3BDzUfQTPeYS7KVvbCnkrXm"),
             AquaFarms::GMTUSDC => static_pubkey!("3pBqsnahNsm6p14FFjtMCGfD1VCQNcUEdNEeSwTGfE2q"),
-
         }
     }
     pub fn solfarm_vault(&self) -> Pubkey {
@@ -1057,16 +1046,16 @@ impl AquaFarms {
     }
     pub fn is_double_dip(&self) -> bool {
         match self {
-            AquaFarms::ATLASUSDC 
-            | AquaFarms::POLISUSDC 
-            | AquaFarms::SAMOUSDC 
-            | AquaFarms::SHDWUSDC 
-            | AquaFarms::SHDWSOL 
-            | AquaFarms::BASISUSDC 
+            AquaFarms::ATLASUSDC
+            | AquaFarms::POLISUSDC
+            | AquaFarms::SAMOUSDC
+            | AquaFarms::SHDWUSDC
+            | AquaFarms::SHDWSOL
+            | AquaFarms::BASISUSDC
             | AquaFarms::stSOLUSDC
             | AquaFarms::stSOLwUST
             | AquaFarms::sRLYSOL => true,
-            _ => false
+            _ => false,
         }
     }
 }

@@ -16,14 +16,12 @@ pub struct CreateUserFarmObligation {
     pub system_program: Pubkey,
 }
 
-pub fn create_user_farm_obligation(
-    accounts: CreateUserFarmObligation,
-) -> Option<Instruction> {
+pub fn create_user_farm_obligation(accounts: CreateUserFarmObligation) -> Option<Instruction> {
     let ix_sighash = GlobalSighashDB.get_deprecated("create_user_farm_obligation")?;
     Some(Instruction {
         data: ix_sighash.to_vec(),
         program_id: crate::ID,
-        accounts: accounts.to_account_metas(None)
+        accounts: accounts.to_account_metas(None),
     })
 }
 
@@ -32,7 +30,7 @@ impl ToAccountMetas for CreateUserFarmObligation {
         vec![
             AccountMeta::new(self.authority, true),
             AccountMeta::new(self.user_farm, false),
-            AccountMeta::new_readonly(self.leveraged_farm ,false),
+            AccountMeta::new_readonly(self.leveraged_farm, false),
             AccountMeta::new(self.user_farm_obligation, false),
             AccountMeta::new(self.lending_market, false),
             AccountMeta::new(self.obligation_vault_address, false),
@@ -40,7 +38,7 @@ impl ToAccountMetas for CreateUserFarmObligation {
             AccountMeta::new_readonly(self.rent, false),
             AccountMeta::new_readonly(self.lending_program, false),
             AccountMeta::new_readonly(self.token_program, false),
-            AccountMeta::new_readonly(self.system_program, false)
+            AccountMeta::new_readonly(self.system_program, false),
         ]
     }
 }

@@ -2,7 +2,6 @@ use anchor_lang::prelude::*;
 use sighashdb::GlobalSighashDB;
 use solana_program::instruction::Instruction;
 
-
 pub struct AddLiquidity {
     pub authority: Pubkey,
     pub user_farm: Pubkey,
