@@ -20,7 +20,7 @@ pub mod vault_config {
     pub const ACCOUNT: Pubkey = static_pubkey!("EkePqacuxaubJJxCYW9RxqyXc1r4LzLJTRfF4bW64UQv");
     pub const PDA: Pubkey = static_pubkey!("DSzcCvDSQxhhvPfdu1M2aNi1jYBtdUmoFNMsnu6wK41L");
     pub const REWARD_A_TOKEN_ACCOUNT: Pubkey = static_pubkey!("4qXxKeyqFmNz3TEnWSofNCQQrGa5Jqqm9chYeozZH3Cg");
-    pub const REWARD_B_TOKEN_ACCOUNT: Pubkey = static_Pubkey!("5Zeq2DGLqrGngpdnNemydZhvzxDRHiB4uaNkvqtPtGYs");
+    pub const REWARD_B_TOKEN_ACCOUNT: Pubkey = static_pubkey!("5Zeq2DGLqrGngpdnNemydZhvzxDRHiB4uaNkvqtPtGYs");
     pub const POOL_REWARD_A_TOKEN_ACCOUNT: Pubkey = static_pubkey!("5ihtMmeTAx3kdf459Yt3bqos5zDe4WBBcSZSB6ooNxLt");
     pub const POOL_REWARD_B_TOKEN_ACCOUNT: Pubkey = static_pubkey!("5ihtMmeTAx3kdf459Yt3bqos5zDe4WBBcSZSB6ooNxLt");
     pub const POOL_AUTHORITY: Pubkey = static_pubkey!("DdFXxCbn5vpxPRaGmurmefCTTSUa5XZ9Kh6Noc4bvrU9");
@@ -41,7 +41,7 @@ pub mod market_config {
     pub const SERUM_ASKS: Pubkey = static_pubkey!("7bKEjcZEqVAWsiRGDnxXvTnNwhZLt2SH6cHi5hpcg5de");
     pub const SERUM_COIN_VAULT: Pubkey = static_pubkey!("5QDTh4Bpz4wruWMfayMSjUxRgDvMzvS2ifkarhYtjS1B");
     pub const SERUM_PC_VAULT: Pubkey = static_pubkey!("76CofnHCvo5wEKtxNWfLa2jLDz4quwwSHFMne6BWWqx");
-    pub const SERUM_FEE_RECEIVER: Pubkey = static_pubkey!("F5u9eKddWdRyRbK9fDKB1AMCQJKsx8GGAoXSL6LEvA6n,");
+    pub const SERUM_FEE_RECEIVER: Pubkey = static_pubkey!("F5u9eKddWdRyRbK9fDKB1AMCQJKsx8GGAoXSL6LEvA6n");
     pub const SERUM_OPEN_ORDERS: Pubkey = static_pubkey!("J1HDghAEkThP8Xn9KhkRPCABHCdPPJT9YF4hpHm8skYX");
     pub const SERUM_VAULT_SIGNER: Pubkey = static_pubkey!("AorjCaSV1L6NGcaFZXEyUrmbSqY3GdB3YXbQnrh85v6F");
     pub const LP_MINT: Pubkey = static_pubkey!("7P5Thr9Egi2rvMmEuQkLn8x8e8Qro7u2U7yLD2tU2Hbe");

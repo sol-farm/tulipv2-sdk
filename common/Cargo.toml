@@ -79,6 +79,8 @@ default = [
     "ray-msolusdt-levfarm",
     "ray-starsusdc-levfarm",
     "ray-prismusdc-levfarm",
+    "ray-raysrm-levfarm",
+    "ray-solusdc-levfarm"
 ]
 usdc-optimizer = []
 usdt-optimizer = []
@@ -130,3 +132,4 @@ ray-btcstsol-levfarm = []
 ray-msolusdt-levfarm = []
 ray-starsusdc-levfarm = []
 ray-prismusdc-levfarm = []
+ray-solusdc-levfarm = []
