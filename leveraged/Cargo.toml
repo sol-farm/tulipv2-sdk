@@ -1,6 +1,6 @@
 [package]
 name = "tulipv2-sdk-levfarm"
-version = "0.9.17"
+version = "0.9.21"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "farm instructions for v1 leveraged yield farming"
@@ -102,7 +102,7 @@ ray-prismusdc-levfarm = []
 [dependencies]
 solana-program = "1.9.13"
 spl-token = "3.2.0"
-tulipv2-sdk-common = {path = "../common", version = "0.9.18"}
+tulipv2-sdk-common = {path = "../common", version = "0.9.21"}
 itertools = "0.10.3"
 num-derive = "0.3"
 thiserror = "1.0"
