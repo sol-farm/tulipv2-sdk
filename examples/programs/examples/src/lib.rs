@@ -3,7 +3,7 @@ use anchor_spl::token::{Mint, TokenAccount};
 use tulipv2_sdk_common::config::deposit_tracking::traits::IssueShares;
 use tulipv2_sdk_common::config::deposit_tracking::traits::RegisterDepositTracking;
 use tulipv2_sdk_common::config::deposit_tracking::traits::WithdrawDepositTracking;
-use tulipv2_sdk_common::config::lending::traits::WithdrawMultiOptimizerVault;
+use tulipv2_sdk_common::config::strategy::traits::WithdrawMultiOptimizerVault;
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_vaults::instructions::{
@@ -228,7 +228,7 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let registration_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::register_deposit_tracking_ix(
+                let registration_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::register_deposit_tracking_ix(
                         *ctx.accounts.authority.key,
                     );
                 anchor_lang::solana_program::program::invoke(
@@ -407,7 +407,7 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let issue_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
+                let issue_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
                     *ctx.accounts.authority.key,
                 );
 
@@ -586,7 +586,7 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_deposit_tracking_ix(
+                let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_deposit_tracking_ix(
                     *ctx.accounts.authority.key,
                 );
                 anchor_lang::solana_program::program::invoke(
@@ -621,9 +621,9 @@ pub mod examples {
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
+            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
                 *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::lending::Platform::MangoV3,
+                tulipv2_sdk_common::config::strategy::Platform::MangoV3,
             ).unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
@@ -693,9 +693,9 @@ pub mod examples {
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
+            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
                 *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::lending::Platform::Solend,
+                tulipv2_sdk_common::config::strategy::Platform::Solend,
             ).unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
@@ -774,9 +774,9 @@ pub mod examples {
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::lending::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
+            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
                 *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::lending::Platform::Tulip,
+                tulipv2_sdk_common::config::strategy::Platform::Tulip,
             ).unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
