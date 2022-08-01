@@ -17,11 +17,20 @@ There are 4 main crates which are detailed below
 
 ## [`common`](https://crates.io/crates/tulipv2-sdk-common)
 
-The `common` folder contains a crate `tulipv2-sdk-common` which bundles together common functionality used by all the other crates, while also containing a module called `config` which contains many sub-modules, each containing all configuration information needed for interacting with a particular vault. For example `common/config/lending/usdc.rs` contains all needed accounts for working with the Tulip V2 USDC lending optimizer vault.
+The `common` folder contains a crate `tulipv2-sdk-common` which bundles together common functionality used by all the other crates, while also containing a module called `config` which provides configuration variables for easy configuration management. The configuration sub-modules can be enabled/disabled with feature flags enabling you to import only the required dependencies.
 
-### `deposit_tracking` module
+### `common/config/deposit_tracking`
 
-The "Deposit Tracking" account is a user owned account which serves two main purposes, the first acting as a "lockup" account whenever a user deposits assets, locking withdrawal for 10 minutes allowing one or more compounding cycles to take place before a user withdraw, ensuring that compounding rewards can't be gamed via quickly depositing and exiting a vault. Second is providing the ability for users to track their rewards over time.
+Provides configuration variables, traits, and instructions for deposit tracking account management
+
+### `common/config/levfarm`
+
+This module contains files in the form of `ray_X.rs` for Raydium leveraged yield farms, and `orca_X.rs` for Orca leveraged yield farms. Additionally a submodule `common/config/levfarm/reserves` provides configuration variables for all of the lending reserves.
+
+### `common/config/strategy`
+
+This module contains configuration information for the V2 strategy vaults
+
 
 ## [`farms`](https://crates.io/crates/tulipv2-sdk-farms)
 
@@ -30,9 +39,13 @@ The `farms` folder contains a crate `tulipv2-sdk-farms` which provides an enum n
 The wire representation of the farm type / farm key, is a 2 element slice of u64's, where the first element (farm identifier) is the protocol, and the second element is the particular vault for that protocol. 
 
 
-## [`lending` / v1 support](https://crates.io/crates/tulipv2-sdk-lending)
+## [`lending`](https://crates.io/crates/tulipv2-sdk-lending)
 
 The `lending` folder contains a crate `tulipv2-sdk-lending` which provides very basic support for creating instructions, and issuing CPI calls to Tulip's V1 lending program. It allows for the lending of assets through the `Obligation` account, while also allowing the caller to refresh obligations and refresh reserves.
+
+## [`leveraged`](https://crates.io/crates/tulipv2-sdk-leveraged)
+
+The `leveraged` folder contains a crate `tulipv2-sdk-leveraged` which provides accounts, instructions, and various helper functions for interacting with Tulip's leveraged yield farms
 
 ## [`vaults`](https://crates.io/crates/tulipv2-sdk-vaults)
 
