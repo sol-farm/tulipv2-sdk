@@ -53,10 +53,12 @@ The `vaults` folder contains a crate `tulipv2-sdk-vaults` which provides all v2 
 
 # Examples
 
-For now the only usage examples are in the `examples` folder which contains a basic program to register a deposit tracking account for the USDC lending optimizer, and for depositing into the USDC lending optimizer, and withdrawing from the lending optimizer.
 
-Due to the architecture of Tulip's V2 vaults program, the deposit instructions will fail on localnet as there are some sweeping mechanisms used to sweep funds internally between the various protocols that a single optimizer vault supports.
+The `examples` folder contains an anchor program that provides usage examples for all of the crates, including lending, leverage farming, v1/v2 vaults, etc.. In addition to this, anchor unit tests are provided which show how to invoke the example program instructions.
 
-Additionally the localnet setup clones mainnet state to provide a stable set of accounts, etc.. that are used for testing. For instance at the time the snapshot was taken, the USDC lending optimizer was deposited into Solend only. As such the instructions for tulip/mango deposits fail to execute correctly.
+The example program uses mainnet account cloning to simulate real-world usage, however due to some peculiarities with mainnet cloned accounts and localnet, certain tests will fail, namely:
 
-These errors have been caught so that when running `anchor test` all tests pass.
+* raydium vault deposit/withdraw
+* v2 strategy vault withdrawals
+
+As such the anchor unit tests will catch these errors masking them to prevent confusion. All such instances are documented both in the anchor unit test comments
