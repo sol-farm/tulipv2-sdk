@@ -457,3 +457,27 @@ export async function findVaultRewardAccount(
   ]
   return anchor.web3.PublicKey.findProgramAddress(seeds, programId)
 }
+
+
+
+export async function findVaultRewardAAccount(
+  vault: anchor.web3.PublicKey,
+  programId: anchor.web3.PublicKey,
+): Promise<[anchor.web3.PublicKey, number]> {
+  let seeds = [
+    vault.toBuffer(),
+    Buffer.from("reward"),
+  ]
+  return anchor.web3.PublicKey.findProgramAddress(seeds, programId)
+}
+
+export async function findVaultRewardBAccount(
+  vault: anchor.web3.PublicKey,
+  programId: anchor.web3.PublicKey,
+): Promise<[anchor.web3.PublicKey, number]> {
+  let seeds = [
+    vault.toBuffer(),
+    Buffer.from("rewardb")
+  ]
+  return anchor.web3.PublicKey.findProgramAddress(seeds, programId)
+}
