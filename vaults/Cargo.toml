@@ -30,6 +30,7 @@ tulipv2-sdk-farms = {path = "../farms", version = "0.9.21"}
 sighashdb = "0.1.36"
 so-defi-atrix = "0.1.16"
 bytemuck = "1.7.2"
+tulipv2-sdk-levfarm = {path = "../leveraged" }
 [dev-dependencies]
 proptest = "1.0.0"
 solana-client = "1.9.13"
