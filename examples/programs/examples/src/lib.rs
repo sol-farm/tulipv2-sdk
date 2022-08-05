@@ -1658,10 +1658,19 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, DepositRaydiumV1Vault<'info>>,
         amount: u64,
     ) -> Result<()> {
-
         let deposit_accounts: tulipv2_sdk_vaults::v1::instructions::raydium::DepositVault = From::from(&*ctx.accounts);
+        let user_info_for_derive = {
+            let account: Box<tulipv2_sdk_vaults::v1::accounts::raydium::Vault> = Box::new(
+                tulipv2_sdk_vaults::v1::accounts::raydium::load(&ctx.accounts.vault)?
+            );
+            if account.migrated {
+                account.old_user_info_account
+            } else {
+                ctx.accounts.user_info_account.key()
+            }
+        };
         let user_balance_nonce = tulipv2_sdk_vaults::v1::accounts::raydium::derive_balance_account_address(
-            ctx.accounts.user_info_account.key(),
+            user_info_for_derive,
             ctx.accounts.authority.key(),
         ).1;
         let meta_nonce = tulipv2_sdk_vaults::v1::accounts::raydium::derive_balance_account_metadata_address(
@@ -2765,4 +2774,5 @@ pub struct DepositRaydiumV1Vault<'info> {
     pub token_program_id: AccountInfo<'info>,
     #[account(mut)]
     pub user_balance_metadata: AccountInfo<'info>,
+    pub raydium_vault_program: AccountInfo<'info>,
 }

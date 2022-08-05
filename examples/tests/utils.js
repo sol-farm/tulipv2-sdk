@@ -28,7 +28,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findVaultRewardAccount = exports.findVaultBalanceMetadataAccount = exports.findVaultBalanceAccount = exports.findUserPositionInfoAddress = exports.findUserFArmObligationVaultAddress = exports.findUserFarmAddress = exports.findUserFarmObligationAddress = exports.sleep = exports.deriveSunnyVaultAddress = exports.deriveQuarryVaultConfigDataAddress = exports.deriveQuarryVaultRewardTokenAccount = exports.deriveQuarryMinerAddress = exports.deriveOrcaDDWithdrawQueueAddress = exports.deriveEphemeralTrackingAddress = exports.deriveMultiDepositStateTransitionAddress = exports.deriveTrackingOrcaDDQueueAddress = exports.deriveOrcaDDCompoundQueueAddress = exports.deriveOrcaUserFarmAddress = exports.deriveMangoAccountAddress = exports.deriveLendingPlatformConfigDataAddress = exports.deriveLndingPlatformInformationAccountAddress = exports.deriveLendingPlatformAccountAddress = exports.findAssociatedStakeInfoAddress = exports.createAssociatedTokenAccount = exports.deriveTrackingQueueAddress = exports.deriveTrackingPdaAddress = exports.deriveTrackingAddress = exports.deriveSerumFeeRecipientAddress = exports.deriveSerumTradeOpenOrdersAddress = exports.deriveSerumTradePdaAddress = exports.deriveSerumTradeAccount = exports.deriveCompoundQueueAddress = exports.deriveWithdrawQueueAddress = exports.deriveRaydiumUserStakeInfoAddress = exports.deriveSharesMintAddress = exports.deriveVaultPdaAddress = exports.deriveVaultAddress = exports.deriveManagementAddress = void 0;
+exports.findVaultRewardBAccount = exports.findVaultRewardAAccount = exports.findVaultRewardAccount = exports.findVaultBalanceMetadataAccount = exports.findVaultBalanceAccount = exports.findUserPositionInfoAddress = exports.findUserFArmObligationVaultAddress = exports.findUserFarmAddress = exports.findUserFarmObligationAddress = exports.sleep = exports.deriveSunnyVaultAddress = exports.deriveQuarryVaultConfigDataAddress = exports.deriveQuarryVaultRewardTokenAccount = exports.deriveQuarryMinerAddress = exports.deriveOrcaDDWithdrawQueueAddress = exports.deriveEphemeralTrackingAddress = exports.deriveMultiDepositStateTransitionAddress = exports.deriveTrackingOrcaDDQueueAddress = exports.deriveOrcaDDCompoundQueueAddress = exports.deriveOrcaUserFarmAddress = exports.deriveMangoAccountAddress = exports.deriveLendingPlatformConfigDataAddress = exports.deriveLndingPlatformInformationAccountAddress = exports.deriveLendingPlatformAccountAddress = exports.findAssociatedStakeInfoAddress = exports.createAssociatedTokenAccount = exports.deriveTrackingQueueAddress = exports.deriveTrackingPdaAddress = exports.deriveTrackingAddress = exports.deriveSerumFeeRecipientAddress = exports.deriveSerumTradeOpenOrdersAddress = exports.deriveSerumTradePdaAddress = exports.deriveSerumTradeAccount = exports.deriveCompoundQueueAddress = exports.deriveWithdrawQueueAddress = exports.deriveRaydiumUserStakeInfoAddress = exports.deriveSharesMintAddress = exports.deriveVaultPdaAddress = exports.deriveVaultAddress = exports.deriveManagementAddress = void 0;
 const anchor = __importStar(require("@project-serum/anchor"));
 const serumAssoToken = __importStar(require("@project-serum/associated-token"));
 const spl_token_1 = require("@solana/spl-token");
@@ -331,3 +331,23 @@ function findVaultRewardAccount(vaultBalanceMetadataAccount, obligationVaultAcco
     });
 }
 exports.findVaultRewardAccount = findVaultRewardAccount;
+function findVaultRewardAAccount(vault, programId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let seeds = [
+            vault.toBuffer(),
+            Buffer.from("reward"),
+        ];
+        return anchor.web3.PublicKey.findProgramAddress(seeds, programId);
+    });
+}
+exports.findVaultRewardAAccount = findVaultRewardAAccount;
+function findVaultRewardBAccount(vault, programId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let seeds = [
+            vault.toBuffer(),
+            Buffer.from("rewardb")
+        ];
+        return anchor.web3.PublicKey.findProgramAddress(seeds, programId);
+    });
+}
+exports.findVaultRewardBAccount = findVaultRewardBAccount;
