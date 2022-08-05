@@ -300,7 +300,6 @@ describe("prepares test data", () => {
   })
 })
 describe("examples", () => {
-  return;
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -623,7 +622,6 @@ describe("examples", () => {
   });
 });
 describe("test lending instructions via usdc ",  () => {
-  return;
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -692,7 +690,6 @@ describe("test lending instructions via usdc ",  () => {
 })
 
 describe("tests leverage farm instructions via ray-usdc", () => {
-  return;
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -1106,7 +1103,6 @@ describe("tests leverage farm instructions via ray-usdc", () => {
 
 
 describe("tests leverage farm instructions via orca-usdc non double dip", () => {
-  return;
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -1226,7 +1222,6 @@ describe("tests leverage farm instructions via orca-usdc non double dip", () => 
   })
 })
 describe("tests ray-usdc auto vaults", () => {
-  return;
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -1399,7 +1394,6 @@ describe("tests ray-usdc auto vaults", () => {
   })
 })
 describe("tests orca-usdc auto vaults", () => {
-  return;
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -1570,7 +1564,6 @@ describe("tests orca-usdc auto vaults", () => {
 
 })
 describe("tests orca atlas-usdc double dip auto vaults",() => {
-  return;
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -1764,7 +1757,6 @@ describe("tests orca atlas-usdc double dip auto vaults",() => {
   });
 })
 describe("tests atrix usdr-usdc auto vaults", () => {
-  return;
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -1904,7 +1896,10 @@ describe("tests raydium v1 vault deposit", () => {
   })
   it("deposits into ray-usdc vault", async () => {
     console.log("depositing into ray-usdc v1 raydium vault");
-    program.rpc.depositRaydiumVaultV1(one, {
+    await program.rpc.depositRaydiumVaultV1(one.div(new anchor.BN(2)), {
+      options: {
+        skipPreflight: true
+      },
       accounts: {
         authority: provider.wallet.publicKey,
         authorityTokenAccount: yourRayUsdcLpTokenAccount,
@@ -1928,12 +1923,49 @@ describe("tests raydium v1 vault deposit", () => {
         userBalanceMetadata: userBalanceMetadataAccount,
         raydiumVaultProgram: v1RaydiumVaultsProgram
       }
-    }).catch(() => {
-      console.log("expected to fail in localnet");
-    }).then(() => {
-      console.log("shouild fail in localnet");
+    }).then((onfulfilled) => {
+      console.log("should not succeed");
       process.exit(1)
+    }, (onrejected) => {
+      console.log("failure is expected")
     })
+  })
+  it("withdraws from ray-usdc vault", async () => {
+    console.log("withdrawing from ray-usdc v1 raydium vault");
+    await program.rpc.withdrawRaydiumVaultV1(one, {
+      options: {
+        skipPreflight: true
+      },
+      accounts: {
+        authority: provider.wallet.publicKey,
+        authorityTokenAccount: yourRayUsdcLpTokenAccount,
+        vaultPdaAccount: rayUsdcV1VaultPda,
+        vault: rayUsdcV1VaultAccount,
+        lpTokenAccount: rayUsdcV1VaultLpTokenAccount,
+        userBalanceAccount: userBalanceAccount,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        stakeProgramId: raydiumStakeProgramId,
+        poolId: rayUsdcPoolId,
+        poolAuthority: v1RayUsdcPoolAuthority,
+        userInfoAccount: RayUsdcV1VaultInfoAccount,
+        poolLpTokenAccount: v1RayUsdcPoolLpTokenAccount,
+        userRewardATokenAccount: rayUsdcV1VaultUserRewardATokenAccount,
+        poolRewardATokenAccount: v1RayUsdcPoolRewardATokenAccount,
+        userRewardBTokenAccount: rayUsdcV1VaultUserRewardBTokenAccount,
+        poolRewardBTokenAccount: v1RayUsdcPoolRewardBTokenAccount,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        tokenProgramId: splToken.TOKEN_PROGRAM_ID,
+        userBalanceMetadata: userBalanceMetadataAccount,
+        raydiumVaultProgram: v1RaydiumVaultsProgram
+      }
+    }).then((onfulfilled) => {
+      console.log("should not succeed");
+      process.exit(1)
+    }, (onrejected) => {
+      console.log("failure is expected")
+    })
+    console.log("withdrew from ray-usdc vault")
   })
 })
 const timer = ms => new Promise( res => setTimeout(res, ms));

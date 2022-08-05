@@ -62,3 +62,14 @@ The example program uses mainnet account cloning to simulate real-world usage, h
 * v2 strategy vault withdrawals
 
 As such the anchor unit tests will catch these errors masking them to prevent confusion. All such instances are documented both in the anchor unit test comments
+
+## Usage
+
+Before running the examples you will need to prepare the test environment to work with your accounts. You should have a wallet address with the following balances for tests to work properly:
+
+* 15 USDC
+* 1 ORCA
+* 1 ATLAS
+* 1 USDr-USDC atrix lp token
+
+Note, if all you're interested in is running the strategy vault test, you can have 10 USDC.

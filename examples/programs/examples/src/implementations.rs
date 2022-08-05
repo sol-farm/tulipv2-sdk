@@ -264,3 +264,30 @@ impl<'info> From<&DepositRaydiumV1Vault<'info>>
         }
     }
 }
+
+impl<'info> From<&WithdrawRaydiumV1Vault<'info>>
+    for tulipv2_sdk_vaults::v1::instructions::raydium::WithdrawVault
+{
+    fn from(farm_accounts: &WithdrawRaydiumV1Vault<'info>) -> Self {
+        Self {
+            authority: farm_accounts.authority.key(),
+            authority_token_account: farm_accounts.authority_token_account.key(),
+            vault_pda_account: farm_accounts.vault_pda_account.key(),
+            vault: farm_accounts.vault.key(),
+            lp_token_account: farm_accounts.lp_token_account.key(),
+            user_balance_account: farm_accounts.user_balance_account.key(),
+            stake_program_id: farm_accounts.stake_program_id.key(),
+            pool_id: farm_accounts.pool_id.key(),
+            pool_authority: farm_accounts.pool_authority.key(),
+            user_info_account: farm_accounts.user_info_account.key(),
+            pool_lp_token_account: farm_accounts.pool_lp_token_account.key(),
+            user_reward_a_token_account: farm_accounts.user_reward_a_token_account.key(),
+            pool_reward_a_token_account: farm_accounts.pool_reward_a_token_account.key(),
+            user_reward_b_token_account: farm_accounts.user_reward_b_token_account.key(),
+            pool_reward_b_token_account: farm_accounts.pool_reward_b_token_account.key(),
+            clock: farm_accounts.clock.key(),
+            token_program_id: farm_accounts.token_program_id.key(),
+            user_balance_meta: farm_accounts.user_balance_metadata.key(),
+        }
+    }
+}
