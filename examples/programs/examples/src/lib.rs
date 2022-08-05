@@ -1653,6 +1653,122 @@ pub mod examples {
         }
         Ok(())
     }
+
+    pub fn deposit_raydium_vault_v1<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, DepositRaydiumV1Vault<'info>>,
+        amount: u64,
+    ) -> Result<()> {
+        let deposit_accounts: tulipv2_sdk_vaults::v1::instructions::raydium::DepositVault = From::from(&*ctx.accounts);
+        let user_info_for_derive = {
+            let account: Box<tulipv2_sdk_vaults::v1::accounts::raydium::Vault> = Box::new(
+                tulipv2_sdk_vaults::v1::accounts::raydium::load(&ctx.accounts.vault)?
+            );
+            if account.migrated {
+                account.old_user_info_account
+            } else {
+                ctx.accounts.user_info_account.key()
+            }
+        };
+        let user_balance_nonce = tulipv2_sdk_vaults::v1::accounts::raydium::derive_balance_account_address(
+            user_info_for_derive,
+            ctx.accounts.authority.key(),
+        ).1;
+        let meta_nonce = tulipv2_sdk_vaults::v1::accounts::raydium::derive_balance_account_metadata_address(
+            ctx.accounts.user_balance_account.key(),
+            ctx.accounts.authority.key(),
+        ).1;
+        let ix = tulipv2_sdk_vaults::v1::instructions::raydium::new_deposit_vault_ix(
+            deposit_accounts,
+            user_balance_nonce,
+            amount,
+            meta_nonce
+        ).unwrap();
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &[
+                // validate these accounts, this is not safe
+                ctx.accounts.authority.to_account_info(),
+                ctx.accounts.authority_token_account.to_account_info(),
+                ctx.accounts.vault_pda_account.to_account_info(),
+                ctx.accounts.vault.to_account_info(),
+                ctx.accounts.lp_token_account.to_account_info(),
+                ctx.accounts.user_balance_account.to_account_info(),
+                ctx.accounts.system_program.to_account_info(),
+                ctx.accounts.stake_program_id.to_account_info(),
+                ctx.accounts.pool_id.to_account_info(),
+                ctx.accounts.pool_authority.to_account_info(),
+                ctx.accounts.user_info_account.to_account_info(),
+                ctx.accounts.pool_lp_token_account.to_account_info(),
+                ctx.accounts.user_reward_a_token_account.to_account_info(),
+                ctx.accounts.pool_reward_a_token_account.to_account_info(),
+                ctx.accounts.user_reward_b_token_account.to_account_info(),
+                ctx.accounts.pool_reward_b_token_account.to_account_info(),
+                ctx.accounts.clock.to_account_info(),
+                ctx.accounts.rent.to_account_info(),
+                ctx.accounts.token_program_id.to_account_info(),
+                ctx.accounts.user_balance_metadata.to_account_info(),
+            ],
+        )?;
+
+        Ok(())
+    }
+    pub fn withdraw_raydium_vault_v1<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, WithdrawRaydiumV1Vault<'info>>,
+        amount: u64,
+    ) -> Result<()> {
+        let withdraw_accounts: tulipv2_sdk_vaults::v1::instructions::raydium::WithdrawVault = From::from(&*ctx.accounts);
+        let user_info_for_derive = {
+            let account: Box<tulipv2_sdk_vaults::v1::accounts::raydium::Vault> = Box::new(
+                tulipv2_sdk_vaults::v1::accounts::raydium::load(&ctx.accounts.vault)?
+            );
+            if account.migrated {
+                account.old_user_info_account
+            } else {
+                ctx.accounts.user_info_account.key()
+            }
+        };
+        let user_balance_nonce = tulipv2_sdk_vaults::v1::accounts::raydium::derive_balance_account_address(
+            user_info_for_derive,
+            ctx.accounts.authority.key(),
+        ).1;
+        let meta_nonce = tulipv2_sdk_vaults::v1::accounts::raydium::derive_balance_account_metadata_address(
+            ctx.accounts.user_balance_account.key(),
+            ctx.accounts.authority.key(),
+        ).1;
+        let ix = tulipv2_sdk_vaults::v1::instructions::raydium::new_withdraw_vault_ix(
+            withdraw_accounts,
+            amount,
+            meta_nonce
+        ).unwrap();
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &[
+                // validate these accounts, this is not safe
+                ctx.accounts.authority.to_account_info(),
+                ctx.accounts.authority_token_account.to_account_info(),
+                ctx.accounts.vault_pda_account.to_account_info(),
+                ctx.accounts.vault.to_account_info(),
+                ctx.accounts.lp_token_account.to_account_info(),
+                ctx.accounts.user_balance_account.to_account_info(),
+                ctx.accounts.system_program.to_account_info(),
+                ctx.accounts.stake_program_id.to_account_info(),
+                ctx.accounts.pool_id.to_account_info(),
+                ctx.accounts.pool_authority.to_account_info(),
+                ctx.accounts.user_info_account.to_account_info(),
+                ctx.accounts.pool_lp_token_account.to_account_info(),
+                ctx.accounts.user_reward_a_token_account.to_account_info(),
+                ctx.accounts.pool_reward_a_token_account.to_account_info(),
+                ctx.accounts.user_reward_b_token_account.to_account_info(),
+                ctx.accounts.pool_reward_b_token_account.to_account_info(),
+                ctx.accounts.clock.to_account_info(),
+                ctx.accounts.rent.to_account_info(),
+                ctx.accounts.token_program_id.to_account_info(),
+                ctx.accounts.user_balance_metadata.to_account_info(),
+            ],
+        )?;
+
+        Ok(())
+    }
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -2043,8 +2159,10 @@ pub struct OrcaAddLiquidityAccounts<'info> {
 
 #[derive(Accounts)]
 pub struct LogExchangeRate<'info> {
+    /// CHECK: .
     pub vault: AccountInfo<'info>,
     pub shares_mint: Box<Account<'info, Mint>>,
+    /// CHECK: .
     pub vault_program: AccountInfo<'info>,
 }
 
@@ -2676,4 +2794,111 @@ pub struct WithdrawOrcaFarm<'info> {
     /// CHECK: .
     pub user_farm: AccountInfo<'info>, // 10
     */
+}
+
+#[derive(Accounts)]
+pub struct DepositRaydiumV1Vault<'info> {
+    /// CHECK: .
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub authority_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    #[account(mut)]
+     pub vault_pda_account: AccountInfo<'info>,
+     /// CHECK: .
+    #[account(mut)]
+    pub vault: AccountInfo<'info>,
+    #[account(mut)]
+    pub lp_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_balance_account: AccountInfo<'info>,
+    /// CHECK: .
+    pub system_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub stake_program_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_info_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_lp_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub user_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub user_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    pub clock: Sysvar<'info, Clock>,
+    pub rent: Sysvar<'info, Rent>,
+    /// CHECK: .
+    pub token_program_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_balance_metadata: AccountInfo<'info>,
+    /// CHECK: .
+    pub raydium_vault_program: AccountInfo<'info>,
+}
+
+
+#[derive(Accounts)]
+pub struct WithdrawRaydiumV1Vault<'info> {
+    /// CHECK: .
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    pub authority_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    #[account(mut)]
+     pub vault_pda_account: AccountInfo<'info>,
+     /// CHECK: .
+    #[account(mut)]
+    pub vault: AccountInfo<'info>,
+    #[account(mut)]
+    pub lp_token_account:  Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_balance_account: AccountInfo<'info>,
+    /// CHECK: .
+    pub system_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub stake_program_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_info_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub pool_lp_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub user_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_reward_a_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub user_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    pub pool_reward_b_token_account: Box<Account<'info, TokenAccount>>,
+    pub clock: Sysvar<'info, Clock>,
+    pub rent: Sysvar<'info, Rent>,
+    /// CHECK: .
+    pub token_program_id: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_balance_metadata: AccountInfo<'info>,
+    /// CHECK: .
+    pub raydium_vault_program: AccountInfo<'info>,
 }

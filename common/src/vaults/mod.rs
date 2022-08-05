@@ -1,4 +1,9 @@
+
+#![allow(non_upper_case_globals)]
+
 //! provides helper functions for parsing the Tulip V2 vault tag format
+
+pub mod v1;
 
 /// parses a string representation of a vault tag
 /// into a 32 byte array . if the length of the string
