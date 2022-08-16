@@ -3487,6 +3487,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "tulipv2-sdk-lending-anchor"
+version = "0.1.0"
+dependencies = [
+ "anchor-lang",
+ "tulipv2-sdk-common",
+ "tulipv2-sdk-lending",
+]
+
+[[package]]
 name = "tulipv2-sdk-levfarm"
 version = "0.9.21"
 dependencies = [

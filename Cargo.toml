@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "lending",
+    "lending-anchor",
     "farms",
     "common",
     "vaults",
