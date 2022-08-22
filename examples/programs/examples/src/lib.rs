@@ -1769,6 +1769,14 @@ pub mod examples {
 
         Ok(())
     }
+    pub fn deposit_orca_vault_v1<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, DepositOrcaV1Vault<'info>>,
+        amount: u64,
+    ) -> Result<()> {
+        let deposit_accounts: tulipv2_sdk_vaults::v1::instructions::orca::DepositVault = From::from(&*ctx.accounts);
+
+        Ok(())
+    }
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -2901,4 +2909,64 @@ pub struct WithdrawRaydiumV1Vault<'info> {
     pub user_balance_metadata: AccountInfo<'info>,
     /// CHECK: .
     pub raydium_vault_program: AccountInfo<'info>,
+}
+
+
+
+#[derive(Accounts)]
+pub struct DepositOrcaV1Vault<'info> {
+    /// CHECK: .
+    #[account(mut, signer)]
+    pub authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub vault_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub vault_user_account: AccountInfo<'info>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub rent: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub vault_pda: AccountInfo<'info>,
+    /// CHECK: .
+    pub system_program: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm_owner: AccountInfo<'info>,
+    /// CHECK: .
+    pub user_transfer_authority: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_base_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_reward_token_account: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub global_base_token_vault: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub farm_token_mint: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub global_farm: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub user_farm: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub global_reward_token_vault: AccountInfo<'info>,
+    /// CHECK: .
+    pub convert_authority: AccountInfo<'info>,
+    /// CHECK: .
+    pub aqua_farm_program: AccountInfo<'info>,
+    /// CHECK: .
+    #[account(mut)]
+    pub funding_token_account: AccountInfo<'info>,
 }

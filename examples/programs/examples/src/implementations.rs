@@ -291,3 +291,32 @@ impl<'info> From<&WithdrawRaydiumV1Vault<'info>>
         }
     }
 }
+
+impl<'info> From<&DepositOrcaV1Vault<'info>>
+    for tulipv2_sdk_vaults::v1::instructions::orca::DepositVault
+{
+    fn from(farm_accounts: &DepositOrcaV1Vault<'info>) -> Self {
+        Self {
+            authority: farm_accounts.authority.key(),
+            vault_account: farm_accounts.vault_account.key(),
+            vault_user_account: farm_accounts.vault_user_account.key(),
+            token_program: farm_accounts.token_program.key(),
+            rent: farm_accounts.rent.key(),
+            vault_pda: farm_accounts.vault_pda.key(),
+            system_program: farm_accounts.system_program.key(),
+            user_farm_owner: farm_accounts.user_farm_owner.key(),
+            user_transfer_authority: farm_accounts.user_transfer_authority.key(),
+            user_base_token_account: farm_accounts.user_base_token_account.key(),
+            user_farm_token_account: farm_accounts.user_farm_token_account.key(),
+            user_reward_token_account: farm_accounts.user_reward_token_account.key(),
+            global_base_token_vault: farm_accounts.global_base_token_vault.key(),
+            farm_token_mint: farm_accounts.farm_token_mint.key(),
+            global_farm: farm_accounts.global_farm.key(),
+            user_farm: farm_accounts.user_farm.key(),
+            global_reward_token_vault: farm_accounts.global_reward_token_vault.key(),
+            convert_authority: farm_accounts.convert_authority.key(),
+            aqua_farm_program: farm_accounts.aqua_farm_program.key(),
+            funding_token_account: farm_accounts.funding_token_account.key(),
+        }
+    }
+}

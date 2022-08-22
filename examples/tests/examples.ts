@@ -1860,7 +1860,7 @@ describe("tests atrix usdr-usdc auto vaults", () => {
   });  
 })
 
-describe("tests raydium v1 vault deposit", () => {
+describe("tests raydium v1 vault", () => {
   let provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
@@ -1966,6 +1966,34 @@ describe("tests raydium v1 vault deposit", () => {
       console.log("failure is expected")
     })
     console.log("withdrew from ray-usdc vault")
+  })
+})
+describe("tests orca v1 vault", () => {
+  let provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+  const orcaUsdcV1VaultAccount = new anchor.web3.PublicKey("2Dts63SfTz2yivx57izMcVfDMAdpxuBgqM99ChWeJXun");
+  const orcaUsdcV1VaultPda = new anchor.web3.PublicKey("2d2xTss5cCzemByg55CUVB5dZsxrpaLk8BdiZe9WVuXe");
+  const orcaUsdcUserFarm = new anchor.web3.PublicKey("GKkif6NCVM4nH8gtADUHYZsBCCo86hBrQsYtb7VsyAoe");
+  const program = anchor.workspace.Examples as Program<Examples>;  
+  const programId = program.programId;
+  it("prepares test data", async () => {
+
+  })
+  it("deposits into orca-usdc vault", async () => {
+    await program.rpc.depositOrcaVaultV1(one, {
+      accounts: {
+        authority: provider.wallet.publicKey,
+        vaultAccount: orcaUsdcV1VaultAccount,
+        vaultUserAccount: ,
+        tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        vaultPda: orcaUsdcV1VaultPda,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        userTransferAuthority: provider.wallet.publicKey,
+        userBaseTokenAccount: ,
+        userFarm: orcaUsdcUserFarm
+      }
+    })
   })
 })
 const timer = ms => new Promise( res => setTimeout(res, ms));
