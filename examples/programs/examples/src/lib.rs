@@ -1653,6 +1653,134 @@ pub mod examples {
         }
         Ok(())
     }
+    /// similar to issue_shares, except grants whitelisted addresses
+    /// the ability to bypass deposit tracking lockup. the one restriction
+    /// for this instruction is that the `receiving_shares_account` must be
+    /// a token account owned by the signing `authority`
+    pub fn permissioned_issue_shares(
+        ctx: Context<PermissionedIssueSharesInstruction>,
+        amount: u64,
+        farm_type: [u64; 2],
+    ) -> Result<()> {
+        /*
+            if this error is returned, it means the depositing_underlying_account
+            has less tokens (X) then requested deposit amount (Y)
+            Program log: RUNTIME ERROR: a(X) < b(Y)
+            Program log: panicked at 'RUNTIME ERROR: a(0) < b(1)', programs/vaults/src/vault_instructions/deposit_tracking/acl_helpers.rs:198:9
+        */
+        let farm: tulipv2_sdk_farms::Farm = farm_type.into();
+        match farm {
+            tulipv2_sdk_farms::Farm::Orca { name } => {
+                let issue_trait = if name.is_double_dip() {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config.permissioned_issue_shares(ctx.accounts.authority.key())
+                } else {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config.permissioned_issue_shares(ctx.accounts.authority.key())
+                };
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait.instruction(farm, amount).unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.management.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Raydium { name } => {
+                let raydium_config = tulipv2_sdk_vaults::config::raydium::RaydiumVaultConfig::new(
+                    ctx.accounts.vault.key(),
+                    ctx.accounts.vault_underlying_account.mint,
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                );
+                let issue_trait = raydium_config.permissioned_issue_shares(ctx.accounts.authority.key());
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait
+                        .instruction(
+                            tulipv2_sdk_farms::Farm::Raydium {
+                                name: tulipv2_sdk_farms::raydium::Raydium::RAYUSDC,
+                            },
+                            amount,
+                        )
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.management.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+            } => {
+                let issue_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
+                    *ctx.accounts.authority.key,
+                );
+
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait.instruction(farm_type.into(), amount).unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.management.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            _ => panic!("unsupported"),
+        }
+        Ok(())
+    }
+    
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -2676,4 +2804,44 @@ pub struct WithdrawOrcaFarm<'info> {
     /// CHECK: .
     pub user_farm: AccountInfo<'info>, // 10
     */
+}
+
+
+#[derive(Accounts)]
+pub struct PermissionedIssueSharesInstruction<'info> {
+    #[account(signer)]
+    /// CHECK: .
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    /// CHECK: .
+    pub vault: AccountInfo<'info>,
+    /// CHECK: .
+    pub management: AccountInfo<'info>,
+    /// CHECK: .
+    pub vault_pda: AccountInfo<'info>,
+    #[account(mut)]
+    /// CHECK: .
+    pub shares_mint: Box<Account<'info, Mint>>,
+    #[account(mut)]
+    /// CHECK: .
+    /// must be owned by the authority
+    pub receiving_shares_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// CHECK: .
+    /// the account owned by the authority which contains the underlying tokens
+    /// we want to deposit in exchange for the vault shares
+    pub depositing_underlying_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// CHECK: .
+    /// the underlying token account that is owned by the vault pda
+    /// which holds the underlying tokens until they are swept into the farm.
+    ///
+    /// also known as the deposit queue account
+    pub vault_underlying_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    pub system_program: Program<'info, System>,
+    /// CHECK: .
+    pub vault_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
 }

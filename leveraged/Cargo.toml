@@ -109,7 +109,7 @@ thiserror = "1.0"
 num-traits = "0.2"
 anchor-lang = "0.24.2"
 static-pubkey = "1.0.2"
-sighashdb = "0.1.32"
+sighashdb = "0.1.37"
 [dev-dependencies]
 proptest = "1.0.0"
 solana-client = "1.9.13"
