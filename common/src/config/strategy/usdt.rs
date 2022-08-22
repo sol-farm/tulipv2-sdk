@@ -13,9 +13,11 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
 use static_pubkey::static_pubkey;
 use tulipv2_sdk_farms::{lending::Lending, Farm};
+use crate::config::deposit_tracking::issue_shares::DepositAddressesPermissioned;
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
+
     use super::*;
 
     /// empty struct used to implement the various traits used
@@ -63,6 +65,10 @@ pub mod multi_deposit {
         #[inline(always)]
         pub fn issue_shares_ix(user: Pubkey) -> impl IssueShares {
             DepositAddresses::new(user, ACCOUNT, PDA, SHARES_MINT, UNDERLYING_MINT)
+        }
+        #[inline(always)]
+        pub fn permissioned_issue_shares_ix(user: Pubkey) -> impl IssueShares {
+            DepositAddressesPermissioned::new(user, ACCOUNT, PDA, SHARES_MINT, UNDERLYING_MINT)
         }
 
         #[inline(always)]

@@ -1758,7 +1758,7 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let issue_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
+                let issue_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::permissioned_issue_shares_ix(
                     *ctx.accounts.authority.key,
                 );
 
