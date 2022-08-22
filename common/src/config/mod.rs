@@ -16,6 +16,9 @@ use static_pubkey::static_pubkey;
 
 /// tulip v2 vaults program id
 pub const ID: Pubkey = static_pubkey!("TLPv2tuSVvn3fSk8RgW3yPddkp5oFivzZV3rA9hQxtX");
+/// address of the v2 management account
+pub const V2_MANAGEMENT: Pubkey = static_pubkey!("9bqD5JcQoMD88PJ11o7quULTh5rHFF5u6C6xi2461ADD");
+
 pub const SUNNY_QUARRY_PROGRAM: Pubkey =
     static_pubkey!("SPQR4kT3q2oUKEJes2L6NNSBCiPW9SfuhkuqC9bp6Sx");
 pub const ORCA_AQUAFARM_PROGRAM: Pubkey =

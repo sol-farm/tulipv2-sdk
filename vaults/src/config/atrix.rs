@@ -5,7 +5,7 @@ use crate::accounts::{
 use anchor_lang::solana_program::pubkey::Pubkey;
 use so_defi_atrix::addresses as atrix_addresses;
 
-use tulipv2_sdk_common::config::deposit_tracking::issue_shares::DepositAddresses;
+use tulipv2_sdk_common::config::deposit_tracking::issue_shares::{DepositAddresses, DepositAddressesPermissioned};
 use tulipv2_sdk_common::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
 use tulipv2_sdk_common::config::deposit_tracking::traits::{
     IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
@@ -75,6 +75,15 @@ impl AtrixVaultConfig {
             self.pda,
             self.shares_mint,
             self.underlying_mint,
+        )
+    }
+    pub fn permissioned_issue_shares(&self, authority: Pubkey) -> impl IssueShares {
+        DepositAddressesPermissioned::new(
+            authority,
+            self.vault,
+            self.pda,
+            self.shares_mint,
+            self.underlying_mint
         )
     }
     pub fn withdraw_deposit_tracking(&self, authority: Pubkey) -> impl WithdrawDepositTracking {

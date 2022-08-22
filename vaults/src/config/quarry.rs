@@ -92,6 +92,7 @@ impl QuarrySunnyVaultConfig {
             sunny_tvault_internal_token_account,
         }
     }
+    
 }
 
 impl QuarrySaberVaultConfig {
