@@ -16,6 +16,8 @@ use tulipv2_sdk_farms::{lending::Lending, Farm};
 use crate::config::deposit_tracking::issue_shares::DepositAddressesPermissioned;
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
+    use crate::config::strategy::traits::MultiVaultProgramConfig;
+
     use super::*;
     /// empty struct used to implement the various traits used
     /// to interact with the sol lending optimizer vault
@@ -153,6 +155,64 @@ pub mod multi_deposit {
                 super::mango::GROUP_TOKEN_ACCOUNT,
                 super::mango::GROUP_SIGNER,
             ]
+        }
+    }
+    impl MultiVaultProgramConfig for ProgramConfig {
+        fn account(&self, ) -> Pubkey {
+            ACCOUNT
+        }
+        fn pda(&self, ) -> Pubkey {
+            PDA
+        }
+        fn shares_mint(&self, ) -> Pubkey {
+            SHARES_MINT
+        }
+        fn underlying_compound_queue(&self, ) -> Pubkey {
+            UNDERLYING_COMPOUND_QUEUE
+        }
+        fn underlying_deposit_queue(&self, ) -> Pubkey {
+            UNDERLYING_DEPOSIT_QUEUE
+        }
+        fn underlying_withdraw_queue(&self, ) -> Pubkey {
+            UNDERLYING_WITHDRAW_QUEUE
+        }
+        fn underlying_mint(&self, ) -> Pubkey {
+            UNDERLYING_MINT
+        }
+        fn rebalance_state_transition(&self, ) -> Pubkey {
+            REBALANCE_STATE_TRANSITION
+        }
+        fn rebalance_state_transition_underlying(&self, ) -> Pubkey {
+            REBALANCE_STATE_TRANSITION_UNDERLYING
+        }
+        fn optimizer_shares_account(&self, platform: Platform) -> Pubkey {
+            match platform {
+                Platform::MangoV3 => MANGO_OPTIMIZER_SHARES_ACCOUNT,
+                Platform::Solend => SOLEND_OPTIMIZER_SHARES_ACCOUNT,
+                Platform::Tulip => TULIP_OPTIMIZER_SHARES_ACCOUNT
+            }
+        }
+        fn issue_shares(&self, user: Pubkey) -> Box<dyn IssueShares> {
+            Box::new(ProgramConfig::issue_shares_ix(user))
+        }
+        fn permissioned_issue_shares(&self, user: Pubkey) -> Box<dyn IssueShares> {
+            Box::new(ProgramConfig::permissioned_issue_shares_ix(user))
+        }
+        fn register_deposit_tracking(&self, user: Pubkey) -> Box<dyn RegisterDepositTracking> {
+            Box::new(ProgramConfig::register_deposit_tracking_ix(user))
+        }
+        fn withdraw_deposit_tracking(&self, user: Pubkey) -> Box<dyn WithdrawDepositTracking> {
+            Box::new( ProgramConfig::withdraw_deposit_tracking_ix(user))
+        }
+        fn withdraw_multi_deposit_optimizer_vault(&self, user: Pubkey, platform: Platform) -> std::result::Result<Box<dyn WithdrawMultiOptimizerVault>, std::io::Error> {
+            Ok(ProgramConfig::withdraw_multi_deposit_optimizer_vault(user, platform)?)
+        }
+        fn remaining_accounts(&self, platform: Platform) -> Vec<Pubkey> {
+            match platform {
+                Platform::MangoV3 => ProgramConfig::get_mango_remaining_accounts().to_vec(),
+                Platform::Solend => ProgramConfig::get_solend_remaining_accounts().to_vec(),
+                Platform::Tulip => ProgramConfig::get_tulip_remaining_accounts().to_vec(),
+            }
         }
     }
 }
