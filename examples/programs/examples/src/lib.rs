@@ -616,15 +616,19 @@ pub mod examples {
         ctx: Context<WithdrawMangoMultiDepositOptimizerVault>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::MangoV3,
-            ).unwrap();
+            let conf = StrategyVaults::USDCv1.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::MangoV3,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -688,15 +692,19 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawSolendMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::Solend,
-            ).unwrap();
+            let conf = StrategyVaults::USDCv1.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::Solend,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -769,15 +777,19 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawTulipMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::Tulip,
-            ).unwrap();
+            let conf = StrategyVaults::USDCv1.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::Tulip,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -1733,7 +1745,8 @@ pub mod examples {
                     None, // for shares issuance we dont need to derive these values
                     None, // for shares issuance we dont need to derive these values
                 );
-                let issue_trait = raydium_config.permissioned_issue_shares(ctx.accounts.authority.key());
+                let issue_trait =
+                    raydium_config.permissioned_issue_shares(ctx.accounts.authority.key());
                 anchor_lang::solana_program::program::invoke(
                     &issue_trait
                         .instruction(
@@ -1780,7 +1793,6 @@ pub mod examples {
         }
         Ok(())
     }
-    
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -2805,7 +2817,6 @@ pub struct WithdrawOrcaFarm<'info> {
     pub user_farm: AccountInfo<'info>, // 10
     */
 }
-
 
 #[derive(Accounts)]
 pub struct PermissionedIssueSharesInstruction<'info> {

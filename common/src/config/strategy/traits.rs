@@ -2,10 +2,11 @@
 
 use anchor_lang::prelude::*;
 use solana_program::instruction::Instruction;
+use tulipv2_sdk_farms::Farm;
 
-use crate::config::deposit_tracking::traits::{IssueShares, RegisterDepositTracking};
-use crate::config::deposit_tracking::traits::WithdrawDepositTracking;
 use super::Platform;
+use crate::config::deposit_tracking::traits::WithdrawDepositTracking;
+use crate::config::deposit_tracking::traits::{IssueShares, RegisterDepositTracking};
 
 /// The `WithdrawMultiOptimizerVault` trait is used to
 /// burn a lending optimizer's tokenized shares, in exchange
@@ -129,7 +130,7 @@ pub trait WithdrawMultiOptimizerVault {
 }
 
 /// trait type that is used to return configuration information, instruction helpers, etc...
-/// for any given multi deposit optimizer vault, aka strategy vault. 
+/// for any given multi deposit optimizer vault, aka strategy vault.
 pub trait MultiVaultProgramConfig {
     fn account(&self) -> Pubkey;
     fn pda(&self) -> Pubkey;
@@ -145,50 +146,63 @@ pub trait MultiVaultProgramConfig {
     fn permissioned_issue_shares(&self, user: Pubkey) -> Box<dyn IssueShares>;
     fn register_deposit_tracking(&self, user: Pubkey) -> Box<dyn RegisterDepositTracking>;
     fn withdraw_deposit_tracking(&self, user: Pubkey) -> Box<dyn WithdrawDepositTracking>;
-    fn withdraw_multi_deposit_optimizer_vault(&self, user: Pubkey, platform: Platform) -> std::result::Result<Box<dyn WithdrawMultiOptimizerVault>, std::io::Error>;
+    fn withdraw_multi_deposit_optimizer_vault(
+        &self,
+        user: Pubkey,
+        platform: Platform,
+    ) -> std::result::Result<Box<dyn WithdrawMultiOptimizerVault>, std::io::Error>;
     /// returns the remaining accounts needed for withdrawal instructions to the specific platform
     fn remaining_accounts(&self, platform: Platform) -> Vec<Pubkey>;
+    /// returns an implementation of StandaloneVaultProgramConfig trait for the specified platform
+    fn standalone_config(&self, platform: Platform) -> Box<dyn StandaloneVaultProgramConfig>;
+    /// returns the farm key of the multi deposit vault
+    fn farm(&self) -> Farm;
+    /// returns the stringified tag of the multi deposit vault
+    fn tag(&self) -> &str;
 }
-
 
 /// Trait type that is used to return configuration information, instruction helpers, etc...
 /// for a single standalone vault.
 pub trait StandaloneVaultProgramConfig {
     /// returns the address of the standalone vault account
-    fn account() -> Pubkey;
+    fn account(&self) -> Pubkey;
     /// returns the address of the standalone vault pda
-    fn pda() -> Pubkey;
+    fn pda(&self) -> Pubkey;
     /// returns the address of the standalone vault shares mint
-    fn shares_mint() -> Pubkey;
+    fn shares_mint(&self) -> Pubkey;
     /// returns the address of the standalone vault underlying compound queue
-    fn underlying_compound_queue() -> Pubkey;
+    fn underlying_compound_queue(&self) -> Pubkey;
     /// returns the address of the standalone vault underlying deposit queue
-    fn underlying_deposit_queue() -> Pubkey;
+    fn underlying_deposit_queue(&self) -> Pubkey;
     /// returns the address of the standalone vault underlying withdraw queue
-    fn underlying_withdraw_queue() -> Pubkey;
+    fn underlying_withdraw_queue(&self) -> Pubkey;
     /// returns the address of the standalone vault underlying token mint
     /// which is the mint of the token the vault accepts for deposits
-    fn underlying_mint() -> Pubkey;
+    fn underlying_mint(&self) -> Pubkey;
     /// returns the address of configuration data account
-    fn config_data_account() -> Pubkey;
+    fn config_data_account(&self) -> Pubkey;
     /// returns the address of the configuration information account
-    fn information_account() -> Pubkey;
+    fn information_account(&self) -> Pubkey;
     /// returns the address of the program this standalone vault farms. for example
     /// solend standalone vaults will return the address of the solend lending program
     /// while mango standalone vaults will return the address of the mango program
-    fn program_id() -> Pubkey;
+    fn program_id(&self) -> Pubkey;
     /// when the implementation of this trait is a solend standalone vault
     /// calling this method returns Some(...)
-    fn solend_config() -> Option<Box<dyn SolendProgramConfig>>;
+    fn solend_config(&self) -> Option<Box<dyn SolendProgramConfig>>;
     /// when the implementation of this trait is a tulip standalone vault
     /// calling this method returns Some(...)
-    fn tulip_config() -> Option<Box<dyn TulipProgramConfig>>;
+    fn tulip_config(&self) -> Option<Box<dyn TulipProgramConfig>>;
     /// when the implementation of this trait is a mango standalone vault
     /// calling this method returns Some(...)
-    fn mango_config() -> Option<Box<dyn MangoProgramConfig>>;
+    fn mango_config(&self) -> Option<Box<dyn MangoProgramConfig>>;
     /// returns true if the instance of the implementation of this trait is a platform
     /// matching the one specified in `platform`, otherwise returns false
-    fn is_platform(platform: Platform) -> bool;
+    fn is_platform(&self, platform: Platform) -> bool;
+    /// returns the farm key of the standalone vault
+    fn farm(&self) -> Farm;
+    /// returns the stringified tag of the standalone vault
+    fn tag(&self) -> &str;
 }
 
 /// Trait type that is used to return configuration information, instruction helpers, etc..
@@ -200,7 +214,7 @@ pub trait SolendProgramConfig {
     fn lending_market(&self) -> Pubkey;
     /// returns the authority of the lending market
     fn lending_market_authority(&self) -> Pubkey;
-    /// returns the pyth price feed account 
+    /// returns the pyth price feed account
     fn pyth_price_account(&self) -> Pubkey;
     /// returns the switchboard price account
     fn switchboard_price_account(&self) -> Pubkey;
@@ -225,7 +239,7 @@ pub trait TulipProgramConfig {
     fn lending_market(&self) -> Pubkey;
     /// returns the authority of the lending market
     fn lending_market_authority(&self) -> Pubkey;
-    /// returns the pyth price feed account 
+    /// returns the pyth price feed account
     fn pyth_price_account(&self) -> Pubkey;
     /// returns the address of the pyth oracle program
     fn pyth_program_id(&self) -> Pubkey;
