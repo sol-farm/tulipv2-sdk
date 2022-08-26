@@ -8,7 +8,7 @@ use crate::config::deposit_tracking::traits::{
 };
 use crate::config::deposit_tracking::withdraw::WithdrawDepositTrackingAddresses;
 use crate::config::strategy::traits::WithdrawMultiOptimizerVault;
-use crate::config::strategy::withdraw::{PlatformConfigAddresses, WithdrawAddresses};
+use crate::config::strategy::withdraw::WithdrawAddresses;
 use crate::config::strategy::Platform;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program;
