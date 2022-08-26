@@ -41,3 +41,59 @@ pub fn into_strategy_vault<'info>(account: &AccountInfo<'info>) -> StrategyVault
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    use anchor_lang::solana_program::{self, pubkey::Pubkey, account_info::IntoAccountInfo};
+    use solana_client::rpc_client::RpcClient;
+    use static_pubkey::static_pubkey;
+    #[test]
+    fn test_into_strategy_vault_usdcv1() {
+        let vault_key = static_pubkey!("3wPiV9inTGexMZjp6x5Amqwp2sRNtpSheG8Hbv2rgq8W");
+        let rpc = RpcClient::new("https://ssc-dao.genesysgo.net".to_string());
+        let account = rpc.get_account(&vault_key).unwrap();
+
+        let mut acct_tup = (vault_key, account);
+        let mut acct = acct_tup.into_account_info();
+
+        let strat_vault = into_strategy_vault(&acct);
+        assert!(strat_vault.eq(&StrategyVaults::USDCv1));
+    }
+    #[test]
+    fn test_into_strategy_vault_usdtv1() {
+        let vault_key = static_pubkey!("BBRkN5paHbHLku4KrZMN8Mc5U3Ygasd4v2FtxdwG7F8F");
+        let rpc = RpcClient::new("https://ssc-dao.genesysgo.net".to_string());
+        let account = rpc.get_account(&vault_key).unwrap();
+
+        let mut acct_tup = (vault_key, account);
+        let mut acct = acct_tup.into_account_info();
+
+        let strat_vault = into_strategy_vault(&acct);
+        assert!(strat_vault.eq(&StrategyVaults::USDTv1));
+    }
+    #[test]
+    fn test_into_strategy_vault_rayv1() {
+        let vault_key = static_pubkey!("EH1iQnhDqQpHsVJWLw8oC1ehDqVaPGh7JH6ctG4dAQ2d");
+        let rpc = RpcClient::new("https://ssc-dao.genesysgo.net".to_string());
+        let account = rpc.get_account(&vault_key).unwrap();
+
+        let mut acct_tup = (vault_key, account);
+        let mut acct = acct_tup.into_account_info();
+
+        let strat_vault = into_strategy_vault(&acct);
+        assert!(strat_vault.eq(&StrategyVaults::RAYv1));
+    }
+    #[test]
+    fn test_into_strategy_vault_solv1() {
+        let vault_key = static_pubkey!("2WNw7tW2G54UCXN726S5tR9XutSEDeMf7xamidQtWszK");
+        let rpc = RpcClient::new("https://ssc-dao.genesysgo.net".to_string());
+        let account = rpc.get_account(&vault_key).unwrap();
+
+        let mut acct_tup = (vault_key, account);
+        let mut acct = acct_tup.into_account_info();
+
+        let strat_vault = into_strategy_vault(&acct);
+        assert!(strat_vault.eq(&StrategyVaults::SOLv1));
+    }
+}

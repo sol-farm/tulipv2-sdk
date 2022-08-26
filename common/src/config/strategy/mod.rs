@@ -24,7 +24,7 @@ pub enum Platform {
     Solend,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub enum StrategyVaults {
     USDCv1,
     SOLv1,
