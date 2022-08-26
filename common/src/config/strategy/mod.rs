@@ -1,9 +1,5 @@
 //! tulip strategy vault configurations
 
-use anchor_lang::prelude::AccountLoader;
-use solana_program::account_info::AccountInfo;
-use tulipv2_sdk_farms::{lending::Lending, Farm};
-
 use self::traits::{MultiVaultProgramConfig, StandaloneVaultProgramConfig};
 
 pub mod traits;
