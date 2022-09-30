@@ -2,6 +2,11 @@
 
 use anchor_lang::prelude::*;
 use solana_program::instruction::Instruction;
+use tulipv2_sdk_farms::Farm;
+
+use super::Platform;
+use crate::config::deposit_tracking::traits::WithdrawDepositTracking;
+use crate::config::deposit_tracking::traits::{IssueShares, RegisterDepositTracking};
 
 /// The `WithdrawMultiOptimizerVault` trait is used to
 /// burn a lending optimizer's tokenized shares, in exchange
@@ -122,4 +127,147 @@ pub trait WithdrawMultiOptimizerVault {
     /// please note the _is_signer variable is ignored, it's simply here to provide
     /// compatibility
     fn to_account_meta(&self, _is_signer: Option<bool>) -> Vec<AccountMeta>;
+}
+
+/// trait type that is used to return configuration information, instruction helpers, etc...
+/// for any given multi deposit optimizer vault, aka strategy vault.
+pub trait MultiVaultProgramConfig {
+    fn account(&self) -> Pubkey;
+    fn pda(&self) -> Pubkey;
+    fn shares_mint(&self) -> Pubkey;
+    fn underlying_compound_queue(&self) -> Pubkey;
+    fn underlying_deposit_queue(&self) -> Pubkey;
+    fn underlying_withdraw_queue(&self) -> Pubkey;
+    fn underlying_mint(&self) -> Pubkey;
+    fn rebalance_state_transition(&self) -> Pubkey;
+    fn rebalance_state_transition_underlying(&self) -> Pubkey;
+    fn optimizer_shares_account(&self, platform: Platform) -> Pubkey;
+    fn issue_shares(&self, user: Pubkey) -> Box<dyn IssueShares>;
+    fn permissioned_issue_shares(&self, user: Pubkey) -> Box<dyn IssueShares>;
+    fn register_deposit_tracking(&self, user: Pubkey) -> Box<dyn RegisterDepositTracking>;
+    fn withdraw_deposit_tracking(&self, user: Pubkey) -> Box<dyn WithdrawDepositTracking>;
+    fn withdraw_multi_deposit_optimizer_vault(
+        &self,
+        user: Pubkey,
+        platform: Platform,
+    ) -> std::result::Result<Box<dyn WithdrawMultiOptimizerVault>, std::io::Error>;
+    /// returns the remaining accounts needed for withdrawal instructions to the specific platform
+    fn remaining_accounts(&self, platform: Platform) -> Vec<Pubkey>;
+    /// returns an implementation of StandaloneVaultProgramConfig trait for the specified platform
+    fn standalone_config(&self, platform: Platform) -> Box<dyn StandaloneVaultProgramConfig>;
+    /// returns the farm key of the multi deposit vault
+    fn farm(&self) -> Farm;
+    /// returns the stringified tag of the multi deposit vault
+    fn tag(&self) -> &str;
+}
+
+/// Trait type that is used to return configuration information, instruction helpers, etc...
+/// for a single standalone vault.
+pub trait StandaloneVaultProgramConfig {
+    /// returns the address of the standalone vault account
+    fn account(&self) -> Pubkey;
+    /// returns the address of the standalone vault pda
+    fn pda(&self) -> Pubkey;
+    /// returns the address of the standalone vault shares mint
+    fn shares_mint(&self) -> Pubkey;
+    /// returns the address of the standalone vault underlying compound queue
+    fn underlying_compound_queue(&self) -> Pubkey;
+    /// returns the address of the standalone vault underlying deposit queue
+    fn underlying_deposit_queue(&self) -> Pubkey;
+    /// returns the address of the standalone vault underlying withdraw queue
+    fn underlying_withdraw_queue(&self) -> Pubkey;
+    /// returns the address of the standalone vault underlying token mint
+    /// which is the mint of the token the vault accepts for deposits
+    fn underlying_mint(&self) -> Pubkey;
+    /// returns the address of configuration data account
+    fn config_data_account(&self) -> Pubkey;
+    /// returns the address of the configuration information account
+    fn information_account(&self) -> Pubkey;
+    /// returns the address of the program this standalone vault farms. for example
+    /// solend standalone vaults will return the address of the solend lending program
+    /// while mango standalone vaults will return the address of the mango program
+    fn program_id(&self) -> Pubkey;
+    /// when the implementation of this trait is a solend standalone vault
+    /// calling this method returns Some(...)
+    fn solend_config(&self) -> Option<Box<dyn SolendProgramConfig>>;
+    /// when the implementation of this trait is a tulip standalone vault
+    /// calling this method returns Some(...)
+    fn tulip_config(&self) -> Option<Box<dyn TulipProgramConfig>>;
+    /// when the implementation of this trait is a mango standalone vault
+    /// calling this method returns Some(...)
+    fn mango_config(&self) -> Option<Box<dyn MangoProgramConfig>>;
+    /// returns true if the instance of the implementation of this trait is a platform
+    /// matching the one specified in `platform`, otherwise returns false
+    fn is_platform(&self, platform: Platform) -> bool;
+    /// returns the farm key of the standalone vault
+    fn farm(&self) -> Farm;
+    /// returns the stringified tag of the standalone vault
+    fn tag(&self) -> &str;
+}
+
+/// Trait type that is used to return configuration information, instruction helpers, etc..
+/// for solend standalone vaults
+pub trait SolendProgramConfig {
+    /// returns the address of the collateral mint issued by the lending reserve
+    fn collateral_mint(&self) -> Pubkey;
+    /// returns the lending market that the reserve is a part of
+    fn lending_market(&self) -> Pubkey;
+    /// returns the authority of the lending market
+    fn lending_market_authority(&self) -> Pubkey;
+    /// returns the pyth price feed account
+    fn pyth_price_account(&self) -> Pubkey;
+    /// returns the switchboard price account
+    fn switchboard_price_account(&self) -> Pubkey;
+    /// returns the address of the pyth oracle program
+    fn pyth_program_id(&self) -> Pubkey;
+    /// returns the address of the switchboard oracle program
+    fn switchboard_program_id(&self) -> Pubkey;
+    /// returns the address of the lending reserve deposits go into
+    fn reserve(&self) -> Pubkey;
+    /// returns the token account the reserve uses to hold deposited liquidity
+    fn reserve_liquidity(&self) -> Pubkey;
+    /// the solend standalone vault's collateral token account
+    fn vault_collateral_account(&self) -> Pubkey;
+}
+
+/// Trait type that is used to return configuration information, instruction helpers, etc..
+/// for solend tulip vaults
+pub trait TulipProgramConfig {
+    /// returns the address of the collateral mint issued by the lending reserve
+    fn collateral_mint(&self) -> Pubkey;
+    /// returns the lending market that the reserve is a part of
+    fn lending_market(&self) -> Pubkey;
+    /// returns the authority of the lending market
+    fn lending_market_authority(&self) -> Pubkey;
+    /// returns the pyth price feed account
+    fn pyth_price_account(&self) -> Pubkey;
+    /// returns the address of the pyth oracle program
+    fn pyth_program_id(&self) -> Pubkey;
+    /// returns the address of the lending reserve deposits go into
+    fn reserve(&self) -> Pubkey;
+    /// returns the token account the reserve uses to hold deposited liquidity
+    fn reserve_liquidity(&self) -> Pubkey;
+    /// the tulip standalone vault's collateral token account
+    fn vault_collateral_account(&self) -> Pubkey;
+}
+
+/// Trait type that is used to return configuration information, instruction helpers, etc..
+/// for solend mango vaults
+pub trait MangoProgramConfig {
+    /// returns the address of the mango cache
+    fn cache(&self) -> Pubkey;
+    /// returns the address of the mango group
+    fn group(&self) -> Pubkey;
+    /// returns the address of the group authority
+    fn group_signer(&self) -> Pubkey;
+    /// returns the address of the group's token account which accepts the asset
+    /// being accepted by the strategy. for example usdc strategy vaults, this will be the mango
+    /// group's usdc token account
+    fn group_token_account(&self) -> Pubkey;
+    /// returns the address of the mango root bank
+    fn root_bank(&self) -> Pubkey;
+    /// returns the address of the mango node bank
+    fn node_bank(&self) -> Pubkey;
+    /// address of the standalone vaults mango account
+    fn optimizer_mango_account(&self) -> Pubkey;
 }

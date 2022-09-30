@@ -5,6 +5,7 @@ use tulipv2_sdk_common::config::deposit_tracking::traits::IssueShares;
 use tulipv2_sdk_common::config::deposit_tracking::traits::RegisterDepositTracking;
 use tulipv2_sdk_common::config::deposit_tracking::traits::WithdrawDepositTracking;
 use tulipv2_sdk_common::config::strategy::traits::WithdrawMultiOptimizerVault;
+use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_vaults::instructions::{
@@ -228,15 +229,13 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let registration_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::register_deposit_tracking_ix(
-                        *ctx.accounts.authority.key,
-                    );
+                let strat_vault: StrategyVaults =
+                    tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.vault);
+                let conf = strat_vault.multi_deposit_config();
+                let registration_trait =
+                    conf.register_deposit_tracking(*ctx.accounts.authority.key);
                 anchor_lang::solana_program::program::invoke(
-                    &registration_trait
-                        .instruction(tulipv2_sdk_farms::Farm::Lending {
-                            name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
-                        })
-                        .unwrap(),
+                    &registration_trait.instruction(conf.farm()).unwrap(),
                     &[
                         ctx.accounts.authority.clone(),
                         ctx.accounts.vault.clone(),
@@ -407,12 +406,12 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let issue_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
-                    *ctx.accounts.authority.key,
-                );
-
+                let strat_vault: StrategyVaults =
+                    tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.vault);
+                let conf = strat_vault.multi_deposit_config();
+                let issue_trait = conf.issue_shares(*ctx.accounts.authority.key);
                 anchor_lang::solana_program::program::invoke(
-                    &issue_trait.instruction(farm_type.into(), amount).unwrap(),
+                    &issue_trait.instruction(conf.farm(), amount).unwrap(),
                     &[
                         ctx.accounts.authority.clone(),
                         ctx.accounts.vault.clone(),
@@ -586,13 +585,12 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_deposit_tracking_ix(
-                    *ctx.accounts.authority.key,
-                );
+                let strat_vault: StrategyVaults =
+                    tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.vault);
+                let conf = strat_vault.multi_deposit_config();
+                let withdraw_trait = conf.withdraw_deposit_tracking(*ctx.accounts.authority.key);
                 anchor_lang::solana_program::program::invoke(
-                    &withdraw_trait
-                        .instruction(amount, farm_type.into())
-                        .unwrap(),
+                    &withdraw_trait.instruction(amount, conf.farm()).unwrap(),
                     &[
                         ctx.accounts.authority.clone(),
                         ctx.accounts.clock.to_account_info(),
@@ -616,15 +614,21 @@ pub mod examples {
         ctx: Context<WithdrawMangoMultiDepositOptimizerVault>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::MangoV3,
-            ).unwrap();
+            let strat_vault: StrategyVaults =
+                tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.common_data.multi_vault);
+            let conf = strat_vault.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::MangoV3,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -688,15 +692,21 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawSolendMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::Solend,
-            ).unwrap();
+            let strat_vault: StrategyVaults =
+                tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.common_data.multi_vault);
+            let conf = strat_vault.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::Solend,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -769,15 +779,21 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawTulipMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::Tulip,
-            ).unwrap();
+            let strat_vault: StrategyVaults =
+                tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.common_data.multi_vault);
+            let conf = strat_vault.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::Tulip,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -1733,7 +1749,8 @@ pub mod examples {
                     None, // for shares issuance we dont need to derive these values
                     None, // for shares issuance we dont need to derive these values
                 );
-                let issue_trait = raydium_config.permissioned_issue_shares(ctx.accounts.authority.key());
+                let issue_trait =
+                    raydium_config.permissioned_issue_shares(ctx.accounts.authority.key());
                 anchor_lang::solana_program::program::invoke(
                     &issue_trait
                         .instruction(
@@ -1758,12 +1775,12 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let issue_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::permissioned_issue_shares_ix(
-                    *ctx.accounts.authority.key,
-                );
+                // assumes the vault is a usdc strategy vault
+                let conf = StrategyVaults::USDCv1.multi_deposit_config();
+                let issue_trait = conf.permissioned_issue_shares(*ctx.accounts.authority.key);
 
                 anchor_lang::solana_program::program::invoke(
-                    &issue_trait.instruction(farm_type.into(), amount).unwrap(),
+                    &issue_trait.instruction(conf.farm(), amount).unwrap(),
                     &[
                         ctx.accounts.authority.clone(),
                         ctx.accounts.vault.clone(),
@@ -1780,7 +1797,6 @@ pub mod examples {
         }
         Ok(())
     }
-    
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -2805,7 +2821,6 @@ pub struct WithdrawOrcaFarm<'info> {
     pub user_farm: AccountInfo<'info>, // 10
     */
 }
-
 
 #[derive(Accounts)]
 pub struct PermissionedIssueSharesInstruction<'info> {
