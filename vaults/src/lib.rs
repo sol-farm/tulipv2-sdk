@@ -44,6 +44,8 @@ pub fn into_strategy_vault<'info>(account: &AccountInfo<'info>) -> StrategyVault
 
 #[cfg(test)]
 mod test {
+    use anchor_lang::{AccountDeserialize, solana_program::program_pack::Pack};
+    use tulipv2_sdk_common::traits::vault::TokenizedShares;
     use super::*;
     use anchor_lang::solana_program::{self, pubkey::Pubkey, account_info::IntoAccountInfo};
     use solana_client::rpc_client::RpcClient;
@@ -95,5 +97,26 @@ mod test {
 
         let strat_vault = into_strategy_vault(&acct);
         assert!(strat_vault.eq(&StrategyVaults::SOLv1));
+    }
+    #[test]
+    fn test_rayv1_exchange_rate() {
+        let vault_key = static_pubkey!("EH1iQnhDqQpHsVJWLw8oC1ehDqVaPGh7JH6ctG4dAQ2d");
+        let rpc = RpcClient::new("https://ssc-dao.genesysgo.net".to_string());
+        let mut strat_vault = MultiDepositOptimizerV1::try_deserialize_unchecked(&mut &rpc.get_account(&vault_key).unwrap().data[..]).unwrap();
+        let share_mint = spl_token::state::Mint::unpack_unchecked(&mut &rpc.get_account(&strat_vault.base.shares_mint).unwrap().data[..]).unwrap();
+
+        // this will update the vault state synchronizing shares issued tracked 
+        // by the vault with the actual supply of the mint itself.
+        //
+        // mainly intended for on-chain usage
+        //
+        // however if you fetch the multi deposit vault state and then invoke the 
+        // exchange rate function after some period of time without refetching
+        // the multi deposit vault state, this may be useful off-chain
+        let exch_rate = strat_vault.base.exchange_rate(&share_mint);
+        println!("exchange rate {}", exch_rate);
+        // doesn't synchronize the vault state intended for off-chain usage
+        let exch_rate = strat_vault.base.cached_exchange_rate(&share_mint);
+        println!("exchange rate {}", exch_rate);
     }
 }
