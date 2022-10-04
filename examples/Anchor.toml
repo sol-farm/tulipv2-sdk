@@ -692,8 +692,8 @@ filename = "deps/accounts/Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD.json"
 
 # usdc switchboard feed address
 [[test.validator.account]]
-address = "CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb"
-filename = "deps/accounts/CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb.json"
+address = "BjUgj6YCnFBZ49wF54ddBVA9qu8TeqkFtkbqmZcee8uW"
+filename = "deps/accounts/BjUgj6YCnFBZ49wF54ddBVA9qu8TeqkFtkbqmZcee8uW.json"
 
 
 #################

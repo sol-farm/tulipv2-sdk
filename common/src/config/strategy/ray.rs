@@ -298,7 +298,7 @@ pub mod solend {
     /// address of the oracle that goes into the second element
     /// of the oracle keys array
     pub const SWITCHBOARD_PRICE_ACCOUNT: Pubkey =
-        static_pubkey!("CppyF6264uKZkGua1brTUa2fSVdMFSCszwzDs76HCuzU");
+        static_pubkey!("2oALNZVi5czyHvKbnjE4Jf2gR7dNp1FBpEGaq4PzVAf7");
     /// address of the program which owns the first oracle
     pub const PYTH_PROGRAM_ID: Pubkey =
         static_pubkey!("FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH");
