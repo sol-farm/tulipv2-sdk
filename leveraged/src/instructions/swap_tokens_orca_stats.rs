@@ -31,36 +31,36 @@ pub struct NewSerumSwap<'info> {
 #[derive(Accounts)]
 pub struct MarketAccounts<'info> {
     #[account(mut)]
-    market: AccountInfo<'info>,
+    pub market: AccountInfo<'info>,
     #[account(mut)]
-    open_orders: AccountInfo<'info>,
+    pub open_orders: AccountInfo<'info>,
     #[account(mut)]
-    request_queue: AccountInfo<'info>,
+    pub request_queue: AccountInfo<'info>,
     #[account(mut)]
-    event_queue: AccountInfo<'info>,
+    pub event_queue: AccountInfo<'info>,
     #[account(mut)]
-    bids: AccountInfo<'info>,
+    pub bids: AccountInfo<'info>,
     #[account(mut)]
-    asks: AccountInfo<'info>,
+    pub asks: AccountInfo<'info>,
     // The `spl_token::Account` that funds will be taken from, i.e., transferred
     // from the user into the market's vault.
     //
     // For bids, this is the base currency. For asks, the quote.
     #[account(mut)]
-    order_payer_token_account: AccountInfo<'info>,
+    pub order_payer_token_account: AccountInfo<'info>,
     // Also known as the "base" currency. For a given A/B market,
     // this is the vault for the A mint.
     #[account(mut)]
-    coin_vault: AccountInfo<'info>,
+    pub coin_vault: AccountInfo<'info>,
     // Also known as the "quote" currency. For a given A/B market,
     // this is the vault for the B mint.
     #[account(mut)]
-    pc_vault: AccountInfo<'info>,
+    pub pc_vault: AccountInfo<'info>,
     // PDA owner of the DEX's token accounts for base + quote currencies.
-    vault_signer: AccountInfo<'info>,
+    pub vault_signer: AccountInfo<'info>,
     // User wallets.
     #[account(mut)]
-    coin_wallet: AccountInfo<'info>,
+    pub coin_wallet: AccountInfo<'info>,
 }
 
 pub fn swap_tokens_orca_stats<'info>(
