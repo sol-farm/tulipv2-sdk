@@ -43,9 +43,9 @@ The wire representation of the farm type / farm key, is a 2 element slice of u64
 
 The `lending` folder contains a crate `tulipv2-sdk-lending` which provides very basic support for creating instructions, and issuing CPI calls to Tulip's V1 lending program. It allows for the lending of assets through the `Obligation` account, while also allowing the caller to refresh obligations and refresh reserves.
 
-## [`leveraged`](https://crates.io/crates/tulipv2-sdk-leveraged)
+## [`leveraged`](https://crates.io/crates/tulipv2-sdk-levfarm)
 
-The `leveraged` folder contains a crate `tulipv2-sdk-leveraged` which provides accounts, instructions, and various helper functions for interacting with Tulip's leveraged yield farms
+The `leveraged` folder contains a crate `tulipv2-sdk-levfarm` which provides accounts, instructions, and various helper functions for interacting with Tulip's leveraged yield farms
 
 ## [`vaults`](https://crates.io/crates/tulipv2-sdk-vaults)
 
