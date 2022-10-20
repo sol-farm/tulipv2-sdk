@@ -1694,6 +1694,9 @@ filename = "deps/accounts/DFNLwKwx4kZr8bdYmaBn5HdKQhZRfgwva4xKEPporYqx.json"
 [[test.validator.account]] # v2 vaults management account
 address = "9bqD5JcQoMD88PJ11o7quULTh5rHFF5u6C6xi2461ADD"
 filename = "deps/accounts/9bqD5JcQoMD88PJ11o7quULTh5rHFF5u6C6xi2461ADD.json"
-[[test.validator.account]]
+[[test.validator.account]] # solend usdc switchboard feed
 address = "CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb"
 filename = "deps/accounts/CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb.json"
+[[test.validator.account]]
+address = "7toJGrprEZPHemdMAtozt2tDfw5X2v2GmdCsBc8e82RP"
+filename = "deps/accounts/7toJGrprEZPHemdMAtozt2tDfw5X2v2GmdCsBc8e82RP.json"

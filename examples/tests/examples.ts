@@ -503,42 +503,50 @@ describe("examples", () => {
       ],
     });
   });
-  /*it("rebases lending optimizer against tulip", async () => {
+  it("rebases lending optimizer against tulip", async () => {
     console.log("sending rebase tx");
     const tx = await program.rpc.rebaseLendingOptimizerVault({
+      options: {
+        skipPreflight: true
+      },
       accounts: {
-        vault: tulipUsdcStandaloneVault,
-        vaultPda: tulipUsdcStandaloneVaultPda,
-        platformInformation: optimizerTulipPlatformInformationAddress,
-        platformConfigData: optimizerTulipPlatformConfigDataAddress,
+        vault: tulipVault,
+        vaultPda: tulipVaultPda,
+        platformInformation: tulipVaultPlatformInformation,
+        platformConfigData: tulipVaultPlatformConfigDataAccount,
         lendingProgram: tulipLendingProgramId,
         clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
         tokenProgram: splToken.TOKEN_PROGRAM_ID,
-        underlyingDepositQueue: tulipUsdcStandaloneVaultUnderlying,
-        feeReceiver: tuUsdcFeeReceiver,
+        underlyingDepositQueue: tulipVaultDepositQueue,
+        feeReceiver: new anchor.web3.PublicKey("7toJGrprEZPHemdMAtozt2tDfw5X2v2GmdCsBc8e82RP"),
         authority: provider.wallet.publicKey,
-        management: managementAddress,
-        sharesMint: tulipUsdcStandaloneVaultSharesMint,
+        management: vaultManagementAddress,
+        sharesMint: tulipVaultSharesMint,
       },
       remainingAccounts: [
         {
-          pubkey: optimizerTulipUsdcCollateralTokenAccount,
+          pubkey: v2VaultsProgramId,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: tulipCollateralTokenAccount,
           isSigner: false,
           isWritable: true,
         },
         {
-          pubkey: tulipUsdcLendingReserve,
+          pubkey: tulipReserveAccount,
           isSigner: false,
           isWritable: true,
         },
         {
-          pubkey: tulipUsdcPythPriceAccount,
+          pubkey: tulipReservePythPriceAccount,
           isSigner: false,
           isWritable: false,
         },
       ],
     });
-  });*/
+  });
   it("rebases multideposit optimizer vault", async () => {
     console.log("sending multi-deposit optimizer rebase tx");
     const tx = await program.rpc.rebaseMultiDepositOptimizerVault({
@@ -549,10 +557,13 @@ describe("examples", () => {
         authority: provider.wallet.publicKey,
         management: vaultManagementAddress,
         sharesMint: usdcv1SharesMint,
-        vaultProgram: v2VaultsProgramId
       },
       remainingAccounts: [
-
+        {
+          pubkey: v2VaultsProgramId,
+          isSigner: false,
+          isWritable: false,
+        },
 
         {
           pubkey: solendVault,

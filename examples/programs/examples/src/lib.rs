@@ -1814,10 +1814,33 @@ pub mod examples {
     ///
     /// `multi_shares_account` is the multi-deposit optimizer vault's token account
     /// whichs holds the vault shares issued by the given standaloen vault
+    /// 
+    /// the very first remaining account is the v2 vault program
     pub fn rebase_multi_deposit_optimizer_vault<'a, 'b, 'c, 'info>(
         ctx: Context<'a, 'b, 'c, 'info, RebaseMultiDepositOptimizerVault<'info>>,
     ) -> Result<()> {
-
+        let ix = {
+            let ix_data = GlobalSighashDB.get("rebase_multi_deposit_optimizer_vault").unwrap();
+            let mut accounts = ctx.accounts.to_account_metas(None);
+            // skip the first element which is the vault progrma
+            accounts.extend_from_slice(&ctx.remaining_accounts[1..].iter().map(|acct| if acct.is_writable {
+                AccountMeta::new(*acct.key, acct.is_signer)
+            } else {
+                AccountMeta::new_readonly(*acct.key, acct.is_signer)
+            }).collect::<Vec<AccountMeta>>()[..]);
+            let ix = Instruction {
+                program_id: ctx.remaining_accounts[0].key(),
+                data: ix_data.to_vec(),
+                accounts,
+            };
+            ix
+        };
+        let mut accounts = ctx.accounts.to_account_infos();
+        accounts.extend_from_slice(&ctx.remaining_accounts[..]);
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &accounts[..],
+        )?;
         Ok(())
     }
     /// rebases a vault's total deposited balance to match the deposited
@@ -2992,5 +3015,4 @@ pub struct RebaseMultiDepositOptimizerVault<'info> {
     pub authority: AccountInfo<'info>,
     pub management: AccountInfo<'info>,
     pub shares_mint: Box<Account<'info, Mint>>,
-    pub vault_program: AccountInfo<'info>,
 }
