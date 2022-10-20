@@ -1342,7 +1342,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-common"
-version = "0.9.21"
+version = "0.9.22"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
@@ -1385,7 +1385,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-levfarm"
-version = "0.9.21"
+version = "0.9.22"
 dependencies = [
  "anchor-lang",
  "itertools",
@@ -1401,7 +1401,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.21"
+version = "0.9.22"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

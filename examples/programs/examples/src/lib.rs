@@ -15,6 +15,9 @@ use tulipv2_sdk_vaults::instructions::{
     multi_deposit_optimizer::new_withdraw_multi_deposit_optimizer_vault_ix,
     new_issue_shares_ix,
 };
+use tulipv2_sdk_vaults::accounts::multi_optimizer::MultiDepositOptimizerV1;
+use tulipv2_sdk_vaults::accounts::lending_optimizer::LendingPlatformV1;
+use tulipv2_sdk_vaults::accounts::lending_optimizer::LendingOptimizerV1;
 pub mod implementations;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -2965,6 +2968,6 @@ pub struct RebaseMultiDepositOptimizerVault<'info> {
     /// CHECK: not needed
     #[account(signer)]
     pub authority: AccountInfo<'info>,
-    pub management: AccountLoader<'info, Management>,
+    pub management: AccountInfo<'info>,
     pub shares_mint: Box<Account<'info, Mint>>,
 }
