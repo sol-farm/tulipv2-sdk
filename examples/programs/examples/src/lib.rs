@@ -15,8 +15,12 @@ use tulipv2_sdk_vaults::instructions::{
     multi_deposit_optimizer::new_withdraw_multi_deposit_optimizer_vault_ix,
     new_issue_shares_ix,
 };
+use tulipv2_sdk_vaults::accounts::multi_optimizer::MultiDepositOptimizerV1;
+use tulipv2_sdk_vaults::accounts::lending_optimizer::LendingPlatformV1;
+use tulipv2_sdk_vaults::accounts::lending_optimizer::LendingOptimizerV1;
+use solana_program::instruction::Instruction;
 pub mod implementations;
-
+use sighashdb::GlobalSighashDB;
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
@@ -1797,6 +1801,114 @@ pub mod examples {
         }
         Ok(())
     }
+
+
+    /// rebases a multi-deposit optimizer vualt against all standalone vaults.
+    /// the standalone vaults must be rebased within 240 slots (~2min) of the multi-deposit
+    /// being rebased. The `remaining_accounts` are used to provide the standalone vault account
+    /// types, and must be ordered in the same sequence that the multi-deposit account `standalone_vaults`
+    /// field is sequenced.
+    ///
+    /// note that you must provide 2 accounts per vault, consider it a tuple:
+    ///    (vault_account, multi_shares_account)
+    ///
+    /// `multi_shares_account` is the multi-deposit optimizer vault's token account
+    /// whichs holds the vault shares issued by the given standaloen vault
+    /// 
+    /// the very first remaining account is the v2 vault program
+    pub fn rebase_multi_deposit_optimizer_vault<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, RebaseMultiDepositOptimizerVault<'info>>,
+    ) -> Result<()> {
+        let ix = {
+            let ix_data = GlobalSighashDB.get("rebase_multi_deposit_optimizer_vault").unwrap();
+            let mut accounts = ctx.accounts.to_account_metas(None);
+            // skip the first element which is the vault progrma
+            accounts.extend_from_slice(&ctx.remaining_accounts[1..].iter().map(|acct| if acct.is_writable {
+                AccountMeta::new(*acct.key, acct.is_signer)
+            } else {
+                AccountMeta::new_readonly(*acct.key, acct.is_signer)
+            }).collect::<Vec<AccountMeta>>()[..]);
+            let ix = Instruction {
+                program_id: ctx.remaining_accounts[0].key(),
+                data: ix_data.to_vec(),
+                accounts,
+            };
+            ix
+        };
+        let mut accounts = ctx.accounts.to_account_infos();
+        accounts.extend_from_slice(&ctx.remaining_accounts[..]);
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &accounts[..],
+        )?;
+        Ok(())
+    }
+    /// rebases a vault's total deposited balance to match the deposited
+    /// balance and accrued interest within the current farm program.
+    ///
+    /// For platforms with a ProgramType::SplUnmodified are used, the following accounts are needed in order.
+    ///
+    ///         0 []                -> vault_collateral_token_account
+    ///
+    ///         1 [writable]        -> reserve_account
+    ///                                 
+    ///         2 []                -> reserve_oracle                       
+    ///
+    /// For platforms with a ProgramType::SplModifiedSolend are used, the following accounts are needed in order
+    ///
+    ///         0 []                -> vault_collateral_token_account
+    ///
+    ///         1 [writable]        -> reserve_account
+    ///                                
+    ///         2 []                -> reserve_pyth_price_account
+    ///                                 
+    ///         3 []                -> reserve_switchboard_price_account
+    ///
+    /// For platforms with a ProgramType::MangoV3 are used, the following accounts are needed in order
+    ///
+    ///         0 []                -> optimizer_mango_account
+    ///
+    ///         1 []                -> mango_group
+    ///
+    ///         2 [writable]        -> root_bank_cache
+    ///
+    ///         3 [writable]        -> node_bank_cache
+    ///
+    ///         4 [writable]        -> mango_cache
+    ///
+    ///         5 [writable]        -> mango_token_account
+    ///
+    ///         6 []                -> mango_group_signer
+    ///
+    ///         7 []                -> system_program
+    pub fn rebase_lending_optimizer_vault<'a, 'b, 'c, 'info>(
+        mut ctx: Context<'a, 'b, 'c, 'info, RebaseLendingOptimizerVault<'info>>,
+    ) -> Result<()> {
+        let ix = {
+            let ix_data = GlobalSighashDB.get("rebase_lending_optimizer_vault").unwrap();
+            let mut accounts = ctx.accounts.to_account_metas(None);
+            // skip the first element which is the vault progrma
+            accounts.extend_from_slice(&ctx.remaining_accounts[1..].iter().map(|acct| if acct.is_writable {
+                AccountMeta::new(*acct.key, acct.is_signer)
+            } else {
+                AccountMeta::new_readonly(*acct.key, acct.is_signer)
+            }).collect::<Vec<AccountMeta>>()[..]);
+            let ix = Instruction {
+                program_id: ctx.remaining_accounts[0].key(),
+                data: ix_data.to_vec(),
+                accounts,
+            };
+            ix
+        };
+        let mut accounts = ctx.accounts.to_account_infos();
+        accounts.extend_from_slice(&ctx.remaining_accounts[..]);
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &accounts[..],
+        )?;
+        Ok(())
+    }
+
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -2859,4 +2971,48 @@ pub struct PermissionedIssueSharesInstruction<'info> {
     pub vault_program: AccountInfo<'info>,
     /// CHECK: .
     pub token_program: AccountInfo<'info>,
+}
+
+
+#[derive(Accounts)]
+pub struct RebaseLendingOptimizerVault<'info> {
+    #[account(mut)]
+    pub vault: AccountLoader<'info, LendingOptimizerV1>,
+    /// CHECK: not needed
+    pub vault_pda: AccountInfo<'info>,
+    pub platform_information: Box<Account<'info, LendingPlatformV1>>,
+    /// CHECK: not needed
+    pub platform_config_data: AccountInfo<'info>,
+    /// the lending program funds are being swept into
+    /// must match the current farm address stored in the vault
+    /// CHECK: not needed
+    pub lending_program: AccountInfo<'info>,
+    pub clock: Sysvar<'info, Clock>,
+    /// CHECK: not needed
+    pub token_program: AccountInfo<'info>,
+    pub underlying_deposit_queue: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// any fees that need to be claimed will be sent to this address
+    pub fee_receiver: Box<Account<'info, TokenAccount>>,
+    /// CHECK: not needed
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    pub management: AccountInfo<'info>,
+    pub shares_mint: Box<Account<'info, Mint>>,
+}
+
+#[derive(Accounts)]
+/// rebases the multi-deposit optimizer vault, ensuring that
+/// we've
+pub struct RebaseMultiDepositOptimizerVault<'info> {
+    #[account(mut)]
+    pub vault: AccountLoader<'info, MultiDepositOptimizerV1>,
+    /// CHECK: not needed
+    pub vault_pda: AccountInfo<'info>,
+    pub underlying_deposit_queue: Box<Account<'info, TokenAccount>>,
+    /// CHECK: not needed
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    pub management: AccountInfo<'info>,
+    pub shares_mint: Box<Account<'info, Mint>>,
 }

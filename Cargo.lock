@@ -2400,9 +2400,9 @@ dependencies = [
 
 [[package]]
 name = "sighashdb"
-version = "0.1.37"
+version = "0.1.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "393be469778e092958422c81b8bdacca35b1033caeacbcc72b70a599962cd985"
+checksum = "4d3d0df8bcf3cf05dc58adf2d661ec47c8ad445754281b2e580c826aeba77d45"
 
 [[package]]
 name = "signal-hook-registry"

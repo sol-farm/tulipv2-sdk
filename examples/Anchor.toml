@@ -1686,3 +1686,17 @@ filename = "deps/accounts/HNpdP2rL6FR6jM3bDxFX2Zo32D1YG2ZCztf9zzCrKMEX.json"
 address = "3uTzTX5GBSfbW7eM9R9k95H7Txe32Qw3Z25MtyD2dzwC"
 filename = "deps/accounts/3uTzTX5GBSfbW7eM9R9k95H7Txe32Qw3Z25MtyD2dzwC.json"
 ###############
+
+
+[[test.validator.account]] # tulip cUSDC protocol fee account
+address = "DFNLwKwx4kZr8bdYmaBn5HdKQhZRfgwva4xKEPporYqx"
+filename = "deps/accounts/DFNLwKwx4kZr8bdYmaBn5HdKQhZRfgwva4xKEPporYqx.json"
+[[test.validator.account]] # v2 vaults management account
+address = "9bqD5JcQoMD88PJ11o7quULTh5rHFF5u6C6xi2461ADD"
+filename = "deps/accounts/9bqD5JcQoMD88PJ11o7quULTh5rHFF5u6C6xi2461ADD.json"
+[[test.validator.account]] # solend usdc switchboard feed
+address = "CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb"
+filename = "deps/accounts/CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb.json"
+[[test.validator.account]]
+address = "7toJGrprEZPHemdMAtozt2tDfw5X2v2GmdCsBc8e82RP"
+filename = "deps/accounts/7toJGrprEZPHemdMAtozt2tDfw5X2v2GmdCsBc8e82RP.json"
