@@ -161,7 +161,7 @@ const solendReservePythPriceAccount = new anchor.web3.PublicKey(
   "Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"
 );
 const solendReserveSwitchboardPriceAccount = new anchor.web3.PublicKey(
-  "BjUgj6YCnFBZ49wF54ddBVA9qu8TeqkFtkbqmZcee8uW"
+  "CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb"
 );
 const solendProgramId = new anchor.web3.PublicKey(
   "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo"
@@ -279,7 +279,7 @@ let yourOrcaTokenAccount: anchor.web3.PublicKey;
 
 
 
-let vaultManagementAddress: anchor.web3.PublicKey;
+const vaultManagementAddress = new anchor.web3.PublicKey("9bqD5JcQoMD88PJ11o7quULTh5rHFF5u6C6xi2461ADD");
 
 
 //const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
@@ -300,7 +300,6 @@ describe("examples", () => {
 
   let yourUnderlyingTokenAccount: anchor.web3.PublicKey;
   let yourSharesTokenAccount: anchor.web3.PublicKey;
-
   it("registers deposit tracking account", async () => {
     console.log("progrmaId ", programId);
     console.log("usdcv1 vault ", usdcv1Vault);
@@ -390,9 +389,157 @@ describe("examples", () => {
     );
     console.log("sent issue shares tx")
   });
+  it("rebases lending optimizer against solend", async () => {
+    let solendCtokenFeeReceiver = new anchor.web3.PublicKey("DFNLwKwx4kZr8bdYmaBn5HdKQhZRfgwva4xKEPporYqx");
+    const tx = await program.rpc.rebaseLendingOptimizerVault({
+      options: {
+        skipPreflight: true
+      },
+      accounts: {
+        vault: solendVault,
+        vaultPda: solendVaultPda,
+        platformInformation: solendVaultPlatformInformation,
+        platformConfigData: solendVaultPlatformConfigDataAccount,
+        lendingProgram: solendProgramId,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        underlyingDepositQueue: solendVaultDepositQueue,
+        feeReceiver: solendCtokenFeeReceiver,
+        authority: provider.wallet.publicKey,
+        management: vaultManagementAddress,
+        sharesMint: solendVaultSharesMint,
+      },
+      remainingAccounts: [
+        {
+          pubkey: v2VaultsProgramId,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: solendCollateralTokenAccount,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: solendReserveAccount,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: solendReservePythPriceAccount,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: solendReserveSwitchboardPriceAccount,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+    });
+  });
+  it("rebases lending optimizer against mango", async () => {
+    const tx = await program.rpc.rebaseLendingOptimizerVault({
+      accounts: {
+        vault: mangoVault,
+        vaultPda: mangoVaultPda,
+        platformInformation: mangoVaultPlatformInformation,
+        platformConfigData: mangoVaultPlatformConfigDataAccount,
+        lendingProgram: mangoProgramId,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        underlyingDepositQueue: mangoVaultDepositQueue,
+        feeReceiver: new anchor.web3.PublicKey("3y3UC1tXhjsg34kiTs6ueuR11wEh9UDGugJV8f7Df16P"),
+        authority: provider.wallet.publicKey,
+        management: vaultManagementAddress,
+        sharesMint: mangoVaultSharesMint,
+      },
+      remainingAccounts: [
+        {
+          pubkey: v2VaultsProgramId,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: mangoVaultMangoAccount,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: mangoGroupAccount,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: mangoRootBank,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: mangoNodeBank,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: mangoCache,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: mangoTokenAccount,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: mangoGroupSigner,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: anchor.web3.SystemProgram.programId,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+    });
+  });
+  /*it("rebases lending optimizer against tulip", async () => {
+    console.log("sending rebase tx");
+    const tx = await program.rpc.rebaseLendingOptimizerVault({
+      accounts: {
+        vault: tulipUsdcStandaloneVault,
+        vaultPda: tulipUsdcStandaloneVaultPda,
+        platformInformation: optimizerTulipPlatformInformationAddress,
+        platformConfigData: optimizerTulipPlatformConfigDataAddress,
+        lendingProgram: tulipLendingProgramId,
+        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
+        tokenProgram: splToken.TOKEN_PROGRAM_ID,
+        underlyingDepositQueue: tulipUsdcStandaloneVaultUnderlying,
+        feeReceiver: tuUsdcFeeReceiver,
+        authority: provider.wallet.publicKey,
+        management: managementAddress,
+        sharesMint: tulipUsdcStandaloneVaultSharesMint,
+      },
+      remainingAccounts: [
+        {
+          pubkey: optimizerTulipUsdcCollateralTokenAccount,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: tulipUsdcLendingReserve,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: tulipUsdcPythPriceAccount,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+    });
+  });*/
   it("rebases multideposit optimizer vault", async () => {
-    let [_addr, _nonce] = await deriveManagementAddress(programId);
-    vaultManagementAddress = _addr;
     console.log("sending multi-deposit optimizer rebase tx");
     const tx = await program.rpc.rebaseMultiDepositOptimizerVault({
       accounts: {
@@ -402,6 +549,7 @@ describe("examples", () => {
         authority: provider.wallet.publicKey,
         management: vaultManagementAddress,
         sharesMint: usdcv1SharesMint,
+        vaultProgram: v2VaultsProgramId
       },
       remainingAccounts: [
 

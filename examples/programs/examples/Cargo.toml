@@ -25,3 +25,5 @@ spl-associated-token-account = "1.0.3"
 tulipv2-sdk-lending = {path = "../../../lending"}
 tulipv2-sdk-levfarm = {path = "../../../leveraged"}
 spl-token = "3.0.2"
+sighashdb = "0.1.39"
+solana-program = "1.9"
