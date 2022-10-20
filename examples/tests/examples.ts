@@ -276,6 +276,12 @@ const orcaUsdcLpTokenMint = new anchor.web3.PublicKey("n8Mpu28RjeYD7oUX3LG1tPxzh
 const orcaTokenMint = new anchor.web3.PublicKey("orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE")
 let yourUsdcTokenAccount: anchor.web3.PublicKey;
 let yourOrcaTokenAccount: anchor.web3.PublicKey;
+
+
+
+let vaultManagementAddress: anchor.web3.PublicKey;
+
+
 //const nine = new anchor.BN(9).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 const one = new anchor.BN(1).mul(new anchor.BN(10).pow(new anchor.BN(6)));
 
@@ -383,6 +389,73 @@ describe("examples", () => {
       }
     );
     console.log("sent issue shares tx")
+  });
+  it("rebases multideposit optimizer vault", async () => {
+    let [_addr, _nonce] = await deriveManagementAddress(programId);
+    vaultManagementAddress = _addr;
+    console.log("sending multi-deposit optimizer rebase tx");
+    const tx = await program.rpc.rebaseMultiDepositOptimizerVault({
+      accounts: {
+        vault: usdcv1Vault,
+        vaultPda: usdcv1VaultPda,
+        underlyingDepositQueue: usdcv1DepositQueue,
+        authority: provider.wallet.publicKey,
+        management: vaultManagementAddress,
+        sharesMint: usdcv1SharesMint,
+      },
+      remainingAccounts: [
+
+
+        {
+          pubkey: solendVault,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: usdcv1SolendVaultSharesAccount,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: solendVaultSharesMint,
+          isSigner: false,
+          isWritable: false,
+        },
+
+        {
+          pubkey: tulipVault,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: usdcv1TulipVaultSharesAccount,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: tulipVaultSharesMint,
+          isSigner: false,
+          isWritable: false,
+        },
+
+        {
+          pubkey: mangoVault,
+          isSigner: false,
+          isWritable: true,
+        },
+        {
+          pubkey: usdcv1MangoVaultSharesAccount,
+          isSigner: false,
+          isWritable: false,
+        },
+        {
+          pubkey: mangoVaultSharesMint,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+    });
+    console.log("multi-deposit rebase tx ", tx);
   });
   it("withdraws from deposit tracking account", async () => {
     console.log("wait 3 seconds")
