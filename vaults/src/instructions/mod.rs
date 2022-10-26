@@ -53,3 +53,37 @@ pub fn new_issue_shares_ix(
         data: ix_data,
     })
 }
+
+pub fn new_permissioned_issue_shares_ix(
+    authority: Pubkey,
+    vault: Pubkey,
+    vault_pda: Pubkey,
+    vault_underlying_account: Pubkey,
+    shares_mint: Pubkey,
+    receiving_shares_account: Pubkey,
+    depositing_underlying_account: Pubkey,
+    farm_type: Farm,
+    amount: u64,
+) -> Option<Instruction> {
+    let ix_sighash = GlobalSighashDB.get("permissioned_issue_shares")?;
+    let farm_type: [u64; 2] = farm_type.into();
+    let mut ix_data = Vec::with_capacity(40);
+    ix_data.extend_from_slice(&ix_sighash[..]);
+    ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&farm_type).ok()?[..]);
+    ix_data.extend_from_slice(&AnchorSerialize::try_to_vec(&amount).unwrap());
+    Some(Instruction {
+        program_id: crate::ID,
+        accounts: vec![
+            AccountMeta::new_readonly(authority, true),
+            AccountMeta::new(vault, false),
+            AccountMeta::new_readonly(crate::MANAGEMENT, false),
+            AccountMeta::new_readonly(vault_pda, false),
+            AccountMeta::new(vault_underlying_account, false),
+            AccountMeta::new(shares_mint, false),
+            AccountMeta::new(receiving_shares_account, false),
+            AccountMeta::new(depositing_underlying_account, false),
+            AccountMeta::new(spl_token::id(), false),
+        ],
+        data: ix_data,
+    })   
+}

@@ -2400,9 +2400,9 @@ dependencies = [
 
 [[package]]
 name = "sighashdb"
-version = "0.1.34"
+version = "0.1.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b58e91b6af83a51250c848b1c676767effd62b6270fa23e1d3341c814ef76f9"
+checksum = "4d3d0df8bcf3cf05dc58adf2d661ec47c8ad445754281b2e580c826aeba77d45"
 
 [[package]]
 name = "signal-hook-registry"
@@ -3439,7 +3439,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-common"
-version = "0.9.21"
+version = "0.9.22"
 dependencies = [
  "anchor-client",
  "anchor-lang",
@@ -3497,7 +3497,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-levfarm"
-version = "0.9.21"
+version = "0.9.22"
 dependencies = [
  "anchor-lang",
  "data-encoding",
@@ -3518,7 +3518,7 @@ dependencies = [
 
 [[package]]
 name = "tulipv2-sdk-vaults"
-version = "0.9.21"
+version = "0.9.22"
 dependencies = [
  "anchor-lang",
  "anchor-spl",

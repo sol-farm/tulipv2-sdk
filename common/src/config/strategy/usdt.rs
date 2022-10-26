@@ -1,6 +1,7 @@
 //! usdc lending optimizer configuration variables
 
 use crate::config::deposit_tracking::issue_shares::DepositAddresses;
+use crate::config::deposit_tracking::issue_shares::DepositAddressesPermissioned;
 use crate::config::deposit_tracking::register::RegisterDepositTrackingAddresses;
 use crate::config::deposit_tracking::traits::{
     IssueShares, RegisterDepositTracking, WithdrawDepositTracking,
@@ -16,10 +17,14 @@ use tulipv2_sdk_farms::{lending::Lending, Farm};
 
 /// bundles configuration information for the usdc lending optimizer multi deposit vault
 pub mod multi_deposit {
+
+    use crate::config::strategy::traits::{MultiVaultProgramConfig, StandaloneVaultProgramConfig};
+
     use super::*;
 
     /// empty struct used to implement the various traits used
     /// to interact with the usdt lending optimizer vault
+    #[derive(Clone, Copy)]
     pub struct ProgramConfig;
 
     pub const TAG_STRING: &str = "usdtv1";
@@ -63,6 +68,10 @@ pub mod multi_deposit {
         #[inline(always)]
         pub fn issue_shares_ix(user: Pubkey) -> impl IssueShares {
             DepositAddresses::new(user, ACCOUNT, PDA, SHARES_MINT, UNDERLYING_MINT)
+        }
+        #[inline(always)]
+        pub fn permissioned_issue_shares_ix(user: Pubkey) -> impl IssueShares {
+            DepositAddressesPermissioned::new(user, ACCOUNT, PDA, SHARES_MINT, UNDERLYING_MINT)
         }
 
         #[inline(always)]
@@ -155,16 +164,97 @@ pub mod multi_deposit {
             ]
         }
     }
+    impl MultiVaultProgramConfig for ProgramConfig {
+        fn account(&self) -> Pubkey {
+            ACCOUNT
+        }
+        fn pda(&self) -> Pubkey {
+            PDA
+        }
+        fn shares_mint(&self) -> Pubkey {
+            SHARES_MINT
+        }
+        fn underlying_compound_queue(&self) -> Pubkey {
+            UNDERLYING_COMPOUND_QUEUE
+        }
+        fn underlying_deposit_queue(&self) -> Pubkey {
+            UNDERLYING_DEPOSIT_QUEUE
+        }
+        fn underlying_withdraw_queue(&self) -> Pubkey {
+            UNDERLYING_WITHDRAW_QUEUE
+        }
+        fn underlying_mint(&self) -> Pubkey {
+            UNDERLYING_MINT
+        }
+        fn rebalance_state_transition(&self) -> Pubkey {
+            REBALANCE_STATE_TRANSITION
+        }
+        fn rebalance_state_transition_underlying(&self) -> Pubkey {
+            REBALANCE_STATE_TRANSITION_UNDERLYING
+        }
+        fn optimizer_shares_account(&self, platform: Platform) -> Pubkey {
+            match platform {
+                Platform::MangoV3 => MANGO_OPTIMIZER_SHARES_ACCOUNT,
+                Platform::Solend => SOLEND_OPTIMIZER_SHARES_ACCOUNT,
+                Platform::Tulip => TULIP_OPTIMIZER_SHARES_ACCOUNT,
+            }
+        }
+        fn issue_shares(&self, user: Pubkey) -> Box<dyn IssueShares> {
+            Box::new(ProgramConfig::issue_shares_ix(user))
+        }
+        fn permissioned_issue_shares(&self, user: Pubkey) -> Box<dyn IssueShares> {
+            Box::new(ProgramConfig::permissioned_issue_shares_ix(user))
+        }
+        fn register_deposit_tracking(&self, user: Pubkey) -> Box<dyn RegisterDepositTracking> {
+            Box::new(ProgramConfig::register_deposit_tracking_ix(user))
+        }
+        fn withdraw_deposit_tracking(&self, user: Pubkey) -> Box<dyn WithdrawDepositTracking> {
+            Box::new(ProgramConfig::withdraw_deposit_tracking_ix(user))
+        }
+        fn withdraw_multi_deposit_optimizer_vault(
+            &self,
+            user: Pubkey,
+            platform: Platform,
+        ) -> std::result::Result<Box<dyn WithdrawMultiOptimizerVault>, std::io::Error> {
+            Ok(ProgramConfig::withdraw_multi_deposit_optimizer_vault(
+                user, platform,
+            )?)
+        }
+        fn remaining_accounts(&self, platform: Platform) -> Vec<Pubkey> {
+            match platform {
+                Platform::MangoV3 => ProgramConfig::get_mango_remaining_accounts().to_vec(),
+                Platform::Solend => ProgramConfig::get_solend_remaining_accounts().to_vec(),
+                Platform::Tulip => ProgramConfig::get_tulip_remaining_accounts().to_vec(),
+            }
+        }
+        fn standalone_config(&self, platform: Platform) -> Box<dyn StandaloneVaultProgramConfig> {
+            match platform {
+                Platform::MangoV3 => Box::new(mango::ProgramConfig),
+                Platform::Solend => Box::new(solend::ProgramConfig),
+                Platform::Tulip => Box::new(tulip::ProgramConfig),
+            }
+        }
+        fn farm(&self) -> Farm {
+            FARM_KEY
+        }
+        fn tag(&self) -> &str {
+            TAG_STRING
+        }
+    }
 }
 
 /// bundles configuration information for the solend usdc standalone vault
 pub mod solend {
     use super::*;
+    use crate::config::strategy::traits::{SolendProgramConfig, StandaloneVaultProgramConfig};
 
     pub const TAG_STRING: &str = "solend";
     pub const FARM_KEY: Farm = Farm::Lending {
         name: Lending::USDT,
     };
+
+    #[derive(Clone, Copy)]
+    pub struct ProgramConfig;
 
     /// address of the standalone vault itself
     pub const ACCOUNT: Pubkey = static_pubkey!("4YmXxV6C6MQs3TrZjpH5bw4qTtgZZhVRNfkWEteVXcWX");
@@ -207,7 +297,7 @@ pub mod solend {
     /// address of the oracle that goes into the second element
     /// of the oracle keys array
     pub const SWITCHBOARD_PRICE_ACCOUNT: Pubkey =
-        static_pubkey!("5mp8kbkTYwWWCsKSte8rURjTuyinsqBpJ9xAQsewPDD");
+        static_pubkey!("ETAaeeuQBwsh9mC2gCov9WdhJENZuffRMXY2HgjCcSL9");
     /// address of the program which owns the first oracle
     pub const PYTH_PROGRAM_ID: Pubkey =
         static_pubkey!("FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH");
@@ -238,16 +328,108 @@ pub mod solend {
             lending_program: PROGRAM_ID,
         }
     }
+    impl StandaloneVaultProgramConfig for ProgramConfig {
+        fn account(&self) -> Pubkey {
+            ACCOUNT
+        }
+        fn pda(&self) -> Pubkey {
+            PDA
+        }
+        fn shares_mint(&self) -> Pubkey {
+            SHARES_MINT
+        }
+        fn underlying_compound_queue(&self) -> Pubkey {
+            UNDERLYING_COMPOUND_QUEUE
+        }
+        fn underlying_deposit_queue(&self) -> Pubkey {
+            UNDERLYING_DEPOSIT_QUEUE
+        }
+        fn underlying_withdraw_queue(&self) -> Pubkey {
+            UNDERLYING_WITHDRAW_QUEUE
+        }
+        fn underlying_mint(&self) -> Pubkey {
+            UNDERLYING_MINT
+        }
+        fn config_data_account(&self) -> Pubkey {
+            CONFIG_DATA_ACCOUNT
+        }
+        fn information_account(&self) -> Pubkey {
+            INFORMATION_ACCOUNT
+        }
+        fn program_id(&self) -> Pubkey {
+            PROGRAM_ID
+        }
+        fn solend_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::SolendProgramConfig>> {
+            Some(Box::new(*self))
+        }
+        fn tulip_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::TulipProgramConfig>> {
+            None
+        }
+        fn mango_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::MangoProgramConfig>> {
+            None
+        }
+        fn is_platform(&self, platform: Platform) -> bool {
+            matches!(platform, Platform::Solend)
+        }
+        fn farm(&self) -> Farm {
+            FARM_KEY
+        }
+        fn tag(&self) -> &str {
+            TAG_STRING
+        }
+    }
+    impl SolendProgramConfig for ProgramConfig {
+        fn collateral_mint(&self) -> Pubkey {
+            COLLATERAL_MINT
+        }
+        fn lending_market(&self) -> Pubkey {
+            LENDING_MARKET_ACCOUNT
+        }
+        fn lending_market_authority(&self) -> Pubkey {
+            LENDING_MARKET_AUTHORITY
+        }
+        fn pyth_price_account(&self) -> Pubkey {
+            PYTH_PRICE_ACCOUNT
+        }
+        fn switchboard_price_account(&self) -> Pubkey {
+            SWITCHBOARD_PRICE_ACCOUNT
+        }
+        fn pyth_program_id(&self) -> Pubkey {
+            PYTH_PROGRAM_ID
+        }
+        fn switchboard_program_id(&self) -> Pubkey {
+            SWITCHBOARD_PROGRAM_ID
+        }
+        fn reserve(&self) -> Pubkey {
+            RESERVE_ACCOUNT
+        }
+        fn reserve_liquidity(&self) -> Pubkey {
+            RESERVE_LIQUIDITY_ACCOUNT
+        }
+        fn vault_collateral_account(&self) -> Pubkey {
+            COLLATERAL_TOKEN_ACCOUNT
+        }
+    }
 }
 
 /// bundles configuration information for the tulip usdc standalone vault
 pub mod tulip {
     use super::*;
+    use crate::config::strategy::traits::{StandaloneVaultProgramConfig, TulipProgramConfig};
 
     pub const TAG_STRING: &str = "tulip";
     pub const FARM_KEY: Farm = Farm::Lending {
         name: Lending::USDT,
     };
+
+    #[derive(Clone, Copy)]
+    pub struct ProgramConfig;
 
     /// address of the standalone vault itself
     pub const ACCOUNT: Pubkey = static_pubkey!("HC3ah2Z1VNBHjavM3o9uCWnPniy5g9VgHSzbuuBvTMzT");
@@ -314,16 +496,109 @@ pub mod tulip {
             lending_program: PROGRAM_ID,
         }
     }
+    impl StandaloneVaultProgramConfig for ProgramConfig {
+        fn account(&self) -> Pubkey {
+            ACCOUNT
+        }
+        fn pda(&self) -> Pubkey {
+            PDA
+        }
+        fn shares_mint(&self) -> Pubkey {
+            SHARES_MINT
+        }
+        fn underlying_compound_queue(&self) -> Pubkey {
+            UNDERLYING_COMPOUND_QUEUE
+        }
+        fn underlying_deposit_queue(&self) -> Pubkey {
+            UNDERLYING_DEPOSIT_QUEUE
+        }
+        fn underlying_withdraw_queue(&self) -> Pubkey {
+            UNDERLYING_WITHDRAW_QUEUE
+        }
+        fn underlying_mint(&self) -> Pubkey {
+            UNDERLYING_MINT
+        }
+        fn config_data_account(&self) -> Pubkey {
+            CONFIG_DATA_ACCOUNT
+        }
+        fn information_account(&self) -> Pubkey {
+            INFORMATION_ACCOUNT
+        }
+        fn program_id(&self) -> Pubkey {
+            PROGRAM_ID
+        }
+        fn solend_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::SolendProgramConfig>> {
+            None
+        }
+        fn tulip_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::TulipProgramConfig>> {
+            Some(Box::new(*self))
+        }
+        fn mango_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::MangoProgramConfig>> {
+            None
+        }
+        fn is_platform(&self, platform: Platform) -> bool {
+            matches!(platform, Platform::Tulip)
+        }
+        fn farm(&self) -> Farm {
+            FARM_KEY
+        }
+        fn tag(&self) -> &str {
+            TAG_STRING
+        }
+    }
+    impl TulipProgramConfig for ProgramConfig {
+        fn collateral_mint(&self) -> Pubkey {
+            COLLATERAL_MINT
+        }
+        fn lending_market(&self) -> Pubkey {
+            LENDING_MARKET_ACCOUNT
+        }
+        fn lending_market_authority(&self) -> Pubkey {
+            LENDING_MARKET_AUTHORITY
+        }
+        fn pyth_price_account(&self) -> Pubkey {
+            PYTH_PRICE_ACCOUNT
+        }
+        fn pyth_program_id(&self) -> Pubkey {
+            PYTH_PROGRAM_ID
+        }
+        fn reserve(&self) -> Pubkey {
+            RESERVE_ACCOUNT
+        }
+        fn reserve_liquidity(&self) -> Pubkey {
+            RESERVE_LIQUIDITY_ACCOUNT
+        }
+        fn vault_collateral_account(&self) -> Pubkey {
+            COLLATERAL_TOKEN_ACCOUNT
+        }
+    }
 }
 
 /// bundles configuration information for the mango usdc standalone vault
 pub mod mango {
-    use super::*;
+    use crate::config::strategy::{
+        traits::{MangoProgramConfig, StandaloneVaultProgramConfig},
+        withdraw::PlatformConfigAddresses,
+        Platform,
+    };
+
+    use anchor_lang::solana_program::{self, pubkey::Pubkey};
+    use static_pubkey::static_pubkey;
+    use tulipv2_sdk_farms::{lending::Lending, Farm};
 
     pub const TAG_STRING: &str = "mango";
     pub const FARM_KEY: Farm = Farm::Lending {
         name: Lending::USDT,
     };
+
+    #[derive(Clone, Copy)]
+    pub struct ProgramConfig;
 
     /// address of the standalone vault itself
     pub const ACCOUNT: Pubkey = static_pubkey!("3Y9yqi2K4E4zsthNj2YP4sip59azSHA4qhwMkLxtokFZ");
@@ -376,6 +651,85 @@ pub mod mango {
             shares_mint: SHARES_MINT,
             underlying_deposit_queue: UNDERLYING_DEPOSIT_QUEUE,
             lending_program: PROGRAM_ID,
+        }
+    }
+    impl StandaloneVaultProgramConfig for ProgramConfig {
+        fn account(&self) -> Pubkey {
+            ACCOUNT
+        }
+        fn pda(&self) -> Pubkey {
+            PDA
+        }
+        fn shares_mint(&self) -> Pubkey {
+            SHARES_MINT
+        }
+        fn underlying_compound_queue(&self) -> Pubkey {
+            UNDERLYING_COMPOUND_QUEUE
+        }
+        fn underlying_deposit_queue(&self) -> Pubkey {
+            UNDERLYING_DEPOSIT_QUEUE
+        }
+        fn underlying_withdraw_queue(&self) -> Pubkey {
+            UNDERLYING_WITHDRAW_QUEUE
+        }
+        fn underlying_mint(&self) -> Pubkey {
+            UNDERLYING_MINT
+        }
+        fn config_data_account(&self) -> Pubkey {
+            CONFIG_DATA_ACCOUNT
+        }
+        fn information_account(&self) -> Pubkey {
+            INFORMATION_ACCOUNT
+        }
+        fn program_id(&self) -> Pubkey {
+            PROGRAM_ID
+        }
+        fn solend_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::SolendProgramConfig>> {
+            None
+        }
+        fn tulip_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::TulipProgramConfig>> {
+            None
+        }
+        fn mango_config(
+            &self,
+        ) -> Option<Box<dyn crate::config::strategy::traits::MangoProgramConfig>> {
+            Some(Box::new(*self))
+        }
+        fn is_platform(&self, platform: Platform) -> bool {
+            matches!(platform, Platform::MangoV3)
+        }
+        fn farm(&self) -> Farm {
+            FARM_KEY
+        }
+        fn tag(&self) -> &str {
+            TAG_STRING
+        }
+    }
+    impl MangoProgramConfig for ProgramConfig {
+        fn cache(&self) -> Pubkey {
+            CACHE
+        }
+        fn group(&self) -> Pubkey {
+            GROUP
+        }
+        fn group_signer(&self) -> Pubkey {
+            GROUP_SIGNER
+        }
+        fn group_token_account(&self) -> Pubkey {
+            GROUP_TOKEN_ACCOUNT
+        }
+        fn root_bank(&self) -> Pubkey {
+            ROOT_BANK
+        }
+        fn node_bank(&self) -> Pubkey {
+            NODE_BANK
+        }
+        fn optimizer_mango_account(&self) -> Pubkey {
+            OPTIMIZER_MANGO_ACCOUNT
         }
     }
 }

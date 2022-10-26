@@ -5,6 +5,7 @@ use tulipv2_sdk_common::config::deposit_tracking::traits::IssueShares;
 use tulipv2_sdk_common::config::deposit_tracking::traits::RegisterDepositTracking;
 use tulipv2_sdk_common::config::deposit_tracking::traits::WithdrawDepositTracking;
 use tulipv2_sdk_common::config::strategy::traits::WithdrawMultiOptimizerVault;
+use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
 use tulipv2_sdk_common::msg_panic;
 use tulipv2_sdk_farms::Farm;
 use tulipv2_sdk_vaults::instructions::{
@@ -14,8 +15,12 @@ use tulipv2_sdk_vaults::instructions::{
     multi_deposit_optimizer::new_withdraw_multi_deposit_optimizer_vault_ix,
     new_issue_shares_ix,
 };
+use tulipv2_sdk_vaults::accounts::multi_optimizer::MultiDepositOptimizerV1;
+use tulipv2_sdk_vaults::accounts::lending_optimizer::LendingPlatformV1;
+use tulipv2_sdk_vaults::accounts::lending_optimizer::LendingOptimizerV1;
+use solana_program::instruction::Instruction;
 pub mod implementations;
-
+use sighashdb::GlobalSighashDB;
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
@@ -228,15 +233,13 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let registration_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::register_deposit_tracking_ix(
-                        *ctx.accounts.authority.key,
-                    );
+                let strat_vault: StrategyVaults =
+                    tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.vault);
+                let conf = strat_vault.multi_deposit_config();
+                let registration_trait =
+                    conf.register_deposit_tracking(*ctx.accounts.authority.key);
                 anchor_lang::solana_program::program::invoke(
-                    &registration_trait
-                        .instruction(tulipv2_sdk_farms::Farm::Lending {
-                            name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
-                        })
-                        .unwrap(),
+                    &registration_trait.instruction(conf.farm()).unwrap(),
                     &[
                         ctx.accounts.authority.clone(),
                         ctx.accounts.vault.clone(),
@@ -407,12 +410,12 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let issue_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::issue_shares_ix(
-                    *ctx.accounts.authority.key,
-                );
-
+                let strat_vault: StrategyVaults =
+                    tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.vault);
+                let conf = strat_vault.multi_deposit_config();
+                let issue_trait = conf.issue_shares(*ctx.accounts.authority.key);
                 anchor_lang::solana_program::program::invoke(
-                    &issue_trait.instruction(farm_type.into(), amount).unwrap(),
+                    &issue_trait.instruction(conf.farm(), amount).unwrap(),
                     &[
                         ctx.accounts.authority.clone(),
                         ctx.accounts.vault.clone(),
@@ -586,13 +589,12 @@ pub mod examples {
             tulipv2_sdk_farms::Farm::Lending {
                 name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
             } => {
-                let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_deposit_tracking_ix(
-                    *ctx.accounts.authority.key,
-                );
+                let strat_vault: StrategyVaults =
+                    tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.vault);
+                let conf = strat_vault.multi_deposit_config();
+                let withdraw_trait = conf.withdraw_deposit_tracking(*ctx.accounts.authority.key);
                 anchor_lang::solana_program::program::invoke(
-                    &withdraw_trait
-                        .instruction(amount, farm_type.into())
-                        .unwrap(),
+                    &withdraw_trait.instruction(amount, conf.farm()).unwrap(),
                     &[
                         ctx.accounts.authority.clone(),
                         ctx.accounts.clock.to_account_info(),
@@ -616,15 +618,21 @@ pub mod examples {
         ctx: Context<WithdrawMangoMultiDepositOptimizerVault>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::MangoV3,
-            ).unwrap();
+            let strat_vault: StrategyVaults =
+                tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.common_data.multi_vault);
+            let conf = strat_vault.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::MangoV3,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -688,15 +696,21 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawSolendMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::Solend,
-            ).unwrap();
+            let strat_vault: StrategyVaults =
+                tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.common_data.multi_vault);
+            let conf = strat_vault.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::Solend,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -769,15 +783,21 @@ pub mod examples {
         ctx: Context<'a, 'b, 'c, 'info, WithdrawTulipMultiDepositOptimizerVault<'info>>,
         amount: u64,
     ) -> Result<()> {
+        use tulipv2_sdk_common::config::strategy::{Platform, StrategyVaults};
         // you must scope the instruction creation function the way this is done
         // otherwise stack size will be blown, as the size of the `withdraw_trait`
         // and the instruction itself can't be on the stack when the instruction is
         // invoked through cpi
         let ix = {
-            let withdraw_trait = tulipv2_sdk_common::config::strategy::usdc::multi_deposit::ProgramConfig::withdraw_multi_deposit_optimizer_vault(
-                *ctx.accounts.common_data.authority.key,
-                tulipv2_sdk_common::config::strategy::Platform::Tulip,
-            ).unwrap();
+            let strat_vault: StrategyVaults =
+                tulipv2_sdk_vaults::into_strategy_vault(&ctx.accounts.common_data.multi_vault);
+            let conf = strat_vault.multi_deposit_config();
+            let withdraw_trait = conf
+                .withdraw_multi_deposit_optimizer_vault(
+                    *ctx.accounts.common_data.authority.key,
+                    Platform::Tulip,
+                )
+                .unwrap();
             let ix = withdraw_trait.instruction(amount).unwrap();
             ix
         };
@@ -1653,6 +1673,242 @@ pub mod examples {
         }
         Ok(())
     }
+    /// similar to issue_shares, except grants whitelisted addresses
+    /// the ability to bypass deposit tracking lockup. the one restriction
+    /// for this instruction is that the `receiving_shares_account` must be
+    /// a token account owned by the signing `authority`
+    pub fn permissioned_issue_shares(
+        ctx: Context<PermissionedIssueSharesInstruction>,
+        amount: u64,
+        farm_type: [u64; 2],
+    ) -> Result<()> {
+        /*
+            if this error is returned, it means the depositing_underlying_account
+            has less tokens (X) then requested deposit amount (Y)
+            Program log: RUNTIME ERROR: a(X) < b(Y)
+            Program log: panicked at 'RUNTIME ERROR: a(0) < b(1)', programs/vaults/src/vault_instructions/deposit_tracking/acl_helpers.rs:198:9
+        */
+        let farm: tulipv2_sdk_farms::Farm = farm_type.into();
+        match farm {
+            tulipv2_sdk_farms::Farm::Orca { name } => {
+                let issue_trait = if name.is_double_dip() {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaDoubleDipVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config.permissioned_issue_shares(ctx.accounts.authority.key())
+                } else {
+                    let loader: AccountLoader<
+                        tulipv2_sdk_vaults::accounts::orca_vault::OrcaVaultV1,
+                    > = AccountLoader::try_from_unchecked(
+                        ctx.accounts.vault_program.key,
+                        &ctx.accounts.vault,
+                    )?;
+                    let orca_config = {
+                        let vault = loader.load()?;
+                        tulipv2_sdk_vaults::config::orca::OrcaVaultConfig::new(
+                            ctx.accounts.vault.key(),
+                            vault.base.underlying_mint,
+                            vault.farm_data.global_farm,
+                            tulipv2_sdk_common::config::ORCA_AQUAFARM_PROGRAM,
+                            None,
+                            None,
+                        )
+                    };
+                    orca_config.permissioned_issue_shares(ctx.accounts.authority.key())
+                };
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait.instruction(farm, amount).unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.management.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Raydium { name } => {
+                let raydium_config = tulipv2_sdk_vaults::config::raydium::RaydiumVaultConfig::new(
+                    ctx.accounts.vault.key(),
+                    ctx.accounts.vault_underlying_account.mint,
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                    None, // for shares issuance we dont need to derive these values
+                );
+                let issue_trait =
+                    raydium_config.permissioned_issue_shares(ctx.accounts.authority.key());
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait
+                        .instruction(
+                            tulipv2_sdk_farms::Farm::Raydium {
+                                name: tulipv2_sdk_farms::raydium::Raydium::RAYUSDC,
+                            },
+                            amount,
+                        )
+                        .unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.management.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            tulipv2_sdk_farms::Farm::Lending {
+                name: tulipv2_sdk_farms::lending::Lending::MULTI_DEPOSIT,
+            } => {
+                // assumes the vault is a usdc strategy vault
+                let conf = StrategyVaults::USDCv1.multi_deposit_config();
+                let issue_trait = conf.permissioned_issue_shares(*ctx.accounts.authority.key);
+
+                anchor_lang::solana_program::program::invoke(
+                    &issue_trait.instruction(conf.farm(), amount).unwrap(),
+                    &[
+                        ctx.accounts.authority.clone(),
+                        ctx.accounts.vault.clone(),
+                        ctx.accounts.management.clone(),
+                        ctx.accounts.vault_pda.clone(),
+                        ctx.accounts.vault_underlying_account.to_account_info(),
+                        ctx.accounts.shares_mint.to_account_info(),
+                        ctx.accounts.receiving_shares_account.to_account_info(),
+                        ctx.accounts.depositing_underlying_account.to_account_info(),
+                    ],
+                )?;
+            }
+            _ => panic!("unsupported"),
+        }
+        Ok(())
+    }
+
+
+    /// rebases a multi-deposit optimizer vualt against all standalone vaults.
+    /// the standalone vaults must be rebased within 240 slots (~2min) of the multi-deposit
+    /// being rebased. The `remaining_accounts` are used to provide the standalone vault account
+    /// types, and must be ordered in the same sequence that the multi-deposit account `standalone_vaults`
+    /// field is sequenced.
+    ///
+    /// note that you must provide 2 accounts per vault, consider it a tuple:
+    ///    (vault_account, multi_shares_account)
+    ///
+    /// `multi_shares_account` is the multi-deposit optimizer vault's token account
+    /// whichs holds the vault shares issued by the given standaloen vault
+    /// 
+    /// the very first remaining account is the v2 vault program
+    pub fn rebase_multi_deposit_optimizer_vault<'a, 'b, 'c, 'info>(
+        ctx: Context<'a, 'b, 'c, 'info, RebaseMultiDepositOptimizerVault<'info>>,
+    ) -> Result<()> {
+        let ix = {
+            let ix_data = GlobalSighashDB.get("rebase_multi_deposit_optimizer_vault").unwrap();
+            let mut accounts = ctx.accounts.to_account_metas(None);
+            // skip the first element which is the vault progrma
+            accounts.extend_from_slice(&ctx.remaining_accounts[1..].iter().map(|acct| if acct.is_writable {
+                AccountMeta::new(*acct.key, acct.is_signer)
+            } else {
+                AccountMeta::new_readonly(*acct.key, acct.is_signer)
+            }).collect::<Vec<AccountMeta>>()[..]);
+            let ix = Instruction {
+                program_id: ctx.remaining_accounts[0].key(),
+                data: ix_data.to_vec(),
+                accounts,
+            };
+            ix
+        };
+        let mut accounts = ctx.accounts.to_account_infos();
+        accounts.extend_from_slice(&ctx.remaining_accounts[..]);
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &accounts[..],
+        )?;
+        Ok(())
+    }
+    /// rebases a vault's total deposited balance to match the deposited
+    /// balance and accrued interest within the current farm program.
+    ///
+    /// For platforms with a ProgramType::SplUnmodified are used, the following accounts are needed in order.
+    ///
+    ///         0 []                -> vault_collateral_token_account
+    ///
+    ///         1 [writable]        -> reserve_account
+    ///                                 
+    ///         2 []                -> reserve_oracle                       
+    ///
+    /// For platforms with a ProgramType::SplModifiedSolend are used, the following accounts are needed in order
+    ///
+    ///         0 []                -> vault_collateral_token_account
+    ///
+    ///         1 [writable]        -> reserve_account
+    ///                                
+    ///         2 []                -> reserve_pyth_price_account
+    ///                                 
+    ///         3 []                -> reserve_switchboard_price_account
+    ///
+    /// For platforms with a ProgramType::MangoV3 are used, the following accounts are needed in order
+    ///
+    ///         0 []                -> optimizer_mango_account
+    ///
+    ///         1 []                -> mango_group
+    ///
+    ///         2 [writable]        -> root_bank_cache
+    ///
+    ///         3 [writable]        -> node_bank_cache
+    ///
+    ///         4 [writable]        -> mango_cache
+    ///
+    ///         5 [writable]        -> mango_token_account
+    ///
+    ///         6 []                -> mango_group_signer
+    ///
+    ///         7 []                -> system_program
+    pub fn rebase_lending_optimizer_vault<'a, 'b, 'c, 'info>(
+        mut ctx: Context<'a, 'b, 'c, 'info, RebaseLendingOptimizerVault<'info>>,
+    ) -> Result<()> {
+        let ix = {
+            let ix_data = GlobalSighashDB.get("rebase_lending_optimizer_vault").unwrap();
+            let mut accounts = ctx.accounts.to_account_metas(None);
+            // skip the first element which is the vault progrma
+            accounts.extend_from_slice(&ctx.remaining_accounts[1..].iter().map(|acct| if acct.is_writable {
+                AccountMeta::new(*acct.key, acct.is_signer)
+            } else {
+                AccountMeta::new_readonly(*acct.key, acct.is_signer)
+            }).collect::<Vec<AccountMeta>>()[..]);
+            let ix = Instruction {
+                program_id: ctx.remaining_accounts[0].key(),
+                data: ix_data.to_vec(),
+                accounts,
+            };
+            ix
+        };
+        let mut accounts = ctx.accounts.to_account_infos();
+        accounts.extend_from_slice(&ctx.remaining_accounts[..]);
+        anchor_lang::solana_program::program::invoke(
+            &ix,
+            &accounts[..],
+        )?;
+        Ok(())
+    }
+
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize)]
@@ -2676,4 +2932,87 @@ pub struct WithdrawOrcaFarm<'info> {
     /// CHECK: .
     pub user_farm: AccountInfo<'info>, // 10
     */
+}
+
+#[derive(Accounts)]
+pub struct PermissionedIssueSharesInstruction<'info> {
+    #[account(signer)]
+    /// CHECK: .
+    pub authority: AccountInfo<'info>,
+    #[account(mut)]
+    /// CHECK: .
+    pub vault: AccountInfo<'info>,
+    /// CHECK: .
+    pub management: AccountInfo<'info>,
+    /// CHECK: .
+    pub vault_pda: AccountInfo<'info>,
+    #[account(mut)]
+    /// CHECK: .
+    pub shares_mint: Box<Account<'info, Mint>>,
+    #[account(mut)]
+    /// CHECK: .
+    /// must be owned by the authority
+    pub receiving_shares_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// CHECK: .
+    /// the account owned by the authority which contains the underlying tokens
+    /// we want to deposit in exchange for the vault shares
+    pub depositing_underlying_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// CHECK: .
+    /// the underlying token account that is owned by the vault pda
+    /// which holds the underlying tokens until they are swept into the farm.
+    ///
+    /// also known as the deposit queue account
+    pub vault_underlying_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: .
+    pub system_program: Program<'info, System>,
+    /// CHECK: .
+    pub vault_program: AccountInfo<'info>,
+    /// CHECK: .
+    pub token_program: AccountInfo<'info>,
+}
+
+
+#[derive(Accounts)]
+pub struct RebaseLendingOptimizerVault<'info> {
+    #[account(mut)]
+    pub vault: AccountLoader<'info, LendingOptimizerV1>,
+    /// CHECK: not needed
+    pub vault_pda: AccountInfo<'info>,
+    pub platform_information: Box<Account<'info, LendingPlatformV1>>,
+    /// CHECK: not needed
+    pub platform_config_data: AccountInfo<'info>,
+    /// the lending program funds are being swept into
+    /// must match the current farm address stored in the vault
+    /// CHECK: not needed
+    pub lending_program: AccountInfo<'info>,
+    pub clock: Sysvar<'info, Clock>,
+    /// CHECK: not needed
+    pub token_program: AccountInfo<'info>,
+    pub underlying_deposit_queue: Box<Account<'info, TokenAccount>>,
+    #[account(mut)]
+    /// any fees that need to be claimed will be sent to this address
+    pub fee_receiver: Box<Account<'info, TokenAccount>>,
+    /// CHECK: not needed
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    pub management: AccountInfo<'info>,
+    pub shares_mint: Box<Account<'info, Mint>>,
+}
+
+#[derive(Accounts)]
+/// rebases the multi-deposit optimizer vault, ensuring that
+/// we've
+pub struct RebaseMultiDepositOptimizerVault<'info> {
+    #[account(mut)]
+    pub vault: AccountLoader<'info, MultiDepositOptimizerV1>,
+    /// CHECK: not needed
+    pub vault_pda: AccountInfo<'info>,
+    pub underlying_deposit_queue: Box<Account<'info, TokenAccount>>,
+    /// CHECK: not needed
+    #[account(signer)]
+    pub authority: AccountInfo<'info>,
+    pub management: AccountInfo<'info>,
+    pub shares_mint: Box<Account<'info, Mint>>,
 }

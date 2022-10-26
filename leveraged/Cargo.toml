@@ -1,6 +1,6 @@
 [package]
 name = "tulipv2-sdk-levfarm"
-version = "0.9.21"
+version = "0.9.22"
 edition = "2021"
 authors = ["Tulip Protocol"]
 description = "farm instructions for v1 leveraged yield farming"
@@ -109,7 +109,7 @@ thiserror = "1.0"
 num-traits = "0.2"
 anchor-lang = "0.24.2"
 static-pubkey = "1.0.2"
-sighashdb = "0.1.32"
+sighashdb = "0.1.39"
 [dev-dependencies]
 proptest = "1.0.0"
 solana-client = "1.9.13"

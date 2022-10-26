@@ -11,7 +11,8 @@ use tulipv2_sdk_common::lending::error::LendingError;
 /// Instructions supported by the lending program.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum LendingInstruction {
-    // 3
+    /// instruction index: 3
+    ///
     /// Accrue interest and update market price of liquidity on a reserve.
     ///
     /// Accounts expected by this instruction:
@@ -22,7 +23,8 @@ pub enum LendingInstruction {
     ///   2. `[]` Clock sysvar.
     RefreshReserve,
 
-    // 4
+    /// instruction index: 4
+    ///
     /// Deposit liquidity into a reserve in exchange for collateral. Collateral represents a share
     /// of the reserve liquidity pool.
     ///
@@ -44,7 +46,8 @@ pub enum LendingInstruction {
         liquidity_amount: u64,
     },
 
-    // 5
+    /// instruction index: 5
+    ///
     /// Redeem collateral from a reserve in exchange for liquidity.
     ///
     /// Accounts expected by this instruction:
