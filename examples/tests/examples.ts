@@ -161,7 +161,7 @@ const solendReservePythPriceAccount = new anchor.web3.PublicKey(
   "Gnt27xtC473ZT2Mw5u8wZ68Z3gULkSTb5DuxJy7eJotD"
 );
 const solendReserveSwitchboardPriceAccount = new anchor.web3.PublicKey(
-  "CZx29wKMUxaJDq6aLVQTdViPL754tTR64NAgQBUGxxHb"
+  "BjUgj6YCnFBZ49wF54ddBVA9qu8TeqkFtkbqmZcee8uW"
 );
 const solendProgramId = new anchor.web3.PublicKey(
   "So1endDq2YkqhipRh3WViPa8hdiSpxWy6z3Z6tMCpAo"
