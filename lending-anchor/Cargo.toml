@@ -1,0 +1,11 @@
+[package]
+name = "tulipv2-sdk-lending-anchor"
+version = "0.1.0"
+description = "Anchor bindings for the TulipV2 lending SDK."
+edition = "2021"
+keywords = ["solana", "tulipv2", "tulip", "lending", "anchor"]
+
+[dependencies]
+anchor-lang = "0.24.2"
+tulipv2-sdk-lending = { path = "../lending" }
+tulipv2-sdk-common = { path = "../common" }
